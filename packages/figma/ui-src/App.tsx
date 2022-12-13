@@ -23,13 +23,13 @@ export const App: React.FC = () => {
   useEffect(() => {
     window.addEventListener("message", (event) => {
       if (event.data.pluginMessage) {
-        console.log(event.data.pluginMessage);
+        const message = event.data.pluginMessage as MessageToUI;
 
         iframeRef.current!.contentWindow?.postMessage(
           {
             type: "iframe:render",
-            width: (event.data.pluginMessage as MessageToUI).width,
-            height: (event.data.pluginMessage as MessageToUI).height,
+            width: message.width,
+            height: message.height,
           },
           "*"
         );
