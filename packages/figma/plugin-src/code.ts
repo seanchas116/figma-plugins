@@ -37,6 +37,43 @@ figma.ui.onmessage = async (msg: MessageToPlugin) => {
       targetNode.fills = [
         { type: "IMAGE", imageHash: img.hash, scaleMode: "FILL" },
       ];
+
+      targetNode.setPluginData("mark", "true");
     }
   }
 };
+
+const debounce = (fn: (...args: any[]) => void, delay: number) => {
+  let timer: number | undefined;
+  return (...args: any[]) => {
+    if (timer) {
+      clearTimeout(timer);
+    }
+    timer = setTimeout(() => {
+      fn(...args);
+      timer = undefined;
+    }, delay);
+  };
+};
+
+const onChange = debounce((event: DocumentChangeEvent) => {
+  for (const change of event.documentChanges) {
+    if (
+      change.type === "PROPERTY_CHANGE" &&
+      change.node.type === "FRAME" &&
+      !change.node.removed
+    ) {
+      const node = change.node;
+      if (node.getPluginData("mark") === "true") {
+        targetNode = node;
+        postMessageToUI({
+          type: "render",
+          width: node.width,
+          height: node.height,
+        });
+      }
+    }
+  }
+}, 500);
+
+figma.on("documentchange", onChange);
