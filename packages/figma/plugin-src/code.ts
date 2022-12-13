@@ -2,6 +2,10 @@ import { MessageToPlugin, MessageToUI } from "../message";
 
 figma.showUI(__html__, { width: 240, height: 240 });
 
+function postMessageToUI(msg: MessageToUI) {
+  figma.ui.postMessage(msg);
+}
+
 figma.ui.onmessage = async (msg: MessageToPlugin) => {
   if (msg.type === "renderStart") {
     console.log(msg);
@@ -16,11 +20,11 @@ figma.ui.onmessage = async (msg: MessageToPlugin) => {
       return;
     }
 
-    figma.ui.postMessage({
+    postMessageToUI({
       type: "render",
       width: node.width,
       height: node.height,
-    } as MessageToUI);
+    });
   } else if (msg.type === "renderFinish") {
     console.log(msg.payload);
 
