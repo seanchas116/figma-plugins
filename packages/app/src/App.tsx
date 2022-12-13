@@ -13,7 +13,16 @@ function App() {
     const onMessage = async (event: MessageEvent) => {
       console.log(event.data);
 
-      const png = await (await htmlToImage.toBlob(ref.current!))?.arrayBuffer();
+      const button = document.createElement("button");
+      button.style.position = "fixed";
+      button.style.top = "0";
+      button.style.left = "0";
+      button.innerText = "Button";
+      document.body.append(button);
+
+      const png = await (await htmlToImage.toBlob(button))?.arrayBuffer();
+
+      button.remove();
 
       window.parent.postMessage(
         {
