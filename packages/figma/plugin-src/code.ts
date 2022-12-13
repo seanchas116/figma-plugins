@@ -62,12 +62,10 @@ const onChange = debounce((event: DocumentChangeEvent) => {
     if (
       change.type === "PROPERTY_CHANGE" &&
       change.node.type === "FRAME" &&
-      !change.node.removed
+      !change.node.removed &&
+      (change.properties.includes("width") ||
+        change.properties.includes("height"))
     ) {
-      if (change.properties.includes("fills")) {
-        continue;
-      }
-
       const node = change.node;
       if (node.getPluginData("mark") === "true") {
         targetNode = node;

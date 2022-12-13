@@ -45,21 +45,14 @@ export const App: React.FC = () => {
   }, []);
 
   return (
-    <div className="p-2">
+    <div className="p-2 flex flex-col gap-2">
       <button
         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         onClick={handleClick}
       >
         Attach
       </button>
-      <iframe
-        style={{
-          position: "fixed",
-          left: "-1000px",
-        }}
-        ref={iframeRef}
-        src="http://localhost:5173"
-      />
+      <iframe ref={iframeRef} src="http://localhost:5173" />
     </div>
   );
 };
