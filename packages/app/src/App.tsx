@@ -1,22 +1,26 @@
-import { createRef, useEffect, useState } from "react";
+import { createRef, useEffect } from "react";
 import reactLogo from "./assets/react.svg";
 import "./App.css";
 import * as htmlToImage from "html-to-image";
 import download from "downloadjs";
 
 function App() {
-  const [count, setCount] = useState(0);
-
   const ref = createRef<HTMLDivElement>();
 
   useEffect(() => {
     const onMessage = async (event: MessageEvent) => {
+      if (event.data.type !== "iframe:render") {
+        return;
+      }
+
       console.log(event.data);
 
       const button = document.createElement("button");
       button.style.position = "fixed";
       button.style.top = "0";
       button.style.left = "0";
+      button.style.width = `${event.data.width}px`;
+      button.style.height = `${event.data.height}px`;
       button.innerText = "Button";
       document.body.append(button);
 
@@ -26,7 +30,7 @@ function App() {
 
       window.parent.postMessage(
         {
-          type: "renderFinish",
+          type: "iframe:renderFinish",
           payload: png,
         },
         "*"
