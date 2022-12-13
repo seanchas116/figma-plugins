@@ -6,6 +6,8 @@ function postMessageToUI(msg: MessageToUI) {
   figma.ui.postMessage(msg);
 }
 
+let targetNode: FrameNode | undefined;
+
 figma.ui.onmessage = async (msg: MessageToPlugin) => {
   if (msg.type === "renderStart") {
     console.log(msg);
@@ -20,27 +22,21 @@ figma.ui.onmessage = async (msg: MessageToPlugin) => {
       return;
     }
 
+    targetNode = node;
+
     postMessageToUI({
       type: "render",
       width: node.width,
       height: node.height,
     });
   } else if (msg.type === "renderFinish") {
-    console.log(msg.payload);
+    if (targetNode) {
+      const img = await figma.createImage(new Uint8Array(msg.payload));
+      console.log(img.hash);
 
-    const selection = figma.currentPage.selection;
-    if (!selection.length) {
-      return;
+      targetNode.fills = [
+        { type: "IMAGE", imageHash: img.hash, scaleMode: "FILL" },
+      ];
     }
-
-    const node = selection[0];
-    if (node.type !== "FRAME") {
-      return;
-    }
-
-    const img = await figma.createImage(new Uint8Array(msg.payload));
-    console.log(img.hash);
-
-    node.fills = [{ type: "IMAGE", imageHash: img.hash, scaleMode: "FILL" }];
   }
 };
