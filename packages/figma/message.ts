@@ -1,19 +1,13 @@
-import type * as hast from "hast";
-
 export type MessageToPlugin =
   | {
       type: "ready";
     }
   | {
-      type: "notify";
-      data: string;
+      type: "renderFinish";
+      payload: ArrayBuffer;
     };
 
 export type MessageToUI = {
   type: "change";
-  data: hast.Root;
-  sizes: {
-    width: number;
-    height: number;
-  }[];
+  // TODO
 };

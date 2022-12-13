@@ -1,4 +1,4 @@
-import { createRef, useState } from "react";
+import { createRef, useEffect, useState } from "react";
 import reactLogo from "./assets/react.svg";
 import "./App.css";
 import * as htmlToImage from "html-to-image";
@@ -8,6 +8,27 @@ function App() {
   const [count, setCount] = useState(0);
 
   const ref = createRef<HTMLDivElement>();
+
+  useEffect(() => {
+    const onMessage = async (event: MessageEvent) => {
+      console.log(event.data);
+
+      const png = await (await htmlToImage.toBlob(ref.current!))?.arrayBuffer();
+
+      window.parent.postMessage(
+        {
+          type: "renderFinish",
+          payload: png,
+        },
+        "*"
+      );
+    };
+
+    window.addEventListener("message", onMessage);
+    return () => {
+      window.removeEventListener("message", onMessage);
+    };
+  }, []);
 
   return (
     <div className="App" ref={ref}>
