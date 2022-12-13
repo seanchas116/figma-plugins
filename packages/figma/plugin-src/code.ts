@@ -58,11 +58,16 @@ const debounce = (fn: (...args: any[]) => void, delay: number) => {
 
 const onChange = debounce((event: DocumentChangeEvent) => {
   for (const change of event.documentChanges) {
+    console.log(change);
     if (
       change.type === "PROPERTY_CHANGE" &&
       change.node.type === "FRAME" &&
       !change.node.removed
     ) {
+      if (change.properties.includes("fills")) {
+        continue;
+      }
+
       const node = change.node;
       if (node.getPluginData("mark") === "true") {
         targetNode = node;

@@ -50,9 +50,16 @@ export const App: React.FC = () => {
         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         onClick={handleClick}
       >
-        Render
+        Attach
       </button>
-      <iframe ref={iframeRef} src="http://localhost:5173" />
+      <iframe
+        style={{
+          position: "fixed",
+          left: "-1000px",
+        }}
+        ref={iframeRef}
+        src="http://localhost:5173"
+      />
     </div>
   );
 };
