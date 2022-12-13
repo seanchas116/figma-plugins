@@ -33,5 +33,5 @@ const plugin = (): Plugin => {
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), plugin()],
+  plugins: [react()],
 });
