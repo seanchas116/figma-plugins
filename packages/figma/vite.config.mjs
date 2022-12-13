@@ -1,11 +1,10 @@
 import { defineConfig } from "vite";
 import { viteSingleFile } from "vite-plugin-singlefile";
-import macaron from "@macaron-elements/loader-vite";
 
 // https://vitejs.dev/config/
 export default defineConfig({
   root: "./ui-src",
-  plugins: [viteSingleFile(), macaron()],
+  plugins: [viteSingleFile()],
   // build: {
   //   target: "esnext",
   //   assetsInlineLimit: 100000000,
