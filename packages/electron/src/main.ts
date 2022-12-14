@@ -1,7 +1,7 @@
 // Modules to control application life and create native browser window
-const { app, BrowserWindow } = require("electron");
-const path = require("path");
-const childProcess = require("child_process");
+import { app, BrowserWindow } from "electron";
+import * as path from "path";
+import * as childProcess from "child_process";
 
 const createWindow = () => {
   // Create the browser window.
@@ -43,8 +43,8 @@ app.on("window-all-closed", () => {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
 
-const child = childProcess.fork("server.js", [], {
+const child = childProcess.fork(path.resolve(__dirname, "server.js"), [], {
   env: {
-    ELECTRON_RUN_AS_NODE: 1,
+    ELECTRON_RUN_AS_NODE: "1",
   },
 });
