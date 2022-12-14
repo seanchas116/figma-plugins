@@ -3,12 +3,13 @@ import { createRef } from "preact";
 import { useEffect } from "preact/hooks";
 import { MessageToPlugin, MessageToUI } from "../message";
 import type { AppRouter } from "../../electron/src/server";
+import { Buffer } from "buffer";
 
 function postMessageToPlugin(data: MessageToPlugin): void {
   parent.postMessage({ pluginMessage: data }, "*");
 }
 
-async function postMessageToElectron() {
+async function renderInElectron(width: number, height: number) {
   const trpc = createTRPCProxyClient<AppRouter>({
     links: [
       httpBatchLink({
@@ -20,10 +21,19 @@ async function postMessageToElectron() {
   console.log("call tRPC");
 
   const res = await trpc.capture.query({
-    width: 100,
-    height: 100,
+    width,
+    height,
   });
   console.log(res);
+  const base64 = res.dataURL.replace(/^data:image\/png;base64,/, "");
+  const buffer = Buffer.from(base64, "base64");
+
+  console.log(buffer);
+
+  postMessageToPlugin({
+    type: "renderFinish",
+    payload: buffer,
+  });
 }
 
 export const App: React.FC = () => {
@@ -38,30 +48,13 @@ export const App: React.FC = () => {
     postMessageToPlugin({
       type: "renderStart",
     });
-
-    postMessageToElectron();
   };
 
   useEffect(() => {
-    window.addEventListener("message", (event) => {
+    window.addEventListener("message", async (event) => {
       if (event.data.pluginMessage) {
         const message = event.data.pluginMessage as MessageToUI;
-
-        iframeRef.current!.contentWindow?.postMessage(
-          {
-            type: "iframe:render",
-            width: message.width,
-            height: message.height,
-          },
-          "*"
-        );
-      }
-
-      if (event.data.type === "iframe:renderFinish") {
-        postMessageToPlugin({
-          type: "renderFinish",
-          payload: event.data.payload,
-        });
+        await renderInElectron(message.width, message.height);
       }
     });
   }, []);

@@ -45,7 +45,7 @@ const appRouter = t.router({
         height: z.number(),
       })
     )
-    .query(async (req) => {
+    .query<MessageToServer["payload"]>(async (req) => {
       console.log(req.input);
       return await new Promise((resolve) => {
         const requestID = Math.random();

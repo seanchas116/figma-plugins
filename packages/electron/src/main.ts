@@ -117,8 +117,8 @@ serverProcess.on("message", (msg: MessageFromServer) => {
         type: "electron:render",
         requestID: msg.requestID,
         payload: {
-          width: 100,
-          height: 100,
+          width: msg.payload.width,
+          height: msg.payload.height,
         },
       });
       break;
