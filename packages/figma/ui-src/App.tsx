@@ -1,9 +1,29 @@
+import { createTRPCProxyClient, httpBatchLink } from "@trpc/client";
 import { createRef } from "preact";
 import { useEffect } from "preact/hooks";
 import { MessageToPlugin, MessageToUI } from "../message";
+import type { AppRouter } from "../../electron/src/server";
 
 function postMessageToPlugin(data: MessageToPlugin): void {
   parent.postMessage({ pluginMessage: data }, "*");
+}
+
+async function postMessageToElectron() {
+  const trpc = createTRPCProxyClient<AppRouter>({
+    links: [
+      httpBatchLink({
+        url: "http://localhost:3000/trpc",
+      }),
+    ],
+  });
+
+  console.log("call tRPC");
+
+  const res = await trpc.capture.query({
+    width: 100,
+    height: 100,
+  });
+  console.log(res);
 }
 
 export const App: React.FC = () => {
@@ -18,6 +38,8 @@ export const App: React.FC = () => {
     postMessageToPlugin({
       type: "renderStart",
     });
+
+    postMessageToElectron();
   };
 
   useEffect(() => {
