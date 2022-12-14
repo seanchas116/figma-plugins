@@ -33,8 +33,11 @@ const createWindow = () => {
   setTimeout(() => {
     mainWindow.webContents.send("postMessage", {
       type: "electron:render",
-      width: 100,
-      height: 100,
+      requestID: Math.random(),
+      payload: {
+        width: 100,
+        height: 100,
+      },
     });
   }, 1000);
 

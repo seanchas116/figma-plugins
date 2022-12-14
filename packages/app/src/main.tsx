@@ -60,7 +60,10 @@ const onMessage = async (event: MessageEvent) => {
       document.body.append(root);
       const reactRoot = ReactDOMClient.createRoot(root);
       reactRoot.render(
-        <Button width={event.data.width} height={event.data.height} />
+        <Button
+          width={event.data.payload.width}
+          height={event.data.payload.height}
+        />
       );
       await new Promise<void>((resolve) => {
         requestIdleCallback(() => resolve());
@@ -72,6 +75,7 @@ const onMessage = async (event: MessageEvent) => {
 
       window.postMessage({
         type: "electron:renderFinish",
+        requestID: event.data.requestID,
         left: button.offsetLeft,
         top: button.offsetTop,
         width: button.offsetWidth,
