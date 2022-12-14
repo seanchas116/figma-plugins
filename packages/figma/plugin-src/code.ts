@@ -39,6 +39,10 @@ figma.ui.onmessage = async (msg: MessageToPlugin) => {
       ];
 
       targetNode.setPluginData("mark", "true");
+      console.log("relaunchData");
+      targetNode.setRelaunchData({
+        edit: "",
+      });
     }
   }
 };
