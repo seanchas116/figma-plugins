@@ -48,3 +48,22 @@ const child = childProcess.fork(path.resolve(__dirname, "server.js"), [], {
     ELECTRON_RUN_AS_NODE: "1",
   },
 });
+
+const cleanup = () => {
+  const pids = [child.pid!];
+  console.log(pids);
+  for (const pid of pids) {
+    try {
+      process.kill(pid);
+    } catch (e) {
+      console.error(e);
+    }
+  }
+};
+
+process.on("SIGINT", cleanup);
+process.on("SIGHUP", cleanup);
+process.on("SIGQUIT", cleanup);
+process.on("SIGTERM", cleanup);
+process.on("uncaughtException", cleanup);
+process.on("exit", cleanup);
