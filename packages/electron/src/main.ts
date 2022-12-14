@@ -1,5 +1,5 @@
 // Modules to control application life and create native browser window
-import { app, BrowserWindow, ipcMain } from "electron";
+import { app, BrowserWindow, clipboard, ipcMain } from "electron";
 import path from "path";
 import childProcess from "child_process";
 
@@ -16,8 +16,17 @@ const createWindow = () => {
   // and load the index.html of the app.
   mainWindow.loadURL("http://localhost:5173");
 
-  ipcMain.on("postMessage", (event, msg) => {
+  ipcMain.on("postMessage", async (event, msg) => {
     console.log(msg);
+
+    const image = await mainWindow.webContents.capturePage({
+      x: msg.left,
+      y: msg.top,
+      width: msg.width,
+      height: msg.height,
+    });
+
+    clipboard.writeImage(image);
   });
 
   setTimeout(() => {
