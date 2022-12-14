@@ -1,0 +1,2 @@
+# TypeScript annoyingly compiles imported files outside of the rootDir
+/message.js
