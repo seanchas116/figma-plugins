@@ -1,6 +1,5 @@
 import React from "react";
 import ReactDOMClient from "react-dom/client";
-import ReactDOM from "react-dom";
 import * as htmlToImage from "html-to-image";
 import App from "./App";
 import { Button } from "./Button";
@@ -23,14 +22,12 @@ const onMessage = async (event: MessageEvent) => {
 
   const root = document.createElement("div");
   document.body.append(root);
+  const reactRoot = ReactDOMClient.createRoot(root);
+  reactRoot.render(
+    <Button width={event.data.width} height={event.data.height} />
+  );
   await new Promise<void>((resolve) => {
-    ReactDOM.render(
-      <Button width={event.data.width} height={event.data.height} />,
-      root,
-      () => {
-        resolve();
-      }
-    );
+    requestIdleCallback(() => resolve());
   });
   const button = root.firstElementChild as HTMLElement;
   console.log(button);
