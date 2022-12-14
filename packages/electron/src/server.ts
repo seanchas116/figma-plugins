@@ -4,6 +4,38 @@ import { initTRPC } from "@trpc/server";
 import * as trpcExpress from "@trpc/server/adapters/express";
 import { z } from "zod";
 
+export type MessageToServer = {
+  type: "captureEnd";
+  requestID: number;
+  payload: {
+    width: number;
+    height: number;
+    dataURL: string;
+  };
+};
+
+export type MessageFromServer = {
+  type: "capture";
+  requestID: number;
+  payload: {
+    width: number;
+    height: number;
+  };
+};
+
+const messageHandlers = new Map<
+  number,
+  (payload: MessageToServer["payload"]) => void
+>();
+
+process.on("message", (msg: MessageToServer) => {
+  const handler = messageHandlers.get(msg.requestID);
+  if (handler) {
+    handler(msg.payload);
+    messageHandlers.delete(msg.requestID);
+  }
+});
+
 const t = initTRPC.create();
 const appRouter = t.router({
   capture: t.procedure
@@ -13,12 +45,25 @@ const appRouter = t.router({
         height: z.number(),
       })
     )
-    .query((req) => {
+    .query(async (req) => {
       console.log(req.input);
-      return {
-        width: req.input.width,
-        height: req.input.height,
-      };
+      return await new Promise((resolve) => {
+        const requestID = Math.random();
+        console.log(requestID);
+
+        const message: MessageFromServer = {
+          type: "capture",
+          requestID,
+          payload: req.input,
+        };
+        console.log(process.send);
+        process.send?.(message);
+
+        messageHandlers.set(requestID, (payload) => {
+          console.log(payload);
+          resolve(payload);
+        });
+      });
     }),
 });
 export type AppRouter = typeof appRouter;

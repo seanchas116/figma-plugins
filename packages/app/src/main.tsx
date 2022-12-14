@@ -4,6 +4,7 @@ import * as htmlToImage from "html-to-image";
 import App from "./App";
 import { Button } from "./Button";
 import "./index.css";
+import { MessageFromApp, MessageToApp } from "./message";
 
 ReactDOMClient.createRoot(
   document.getElementById("root") as HTMLElement
@@ -46,7 +47,7 @@ const onMessage = async (event: MessageEvent) => {
       break;
     }
     case "electron:render": {
-      console.log(event.data);
+      const data = event.data as MessageToApp;
 
       if (oldRenderRoot) {
         oldRenderRoot.unmount();
@@ -60,10 +61,7 @@ const onMessage = async (event: MessageEvent) => {
       document.body.append(root);
       const reactRoot = ReactDOMClient.createRoot(root);
       reactRoot.render(
-        <Button
-          width={event.data.payload.width}
-          height={event.data.payload.height}
-        />
+        <Button width={data.payload.width} height={data.payload.height} />
       );
       await new Promise<void>((resolve) => {
         requestIdleCallback(() => resolve());
@@ -73,15 +71,17 @@ const onMessage = async (event: MessageEvent) => {
 
       oldRenderRoot = reactRoot;
 
-      window.postMessage({
-        type: "electron:renderFinish",
-        requestID: event.data.requestID,
-        left: button.offsetLeft,
-        top: button.offsetTop,
-        width: button.offsetWidth,
-        height: button.offsetHeight,
-      });
-
+      const message: MessageFromApp = {
+        type: "electron:renderEnd",
+        requestID: data.requestID,
+        payload: {
+          x: button.offsetLeft,
+          y: button.offsetTop,
+          width: button.offsetWidth,
+          height: button.offsetHeight,
+        },
+      };
+      window.postMessage(message, "*");
       break;
     }
   }

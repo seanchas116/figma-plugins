@@ -2,6 +2,12 @@
 import { app, BrowserWindow, clipboard, ipcMain } from "electron";
 import path from "path";
 import childProcess from "child_process";
+import type { MessageFromServer, MessageToServer } from "./server";
+// @ts-ignore
+import type { MessageFromApp } from "../../app/src/message";
+
+let _mainWindow: BrowserWindow | undefined;
+let _serverProcess: childProcess.ChildProcess | undefined;
 
 const createWindow = () => {
   // Create the browser window.
@@ -13,33 +19,33 @@ const createWindow = () => {
       preload: path.join(__dirname, "preload.js"),
     },
   });
+  _mainWindow = mainWindow;
 
   // and load the index.html of the app.
   mainWindow.loadURL("http://localhost:5173");
 
   ipcMain.on("postMessage", async (event, msg) => {
-    console.log(msg);
-
-    const image = await mainWindow.webContents.capturePage({
-      x: msg.left,
-      y: msg.top,
-      width: msg.width,
-      height: msg.height,
-    });
-
-    clipboard.writeImage(image);
+    if (msg.type === "electron:renderEnd") {
+      const message = msg as MessageFromApp;
+      const image = await mainWindow.webContents.capturePage({
+        x: message.payload.x,
+        y: message.payload.y,
+        width: message.payload.width,
+        height: message.payload.height,
+      });
+      const dataURL = await image.toDataURL();
+      const messageToServer: MessageToServer = {
+        type: "captureEnd",
+        requestID: message.requestID,
+        payload: {
+          width: message.payload.width,
+          height: message.payload.height,
+          dataURL,
+        },
+      };
+      _serverProcess?.send?.(messageToServer);
+    }
   });
-
-  setTimeout(() => {
-    mainWindow.webContents.send("postMessage", {
-      type: "electron:render",
-      requestID: Math.random(),
-      payload: {
-        width: 100,
-        height: 100,
-      },
-    });
-  }, 1000);
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
@@ -68,14 +74,19 @@ app.on("window-all-closed", () => {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
 
-const child = childProcess.fork(path.resolve(__dirname, "server.js"), [], {
-  env: {
-    ELECTRON_RUN_AS_NODE: "1",
-  },
-});
+const serverProcess = childProcess.fork(
+  path.resolve(__dirname, "server.js"),
+  [],
+  {
+    env: {
+      ELECTRON_RUN_AS_NODE: "1",
+    },
+  }
+);
+_serverProcess = serverProcess;
 
 const cleanup = () => {
-  const pids = [child.pid!];
+  const pids = [serverProcess.pid!];
   console.log(pids);
   for (const pid of pids) {
     try {
@@ -97,3 +108,20 @@ const quitEvents = [
 for (const event of quitEvents) {
   process.on(event, cleanup);
 }
+
+serverProcess.on("message", (msg: MessageFromServer) => {
+  console.log(msg);
+  switch (msg.type) {
+    case "capture": {
+      _mainWindow?.webContents.send("postMessage", {
+        type: "electron:render",
+        requestID: msg.requestID,
+        payload: {
+          width: 100,
+          height: 100,
+        },
+      });
+      break;
+    }
+  }
+});
