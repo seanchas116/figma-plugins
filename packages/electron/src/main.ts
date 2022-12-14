@@ -61,9 +61,14 @@ const cleanup = () => {
   }
 };
 
-process.on("SIGINT", cleanup);
-process.on("SIGHUP", cleanup);
-process.on("SIGQUIT", cleanup);
-process.on("SIGTERM", cleanup);
-process.on("uncaughtException", cleanup);
-process.on("exit", cleanup);
+const quitEvents = [
+  "SIGINT",
+  "SIGHUP",
+  "SIGQUIT",
+  "SIGTERM",
+  "uncaughtException",
+  "exit",
+];
+for (const event of quitEvents) {
+  process.on(event, cleanup);
+}
