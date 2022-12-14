@@ -13,36 +13,74 @@ ReactDOMClient.createRoot(
   </React.StrictMode>
 );
 
+let oldRenderRoot: ReactDOMClient.Root | undefined;
+
 const onMessage = async (event: MessageEvent) => {
-  if (event.data.type !== "iframe:render") {
-    return;
+  switch (event.data.type) {
+    case "iframe:render": {
+      console.log(event.data);
+
+      const root = document.createElement("div");
+      document.body.append(root);
+      const reactRoot = ReactDOMClient.createRoot(root);
+      reactRoot.render(
+        <Button width={event.data.width} height={event.data.height} />
+      );
+      await new Promise<void>((resolve) => {
+        requestIdleCallback(() => resolve());
+      });
+      const button = root.firstElementChild as HTMLElement;
+      console.log(button);
+
+      const png = await (await htmlToImage.toBlob(button))?.arrayBuffer();
+
+      root.remove();
+
+      window.parent.postMessage(
+        {
+          type: "iframe:renderFinish",
+          payload: png,
+        },
+        "*"
+      );
+      break;
+    }
+    case "electron:render": {
+      console.log(event.data);
+
+      if (oldRenderRoot) {
+        oldRenderRoot.unmount();
+      }
+      if (document.getElementById("renderRoot")) {
+        document.getElementById("renderRoot")?.remove();
+      }
+
+      const root = document.createElement("div");
+      root.id = "renderRoot";
+      document.body.append(root);
+      const reactRoot = ReactDOMClient.createRoot(root);
+      reactRoot.render(
+        <Button width={event.data.width} height={event.data.height} />
+      );
+      await new Promise<void>((resolve) => {
+        requestIdleCallback(() => resolve());
+      });
+      const button = root.firstElementChild as HTMLElement;
+      console.log(button);
+
+      oldRenderRoot = reactRoot;
+
+      window.postMessage({
+        type: "electron:renderFinish",
+        left: button.offsetLeft,
+        top: button.offsetTop,
+        width: button.offsetWidth,
+        height: button.offsetHeight,
+      });
+
+      break;
+    }
   }
-
-  console.log(event.data);
-
-  const root = document.createElement("div");
-  document.body.append(root);
-  const reactRoot = ReactDOMClient.createRoot(root);
-  reactRoot.render(
-    <Button width={event.data.width} height={event.data.height} />
-  );
-  await new Promise<void>((resolve) => {
-    requestIdleCallback(() => resolve());
-  });
-  const button = root.firstElementChild as HTMLElement;
-  console.log(button);
-
-  const png = await (await htmlToImage.toBlob(button))?.arrayBuffer();
-
-  root.remove();
-
-  window.parent.postMessage(
-    {
-      type: "iframe:renderFinish",
-      payload: png,
-    },
-    "*"
-  );
 };
 
 window.addEventListener("message", onMessage);

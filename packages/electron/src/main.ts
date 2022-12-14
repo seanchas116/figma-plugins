@@ -22,7 +22,7 @@ const createWindow = () => {
 
   setTimeout(() => {
     mainWindow.webContents.send("postMessage", {
-      type: "iframe:render",
+      type: "electron:render",
       width: 100,
       height: 100,
     });
