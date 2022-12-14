@@ -26,6 +26,7 @@
   "devDependencies": {
     "@figma/plugin-typings": "^1.57.1",
     "@types/lodash-es": "^4.17.6",
+    "@types/node": "^18.11.15",
     "concurrently": "^7.6.0",
     "esbuild": "^0.16.4",
     "postcss": "^8.4.20",

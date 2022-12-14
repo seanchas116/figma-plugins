@@ -20,7 +20,9 @@ function App() {
       button.innerText = "Button";
       document.body.append(button);
 
+      console.time("htmlToImage");
       const png = await (await htmlToImage.toBlob(button))?.arrayBuffer();
+      console.timeEnd("htmlToImage");
 
       button.remove();
 
