@@ -44,7 +44,7 @@ figma.ui.onmessage = async (msg: MessageToPlugin) => {
 };
 
 const debounce = (fn: (...args: any[]) => void, delay: number) => {
-  let timer: number | undefined;
+  let timer: NodeJS.Timeout | undefined;
   return (...args: any[]) => {
     if (timer) {
       clearTimeout(timer);
