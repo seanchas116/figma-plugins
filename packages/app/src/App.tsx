@@ -21,7 +21,8 @@ function App() {
       document.body.append(button);
 
       console.time("htmlToImage");
-      const png = await (await htmlToImage.toBlob(button))?.arrayBuffer();
+      const pngURL = await htmlToImage.toPng(button);
+      const pngBuffer = await fetch(pngURL).then((res) => res.arrayBuffer());
       console.timeEnd("htmlToImage");
 
       button.remove();
@@ -29,7 +30,7 @@ function App() {
       window.parent.postMessage(
         {
           type: "iframe:renderFinish",
-          payload: png,
+          payload: pngBuffer,
         },
         "*"
       );
