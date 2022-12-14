@@ -1,5 +1,5 @@
 // Modules to control application life and create native browser window
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, ipcMain } from "electron";
 import path from "path";
 import childProcess from "child_process";
 
@@ -14,7 +14,19 @@ const createWindow = () => {
   });
 
   // and load the index.html of the app.
-  mainWindow.loadFile("index.html");
+  mainWindow.loadURL("http://localhost:5173");
+
+  ipcMain.on("postMessage", (event, msg) => {
+    console.log(msg);
+  });
+
+  setTimeout(() => {
+    mainWindow.webContents.send("postMessage", {
+      type: "iframe:render",
+      width: 100,
+      height: 100,
+    });
+  }, 1000);
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
