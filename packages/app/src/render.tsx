@@ -1,6 +1,7 @@
 import * as htmlToImage from "html-to-image";
 import { Button } from "./stories/Button";
 import ReactDOMClient from "react-dom/client";
+import { MessageFromRenderIFrame, MessageToRenderIFrame } from "./message";
 
 const root = document.getElementById("root") as HTMLElement;
 const reactRoot = ReactDOMClient.createRoot(root);
@@ -30,27 +31,28 @@ async function renderComponent(
 }
 
 const onMessage = async (event: MessageEvent) => {
-  if (event.data.type !== "iframe:render") {
+  if (event.source !== window.parent) {
     return;
   }
 
-  console.log(event.data);
+  const message: MessageToRenderIFrame = event.data;
 
   const pngBuffer = await renderComponent(
     <Button primary label={Date.now().toString()} />,
     {
-      width: event.data.width,
-      height: event.data.height,
+      width: message.payload.width,
+      height: message.payload.height,
     }
   );
 
-  window.parent.postMessage(
-    {
-      type: "iframe:renderFinish",
-      payload: pngBuffer,
+  const doneMessage: MessageFromRenderIFrame = {
+    type: "iframe:renderDone",
+    payload: {
+      png: pngBuffer,
     },
-    "*"
-  );
+  };
+
+  window.parent.postMessage(doneMessage, "*");
 };
 
 window.addEventListener("message", onMessage);

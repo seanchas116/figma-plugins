@@ -1,6 +1,10 @@
 import { createRef } from "preact";
 import { useEffect } from "preact/hooks";
 import { MessageToPlugin, MessageToUI } from "../message";
+import type {
+  MessageFromRenderIFrame,
+  MessageToRenderIFrame,
+} from "../../app/src/message";
 
 function postMessageToPlugin(data: MessageToPlugin): void {
   parent.postMessage({ pluginMessage: data }, "*");
@@ -21,24 +25,29 @@ export const App: React.FC = () => {
   };
 
   useEffect(() => {
+    const iframe = iframeRef.current!;
+
     window.addEventListener("message", (event) => {
       if (event.data.pluginMessage) {
         const message = event.data.pluginMessage as MessageToUI;
 
-        iframeRef.current!.contentWindow?.postMessage(
-          {
-            type: "iframe:render",
+        const renderMessage: MessageToRenderIFrame = {
+          type: "iframe:render",
+          payload: {
+            component: "Button",
+            props: {},
             width: message.width,
             height: message.height,
           },
-          "*"
-        );
+        };
+        iframe.contentWindow?.postMessage(renderMessage, "*");
       }
 
-      if (event.data.type === "iframe:renderFinish") {
+      if (event.source === iframe.contentWindow) {
+        const message: MessageFromRenderIFrame = event.data;
         postMessageToPlugin({
           type: "renderFinish",
-          payload: event.data.payload,
+          payload: message.payload.png,
         });
       }
     });
