@@ -1,7 +1,7 @@
 export type MessageToRenderIFrame = {
   type: "iframe:render";
   payload: {
-    component: string;
+    name: string;
     props: Record<string, any>;
     width: number;
     height: number;

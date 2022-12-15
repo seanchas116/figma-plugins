@@ -21,7 +21,7 @@ export const RenderIFrame: React.FC = () => {
           const renderMessage: MessageToRenderIFrame = {
             type: "iframe:render",
             payload: {
-              component: "Button",
+              name: "Button",
               props: {},
               width: message.width,
               height: message.height,
