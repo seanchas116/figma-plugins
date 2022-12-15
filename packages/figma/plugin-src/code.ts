@@ -1,3 +1,4 @@
+import { ComponentState } from "../data";
 import { MessageToPlugin, MessageToUI } from "../message";
 
 figma.showUI(__html__, { width: 240, height: 240 });
@@ -54,12 +55,6 @@ figma.ui.onmessage = async (msg: MessageToPlugin) => {
         targetNode.fills = [
           { type: "IMAGE", imageHash: img.hash, scaleMode: "FILL" },
         ];
-
-        targetNode.setPluginData("component", "true");
-        console.log("relaunchData");
-        targetNode.setRelaunchData({
-          edit: "",
-        });
       }
 
       break;
@@ -80,7 +75,7 @@ const debounce = (fn: (...args: any[]) => void, delay: number) => {
   };
 };
 
-const onChange = debounce((event: DocumentChangeEvent) => {
+const onDocumentChange = debounce((event: DocumentChangeEvent) => {
   for (const change of event.documentChanges) {
     console.log(change);
     if (
@@ -91,7 +86,7 @@ const onChange = debounce((event: DocumentChangeEvent) => {
         change.properties.includes("height"))
     ) {
       const node = change.node;
-      if (node.getPluginData("mark") === "true") {
+      if (node.getPluginData("component")) {
         targetNode = node;
         postMessageToUI({
           type: "render",
@@ -103,4 +98,26 @@ const onChange = debounce((event: DocumentChangeEvent) => {
   }
 }, 200);
 
-figma.on("documentchange", onChange);
+const onSelectionChange = () => {
+  const selection = figma.currentPage.selection;
+
+  let componentState: ComponentState | undefined;
+
+  if (selection.length > 0) {
+    const current = selection[0];
+    const data = current.getPluginData("component");
+    if (data) {
+      componentState = JSON.parse(data) as ComponentState;
+    }
+  }
+
+  postMessageToUI({
+    type: "componentChanged",
+    payload: {
+      component: componentState,
+    },
+  });
+};
+
+figma.on("documentchange", onDocumentChange);
+figma.on("selectionchange", onSelectionChange);
