@@ -32,8 +32,8 @@ export const RenderIFrame: React.FC = () => {
       if (event.source === iframe.contentWindow) {
         const message: MessageFromRenderIFrame = event.data;
         postMessageToPlugin({
-          type: "renderFinish",
-          payload: message.payload.png,
+          type: "renderDone",
+          payload: message.payload,
         });
       }
     });

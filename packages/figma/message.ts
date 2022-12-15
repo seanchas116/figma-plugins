@@ -6,8 +6,10 @@ export type MessageToPlugin =
       type: "renderStart";
     }
   | {
-      type: "renderFinish";
-      payload: ArrayBuffer;
+      type: "renderDone";
+      payload: {
+        png: ArrayBuffer;
+      };
     };
 
 export type MessageToUI = {
