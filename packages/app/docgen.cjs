@@ -2,6 +2,10 @@ const docgen = require("react-docgen-typescript");
 
 const options = {
   savePropValueAsString: true,
+  componentNameResolver: (exp, source) => {
+    console.log(exp, source);
+    return exp.name;
+  },
 };
 
 // Parse a file for docgen info
