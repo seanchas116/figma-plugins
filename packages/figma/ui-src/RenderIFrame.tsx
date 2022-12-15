@@ -41,5 +41,11 @@ export const RenderIFrame: React.FC = () => {
     });
   }, []);
 
-  return <iframe ref={ref} src="http://localhost:5173/render.html" />;
+  return (
+    <iframe
+      className="border border-gray-300"
+      ref={ref}
+      src="http://localhost:5173/render.html"
+    />
+  );
 };
