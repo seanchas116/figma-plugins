@@ -1,7 +1,30 @@
 import { RenderIFrame } from "./RenderIFrame";
 import { postMessageToPlugin } from "./common";
+import { useEffect, useState } from "preact/hooks";
+import { MessageToUI } from "../message";
+
+interface ComponentState {
+  name?: string;
+  props: Record<string, any>;
+}
 
 export const App: React.FC = () => {
+  const [component, setComponent] = useState<ComponentState>({
+    name: undefined,
+    props: {},
+  });
+
+  useEffect(() => {
+    window.addEventListener("message", (event) => {
+      if (event.data.pluginMessage) {
+        const message = event.data.pluginMessage as MessageToUI;
+        if (message.type === "componentChanged") {
+          setComponent(message.payload);
+        }
+      }
+    });
+  }, []);
+
   const handleClick = () => {
     postMessageToPlugin({
       type: "updateComponent",
@@ -14,7 +37,22 @@ export const App: React.FC = () => {
 
   return (
     <div className="p-2 flex flex-col gap-2 text-xs">
-      <select className="border border-gray-300 rounded-md shadow-sm py-1 px-1 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+      <select
+        className="border border-gray-300 rounded-md shadow-sm py-1 px-1 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+        value={component.name ?? ""}
+        onChange={(event) => {
+          console.log("change");
+          const name = event.currentTarget.value;
+
+          postMessageToPlugin({
+            type: "updateComponent",
+            payload: {
+              ...component,
+              name,
+            },
+          });
+        }}
+      >
         <option value="">Not Attached</option>
         <option value="Button">Button</option>
         <option value="Checkbox">Checkbox</option>
