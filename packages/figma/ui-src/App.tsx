@@ -70,12 +70,12 @@ export const App: React.FC = () => {
           />
         </dd>
       </dl>
-      <button
+      {/* <button
         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         onClick={handleClick}
       >
         Attach
-      </button>
+      </button> */}
       <RenderIFrame />
     </div>
   );
