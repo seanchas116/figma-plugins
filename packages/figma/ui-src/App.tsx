@@ -52,7 +52,7 @@ export const App: React.FC = () => {
       >
         Attach
       </button>
-      <iframe ref={iframeRef} src="http://localhost:5173" />
+      <iframe ref={iframeRef} src="http://localhost:5173/render.html" />
     </div>
   );
 };
