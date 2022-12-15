@@ -2,11 +2,7 @@ import { RenderIFrame } from "./RenderIFrame";
 import { postMessageToPlugin } from "./common";
 import { useEffect, useState } from "preact/hooks";
 import { MessageToUI } from "../message";
-
-interface ComponentState {
-  name?: string;
-  props: Record<string, any>;
-}
+import { ComponentState } from "../data";
 
 export const App: React.FC = () => {
   const [component, setComponent] = useState<ComponentState>({
