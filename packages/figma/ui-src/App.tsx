@@ -1,57 +1,12 @@
-import { createRef } from "preact";
-import { useEffect } from "preact/hooks";
-import { MessageToPlugin, MessageToUI } from "../message";
-import type {
-  MessageFromRenderIFrame,
-  MessageToRenderIFrame,
-} from "../../app/src/message";
-
-function postMessageToPlugin(data: MessageToPlugin): void {
-  parent.postMessage({ pluginMessage: data }, "*");
-}
+import { RenderIFrame } from "./RenderIFrame";
+import { postMessageToPlugin } from "./common";
 
 export const App: React.FC = () => {
-  const iframeRef = createRef<HTMLIFrameElement>();
-
   const handleClick = () => {
-    const iframe = iframeRef.current;
-    if (!iframe) {
-      return;
-    }
-
     postMessageToPlugin({
       type: "renderStart",
     });
   };
-
-  useEffect(() => {
-    const iframe = iframeRef.current!;
-
-    window.addEventListener("message", (event) => {
-      if (event.data.pluginMessage) {
-        const message = event.data.pluginMessage as MessageToUI;
-
-        const renderMessage: MessageToRenderIFrame = {
-          type: "iframe:render",
-          payload: {
-            component: "Button",
-            props: {},
-            width: message.width,
-            height: message.height,
-          },
-        };
-        iframe.contentWindow?.postMessage(renderMessage, "*");
-      }
-
-      if (event.source === iframe.contentWindow) {
-        const message: MessageFromRenderIFrame = event.data;
-        postMessageToPlugin({
-          type: "renderFinish",
-          payload: message.payload.png,
-        });
-      }
-    });
-  }, []);
 
   return (
     <div className="p-2 flex flex-col gap-2 text-xs">
@@ -80,7 +35,7 @@ export const App: React.FC = () => {
       >
         Attach
       </button>
-      <iframe ref={iframeRef} src="http://localhost:5173/render.html" />
+      <RenderIFrame />
     </div>
   );
 };
