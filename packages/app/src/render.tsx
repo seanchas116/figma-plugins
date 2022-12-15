@@ -13,12 +13,18 @@ const onMessage = async (event: MessageEvent) => {
   document.body.append(root);
 
   const reactRoot = ReactDOMClient.createRoot(root);
-  reactRoot.render(<Button label="Button" />);
+  reactRoot.render(<Button primary label="Button" />);
 
   await new Promise((resolve) => requestIdleCallback(resolve));
 
   console.time("htmlToImage");
-  const pngURL = await htmlToImage.toPng(root.firstElementChild as HTMLElement);
+  const pngURL = await htmlToImage.toPng(
+    root.firstElementChild as HTMLElement,
+    {
+      width: event.data.width,
+      height: event.data.height,
+    }
+  );
   const pngBuffer = await fetch(pngURL).then((res) => res.arrayBuffer());
   console.timeEnd("htmlToImage");
 
