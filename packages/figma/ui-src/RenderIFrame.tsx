@@ -20,12 +20,7 @@ export const RenderIFrame: React.FC = () => {
         if (message.type === "render") {
           const renderMessage: MessageToRenderIFrame = {
             type: "iframe:render",
-            payload: {
-              name: "Button",
-              props: {},
-              width: message.width,
-              height: message.height,
-            },
+            payload: message.payload,
           };
           iframe.contentWindow?.postMessage(renderMessage, "*");
         }

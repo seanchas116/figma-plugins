@@ -11,6 +11,10 @@ let targetNode: FrameNode | undefined;
 
 figma.ui.onmessage = async (msg: MessageToPlugin) => {
   switch (msg.type) {
+    case "ready": {
+      onSelectionChange();
+      break;
+    }
     case "updateComponent": {
       console.log(msg);
 
@@ -28,13 +32,16 @@ figma.ui.onmessage = async (msg: MessageToPlugin) => {
 
       const componentData = msg.payload.component;
 
-      postMessageToUI({
-        type: "render",
-        width: node.width,
-        height: node.height,
-      });
-
       if (componentData) {
+        postMessageToUI({
+          type: "render",
+          payload: {
+            ...componentData,
+            width: node.width,
+            height: node.height,
+          },
+        });
+
         targetNode.setPluginData("component", JSON.stringify(componentData));
         targetNode.setRelaunchData({
           edit: "",
@@ -86,12 +93,16 @@ const onDocumentChange = debounce((event: DocumentChangeEvent) => {
         change.properties.includes("height"))
     ) {
       const node = change.node;
-      if (node.getPluginData("component")) {
+      const componentData = node.getPluginData("component");
+      if (componentData) {
         targetNode = node;
         postMessageToUI({
           type: "render",
-          width: node.width,
-          height: node.height,
+          payload: {
+            ...JSON.parse(componentData),
+            width: node.width,
+            height: node.height,
+          },
         });
       }
     }

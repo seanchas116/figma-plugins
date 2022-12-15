@@ -20,8 +20,12 @@ export type MessageToPlugin =
 export type MessageToUI =
   | {
       type: "render";
-      width: number;
-      height: number;
+      payload: {
+        name: string;
+        props: Record<string, any>;
+        width: number;
+        height: number;
+      };
     }
   | {
       type: "componentChanged";

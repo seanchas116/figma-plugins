@@ -18,14 +18,12 @@ export const App: React.FC = () => {
     });
   }, []);
 
-  const handleClick = () => {
+  const updateComponent = (component: ComponentState | undefined) => {
+    setComponent(component);
     postMessageToPlugin({
       type: "updateComponent",
       payload: {
-        component: {
-          name: "Button",
-          props: {},
-        },
+        component,
       },
     });
   };
@@ -36,20 +34,16 @@ export const App: React.FC = () => {
         className="border border-gray-300 rounded-md shadow-sm py-1 px-1 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
         value={component?.name ?? ""}
         onChange={(event) => {
-          console.log("change");
           const name = event.currentTarget.value;
 
-          postMessageToPlugin({
-            type: "updateComponent",
-            payload: {
-              component: name
-                ? {
-                    name,
-                    props: component?.props ?? {},
-                  }
-                : undefined,
-            },
-          });
+          updateComponent(
+            name
+              ? {
+                  name,
+                  props: component?.props ?? {},
+                }
+              : undefined
+          );
         }}
       >
         <option value="">Not Attached</option>
@@ -60,13 +54,70 @@ export const App: React.FC = () => {
       <dl className="flex flex-col gap-1">
         <dt className="text-gray-500">Primary</dt>
         <dd>
-          <input className="accent-indigo-500" type="checkbox" />
+          <input
+            className="accent-indigo-500"
+            type="checkbox"
+            checked={component?.props?.primary ?? false}
+            onChange={(event) => {
+              if (!component) {
+                return;
+              }
+              console.log("onchange");
+              const primary = event.currentTarget.checked;
+              updateComponent({
+                ...component,
+                props: {
+                  ...component.props,
+                  primary,
+                },
+              });
+            }}
+          />
+        </dd>
+        <dt className="text-gray-500">Size</dt>
+        <dd>
+          <select
+            className="border border-gray-300 rounded-md shadow-sm py-1 px-1 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+            value={component?.props?.size ?? "medium"}
+            onChange={(event) => {
+              if (!component) {
+                return;
+              }
+
+              const size = event.currentTarget.value;
+              updateComponent({
+                ...component,
+                props: {
+                  ...component.props,
+                  size,
+                },
+              });
+            }}
+          >
+            <option value="small">Small</option>
+            <option value="medium">Medium</option>
+            <option value="large">Large</option>
+          </select>
         </dd>
         <dt className="text-gray-500">Label</dt>
         <dd>
           <input
             className="border border-gray-300 rounded-md shadow-sm py-1 px-1 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
             type="text"
+            value={component?.props?.label ?? ""}
+            onChange={(event) => {
+              if (!component) {
+                return;
+              }
+              const label = event.currentTarget.value;
+              updateComponent({
+                ...component,
+                props: {
+                  ...component.props,
+                  label,
+                },
+              });
+            }}
           />
         </dd>
       </dl>

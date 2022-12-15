@@ -38,7 +38,8 @@ const onMessage = async (event: MessageEvent) => {
   const message: MessageToRenderIFrame = event.data;
 
   const pngBuffer = await renderComponent(
-    <Button primary label={Date.now().toString()} />,
+    // @ts-ignore
+    <Button {...message.payload.props} />,
     {
       width: message.payload.width,
       height: message.payload.height,
