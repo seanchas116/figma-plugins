@@ -10,7 +10,7 @@ let targetNode: FrameNode | undefined;
 
 figma.ui.onmessage = async (msg: MessageToPlugin) => {
   switch (msg.type) {
-    case "renderStart": {
+    case "updateComponent": {
       console.log(msg);
 
       const selection = figma.currentPage.selection;

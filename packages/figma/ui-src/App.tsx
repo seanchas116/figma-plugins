@@ -4,7 +4,11 @@ import { postMessageToPlugin } from "./common";
 export const App: React.FC = () => {
   const handleClick = () => {
     postMessageToPlugin({
-      type: "renderStart",
+      type: "updateComponent",
+      payload: {
+        name: "Button",
+        props: {},
+      },
     });
   };
 

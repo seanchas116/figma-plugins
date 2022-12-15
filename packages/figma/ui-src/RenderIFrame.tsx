@@ -17,16 +17,18 @@ export const RenderIFrame: React.FC = () => {
       if (event.data.pluginMessage) {
         const message = event.data.pluginMessage as MessageToUI;
 
-        const renderMessage: MessageToRenderIFrame = {
-          type: "iframe:render",
-          payload: {
-            component: "Button",
-            props: {},
-            width: message.width,
-            height: message.height,
-          },
-        };
-        iframe.contentWindow?.postMessage(renderMessage, "*");
+        if (message.type === "render") {
+          const renderMessage: MessageToRenderIFrame = {
+            type: "iframe:render",
+            payload: {
+              component: "Button",
+              props: {},
+              width: message.width,
+              height: message.height,
+            },
+          };
+          iframe.contentWindow?.postMessage(renderMessage, "*");
+        }
       }
 
       if (event.source === iframe.contentWindow) {

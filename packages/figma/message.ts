@@ -3,7 +3,11 @@ export type MessageToPlugin =
       type: "ready";
     }
   | {
-      type: "renderStart";
+      type: "updateComponent";
+      payload: {
+        name?: string;
+        props: Record<string, any>;
+      };
     }
   | {
       type: "renderDone";
@@ -12,8 +16,16 @@ export type MessageToPlugin =
       };
     };
 
-export type MessageToUI = {
-  type: "render";
-  width: number;
-  height: number;
-};
+export type MessageToUI =
+  | {
+      type: "render";
+      width: number;
+      height: number;
+    }
+  | {
+      type: "componentChanged";
+      payload: {
+        name?: string;
+        props: Record<string, any>;
+      };
+    };
