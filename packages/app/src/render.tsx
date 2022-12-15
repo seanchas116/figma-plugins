@@ -1,4 +1,6 @@
 import * as htmlToImage from "html-to-image";
+import { Button } from "./stories/Button";
+import ReactDOMClient from "react-dom/client";
 
 const onMessage = async (event: MessageEvent) => {
   if (event.data.type !== "iframe:render") {
@@ -7,21 +9,20 @@ const onMessage = async (event: MessageEvent) => {
 
   console.log(event.data);
 
-  const button = document.createElement("button");
-  button.style.position = "fixed";
-  button.style.top = "0";
-  button.style.left = "0";
-  button.style.width = `${event.data.width}px`;
-  button.style.height = `${event.data.height}px`;
-  button.innerText = "Button";
-  document.body.append(button);
+  const root = document.createElement("div");
+  document.body.append(root);
+
+  const reactRoot = ReactDOMClient.createRoot(root);
+  reactRoot.render(<Button label="Button" />);
+
+  await new Promise((resolve) => requestIdleCallback(resolve));
 
   console.time("htmlToImage");
-  const pngURL = await htmlToImage.toPng(button);
+  const pngURL = await htmlToImage.toPng(root.firstElementChild as HTMLElement);
   const pngBuffer = await fetch(pngURL).then((res) => res.arrayBuffer());
   console.timeEnd("htmlToImage");
 
-  button.remove();
+  root.remove();
 
   window.parent.postMessage(
     {
