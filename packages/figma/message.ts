@@ -1,3 +1,5 @@
+import { ComponentState } from "./data";
+
 export type MessageToPlugin =
   | {
       type: "ready";
@@ -5,8 +7,7 @@ export type MessageToPlugin =
   | {
       type: "updateComponent";
       payload: {
-        name?: string;
-        props: Record<string, any>;
+        component?: ComponentState;
       };
     }
   | {
@@ -25,7 +26,6 @@ export type MessageToUI =
   | {
       type: "componentChanged";
       payload: {
-        name?: string;
-        props: Record<string, any>;
+        component?: ComponentState;
       };
     };

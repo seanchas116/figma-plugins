@@ -1,4 +1,4 @@
 export interface ComponentState {
-  name?: string;
+  name: string;
   props: Record<string, any>;
 }

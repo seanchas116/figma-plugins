@@ -5,17 +5,14 @@ import { MessageToUI } from "../message";
 import { ComponentState } from "../data";
 
 export const App: React.FC = () => {
-  const [component, setComponent] = useState<ComponentState>({
-    name: undefined,
-    props: {},
-  });
+  const [component, setComponent] = useState<ComponentState | undefined>();
 
   useEffect(() => {
     window.addEventListener("message", (event) => {
       if (event.data.pluginMessage) {
         const message = event.data.pluginMessage as MessageToUI;
         if (message.type === "componentChanged") {
-          setComponent(message.payload);
+          setComponent(message.payload.component);
         }
       }
     });
@@ -25,8 +22,10 @@ export const App: React.FC = () => {
     postMessageToPlugin({
       type: "updateComponent",
       payload: {
-        name: "Button",
-        props: {},
+        component: {
+          name: "Button",
+          props: {},
+        },
       },
     });
   };
@@ -35,7 +34,7 @@ export const App: React.FC = () => {
     <div className="p-2 flex flex-col gap-2 text-xs">
       <select
         className="border border-gray-300 rounded-md shadow-sm py-1 px-1 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-        value={component.name ?? ""}
+        value={component?.name ?? ""}
         onChange={(event) => {
           console.log("change");
           const name = event.currentTarget.value;
@@ -43,8 +42,12 @@ export const App: React.FC = () => {
           postMessageToPlugin({
             type: "updateComponent",
             payload: {
-              ...component,
-              name,
+              component: name
+                ? {
+                    name,
+                    props: component?.props ?? {},
+                  }
+                : undefined,
             },
           });
         }}
