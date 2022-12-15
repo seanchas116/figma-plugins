@@ -25,11 +25,23 @@ figma.ui.onmessage = async (msg: MessageToPlugin) => {
 
       targetNode = node;
 
+      const componentData = msg.payload.component;
+
       postMessageToUI({
         type: "render",
         width: node.width,
         height: node.height,
       });
+
+      if (componentData) {
+        targetNode.setPluginData("component", JSON.stringify(componentData));
+        targetNode.setRelaunchData({
+          edit: "",
+        });
+      } else {
+        targetNode.setPluginData("component", "");
+        targetNode.setRelaunchData({});
+      }
 
       break;
     }
@@ -43,7 +55,7 @@ figma.ui.onmessage = async (msg: MessageToPlugin) => {
           { type: "IMAGE", imageHash: img.hash, scaleMode: "FILL" },
         ];
 
-        targetNode.setPluginData("mark", "true");
+        targetNode.setPluginData("component", "true");
         console.log("relaunchData");
         targetNode.setRelaunchData({
           edit: "",
