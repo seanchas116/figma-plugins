@@ -83,6 +83,7 @@ export const App: React.FC = () => {
               ? {
                   name,
                   props: component?.props ?? {},
+                  autoResize: component?.autoResize ?? "none",
                 }
               : undefined
           );
@@ -97,19 +98,48 @@ export const App: React.FC = () => {
         <button
           className="p-0.5 rounded text-gray-500 hover:bg-gray-100 aria-selected:bg-blue-500 aria-selected:text-white"
           title="Auto Width"
-          aria-selected
+          aria-selected={component?.autoResize === "widthHeight"}
+          onClick={() => {
+            if (!component) {
+              return;
+            }
+            updateComponent({
+              ...component,
+              autoResize: "widthHeight",
+            });
+          }}
         >
           <AutoWidthIcon />
         </button>
         <button
           className="p-0.5 rounded text-gray-500 hover:bg-gray-100 aria-selected:bg-blue-500 aria-selected:text-white"
           title="Auto Height"
+          aria-selected={component?.autoResize === "height"}
+          onClick={() => {
+            if (!component) {
+              return;
+            }
+            updateComponent({
+              ...component,
+              autoResize: "height",
+            });
+          }}
         >
           <AutoHeightIcon />
         </button>
         <button
           className="p-0.5 rounded text-gray-500 hover:bg-gray-100 aria-selected:bg-blue-500 aria-selected:text-white"
           title="Fixed Size"
+          aria-selected={component?.autoResize === "none"}
+          onClick={() => {
+            if (!component) {
+              return;
+            }
+            updateComponent({
+              ...component,
+              autoResize: "none",
+            });
+          }}
         >
           <FixedSizeIcon />
         </button>
