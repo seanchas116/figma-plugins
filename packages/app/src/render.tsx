@@ -23,16 +23,16 @@ async function renderComponent(
   reactRoot.render(node);
   await new Promise((resolve) => setTimeout(resolve, 0));
 
+  const element = root.firstElementChild as HTMLElement;
+  element.style.width = options.width ? `${options.width}px` : "";
+  element.style.height = options.height ? `${options.height}px` : "";
+
   const pixelRatio = 2;
 
   console.time("htmlToImage");
   const canvas = await htmlToImage.toCanvas(
     root.firstElementChild as HTMLElement,
-    {
-      pixelRatio,
-      width: options.width,
-      height: options.height,
-    }
+    { pixelRatio }
   );
   const width = Math.round(canvas.width / pixelRatio);
   const height = Math.round(canvas.height / pixelRatio);
