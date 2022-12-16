@@ -2,6 +2,7 @@ const docgen = require("react-docgen-typescript");
 
 const options = {
   savePropValueAsString: true,
+  shouldExtractLiteralValuesFromEnum: true,
   componentNameResolver: (exp, source) => {
     console.log(exp, source);
     return exp.name;
