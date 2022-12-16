@@ -9,8 +9,8 @@ const reactRoot = ReactDOMClient.createRoot(root);
 async function renderComponent(
   node: JSX.Element,
   options: {
-    width: number;
-    height: number;
+    width?: number;
+    height?: number;
   }
 ): Promise<{
   png: ArrayBuffer;
@@ -20,16 +20,19 @@ async function renderComponent(
   reactRoot.render(node);
   await new Promise((resolve) => setTimeout(resolve, 0));
 
+  const pixelRatio = 2;
+
   console.time("htmlToImage");
   const canvas = await htmlToImage.toCanvas(
     root.firstElementChild as HTMLElement,
     {
+      pixelRatio,
       width: options.width,
       height: options.height,
     }
   );
-  const width = canvas.width;
-  const height = canvas.height;
+  const width = Math.round(canvas.width / pixelRatio);
+  const height = Math.round(canvas.height / pixelRatio);
   const pngURL = canvas.toDataURL("image/png");
   const pngBuffer = await fetch(pngURL).then((res) => res.arrayBuffer());
   console.timeEnd("htmlToImage");

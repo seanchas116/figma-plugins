@@ -33,12 +33,14 @@ figma.ui.onmessage = async (msg: MessageToPlugin) => {
       const componentData = msg.payload.component;
 
       if (componentData) {
+        const autoResize = componentData.autoResize;
+
         postMessageToUI({
           type: "render",
           payload: {
             ...componentData,
-            width: node.width,
-            height: node.height,
+            width: autoResize === "widthHeight" ? undefined : node.width,
+            height: autoResize !== "none" ? undefined : node.height,
           },
         });
 
@@ -59,9 +61,18 @@ figma.ui.onmessage = async (msg: MessageToPlugin) => {
         const img = await figma.createImage(new Uint8Array(msg.payload.png));
         console.log(img.hash);
 
+        targetNode.setPluginData(
+          "renderedSize",
+          JSON.stringify({
+            width: msg.payload.width,
+            height: msg.payload.height,
+          })
+        );
+
         targetNode.fills = [
           { type: "IMAGE", imageHash: img.hash, scaleMode: "FILL" },
         ];
+        targetNode.resize(msg.payload.width, msg.payload.height);
       }
 
       break;
@@ -94,14 +105,44 @@ const onDocumentChange = debounce((event: DocumentChangeEvent) => {
     ) {
       const node = change.node;
       const componentData = node.getPluginData("component");
-      if (componentData) {
-        targetNode = node;
+      const renderedSizeData = node.getPluginData("renderedSize");
+
+      if (!componentData) {
+        continue;
+      }
+      const component = JSON.parse(componentData) as ComponentState;
+
+      if (renderedSizeData) {
+        const renderedSize = JSON.parse(renderedSizeData) as {
+          width: number;
+          height: number;
+        };
+        if (
+          renderedSize.width === node.width &&
+          renderedSize.height === node.height
+        ) {
+          continue;
+        }
+      }
+
+      targetNode = node;
+      postMessageToUI({
+        type: "render",
+        payload: {
+          ...component,
+          width: node.width,
+          height: node.height,
+        },
+      });
+
+      if (component.autoResize !== "none") {
         postMessageToUI({
-          type: "render",
+          type: "componentChanged",
           payload: {
-            ...JSON.parse(componentData),
-            width: node.width,
-            height: node.height,
+            component: {
+              ...component,
+              autoResize: "none",
+            },
           },
         });
       }

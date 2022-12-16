@@ -3,8 +3,8 @@ export type MessageToRenderIFrame = {
   payload: {
     name: string;
     props: Record<string, any>;
-    width: number;
-    height: number;
+    width?: number;
+    height?: number;
   };
 };
 

@@ -14,6 +14,8 @@ export type MessageToPlugin =
       type: "renderDone";
       payload: {
         png: ArrayBuffer;
+        width: number;
+        height: number;
       };
     };
 
@@ -23,8 +25,8 @@ export type MessageToUI =
       payload: {
         name: string;
         props: Record<string, any>;
-        width: number;
-        height: number;
+        width?: number;
+        height?: number;
       };
     }
   | {
