@@ -4,6 +4,7 @@ import ReactDOMClient from "react-dom/client";
 import { MessageFromRenderIFrame, MessageToRenderIFrame } from "./message";
 
 const root = document.getElementById("root") as HTMLElement;
+root.style.width = "max-content";
 const reactRoot = ReactDOMClient.createRoot(root);
 
 async function renderComponent(
