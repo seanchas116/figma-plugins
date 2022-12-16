@@ -73,7 +73,7 @@ export const App: React.FC = () => {
   return (
     <div className="p-2 flex flex-col gap-2 text-xs">
       <select
-        className="border border-gray-300 rounded-md shadow-sm py-1 px-1 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+        className="border border-gray-300 rounded-md shadow-sm py-1 px-1 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
         value={component?.name ?? ""}
         onChange={(event) => {
           const name = event.currentTarget.value;
@@ -144,11 +144,11 @@ export const App: React.FC = () => {
           <FixedSizeIcon />
         </button>
       </div>
-      <dl className="flex flex-col gap-1">
+      <dl className="grid grid-cols-[1fr_2fr] gap-1 items-center">
         <dt className="text-gray-500">Primary</dt>
         <dd>
           <input
-            className="accent-indigo-500"
+            className="accent-blue-500"
             type="checkbox"
             checked={component?.props?.primary ?? false}
             onChange={(event) => {
@@ -170,7 +170,7 @@ export const App: React.FC = () => {
         <dt className="text-gray-500">Size</dt>
         <dd>
           <select
-            className="border border-gray-300 rounded-md shadow-sm py-1 px-1 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+            className="border border-gray-300 rounded-md shadow-sm py-1 px-1 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             value={component?.props?.size ?? "medium"}
             onChange={(event) => {
               if (!component) {
@@ -195,7 +195,7 @@ export const App: React.FC = () => {
         <dt className="text-gray-500">Label</dt>
         <dd>
           <input
-            className="border border-gray-300 rounded-md shadow-sm py-1 px-1 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+            className="border border-gray-300 rounded-md shadow-sm py-1 px-1 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             type="text"
             value={component?.props?.label ?? ""}
             onChange={(event) => {

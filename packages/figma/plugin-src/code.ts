@@ -1,7 +1,7 @@
 import { ComponentState } from "../data";
 import { MessageToPlugin, MessageToUI } from "../message";
 
-figma.showUI(__html__, { width: 240, height: 240 });
+figma.showUI(__html__, { width: 240, height: 200 });
 
 function postMessageToUI(msg: MessageToUI) {
   figma.ui.postMessage(msg);
