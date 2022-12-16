@@ -12,22 +12,33 @@ async function renderComponent(
     width: number;
     height: number;
   }
-): Promise<ArrayBuffer> {
+): Promise<{
+  png: ArrayBuffer;
+  width: number;
+  height: number;
+}> {
   reactRoot.render(node);
   await new Promise((resolve) => setTimeout(resolve, 0));
 
   console.time("htmlToImage");
-  const pngURL = await htmlToImage.toPng(
+  const canvas = await htmlToImage.toCanvas(
     root.firstElementChild as HTMLElement,
     {
       width: options.width,
       height: options.height,
     }
   );
+  const width = canvas.width;
+  const height = canvas.height;
+  const pngURL = canvas.toDataURL("image/png");
   const pngBuffer = await fetch(pngURL).then((res) => res.arrayBuffer());
   console.timeEnd("htmlToImage");
 
-  return pngBuffer;
+  return {
+    png: pngBuffer,
+    width,
+    height,
+  };
 }
 
 const onMessage = async (event: MessageEvent) => {
@@ -37,7 +48,7 @@ const onMessage = async (event: MessageEvent) => {
 
   const message: MessageToRenderIFrame = event.data;
 
-  const pngBuffer = await renderComponent(
+  const result = await renderComponent(
     // @ts-ignore
     <Button {...message.payload.props} />,
     {
@@ -48,9 +59,7 @@ const onMessage = async (event: MessageEvent) => {
 
   const doneMessage: MessageFromRenderIFrame = {
     type: "iframe:renderDone",
-    payload: {
-      png: pngBuffer,
-    },
+    payload: result,
   };
 
   window.parent.postMessage(doneMessage, "*");

@@ -12,5 +12,7 @@ export type MessageFromRenderIFrame = {
   type: "iframe:renderDone";
   payload: {
     png: ArrayBuffer;
+    width: number;
+    height: number;
   };
 };
