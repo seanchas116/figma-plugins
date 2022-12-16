@@ -136,12 +136,16 @@ const onDocumentChange = debounce((event: DocumentChangeEvent) => {
       });
 
       if (component.autoResize !== "none") {
+        const newAutoResize = change.properties.includes("height")
+          ? "none"
+          : "height";
+
         postMessageToUI({
           type: "componentChanged",
           payload: {
             component: {
               ...component,
-              autoResize: "none",
+              autoResize: newAutoResize,
             },
           },
         });
