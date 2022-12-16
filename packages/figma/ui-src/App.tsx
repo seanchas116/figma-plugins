@@ -91,8 +91,7 @@ export const App: React.FC = () => {
       >
         <option value="">Not Attached</option>
         <option value="Button">Button</option>
-        <option value="Checkbox">Checkbox</option>
-        <option value="TextField">TextField</option>
+        <option value="Header">Header</option>
       </select>
       <div>
         <button

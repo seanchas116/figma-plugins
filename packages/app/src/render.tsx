@@ -2,6 +2,8 @@ import * as htmlToImage from "html-to-image";
 import { Button } from "./stories/Button";
 import ReactDOMClient from "react-dom/client";
 import { MessageFromRenderIFrame, MessageToRenderIFrame } from "./message";
+import { Header } from "./stories/Header";
+import React from "react";
 
 const root = document.getElementById("root") as HTMLElement;
 root.style.width = "max-content";
@@ -45,6 +47,11 @@ async function renderComponent(
   };
 }
 
+const components = new Map<string, React.FC<any>>([
+  ["Button", Button],
+  ["Header", Header],
+]);
+
 const onMessage = async (event: MessageEvent) => {
   if (event.source !== window.parent) {
     return;
@@ -52,9 +59,11 @@ const onMessage = async (event: MessageEvent) => {
 
   const message: MessageToRenderIFrame = event.data;
 
+  const Component = components.get(message.payload.name) ?? Button;
+
   const result = await renderComponent(
     // @ts-ignore
-    <Button {...message.payload.props} />,
+    <Component {...message.payload.props} />,
     {
       width: message.payload.width,
       height: message.payload.height,
