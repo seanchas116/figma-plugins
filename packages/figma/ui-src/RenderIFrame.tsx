@@ -34,6 +34,10 @@ export const RenderIFrame: React.FC = () => {
         });
       }
     });
+
+    postMessageToPlugin({
+      type: "ready",
+    });
   }, []);
 
   return (
