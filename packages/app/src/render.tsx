@@ -47,10 +47,35 @@ async function renderComponent(
   };
 }
 
-const components = new Map<string, React.FC<any>>([
-  ["Button", Button],
-  ["Header", Header],
-]);
+const components = [
+  {
+    name: "Button",
+    component: Button,
+    props: [
+      {
+        name: "label",
+        type: "string",
+      },
+      {
+        name: "size",
+        type: "enum", // TODO
+      },
+      {
+        name: "primary",
+        type: "boolean",
+      },
+    ],
+  },
+  {
+    name: "Header",
+    component: Header,
+    props: [],
+  },
+];
+
+const componentMap = new Map<string, React.FC<any>>(
+  components.map((component) => [component.name, component.component])
+);
 
 const onMessage = async (event: MessageEvent) => {
   if (event.source !== window.parent) {
@@ -59,7 +84,7 @@ const onMessage = async (event: MessageEvent) => {
 
   const message: MessageToRenderIFrame = event.data;
 
-  const Component = components.get(message.payload.name) ?? Button;
+  const Component = componentMap.get(message.payload.name) ?? Button;
 
   const result = await renderComponent(
     // @ts-ignore
@@ -70,12 +95,24 @@ const onMessage = async (event: MessageEvent) => {
     }
   );
 
-  const doneMessage: MessageFromRenderIFrame = {
+  sendMessage({
     type: "renderDone",
     payload: result,
-  };
-
-  window.parent.postMessage(doneMessage, "*");
+  });
 };
 
+function sendMessage(message: MessageFromRenderIFrame) {
+  window.parent.postMessage(message, "*");
+}
+
 window.addEventListener("message", onMessage);
+
+sendMessage({
+  type: "components",
+  payload: {
+    components: components.map((c) => ({
+      name: c.name,
+      props: c.props,
+    })),
+  },
+});
