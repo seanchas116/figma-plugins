@@ -1,3 +1,5 @@
+import { ComponentDoc } from "react-docgen-typescript";
+
 export type MessageToRenderIFrame = {
   type: "render";
   payload: {
@@ -20,12 +22,6 @@ export type MessageFromRenderIFrame =
   | {
       type: "components";
       payload: {
-        components: {
-          name: string;
-          props: {
-            name: string;
-            type: string;
-          }[];
-        }[];
+        components: ComponentDoc[];
       };
     };

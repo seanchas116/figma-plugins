@@ -1,6 +1,8 @@
 import React from "react";
 import "./button.css";
 
+type ButtonSize = "small" | "medium" | "large";
+
 interface ButtonProps {
   /**
    * Is this the principal call to action on the page?
@@ -13,7 +15,7 @@ interface ButtonProps {
   /**
    * How large should the button be?
    */
-  size?: "small" | "medium" | "large";
+  size?: ButtonSize;
   /**
    * Button contents
    */

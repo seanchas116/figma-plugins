@@ -4,6 +4,7 @@ import ReactDOMClient from "react-dom/client";
 import { MessageFromRenderIFrame, MessageToRenderIFrame } from "./message";
 import { Header } from "./stories/Header";
 import React from "react";
+import { ComponentDoc } from "react-docgen-typescript";
 
 const root = document.getElementById("root") as HTMLElement;
 root.style.width = "max-content";
@@ -47,35 +48,60 @@ async function renderComponent(
   };
 }
 
-const components = [
+const componentDocs: ComponentDoc[] = [
   {
-    name: "Button",
-    component: Button,
-    props: [
-      {
+    displayName: "Button",
+    filePath: "Button.tsx",
+    description: "",
+    methods: [],
+    props: {
+      label: {
         name: "label",
-        type: "string",
+        required: false,
+        type: {
+          name: "string",
+        },
+        description: "",
+        defaultValue: null,
       },
-      {
+      size: {
         name: "size",
-        type: "enum", // TODO
+        required: false,
+        type: {
+          name: "enum",
+          value: [
+            { value: '"small"' },
+            { value: '"medium"' },
+            { value: '"large"' },
+          ],
+        },
+        description: "",
+        defaultValue: null,
       },
-      {
+      primary: {
         name: "primary",
-        type: "boolean",
+        required: false,
+        type: {
+          name: "boolean",
+        },
+        description: "",
+        defaultValue: null,
       },
-    ],
+    },
   },
   {
-    name: "Header",
-    component: Header,
-    props: [],
+    displayName: "Header",
+    filePath: "Header.tsx",
+    description: "",
+    methods: [],
+    props: {},
   },
 ];
 
-const componentMap = new Map<string, React.FC<any>>(
-  components.map((component) => [component.name, component.component])
-);
+const componentFunctions = new Map<string, React.FC<any>>([
+  ["Button", Button],
+  ["Header", Header],
+]);
 
 const onMessage = async (event: MessageEvent) => {
   if (event.source !== window.parent) {
@@ -84,7 +110,7 @@ const onMessage = async (event: MessageEvent) => {
 
   const message: MessageToRenderIFrame = event.data;
 
-  const Component = componentMap.get(message.payload.name) ?? Button;
+  const Component = componentFunctions.get(message.payload.name) ?? Button;
 
   const result = await renderComponent(
     // @ts-ignore
@@ -110,9 +136,6 @@ window.addEventListener("message", onMessage);
 sendMessage({
   type: "components",
   payload: {
-    components: components.map((c) => ({
-      name: c.name,
-      props: c.props,
-    })),
+    components: componentDocs,
   },
 });
