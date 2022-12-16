@@ -95,20 +95,20 @@ export const App: React.FC = () => {
       </select>
       <div>
         <button
-          className="p-0.5 rounded aria-selected:bg-blue-500 aria-selected:text-white"
+          className="p-0.5 rounded text-gray-500 hover:bg-gray-100 aria-selected:bg-blue-500 aria-selected:text-white"
           title="Auto Width"
           aria-selected
         >
           <AutoWidthIcon />
         </button>
         <button
-          className="p-0.5 rounded aria-selected:bg-blue-500 aria-selected:text-white"
+          className="p-0.5 rounded text-gray-500 hover:bg-gray-100 aria-selected:bg-blue-500 aria-selected:text-white"
           title="Auto Height"
         >
           <AutoHeightIcon />
         </button>
         <button
-          className="p-0.5 rounded aria-selected:bg-blue-500 aria-selected:text-white"
+          className="p-0.5 rounded text-gray-500 hover:bg-gray-100 aria-selected:bg-blue-500 aria-selected:text-white"
           title="Fixed Size"
         >
           <FixedSizeIcon />
