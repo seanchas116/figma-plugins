@@ -140,6 +140,7 @@ const onDocumentChange = debounce((event: DocumentChangeEvent) => {
           ? "none"
           : "height";
 
+        targetNode.setPluginData("component", JSON.stringify(component));
         postMessageToUI({
           type: "componentChanged",
           payload: {
