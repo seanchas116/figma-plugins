@@ -70,7 +70,7 @@ figma.ui.onmessage = async (msg: MessageToPlugin) => {
         );
 
         targetNode.fills = [
-          { type: "IMAGE", imageHash: img.hash, scaleMode: "FILL" },
+          { type: "IMAGE", imageHash: img.hash, scaleMode: "CROP" },
         ];
         targetNode.resize(msg.payload.width, msg.payload.height);
       }
