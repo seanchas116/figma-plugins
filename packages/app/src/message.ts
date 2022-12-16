@@ -1,5 +1,5 @@
 export type MessageToRenderIFrame = {
-  type: "iframe:render";
+  type: "render";
   payload: {
     name: string;
     props: Record<string, any>;
@@ -9,7 +9,7 @@ export type MessageToRenderIFrame = {
 };
 
 export type MessageFromRenderIFrame = {
-  type: "iframe:renderDone";
+  type: "renderDone";
   payload: {
     png: ArrayBuffer;
     width: number;

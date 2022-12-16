@@ -71,7 +71,7 @@ const onMessage = async (event: MessageEvent) => {
   );
 
   const doneMessage: MessageFromRenderIFrame = {
-    type: "iframe:renderDone",
+    type: "renderDone",
     payload: result,
   };
 
