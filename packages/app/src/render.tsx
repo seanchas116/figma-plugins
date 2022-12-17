@@ -5,6 +5,7 @@ import { MessageFromRenderIFrame, MessageToRenderIFrame } from "./message";
 import { Header } from "./stories/Header";
 import React from "react";
 import { ComponentDoc } from "react-docgen-typescript";
+import componentDocs from "./docs.json";
 
 const root = document.getElementById("root") as HTMLElement;
 root.style.width = "max-content";
@@ -48,56 +49,6 @@ async function renderComponent(
   };
 }
 
-const componentDocs: ComponentDoc[] = [
-  {
-    displayName: "Button",
-    filePath: "Button.tsx",
-    description: "",
-    methods: [],
-    props: {
-      label: {
-        name: "label",
-        required: false,
-        type: {
-          name: "string",
-        },
-        description: "",
-        defaultValue: null,
-      },
-      size: {
-        name: "size",
-        required: false,
-        type: {
-          name: "enum",
-          value: [
-            { value: '"small"' },
-            { value: '"medium"' },
-            { value: '"large"' },
-          ],
-        },
-        description: "",
-        defaultValue: null,
-      },
-      primary: {
-        name: "primary",
-        required: false,
-        type: {
-          name: "boolean",
-        },
-        description: "",
-        defaultValue: null,
-      },
-    },
-  },
-  {
-    displayName: "Header",
-    filePath: "Header.tsx",
-    description: "",
-    methods: [],
-    props: {},
-  },
-];
-
 const componentFunctions = new Map<string, React.FC<any>>([
   ["Button", Button],
   ["Header", Header],
@@ -136,6 +87,6 @@ window.addEventListener("message", onMessage);
 sendMessage({
   type: "components",
   payload: {
-    components: componentDocs,
+    components: componentDocs as any as ComponentDoc[],
   },
 });
