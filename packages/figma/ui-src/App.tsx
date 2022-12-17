@@ -3,6 +3,7 @@ import { postMessageToPlugin } from "./common";
 import { useEffect, useState } from "preact/hooks";
 import { MessageToUI } from "../message";
 import { ComponentState } from "../data";
+import { state } from "./state";
 
 const AutoWidthIcon = () => {
   return (
@@ -47,21 +48,19 @@ const FixedSizeIcon = () => {
 };
 
 export const App: React.FC = () => {
-  const [component, setComponent] = useState<ComponentState | undefined>();
-
   useEffect(() => {
     window.addEventListener("message", (event) => {
       if (event.data.pluginMessage) {
         const message = event.data.pluginMessage as MessageToUI;
         if (message.type === "componentChanged") {
-          setComponent(message.payload.component);
+          state.component = message.payload.component;
         }
       }
     });
   }, []);
 
   const updateComponent = (component: ComponentState | undefined) => {
-    setComponent(component);
+    state.component = component;
     postMessageToPlugin({
       type: "updateComponent",
       payload: {
@@ -69,6 +68,8 @@ export const App: React.FC = () => {
       },
     });
   };
+
+  const component = state.component;
 
   return (
     <div className="p-2 flex flex-col gap-2 text-xs">
