@@ -1,6 +1,6 @@
-const docgen = require("react-docgen-typescript");
+import docgen from "react-docgen-typescript";
 
-const options = {
+const options: docgen.ParserOptions = {
   savePropValueAsString: true,
   shouldExtractLiteralValuesFromEnum: true,
   componentNameResolver: (exp, source) => {
