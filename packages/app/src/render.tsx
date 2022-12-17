@@ -49,13 +49,9 @@ async function renderComponent(
   };
 }
 
-function componentID(componentDoc: ComponentDoc) {
-  return componentDoc.filePath + "#" + componentDoc.displayName;
-}
-
 const componentDocMap = new Map<string, ComponentDoc>(
   (componentDocs as any as ComponentDoc[]).map((componentDoc) => [
-    componentID(componentDoc),
+    componentDoc.filePath + "#" + componentDoc.displayName,
     componentDoc,
   ])
 );
