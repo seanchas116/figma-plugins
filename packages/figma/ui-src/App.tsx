@@ -91,8 +91,9 @@ export const App: React.FC = () => {
         }}
       >
         <option value="">Not Attached</option>
-        <option value="Button">Button</option>
-        <option value="Header">Header</option>
+        {state.componentDocs.map((doc) => (
+          <option value={doc.displayName}>{doc.displayName}</option>
+        ))}
       </select>
       <div>
         <button
