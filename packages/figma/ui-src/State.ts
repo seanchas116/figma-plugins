@@ -1,6 +1,8 @@
 import { signal } from "@preact/signals";
 import { ComponentDoc } from "react-docgen-typescript";
 import { ComponentState } from "../data";
+import { MessageToUI } from "../message";
+import { postMessageToPlugin } from "./common";
 
 class State {
   private _componentDocs = signal<ComponentDoc[]>([]);
@@ -9,15 +11,33 @@ class State {
   get componentDocs() {
     return this._componentDocs.value;
   }
-  set componentDocs(value) {
+  set componentDocs(value: ComponentDoc[]) {
     this._componentDocs.value = value;
   }
 
   get component() {
     return this._component.value;
   }
-  set component(value) {
-    this._component.value = value;
+
+  constructor() {
+    window.addEventListener("message", (event) => {
+      if (event.data.pluginMessage) {
+        const message = event.data.pluginMessage as MessageToUI;
+        if (message.type === "componentChanged") {
+          this._component.value = message.payload.component;
+        }
+      }
+    });
+  }
+
+  updateComponent(component?: ComponentState) {
+    this._component.value = component;
+    postMessageToPlugin({
+      type: "updateComponent",
+      payload: {
+        component,
+      },
+    });
   }
 }
 

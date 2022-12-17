@@ -1,8 +1,4 @@
 import { RenderIFrame } from "./RenderIFrame";
-import { postMessageToPlugin } from "./common";
-import { useEffect } from "preact/hooks";
-import { MessageToUI } from "../message";
-import { ComponentState } from "../data";
 import { state } from "./State";
 
 const AutoWidthIcon = () => {
@@ -48,27 +44,6 @@ const FixedSizeIcon = () => {
 };
 
 export const App: React.FC = () => {
-  useEffect(() => {
-    window.addEventListener("message", (event) => {
-      if (event.data.pluginMessage) {
-        const message = event.data.pluginMessage as MessageToUI;
-        if (message.type === "componentChanged") {
-          state.component = message.payload.component;
-        }
-      }
-    });
-  }, []);
-
-  const updateComponent = (component: ComponentState | undefined) => {
-    state.component = component;
-    postMessageToPlugin({
-      type: "updateComponent",
-      payload: {
-        component,
-      },
-    });
-  };
-
   const component = state.component;
 
   return (
@@ -79,7 +54,7 @@ export const App: React.FC = () => {
         onChange={(event) => {
           const name = event.currentTarget.value;
 
-          updateComponent(
+          state.updateComponent(
             name
               ? {
                   name,
@@ -104,7 +79,7 @@ export const App: React.FC = () => {
             if (!component) {
               return;
             }
-            updateComponent({
+            state.updateComponent({
               ...component,
               autoResize: "widthHeight",
             });
@@ -120,7 +95,7 @@ export const App: React.FC = () => {
             if (!component) {
               return;
             }
-            updateComponent({
+            state.updateComponent({
               ...component,
               autoResize: "height",
             });
@@ -136,7 +111,7 @@ export const App: React.FC = () => {
             if (!component) {
               return;
             }
-            updateComponent({
+            state.updateComponent({
               ...component,
               autoResize: "none",
             });
@@ -158,7 +133,7 @@ export const App: React.FC = () => {
               }
               console.log("onchange");
               const primary = event.currentTarget.checked;
-              updateComponent({
+              state.updateComponent({
                 ...component,
                 props: {
                   ...component.props,
@@ -179,7 +154,7 @@ export const App: React.FC = () => {
               }
 
               const size = event.currentTarget.value;
-              updateComponent({
+              state.updateComponent({
                 ...component,
                 props: {
                   ...component.props,
@@ -204,7 +179,7 @@ export const App: React.FC = () => {
                 return;
               }
               const label = event.currentTarget.value;
-              updateComponent({
+              state.updateComponent({
                 ...component,
                 props: {
                   ...component.props,
