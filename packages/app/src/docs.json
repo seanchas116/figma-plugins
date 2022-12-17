@@ -1,0 +1,207 @@
+[
+  {
+    "tags": {},
+    "filePath": "src/stories/Button.tsx",
+    "description": "Primary UI component for user interaction",
+    "displayName": "Button",
+    "methods": [],
+    "props": {
+      "primary": {
+        "defaultValue": {
+          "value": "false"
+        },
+        "description": "Is this the principal call to action on the page?",
+        "name": "primary",
+        "parent": {
+          "fileName": "src/stories/Button.tsx",
+          "name": "ButtonProps"
+        },
+        "declarations": [
+          {
+            "fileName": "src/stories/Button.tsx",
+            "name": "ButtonProps"
+          }
+        ],
+        "required": false,
+        "type": {
+          "name": "boolean"
+        }
+      },
+      "backgroundColor": {
+        "defaultValue": null,
+        "description": "What background color to use",
+        "name": "backgroundColor",
+        "parent": {
+          "fileName": "src/stories/Button.tsx",
+          "name": "ButtonProps"
+        },
+        "declarations": [
+          {
+            "fileName": "src/stories/Button.tsx",
+            "name": "ButtonProps"
+          }
+        ],
+        "required": false,
+        "type": {
+          "name": "string"
+        }
+      },
+      "size": {
+        "defaultValue": {
+          "value": "medium"
+        },
+        "description": "How large should the button be?",
+        "name": "size",
+        "parent": {
+          "fileName": "src/stories/Button.tsx",
+          "name": "ButtonProps"
+        },
+        "declarations": [
+          {
+            "fileName": "src/stories/Button.tsx",
+            "name": "ButtonProps"
+          }
+        ],
+        "required": false,
+        "type": {
+          "name": "enum",
+          "raw": "ButtonSize",
+          "value": [
+            {
+              "value": "\"small\""
+            },
+            {
+              "value": "\"medium\""
+            },
+            {
+              "value": "\"large\""
+            }
+          ]
+        }
+      },
+      "label": {
+        "defaultValue": null,
+        "description": "Button contents",
+        "name": "label",
+        "parent": {
+          "fileName": "src/stories/Button.tsx",
+          "name": "ButtonProps"
+        },
+        "declarations": [
+          {
+            "fileName": "src/stories/Button.tsx",
+            "name": "ButtonProps"
+          }
+        ],
+        "required": true,
+        "type": {
+          "name": "string"
+        }
+      },
+      "onClick": {
+        "defaultValue": null,
+        "description": "Optional click handler",
+        "name": "onClick",
+        "parent": {
+          "fileName": "src/stories/Button.tsx",
+          "name": "ButtonProps"
+        },
+        "declarations": [
+          {
+            "fileName": "src/stories/Button.tsx",
+            "name": "ButtonProps"
+          }
+        ],
+        "required": false,
+        "type": {
+          "name": "() => void"
+        }
+      }
+    }
+  },
+  {
+    "tags": {},
+    "filePath": "src/stories/Header.tsx",
+    "description": "",
+    "displayName": "Header",
+    "methods": [],
+    "props": {
+      "user": {
+        "defaultValue": null,
+        "description": "",
+        "name": "user",
+        "parent": {
+          "fileName": "src/stories/Header.tsx",
+          "name": "HeaderProps"
+        },
+        "declarations": [
+          {
+            "fileName": "src/stories/Header.tsx",
+            "name": "HeaderProps"
+          }
+        ],
+        "required": false,
+        "type": {
+          "name": "User"
+        }
+      },
+      "onLogin": {
+        "defaultValue": null,
+        "description": "",
+        "name": "onLogin",
+        "parent": {
+          "fileName": "src/stories/Header.tsx",
+          "name": "HeaderProps"
+        },
+        "declarations": [
+          {
+            "fileName": "src/stories/Header.tsx",
+            "name": "HeaderProps"
+          }
+        ],
+        "required": false,
+        "type": {
+          "name": "() => void"
+        }
+      },
+      "onLogout": {
+        "defaultValue": null,
+        "description": "",
+        "name": "onLogout",
+        "parent": {
+          "fileName": "src/stories/Header.tsx",
+          "name": "HeaderProps"
+        },
+        "declarations": [
+          {
+            "fileName": "src/stories/Header.tsx",
+            "name": "HeaderProps"
+          }
+        ],
+        "required": false,
+        "type": {
+          "name": "() => void"
+        }
+      },
+      "onCreateAccount": {
+        "defaultValue": null,
+        "description": "",
+        "name": "onCreateAccount",
+        "parent": {
+          "fileName": "src/stories/Header.tsx",
+          "name": "HeaderProps"
+        },
+        "declarations": [
+          {
+            "fileName": "src/stories/Header.tsx",
+            "name": "HeaderProps"
+          }
+        ],
+        "required": false,
+        "type": {
+          "name": "() => void"
+        }
+      }
+    }
+  }
+]
