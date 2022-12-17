@@ -1,8 +1,9 @@
 import { signal } from "@preact/signals";
+import { ComponentDoc } from "react-docgen-typescript";
 import { ComponentState } from "../data";
 
 class State {
-  private _componentDocs = signal<ComponentState[]>([]);
+  private _componentDocs = signal<ComponentDoc[]>([]);
   private _component = signal<ComponentState | undefined>(undefined);
 
   get componentDocs() {

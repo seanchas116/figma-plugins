@@ -6,6 +6,7 @@ import type {
   MessageToRenderIFrame,
 } from "../../app/src/message";
 import { postMessageToPlugin } from "./common";
+import { state } from "./State";
 
 export const RenderIFrame: React.FC = () => {
   const ref = createRef<HTMLIFrameElement>();
@@ -39,7 +40,8 @@ export const RenderIFrame: React.FC = () => {
           }
           case "components": {
             console.log(message.payload);
-            // TODO
+            state.componentDocs = message.payload.components;
+            break;
           }
         }
       }
