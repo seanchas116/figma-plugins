@@ -1,9 +1,9 @@
 import { RenderIFrame } from "./RenderIFrame";
 import { postMessageToPlugin } from "./common";
-import { useEffect, useState } from "preact/hooks";
+import { useEffect } from "preact/hooks";
 import { MessageToUI } from "../message";
 import { ComponentState } from "../data";
-import { state } from "./state";
+import { state } from "./State";
 
 const AutoWidthIcon = () => {
   return (
