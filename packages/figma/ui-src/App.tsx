@@ -46,31 +46,39 @@ const FixedSizeIcon = () => {
 export const App: React.FC = () => {
   const component = state.component;
   const componentDoc = state.componentDocs.find(
-    (doc) => doc.displayName === component?.name
+    (doc) =>
+      doc.filePath === component?.path && doc.displayName === component?.name
   );
 
   return (
     <div className="p-2 flex flex-col gap-2 text-xs">
       <select
         className="border border-gray-300 rounded-md shadow-sm py-1 px-1 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-        value={component?.name ?? ""}
+        value={
+          component ? JSON.stringify([component.path, component.name]) : ""
+        }
         onChange={(event) => {
-          const name = event.currentTarget.value;
+          const value = event.currentTarget.value;
+          if (!value) {
+            state.updateComponent(undefined);
+            return;
+          }
 
-          state.updateComponent(
-            name
-              ? {
-                  name,
-                  props: component?.props ?? {},
-                  autoResize: component?.autoResize ?? "none",
-                }
-              : undefined
-          );
+          const [path, name] = JSON.parse(value) as [string, string];
+
+          state.updateComponent({
+            path,
+            name,
+            props: component?.props ?? {},
+            autoResize: component?.autoResize ?? "none",
+          });
         }}
       >
         <option value="">Not Attached</option>
         {state.componentDocs.map((doc) => (
-          <option value={doc.displayName}>{doc.displayName}</option>
+          <option value={JSON.stringify([doc.filePath, doc.displayName])}>
+            {doc.displayName}
+          </option>
         ))}
       </select>
       <div>

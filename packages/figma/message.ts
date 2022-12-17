@@ -23,6 +23,7 @@ export type MessageToUI =
   | {
       type: "render";
       payload: {
+        path: string;
         name: string;
         props: Record<string, any>;
         width?: number;

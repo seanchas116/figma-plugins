@@ -3,6 +3,7 @@ import { ComponentDoc } from "react-docgen-typescript";
 export type MessageToRenderIFrame = {
   type: "render";
   payload: {
+    path: string;
     name: string;
     props: Record<string, any>;
     width?: number;

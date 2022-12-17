@@ -49,10 +49,24 @@ async function renderComponent(
   };
 }
 
-const componentFunctions = new Map<string, React.FC<any>>([
-  ["Button", Button],
-  ["Header", Header],
-]);
+function componentID(componentDoc: ComponentDoc) {
+  return componentDoc.filePath + "#" + componentDoc.displayName;
+}
+
+const componentDocMap = new Map<string, ComponentDoc>(
+  (componentDocs as any as ComponentDoc[]).map((componentDoc) => [
+    componentID(componentDoc),
+    componentDoc,
+  ])
+);
+
+async function getComponent(
+  componentDoc: ComponentDoc
+): Promise<React.ComponentType<any> | undefined> {
+  return (await import("../../" + componentDoc.filePath))[
+    componentDoc.displayName
+  ];
+}
 
 const onMessage = async (event: MessageEvent) => {
   if (event.source !== window.parent) {
@@ -61,11 +75,13 @@ const onMessage = async (event: MessageEvent) => {
 
   const message: MessageToRenderIFrame = event.data;
 
-  const Component = componentFunctions.get(message.payload.name) ?? Button;
+  const componentDoc = componentDocMap.get(
+    message.payload.path + "#" + message.payload.name
+  );
+  const Component = componentDoc && (await getComponent(componentDoc));
 
   const result = await renderComponent(
-    // @ts-ignore
-    <Component {...message.payload.props} />,
+    Component ? <Component {...message.payload.props} /> : <div />,
     {
       width: message.payload.width,
       height: message.payload.height,
