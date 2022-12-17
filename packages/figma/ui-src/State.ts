@@ -39,6 +39,20 @@ class State {
       },
     });
   }
+
+  updateComponentProps(values: Record<string, any>) {
+    if (!this.component) {
+      return;
+    }
+
+    state.updateComponent({
+      ...this.component,
+      props: {
+        ...this.component.props,
+        ...values,
+      },
+    });
+  }
 }
 
 export const state = new State();

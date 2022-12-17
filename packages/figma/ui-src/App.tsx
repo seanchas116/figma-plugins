@@ -45,6 +45,9 @@ const FixedSizeIcon = () => {
 
 export const App: React.FC = () => {
   const component = state.component;
+  const componentDoc = state.componentDocs.find(
+    (doc) => doc.displayName === component?.name
+  );
 
   return (
     <div className="p-2 flex flex-col gap-2 text-xs">
@@ -121,74 +124,69 @@ export const App: React.FC = () => {
         </button>
       </div>
       <dl className="grid grid-cols-[1fr_2fr] gap-1 items-center">
-        <dt className="text-gray-500">Primary</dt>
-        <dd>
-          <input
-            className="accent-blue-500"
-            type="checkbox"
-            checked={component?.props?.primary ?? false}
-            onChange={(event) => {
-              if (!component) {
-                return;
-              }
-              console.log("onchange");
-              const primary = event.currentTarget.checked;
-              state.updateComponent({
-                ...component,
-                props: {
-                  ...component.props,
-                  primary,
-                },
-              });
-            }}
-          />
-        </dd>
-        <dt className="text-gray-500">Size</dt>
-        <dd>
-          <select
-            className="border border-gray-300 rounded-md shadow-sm py-1 px-1 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-            value={component?.props?.size ?? "medium"}
-            onChange={(event) => {
-              if (!component) {
-                return;
-              }
+        {componentDoc &&
+          Object.values(componentDoc.props).map((prop) => {
+            const name = prop.name;
+            const value = component?.props?.[name];
 
-              const size = event.currentTarget.value;
-              state.updateComponent({
-                ...component,
-                props: {
-                  ...component.props,
-                  size,
-                },
-              });
-            }}
-          >
-            <option value="small">Small</option>
-            <option value="medium">Medium</option>
-            <option value="large">Large</option>
-          </select>
-        </dd>
-        <dt className="text-gray-500">Label</dt>
-        <dd>
-          <input
-            className="border border-gray-300 rounded-md shadow-sm py-1 px-1 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-            type="text"
-            value={component?.props?.label ?? ""}
-            onChange={(event) => {
-              if (!component) {
-                return;
-              }
-              const label = event.currentTarget.value;
-              state.updateComponent({
-                ...component,
-                props: {
-                  ...component.props,
-                  label,
-                },
-              });
-            }}
-          />
-        </dd>
+            let input: JSX.Element | undefined;
+
+            if (prop.type.name === "enum") {
+              input = (
+                <select
+                  className="border border-gray-300 rounded-md shadow-sm py-1 px-1 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  value={value ?? ""}
+                  onChange={(event) => {
+                    state.updateComponentProps({
+                      [name]: event.currentTarget.value,
+                    });
+                  }}
+                >
+                  {prop.type.value.map((value: { value: string }) => {
+                    try {
+                      const rawValue = JSON.parse(value.value);
+                      return <option value={rawValue}>{rawValue}</option>;
+                    } catch {
+                      return null;
+                    }
+                  })}
+                </select>
+              );
+            } else if (prop.type.name === "string") {
+              input = (
+                <input
+                  className="border border-gray-300 rounded-md shadow-sm py-1 px-1 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  type="text"
+                  value={value ?? ""}
+                  onChange={(event) => {
+                    state.updateComponentProps({
+                      [name]: event.currentTarget.value,
+                    });
+                  }}
+                />
+              );
+            } else if (prop.type.name === "boolean") {
+              input = (
+                <input
+                  className="accent-blue-500"
+                  type="checkbox"
+                  checked={value ?? false}
+                  onChange={(event) => {
+                    state.updateComponentProps({
+                      [name]: event.currentTarget.checked,
+                    });
+                  }}
+                />
+              );
+            }
+
+            return (
+              <>
+                <dt className="text-gray-500">{name}</dt>
+                <dd>{input}</dd>
+              </>
+            );
+          })}
       </dl>
       {/* <button
         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
