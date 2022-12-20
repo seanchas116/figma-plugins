@@ -10,7 +10,7 @@ import {
 } from "./pluginData";
 import { debounce } from "./util";
 
-figma.showUI(__html__, { width: 240, height: 200 });
+figma.showUI(__html__, { width: 240, height: 240 });
 
 function postMessageToUI(msg: MessageToUI) {
   figma.ui.postMessage(msg);

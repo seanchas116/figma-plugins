@@ -68,7 +68,8 @@ export const App: React.FC = () => {
       >
         Sync Components & Tokens
       </button>
-      <select
+      <h1 className="mt-2 font-bold text-sm">{instance?.name}</h1>
+      {/* <select
         className="border border-gray-300 rounded-md shadow-sm py-1 px-1 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
         value={instance ? JSON.stringify([instance.path, instance.name]) : ""}
         onChange={(event) => {
@@ -94,7 +95,7 @@ export const App: React.FC = () => {
             {doc.displayName}
           </option>
         ))}
-      </select>
+      </select> */}
       <div>
         <button
           className="p-0.5 rounded text-gray-500 hover:bg-gray-100 aria-selected:bg-blue-500 aria-selected:text-white"
