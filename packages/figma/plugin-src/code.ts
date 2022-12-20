@@ -77,6 +77,13 @@ figma.ui.onmessage = async (msg: MessageToPlugin) => {
 
       break;
     }
+
+    case "syncAssets": {
+      // TODO: generate components
+
+      figma.notify("Components & tokens synced to your Figma file!");
+      break;
+    }
   }
 };
 
