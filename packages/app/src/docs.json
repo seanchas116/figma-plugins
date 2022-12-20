@@ -80,7 +80,9 @@
         }
       },
       "label": {
-        "defaultValue": null,
+        "defaultValue": {
+          "value": "Button"
+        },
         "description": "Button contents",
         "name": "label",
         "parent": {
@@ -93,7 +95,7 @@
             "name": "ButtonProps"
           }
         ],
-        "required": true,
+        "required": false,
         "type": {
           "name": "string"
         }
@@ -126,6 +128,25 @@
     "displayName": "Header",
     "methods": [],
     "props": {
+      "productName": {
+        "defaultValue": null,
+        "description": "",
+        "name": "productName",
+        "parent": {
+          "fileName": "src/stories/Header.tsx",
+          "name": "HeaderProps"
+        },
+        "declarations": [
+          {
+            "fileName": "src/stories/Header.tsx",
+            "name": "HeaderProps"
+          }
+        ],
+        "required": false,
+        "type": {
+          "name": "string"
+        }
+      },
       "user": {
         "defaultValue": null,
         "description": "",

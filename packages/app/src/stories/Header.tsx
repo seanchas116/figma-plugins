@@ -8,6 +8,7 @@ type User = {
 };
 
 interface HeaderProps {
+  productName?: string;
   user?: User;
   onLogin?: () => void;
   onLogout?: () => void;
@@ -15,6 +16,7 @@ interface HeaderProps {
 }
 
 export const Header = ({
+  productName,
   user,
   onLogin,
   onLogout,
@@ -44,7 +46,7 @@ export const Header = ({
             />
           </g>
         </svg>
-        <h1>Acme</h1>
+        <h1>{productName}</h1>
       </div>
       <div>
         {user ? (
