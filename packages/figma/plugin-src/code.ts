@@ -61,14 +61,10 @@ figma.ui.onmessage = async (msg: MessageToPlugin) => {
         const img = await figma.createImage(new Uint8Array(msg.payload.png));
         console.log(img.hash);
 
-        targetNode.setPluginData(
-          "renderedSize",
-          JSON.stringify({
-            width: msg.payload.width,
-            height: msg.payload.height,
-          })
-        );
-
+        setRenderedSize(targetNode, {
+          width: msg.payload.width,
+          height: msg.payload.height,
+        });
         targetNode.fills = [
           { type: "IMAGE", imageHash: img.hash, scaleMode: "CROP" },
         ];
@@ -137,18 +133,13 @@ const onDocumentChange = debounce((event: DocumentChangeEvent) => {
         continue;
       }
 
-      const renderedSizeData = node.getPluginData("renderedSize");
-      if (renderedSizeData) {
-        const renderedSize = JSON.parse(renderedSizeData) as {
-          width: number;
-          height: number;
-        };
-        if (
-          renderedSize.width === node.width &&
-          renderedSize.height === node.height
-        ) {
-          continue;
-        }
+      const renderedSize = getRenderedSize(node);
+      if (
+        renderedSize &&
+        renderedSize.width === node.width &&
+        renderedSize.height === node.height
+      ) {
+        continue;
       }
 
       targetNode = node;
@@ -224,5 +215,21 @@ function getInstanceInfo(node: SceneNode): InstanceInfo | undefined {
   const data = node.getPluginData("instance");
   if (data) {
     return JSON.parse(data) as InstanceInfo;
+  }
+}
+
+interface RenderedSize {
+  width: number;
+  height: number;
+}
+
+function setRenderedSize(node: SceneNode, size: RenderedSize) {
+  node.setPluginData("renderedSize", JSON.stringify(size));
+}
+
+function getRenderedSize(node: SceneNode): RenderedSize | undefined {
+  const data = node.getPluginData("renderedSize");
+  if (data) {
+    return JSON.parse(data) as RenderedSize;
   }
 }
