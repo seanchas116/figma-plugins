@@ -1,8 +1,6 @@
 import * as htmlToImage from "html-to-image";
-import { Button } from "./stories/Button";
 import ReactDOMClient from "react-dom/client";
 import { MessageFromRenderIFrame, MessageToRenderIFrame } from "./message";
-import { Header } from "./stories/Header";
 import React from "react";
 import { ComponentDoc } from "react-docgen-typescript";
 import componentDocs from "./docs.json";
