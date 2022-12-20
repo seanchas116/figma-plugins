@@ -52,6 +52,9 @@ export const App: React.FC = () => {
 
   return (
     <div className="p-2 flex flex-col gap-2 text-xs">
+      <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded">
+        Sync Components & Tokens
+      </button>
       <select
         className="border border-gray-300 rounded-md shadow-sm py-1 px-1 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
         value={
@@ -196,12 +199,6 @@ export const App: React.FC = () => {
             );
           })}
       </dl>
-      {/* <button
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        onClick={handleClick}
-      >
-        Attach
-      </button> */}
       <RenderIFrame />
     </div>
   );
