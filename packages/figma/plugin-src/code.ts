@@ -39,9 +39,11 @@ figma.ui.onmessage = async (msg: MessageToPlugin) => {
       }
 
       const node = selection[0];
-      if (node.type !== "FRAME") {
+      if (node.type !== "INSTANCE") {
         return;
       }
+
+      console.log("setting instance info", msg.payload.instance);
 
       const instanceInfo = msg.payload.instance;
       setInstanceInfo(node, instanceInfo);
@@ -126,7 +128,7 @@ const onDocumentChange = debounce((event: DocumentChangeEvent) => {
     console.log(change);
     if (
       change.type === "PROPERTY_CHANGE" &&
-      change.node.type === "FRAME" &&
+      change.node.type === "INSTANCE" &&
       !change.node.removed &&
       (change.properties.includes("width") ||
         change.properties.includes("height"))
@@ -177,7 +179,9 @@ const onSelectionChange = () => {
 
   if (selection.length > 0) {
     const current = selection[0];
-    componentState = getInstanceInfo(current);
+    if (current.type === "INSTANCE") {
+      componentState = getInstanceInfo(current);
+    }
   }
 
   postMessageToUI({
@@ -215,7 +219,7 @@ async function renderInstanceImage(
   });
 }
 
-async function renderInstance(node: FrameNode) {
+async function renderInstance(node: InstanceNode) {
   const instanceInfo = getInstanceInfo(node);
   if (!instanceInfo) {
     return;

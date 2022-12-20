@@ -17,16 +17,30 @@ export function getComponentInfo(
 }
 
 export function setInstanceInfo(
-  node: SceneNode,
+  node: InstanceNode,
   info: InstanceInfo | undefined
 ) {
   node.setPluginData("instance", info ? JSON.stringify(info) : "");
 }
 
-export function getInstanceInfo(node: SceneNode): InstanceInfo | undefined {
+export function getInstanceInfo(node: InstanceNode): InstanceInfo | undefined {
+  if (!node.mainComponent) {
+    return;
+  }
+
   const data = node.getPluginData("instance");
   if (data) {
     return JSON.parse(data) as InstanceInfo;
+  }
+
+  const componentInfo = getComponentInfo(node.mainComponent);
+  if (componentInfo) {
+    return {
+      path: componentInfo.path,
+      name: componentInfo.name,
+      props: {},
+      autoResize: "none",
+    };
   }
 }
 
@@ -35,11 +49,11 @@ export interface RenderedSize {
   height: number;
 }
 
-export function setRenderedSize(node: SceneNode, size: RenderedSize) {
+export function setRenderedSize(node: InstanceNode, size: RenderedSize) {
   node.setPluginData("renderedSize", JSON.stringify(size));
 }
 
-export function getRenderedSize(node: SceneNode): RenderedSize | undefined {
+export function getRenderedSize(node: InstanceNode): RenderedSize | undefined {
   const data = node.getPluginData("renderedSize");
   if (data) {
     return JSON.parse(data) as RenderedSize;
