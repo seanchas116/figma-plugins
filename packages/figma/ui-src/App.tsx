@@ -1,3 +1,4 @@
+import { FunctionComponent } from "preact";
 import { postMessageToPlugin } from "./common";
 import { RenderIFrame } from "./RenderIFrame";
 import { state } from "./State";
@@ -44,58 +45,20 @@ const FixedSizeIcon = () => {
   );
 };
 
-export const App: React.FC = () => {
+export const InstanceEdit: FunctionComponent = () => {
   const instance = state.instance;
   const componentDoc = state.componentDocs.find(
     (doc) =>
       doc.filePath === instance?.path && doc.displayName === instance?.name
   );
 
-  const syncAssets = () => {
-    postMessageToPlugin({
-      type: "syncAssets",
-      payload: {
-        componentDocs: state.componentDocs,
-      },
-    });
-  };
+  if (!instance) {
+    return null;
+  }
 
   return (
-    <div className="p-2 flex flex-col gap-2 text-xs">
-      <button
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
-        onClick={syncAssets}
-      >
-        Sync Components & Tokens
-      </button>
+    <div className="flex flex-col gap-2">
       <h1 className="mt-2 font-bold text-sm">{instance?.name}</h1>
-      {/* <select
-        className="border border-gray-300 rounded-md shadow-sm py-1 px-1 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-        value={instance ? JSON.stringify([instance.path, instance.name]) : ""}
-        onChange={(event) => {
-          const value = event.currentTarget.value;
-          if (!value) {
-            state.updateInstance(undefined);
-            return;
-          }
-
-          const [path, name] = JSON.parse(value) as [string, string];
-
-          state.updateInstance({
-            path,
-            name,
-            props: instance?.props ?? {},
-            autoResize: instance?.autoResize ?? "none",
-          });
-        }}
-      >
-        <option value="">Not Attached</option>
-        {state.componentDocs.map((doc) => (
-          <option value={JSON.stringify([doc.filePath, doc.displayName])}>
-            {doc.displayName}
-          </option>
-        ))}
-      </select> */}
       <div>
         <button
           className="p-0.5 rounded text-gray-500 hover:bg-gray-100 aria-selected:bg-blue-500 aria-selected:text-white"
@@ -211,6 +174,29 @@ export const App: React.FC = () => {
             );
           })}
       </dl>
+    </div>
+  );
+};
+
+export const App: FunctionComponent = () => {
+  const syncAssets = () => {
+    postMessageToPlugin({
+      type: "syncAssets",
+      payload: {
+        componentDocs: state.componentDocs,
+      },
+    });
+  };
+
+  return (
+    <div className="p-2 flex flex-col gap-2 text-xs">
+      <button
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
+        onClick={syncAssets}
+      >
+        Sync Components & Tokens
+      </button>
+      <InstanceEdit />
       <RenderIFrame />
     </div>
   );

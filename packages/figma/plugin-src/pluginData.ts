@@ -39,7 +39,7 @@ export function getInstanceInfo(node: InstanceNode): InstanceInfo | undefined {
       path: componentInfo.path,
       name: componentInfo.name,
       props: {},
-      autoResize: "none",
+      autoResize: "widthHeight",
     };
   }
 }
