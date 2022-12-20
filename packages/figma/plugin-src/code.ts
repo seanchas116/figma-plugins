@@ -101,6 +101,20 @@ figma.ui.onmessage = async (msg: MessageToPlugin) => {
         }
 
         component.resize(100, 100);
+
+        const result = await renderInstanceImage({
+          path: componentDoc.filePath,
+          name: componentDoc.displayName,
+          props: {},
+          autoResize: "none",
+        });
+
+        const img = await figma.createImage(new Uint8Array(result.png));
+        component.fills = [
+          { type: "IMAGE", imageHash: img.hash, scaleMode: "CROP" },
+        ];
+        component.resize(result.width, result.height);
+
         component.name = componentDoc.displayName;
       }
 
@@ -180,12 +194,11 @@ const onSelectionChange = () => {
 figma.on("documentchange", onDocumentChange);
 figma.on("selectionchange", onSelectionChange);
 
-async function renderInstance(node: FrameNode) {
-  const instanceInfo = getInstanceInfo(node);
-  if (!instanceInfo) {
-    return;
-  }
-
+async function renderInstanceImage(
+  instanceInfo: InstanceInfo,
+  width?: number,
+  height?: number
+): Promise<RenderResult> {
   const requestID = Math.random();
 
   const autoResize = instanceInfo.autoResize;
@@ -195,14 +208,27 @@ async function renderInstance(node: FrameNode) {
     requestID,
     payload: {
       ...instanceInfo,
-      width: autoResize === "widthHeight" ? undefined : node.width,
-      height: autoResize !== "none" ? undefined : node.height,
+      width: autoResize === "widthHeight" ? undefined : width,
+      height: autoResize !== "none" ? undefined : height,
     },
   });
 
-  const result = await new Promise<RenderResult>((resolve) => {
+  return new Promise<RenderResult>((resolve) => {
     renderCallbacks.set(requestID, resolve);
   });
+}
+
+async function renderInstance(node: FrameNode) {
+  const instanceInfo = getInstanceInfo(node);
+  if (!instanceInfo) {
+    return;
+  }
+
+  const result = await renderInstanceImage(
+    instanceInfo,
+    node.width,
+    node.height
+  );
 
   const img = await figma.createImage(new Uint8Array(result.png));
   console.log(img.hash);
