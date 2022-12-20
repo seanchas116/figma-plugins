@@ -45,10 +45,10 @@ const FixedSizeIcon = () => {
 };
 
 export const App: React.FC = () => {
-  const component = state.component;
+  const instance = state.instance;
   const componentDoc = state.componentDocs.find(
     (doc) =>
-      doc.filePath === component?.path && doc.displayName === component?.name
+      doc.filePath === instance?.path && doc.displayName === instance?.name
   );
 
   const syncAssets = () => {
@@ -70,23 +70,21 @@ export const App: React.FC = () => {
       </button>
       <select
         className="border border-gray-300 rounded-md shadow-sm py-1 px-1 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-        value={
-          component ? JSON.stringify([component.path, component.name]) : ""
-        }
+        value={instance ? JSON.stringify([instance.path, instance.name]) : ""}
         onChange={(event) => {
           const value = event.currentTarget.value;
           if (!value) {
-            state.updateComponent(undefined);
+            state.updateInstance(undefined);
             return;
           }
 
           const [path, name] = JSON.parse(value) as [string, string];
 
-          state.updateComponent({
+          state.updateInstance({
             path,
             name,
-            props: component?.props ?? {},
-            autoResize: component?.autoResize ?? "none",
+            props: instance?.props ?? {},
+            autoResize: instance?.autoResize ?? "none",
           });
         }}
       >
@@ -101,13 +99,13 @@ export const App: React.FC = () => {
         <button
           className="p-0.5 rounded text-gray-500 hover:bg-gray-100 aria-selected:bg-blue-500 aria-selected:text-white"
           title="Auto Width"
-          aria-selected={component?.autoResize === "widthHeight"}
+          aria-selected={instance?.autoResize === "widthHeight"}
           onClick={() => {
-            if (!component) {
+            if (!instance) {
               return;
             }
-            state.updateComponent({
-              ...component,
+            state.updateInstance({
+              ...instance,
               autoResize: "widthHeight",
             });
           }}
@@ -117,13 +115,13 @@ export const App: React.FC = () => {
         <button
           className="p-0.5 rounded text-gray-500 hover:bg-gray-100 aria-selected:bg-blue-500 aria-selected:text-white"
           title="Auto Height"
-          aria-selected={component?.autoResize === "height"}
+          aria-selected={instance?.autoResize === "height"}
           onClick={() => {
-            if (!component) {
+            if (!instance) {
               return;
             }
-            state.updateComponent({
-              ...component,
+            state.updateInstance({
+              ...instance,
               autoResize: "height",
             });
           }}
@@ -133,13 +131,13 @@ export const App: React.FC = () => {
         <button
           className="p-0.5 rounded text-gray-500 hover:bg-gray-100 aria-selected:bg-blue-500 aria-selected:text-white"
           title="Fixed Size"
-          aria-selected={component?.autoResize === "none"}
+          aria-selected={instance?.autoResize === "none"}
           onClick={() => {
-            if (!component) {
+            if (!instance) {
               return;
             }
-            state.updateComponent({
-              ...component,
+            state.updateInstance({
+              ...instance,
               autoResize: "none",
             });
           }}
@@ -151,7 +149,7 @@ export const App: React.FC = () => {
         {componentDoc &&
           Object.values(componentDoc.props).map((prop) => {
             const name = prop.name;
-            const value = component?.props?.[name];
+            const value = instance?.props?.[name];
 
             let input: JSX.Element | undefined;
 
@@ -161,7 +159,7 @@ export const App: React.FC = () => {
                   className="border border-gray-300 rounded-md shadow-sm py-1 px-1 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                   value={value ?? ""}
                   onChange={(event) => {
-                    state.updateComponentProps({
+                    state.updateInstanceProps({
                       [name]: event.currentTarget.value,
                     });
                   }}
@@ -183,7 +181,7 @@ export const App: React.FC = () => {
                   type="text"
                   value={value ?? ""}
                   onChange={(event) => {
-                    state.updateComponentProps({
+                    state.updateInstanceProps({
                       [name]: event.currentTarget.value,
                     });
                   }}
@@ -196,7 +194,7 @@ export const App: React.FC = () => {
                   type="checkbox"
                   checked={value ?? false}
                   onChange={(event) => {
-                    state.updateComponentProps({
+                    state.updateInstanceProps({
                       [name]: event.currentTarget.checked,
                     });
                   }}

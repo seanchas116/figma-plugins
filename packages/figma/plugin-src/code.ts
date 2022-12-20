@@ -1,4 +1,4 @@
-import { ComponentState } from "../data";
+import { InstanceState } from "../data";
 import { MessageToPlugin, MessageToUI } from "../message";
 
 figma.showUI(__html__, { width: 240, height: 200 });
@@ -15,7 +15,7 @@ figma.ui.onmessage = async (msg: MessageToPlugin) => {
       onSelectionChange();
       break;
     }
-    case "updateComponent": {
+    case "updateInstance": {
       console.log(msg);
 
       const selection = figma.currentPage.selection;
@@ -30,7 +30,7 @@ figma.ui.onmessage = async (msg: MessageToPlugin) => {
 
       targetNode = node;
 
-      const componentData = msg.payload.component;
+      const componentData = msg.payload.instance;
 
       if (componentData) {
         const autoResize = componentData.autoResize;
@@ -44,12 +44,12 @@ figma.ui.onmessage = async (msg: MessageToPlugin) => {
           },
         });
 
-        targetNode.setPluginData("component", JSON.stringify(componentData));
+        targetNode.setPluginData("instance", JSON.stringify(componentData));
         targetNode.setRelaunchData({
           edit: "",
         });
       } else {
-        targetNode.setPluginData("component", "");
+        targetNode.setPluginData("instance", "");
         targetNode.setRelaunchData({});
       }
 
@@ -93,7 +93,7 @@ figma.ui.onmessage = async (msg: MessageToPlugin) => {
         const component = figma.createComponent();
         component.name = componentDoc.displayName;
         component.resize(100, 100);
-        component.setPluginData("component", JSON.stringify(componentDoc));
+        component.setPluginData("instance", JSON.stringify(componentDoc));
 
         page!.appendChild(component);
       }
@@ -128,13 +128,13 @@ const onDocumentChange = debounce((event: DocumentChangeEvent) => {
         change.properties.includes("height"))
     ) {
       const node = change.node;
-      const componentData = node.getPluginData("component");
+      const componentData = node.getPluginData("instance");
       const renderedSizeData = node.getPluginData("renderedSize");
 
       if (!componentData) {
         continue;
       }
-      const component = JSON.parse(componentData) as ComponentState;
+      const component = JSON.parse(componentData) as InstanceState;
 
       if (renderedSizeData) {
         const renderedSize = JSON.parse(renderedSizeData) as {
@@ -164,11 +164,11 @@ const onDocumentChange = debounce((event: DocumentChangeEvent) => {
           ? "none"
           : "height";
 
-        targetNode.setPluginData("component", JSON.stringify(component));
+        targetNode.setPluginData("instance", JSON.stringify(component));
         postMessageToUI({
-          type: "componentChanged",
+          type: "instanceChanged",
           payload: {
-            component: {
+            instance: {
               ...component,
               autoResize: newAutoResize,
             },
@@ -182,20 +182,20 @@ const onDocumentChange = debounce((event: DocumentChangeEvent) => {
 const onSelectionChange = () => {
   const selection = figma.currentPage.selection;
 
-  let componentState: ComponentState | undefined;
+  let componentState: InstanceState | undefined;
 
   if (selection.length > 0) {
     const current = selection[0];
-    const data = current.getPluginData("component");
+    const data = current.getPluginData("instance");
     if (data) {
-      componentState = JSON.parse(data) as ComponentState;
+      componentState = JSON.parse(data) as InstanceState;
     }
   }
 
   postMessageToUI({
-    type: "componentChanged",
+    type: "instanceChanged",
     payload: {
-      component: componentState,
+      instance: componentState,
     },
   });
 };

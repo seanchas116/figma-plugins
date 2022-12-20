@@ -1,6 +1,4 @@
-import type { ComponentDoc } from "react-docgen-typescript";
-
-export interface ComponentState {
+export interface InstanceState {
   path: string;
   name: string;
   props: Record<string, any>;
