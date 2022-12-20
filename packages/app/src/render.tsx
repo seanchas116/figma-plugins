@@ -65,7 +65,7 @@ async function getComponent(
 }
 
 const onMessage = async (event: MessageEvent) => {
-  if (event.source !== window.parent) {
+  if (event.source === window || event.source !== window.parent) {
     return;
   }
 
