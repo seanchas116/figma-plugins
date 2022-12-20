@@ -7,7 +7,13 @@ function postMessageToUI(msg: MessageToUI) {
   figma.ui.postMessage(msg);
 }
 
-let targetNode: FrameNode | undefined;
+interface RenderResult {
+  png: ArrayBuffer;
+  width: number;
+  height: number;
+}
+
+const renderCallbacks = new Map<number, (payload: RenderResult) => void>();
 
 figma.ui.onmessage = async (msg: MessageToPlugin) => {
   switch (msg.type) {
@@ -28,48 +34,25 @@ figma.ui.onmessage = async (msg: MessageToPlugin) => {
         return;
       }
 
-      targetNode = node;
-
-      const componentData = msg.payload.instance;
-
-      if (componentData) {
-        const autoResize = componentData.autoResize;
-
-        postMessageToUI({
-          type: "render",
-          requestID: Math.random(),
-          payload: {
-            ...componentData,
-            width: autoResize === "widthHeight" ? undefined : node.width,
-            height: autoResize !== "none" ? undefined : node.height,
-          },
-        });
-
-        setInstanceInfo(targetNode, componentData);
-        targetNode.setRelaunchData({
+      const instanceInfo = msg.payload.instance;
+      setInstanceInfo(node, instanceInfo);
+      if (instanceInfo) {
+        node.setRelaunchData({
           edit: "",
         });
+        renderInstance(node);
       } else {
-        setInstanceInfo(targetNode, undefined);
-        targetNode.setRelaunchData({});
+        node.setRelaunchData({});
       }
 
       break;
     }
 
     case "renderDone": {
-      if (targetNode) {
-        const img = await figma.createImage(new Uint8Array(msg.payload.png));
-        console.log(img.hash);
-
-        setRenderedSize(targetNode, {
-          width: msg.payload.width,
-          height: msg.payload.height,
-        });
-        targetNode.fills = [
-          { type: "IMAGE", imageHash: img.hash, scaleMode: "CROP" },
-        ];
-        targetNode.resize(msg.payload.width, msg.payload.height);
+      const callback = renderCallbacks.get(msg.requestID);
+      if (callback) {
+        renderCallbacks.delete(msg.requestID);
+        callback(msg.payload);
       }
 
       break;
@@ -142,8 +125,8 @@ const onDocumentChange = debounce((event: DocumentChangeEvent) => {
         change.properties.includes("height"))
     ) {
       const node = change.node;
-      const component = getInstanceInfo(node);
-      if (!component) {
+      const instanceInfo = getInstanceInfo(node);
+      if (!instanceInfo) {
         continue;
       }
 
@@ -156,33 +139,26 @@ const onDocumentChange = debounce((event: DocumentChangeEvent) => {
         continue;
       }
 
-      targetNode = node;
-      postMessageToUI({
-        type: "render",
-        requestID: Math.random(),
-        payload: {
-          ...component,
-          width: node.width,
-          height: node.height,
-        },
-      });
-
-      if (component.autoResize !== "none") {
+      if (instanceInfo.autoResize !== "none") {
         const newAutoResize = change.properties.includes("height")
           ? "none"
           : "height";
 
-        setInstanceInfo(targetNode, component);
+        const newInstanceInfo: InstanceInfo = {
+          ...instanceInfo,
+          autoResize: newAutoResize,
+        };
+
+        setInstanceInfo(node, newInstanceInfo);
         postMessageToUI({
           type: "instanceChanged",
           payload: {
-            instance: {
-              ...component,
-              autoResize: newAutoResize,
-            },
+            instance: newInstanceInfo,
           },
         });
       }
+
+      renderInstance(node);
     }
   }
 }, 200);
@@ -247,4 +223,39 @@ function getRenderedSize(node: SceneNode): RenderedSize | undefined {
   if (data) {
     return JSON.parse(data) as RenderedSize;
   }
+}
+
+async function renderInstance(node: FrameNode) {
+  const instanceInfo = getInstanceInfo(node);
+  if (!instanceInfo) {
+    return;
+  }
+
+  const requestID = Math.random();
+
+  const autoResize = instanceInfo.autoResize;
+
+  postMessageToUI({
+    type: "render",
+    requestID,
+    payload: {
+      ...instanceInfo,
+      width: autoResize === "widthHeight" ? undefined : node.width,
+      height: autoResize !== "none" ? undefined : node.height,
+    },
+  });
+
+  const result = await new Promise<RenderResult>((resolve) => {
+    renderCallbacks.set(requestID, resolve);
+  });
+
+  const img = await figma.createImage(new Uint8Array(result.png));
+  console.log(img.hash);
+
+  setRenderedSize(node, {
+    width: result.width,
+    height: result.height,
+  });
+  node.fills = [{ type: "IMAGE", imageHash: img.hash, scaleMode: "CROP" }];
+  node.resize(result.width, result.height);
 }
