@@ -13,6 +13,7 @@ export type MessageToPlugin =
     }
   | {
       type: "renderDone";
+      requestID: number;
       payload: {
         png: ArrayBuffer;
         width: number;
@@ -29,6 +30,7 @@ export type MessageToPlugin =
 export type MessageToUI =
   | {
       type: "render";
+      requestID: number;
       payload: {
         path: string;
         name: string;

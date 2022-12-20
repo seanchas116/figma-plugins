@@ -86,6 +86,7 @@ const onMessage = async (event: MessageEvent) => {
 
   sendMessage({
     type: "renderDone",
+    requestID: message.requestID,
     payload: result,
   });
 };

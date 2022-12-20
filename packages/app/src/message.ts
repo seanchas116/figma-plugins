@@ -2,6 +2,7 @@ import { ComponentDoc } from "react-docgen-typescript";
 
 export type MessageToRenderIFrame = {
   type: "render";
+  requestID: number;
   payload: {
     path: string;
     name: string;
@@ -14,6 +15,7 @@ export type MessageToRenderIFrame = {
 export type MessageFromRenderIFrame =
   | {
       type: "renderDone";
+      requestID: number;
       payload: {
         png: ArrayBuffer;
         width: number;

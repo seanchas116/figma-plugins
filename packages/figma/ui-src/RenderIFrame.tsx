@@ -21,6 +21,7 @@ export const RenderIFrame: React.FC = () => {
         if (message.type === "render") {
           const renderMessage: MessageToRenderIFrame = {
             type: "render",
+            requestID: message.requestID,
             payload: message.payload,
           };
           iframe.contentWindow?.postMessage(renderMessage, "*");
@@ -34,6 +35,7 @@ export const RenderIFrame: React.FC = () => {
           case "renderDone": {
             postMessageToPlugin({
               type: "renderDone",
+              requestID: message.requestID,
               payload: message.payload,
             });
             break;

@@ -37,6 +37,7 @@ figma.ui.onmessage = async (msg: MessageToPlugin) => {
 
         postMessageToUI({
           type: "render",
+          requestID: Math.random(),
           payload: {
             ...componentData,
             width: autoResize === "widthHeight" ? undefined : node.width,
@@ -158,6 +159,7 @@ const onDocumentChange = debounce((event: DocumentChangeEvent) => {
       targetNode = node;
       postMessageToUI({
         type: "render",
+        requestID: Math.random(),
         payload: {
           ...component,
           width: node.width,
