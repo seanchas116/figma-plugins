@@ -1,5 +1,14 @@
-import { ComponentInfo, InstanceInfo } from "../data";
+import { InstanceInfo } from "../data";
 import { MessageToPlugin, MessageToUI } from "../message";
+import {
+  setInstanceInfo,
+  getComponentInfo,
+  setComponentInfo,
+  getInstanceInfo,
+  getRenderedSize,
+  setRenderedSize,
+} from "./pluginData";
+import { debounce } from "./util";
 
 figma.showUI(__html__, { width: 240, height: 200 });
 
@@ -101,19 +110,6 @@ figma.ui.onmessage = async (msg: MessageToPlugin) => {
   }
 };
 
-const debounce = (fn: (...args: any[]) => void, delay: number) => {
-  let timer: NodeJS.Timeout | undefined;
-  return (...args: any[]) => {
-    if (timer) {
-      clearTimeout(timer);
-    }
-    timer = setTimeout(() => {
-      fn(...args);
-      timer = undefined;
-    }, delay);
-  };
-};
-
 const onDocumentChange = debounce((event: DocumentChangeEvent) => {
   for (const change of event.documentChanges) {
     console.log(change);
@@ -183,47 +179,6 @@ const onSelectionChange = () => {
 
 figma.on("documentchange", onDocumentChange);
 figma.on("selectionchange", onSelectionChange);
-
-function setComponentInfo(
-  node: ComponentNode,
-  info: ComponentInfo | undefined
-) {
-  node.setPluginData("component", info ? JSON.stringify(info) : "");
-}
-
-function getComponentInfo(node: ComponentNode): ComponentInfo | undefined {
-  const data = node.getPluginData("component");
-  if (data) {
-    return JSON.parse(data) as ComponentInfo;
-  }
-}
-
-function setInstanceInfo(node: SceneNode, info: InstanceInfo | undefined) {
-  node.setPluginData("instance", info ? JSON.stringify(info) : "");
-}
-
-function getInstanceInfo(node: SceneNode): InstanceInfo | undefined {
-  const data = node.getPluginData("instance");
-  if (data) {
-    return JSON.parse(data) as InstanceInfo;
-  }
-}
-
-interface RenderedSize {
-  width: number;
-  height: number;
-}
-
-function setRenderedSize(node: SceneNode, size: RenderedSize) {
-  node.setPluginData("renderedSize", JSON.stringify(size));
-}
-
-function getRenderedSize(node: SceneNode): RenderedSize | undefined {
-  const data = node.getPluginData("renderedSize");
-  if (data) {
-    return JSON.parse(data) as RenderedSize;
-  }
-}
 
 async function renderInstance(node: FrameNode) {
   const instanceInfo = getInstanceInfo(node);
