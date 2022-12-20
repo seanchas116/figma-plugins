@@ -33,7 +33,7 @@ export const Button = ({
   primary = false,
   size = "medium",
   backgroundColor,
-  label,
+  label = "Button",
   ...props
 }: ButtonProps) => {
   const mode = primary
