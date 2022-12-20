@@ -1,4 +1,5 @@
 import { ComponentState } from "./data";
+import type { ComponentDoc } from "react-docgen-typescript";
 
 export type MessageToPlugin =
   | {
@@ -16,6 +17,12 @@ export type MessageToPlugin =
         png: ArrayBuffer;
         width: number;
         height: number;
+      };
+    }
+  | {
+      type: "syncAssets";
+      payload: {
+        componentDocs?: ComponentDoc[];
       };
     };
 
