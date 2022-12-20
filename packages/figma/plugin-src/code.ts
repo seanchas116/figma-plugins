@@ -81,21 +81,34 @@ figma.ui.onmessage = async (msg: MessageToPlugin) => {
         (page) => page.name === "Component Catalog"
       );
       if (!page) {
-        const page = figma.createPage();
+        page = figma.createPage();
         page.name = "Component Catalog";
       }
 
+      const components = new Map<string, ComponentNode>();
+      for (const node of page.children) {
+        if (node.type === "COMPONENT") {
+          const info = getComponentInfo(node);
+          if (info) {
+            components.set(info.path + "#" + info.name, node);
+          }
+        }
+      }
+
       for (const componentDoc of msg.payload.componentDocs || []) {
-        const component = figma.createComponent();
-        component.name = componentDoc.displayName;
+        const key = componentDoc.filePath + "#" + componentDoc.displayName;
+        let component = components.get(key);
+        if (!component) {
+          component = figma.createComponent();
+          setComponentInfo(component, {
+            path: componentDoc.filePath,
+            name: componentDoc.displayName,
+          });
+          page.appendChild(component);
+        }
+
         component.resize(100, 100);
-
-        setComponentInfo(component, {
-          path: componentDoc.filePath,
-          name: componentDoc.displayName,
-        });
-
-        page!.appendChild(component);
+        component.name = componentDoc.displayName;
       }
 
       figma.notify("Components & tokens synced to your Figma file!");
