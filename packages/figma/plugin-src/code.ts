@@ -81,6 +81,23 @@ figma.ui.onmessage = async (msg: MessageToPlugin) => {
     case "syncAssets": {
       // TODO: generate components
 
+      let page = figma.root.findChild(
+        (page) => page.name === "Component Catalog"
+      );
+      if (!page) {
+        const page = figma.createPage();
+        page.name = "Component Catalog";
+      }
+
+      for (const componentDoc of msg.payload.componentDocs || []) {
+        const component = figma.createComponent();
+        component.name = componentDoc.displayName;
+        component.resize(100, 100);
+        component.setPluginData("component", JSON.stringify(componentDoc));
+
+        page!.appendChild(component);
+      }
+
       figma.notify("Components & tokens synced to your Figma file!");
       break;
     }
