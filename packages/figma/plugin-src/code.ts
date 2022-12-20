@@ -100,8 +100,6 @@ figma.ui.onmessage = async (msg: MessageToPlugin) => {
           page.appendChild(component);
         }
 
-        component.resize(100, 100);
-
         const result = await renderInstanceImage({
           path: componentDoc.filePath,
           name: componentDoc.displayName,
@@ -114,7 +112,6 @@ figma.ui.onmessage = async (msg: MessageToPlugin) => {
           { type: "IMAGE", imageHash: img.hash, scaleMode: "CROP" },
         ];
         component.resize(result.width, result.height);
-
         component.name = componentDoc.displayName;
       }
 
