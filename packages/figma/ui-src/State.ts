@@ -1,12 +1,12 @@
 import { signal } from "@preact/signals";
 import { ComponentDoc } from "react-docgen-typescript";
-import { InstanceState } from "../data";
+import { InstanceInfo } from "../data";
 import { MessageToUI } from "../message";
 import { postMessageToPlugin } from "./common";
 
 class State {
   private _componentDocs = signal<ComponentDoc[]>([]);
-  private _instance = signal<InstanceState | undefined>(undefined);
+  private _instance = signal<InstanceInfo | undefined>(undefined);
 
   get componentDocs() {
     return this._componentDocs.value;
@@ -30,7 +30,7 @@ class State {
     });
   }
 
-  updateInstance(instance?: InstanceState) {
+  updateInstance(instance?: InstanceInfo) {
     this._instance.value = instance;
     postMessageToPlugin({
       type: "updateInstance",

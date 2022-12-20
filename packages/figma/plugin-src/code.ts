@@ -1,4 +1,4 @@
-import { InstanceState } from "../data";
+import { InstanceInfo } from "../data";
 import { MessageToPlugin, MessageToUI } from "../message";
 
 figma.showUI(__html__, { width: 240, height: 200 });
@@ -134,7 +134,7 @@ const onDocumentChange = debounce((event: DocumentChangeEvent) => {
       if (!componentData) {
         continue;
       }
-      const component = JSON.parse(componentData) as InstanceState;
+      const component = JSON.parse(componentData) as InstanceInfo;
 
       if (renderedSizeData) {
         const renderedSize = JSON.parse(renderedSizeData) as {
@@ -182,13 +182,13 @@ const onDocumentChange = debounce((event: DocumentChangeEvent) => {
 const onSelectionChange = () => {
   const selection = figma.currentPage.selection;
 
-  let componentState: InstanceState | undefined;
+  let componentState: InstanceInfo | undefined;
 
   if (selection.length > 0) {
     const current = selection[0];
     const data = current.getPluginData("instance");
     if (data) {
-      componentState = JSON.parse(data) as InstanceState;
+      componentState = JSON.parse(data) as InstanceInfo;
     }
   }
 

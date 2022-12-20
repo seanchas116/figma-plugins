@@ -1,4 +1,4 @@
-import { InstanceState } from "./data";
+import { InstanceInfo } from "./data";
 import type { ComponentDoc } from "react-docgen-typescript";
 
 export type MessageToPlugin =
@@ -8,7 +8,7 @@ export type MessageToPlugin =
   | {
       type: "updateInstance";
       payload: {
-        instance?: InstanceState;
+        instance?: InstanceInfo;
       };
     }
   | {
@@ -40,6 +40,6 @@ export type MessageToUI =
   | {
       type: "instanceChanged";
       payload: {
-        instance?: InstanceState;
+        instance?: InstanceInfo;
       };
     };
