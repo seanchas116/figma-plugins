@@ -21,6 +21,7 @@
     "buffer": "^6.0.3",
     "clsx": "^1.2.1",
     "lodash-es": "^4.17.21",
+    "parse-css-color": "^0.2.1",
     "preact": "^10.11.3",
     "tailwind-merge": "^1.8.0"
   },

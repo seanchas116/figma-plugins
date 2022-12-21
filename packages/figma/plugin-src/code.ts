@@ -11,6 +11,7 @@ import {
 } from "./pluginData";
 import { debounce, postMessageToUI } from "./common";
 import { onRenderDone, renderInstance, renderInstanceImage } from "./render";
+import parseCSSColor from "parse-css-color";
 
 figma.showUI(__html__, { width: 240, height: 240 });
 
@@ -85,7 +86,22 @@ figma.ui.onmessage = async (msg: MessageToPlugin) => {
           setPaintStyleMetadata(style, { name });
         }
         style.name = name;
-        style.paints = [{ type: "SOLID", color: { r: 1, g: 1, b: 1 } }];
+        const color = parseCSSColor(value);
+        if (color?.type === "rgb") {
+          // TODO: support other color types
+          style.paints = [
+            {
+              type: "SOLID",
+              color: {
+                r: color.values[0] / 255,
+                g: color.values[1] / 255,
+                b: color.values[2] / 255,
+              },
+              opacity: color.alpha,
+            },
+          ];
+        }
+
         style.description = value;
       }
 
