@@ -44,7 +44,7 @@ export function getInstanceInfo(node: InstanceNode): InstanceInfo | undefined {
 
 export function getTargetInfo(node: InstanceNode): TargetInfo | undefined {
   const instance = getInstanceInfo(node);
-  const component = getComponentInfo(node);
+  const component = getComponentInfo(node); // from main component
   if (instance && component) {
     return {
       instance,
