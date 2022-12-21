@@ -23,7 +23,8 @@ export type MessageToPlugin =
   | {
       type: "syncAssets";
       payload: {
-        componentDocs?: ComponentDoc[];
+        componentDocs: ComponentDoc[];
+        colors: Record<string, string>;
       };
     }
   | {

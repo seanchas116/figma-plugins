@@ -77,7 +77,7 @@ figma.ui.onmessage = async (msg: MessageToPlugin) => {
         }
       }
 
-      for (const componentDoc of msg.payload.componentDocs || []) {
+      for (const componentDoc of msg.payload.componentDocs) {
         const key = componentDoc.filePath + "#" + componentDoc.displayName;
         let component = components.get(key);
         if (!component) {

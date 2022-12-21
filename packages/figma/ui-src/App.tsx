@@ -11,6 +11,7 @@ export const App: FunctionComponent = () => {
       type: "syncAssets",
       payload: {
         componentDocs: state.componentDocs,
+        colors: state.colors,
       },
     });
   };
