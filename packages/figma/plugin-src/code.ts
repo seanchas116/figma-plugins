@@ -187,27 +187,19 @@ const onDocumentChange = debounce((event: DocumentChangeEvent) => {
 const onSelectionChange = () => {
   const selection = figma.currentPage.selection;
 
-  let instanceInfo: InstanceInfo | undefined;
-  let componentInfo: ComponentInfo | undefined;
+  let target: Target | undefined;
 
   if (selection.length > 0) {
     const current = selection[0];
     if (current.type === "INSTANCE") {
-      instanceInfo = getInstanceInfo(current);
-      componentInfo = getComponentInfo(current);
+      target = getTarget(current);
     }
   }
 
   postMessageToUI({
     type: "targetChanged",
     payload: {
-      target:
-        instanceInfo && componentInfo
-          ? {
-              instance: instanceInfo,
-              component: componentInfo,
-            }
-          : undefined,
+      target,
     },
   });
 };
