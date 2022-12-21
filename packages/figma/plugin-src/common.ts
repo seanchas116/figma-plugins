@@ -42,11 +42,12 @@ export function findFontForWeight(fonts: FontName[], weight: number): FontName {
   const candidates: [FontName, number][] = [];
 
   for (const font of fonts) {
-    const style = font.style.toLowerCase();
-    if (style.includes("italic")) {
+    const style = font.style.toLowerCase().trim();
+    const words = style.split(/\s+/);
+    if (words.length !== 1) {
       continue;
     }
-    const styleName = style.replace("italic", "").trim();
+    const styleName = words[0];
     const styleWeight = fontWeightForName[styleName];
 
     if (styleWeight) {
