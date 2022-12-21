@@ -1,4 +1,4 @@
-import { ComponentInfo, InstanceInfo } from "../data";
+import { ComponentInfo, InstanceInfo, Target } from "../data";
 
 export function setComponentInfo(
   node: ComponentNode,
@@ -36,10 +36,19 @@ export function getInstanceInfo(node: InstanceNode): InstanceInfo | undefined {
   const componentInfo = getComponentInfo(node);
   if (componentInfo) {
     return {
-      path: componentInfo.path,
-      name: componentInfo.name,
       props: {},
       autoResize: "widthHeight",
+    };
+  }
+}
+
+export function getTarget(node: InstanceNode): Target | undefined {
+  const instance = getInstanceInfo(node);
+  const component = getComponentInfo(node);
+  if (instance && component) {
+    return {
+      instance,
+      component,
     };
   }
 }

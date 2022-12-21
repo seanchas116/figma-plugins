@@ -44,28 +44,29 @@ const FixedSizeIcon = () => {
 };
 
 export const InstanceEdit: FunctionComponent = () => {
-  const instance = state.instance;
-  const componentDoc = state.componentDocs.find(
-    (doc) =>
-      doc.filePath === instance?.path && doc.displayName === instance?.name
-  );
-
-  if (!instance) {
+  const target = state.target;
+  if (!target) {
     return null;
   }
 
+  const componentDoc = state.componentDocs.find(
+    (doc) =>
+      doc.filePath === target.component.path &&
+      doc.displayName === target.component.name
+  );
+  const instance = target.instance;
+
   return (
     <div className="flex flex-col gap-2">
-      <h1 className="mt-2 font-bold text-sm">{instance?.name}</h1>
+      <h1 className="mt-2 font-bold text-sm">
+        {componentDoc?.displayName ?? "Component Not Found"}
+      </h1>
       <div>
         <button
           className="p-0.5 rounded text-gray-500 hover:bg-gray-100 aria-selected:bg-blue-500 aria-selected:text-white"
           title="Auto Width"
-          aria-selected={instance?.autoResize === "widthHeight"}
+          aria-selected={instance.autoResize === "widthHeight"}
           onClick={() => {
-            if (!instance) {
-              return;
-            }
             state.updateInstance({
               ...instance,
               autoResize: "widthHeight",
@@ -77,11 +78,8 @@ export const InstanceEdit: FunctionComponent = () => {
         <button
           className="p-0.5 rounded text-gray-500 hover:bg-gray-100 aria-selected:bg-blue-500 aria-selected:text-white"
           title="Auto Height"
-          aria-selected={instance?.autoResize === "height"}
+          aria-selected={instance.autoResize === "height"}
           onClick={() => {
-            if (!instance) {
-              return;
-            }
             state.updateInstance({
               ...instance,
               autoResize: "height",
@@ -93,11 +91,8 @@ export const InstanceEdit: FunctionComponent = () => {
         <button
           className="p-0.5 rounded text-gray-500 hover:bg-gray-100 aria-selected:bg-blue-500 aria-selected:text-white"
           title="Fixed Size"
-          aria-selected={instance?.autoResize === "none"}
+          aria-selected={instance.autoResize === "none"}
           onClick={() => {
-            if (!instance) {
-              return;
-            }
             state.updateInstance({
               ...instance,
               autoResize: "none",
@@ -111,7 +106,7 @@ export const InstanceEdit: FunctionComponent = () => {
         {componentDoc &&
           Object.values(componentDoc.props).map((prop) => {
             const name = prop.name;
-            const value = instance?.props?.[name];
+            const value = instance.props?.[name];
 
             let input: JSX.Element | undefined;
 

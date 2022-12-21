@@ -1,4 +1,4 @@
-import { InstanceInfo } from "../data";
+import { ComponentInfo, InstanceInfo, Target } from "../data";
 import { MessageToPlugin, MessageToUI } from "../message";
 import {
   setInstanceInfo,
@@ -7,6 +7,7 @@ import {
   getInstanceInfo,
   getRenderedSize,
   setRenderedSize,
+  getTarget,
 } from "./pluginData";
 import { debounce } from "./util";
 
@@ -107,10 +108,14 @@ figma.ui.onmessage = async (msg: MessageToPlugin) => {
         }
 
         const result = await renderInstanceImage({
-          path: componentDoc.filePath,
-          name: componentDoc.displayName,
-          props: {},
-          autoResize: "none",
+          component: {
+            path: componentDoc.filePath,
+            name: componentDoc.displayName,
+          },
+          instance: {
+            props: {},
+            autoResize: "none",
+          },
         });
 
         const img = await figma.createImage(new Uint8Array(result.png));
@@ -138,8 +143,9 @@ const onDocumentChange = debounce((event: DocumentChangeEvent) => {
         change.properties.includes("height"))
     ) {
       const node = change.node;
+      const componentInfo = getComponentInfo(node);
       const instanceInfo = getInstanceInfo(node);
-      if (!instanceInfo) {
+      if (!componentInfo || !instanceInfo) {
         continue;
       }
 
@@ -164,9 +170,12 @@ const onDocumentChange = debounce((event: DocumentChangeEvent) => {
 
         setInstanceInfo(node, newInstanceInfo);
         postMessageToUI({
-          type: "instanceChanged",
+          type: "targetChanged",
           payload: {
-            instance: newInstanceInfo,
+            target: {
+              component: getComponentInfo(node)!,
+              instance: newInstanceInfo,
+            },
           },
         });
       }
@@ -179,19 +188,27 @@ const onDocumentChange = debounce((event: DocumentChangeEvent) => {
 const onSelectionChange = () => {
   const selection = figma.currentPage.selection;
 
-  let componentState: InstanceInfo | undefined;
+  let instanceInfo: InstanceInfo | undefined;
+  let componentInfo: ComponentInfo | undefined;
 
   if (selection.length > 0) {
     const current = selection[0];
     if (current.type === "INSTANCE") {
-      componentState = getInstanceInfo(current);
+      instanceInfo = getInstanceInfo(current);
+      componentInfo = getComponentInfo(current);
     }
   }
 
   postMessageToUI({
-    type: "instanceChanged",
+    type: "targetChanged",
     payload: {
-      instance: componentState,
+      target:
+        instanceInfo && componentInfo
+          ? {
+              instance: instanceInfo,
+              component: componentInfo,
+            }
+          : undefined,
     },
   });
 };
@@ -200,19 +217,20 @@ figma.on("documentchange", onDocumentChange);
 figma.on("selectionchange", onSelectionChange);
 
 async function renderInstanceImage(
-  instanceInfo: InstanceInfo,
+  target: Target,
   width?: number,
   height?: number
 ): Promise<RenderResult> {
   const requestID = Math.random();
 
-  const autoResize = instanceInfo.autoResize;
+  const autoResize = target.instance.autoResize;
 
   postMessageToUI({
     type: "render",
     requestID,
     payload: {
-      ...instanceInfo,
+      ...target.component,
+      ...target.instance,
       width: autoResize === "widthHeight" ? undefined : width,
       height: autoResize !== "none" ? undefined : height,
     },
@@ -224,16 +242,12 @@ async function renderInstanceImage(
 }
 
 async function renderInstance(node: InstanceNode) {
-  const instanceInfo = getInstanceInfo(node);
-  if (!instanceInfo) {
+  const target = getTarget(node);
+  if (!target) {
     return;
   }
 
-  const result = await renderInstanceImage(
-    instanceInfo,
-    node.width,
-    node.height
-  );
+  const result = await renderInstanceImage(target, node.width, node.height);
 
   const img = await figma.createImage(new Uint8Array(result.png));
   console.log(img.hash);

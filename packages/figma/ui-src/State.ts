@@ -1,12 +1,12 @@
 import { signal } from "@preact/signals";
 import { ComponentDoc } from "react-docgen-typescript";
-import { InstanceInfo } from "../data";
+import { InstanceInfo, Target } from "../data";
 import { MessageToUI } from "../message";
 import { postMessageToPlugin } from "./common";
 
 class State {
   private _componentDocs = signal<ComponentDoc[]>([]);
-  private _instance = signal<InstanceInfo | undefined>(undefined);
+  private _target = signal<Target | undefined>(undefined);
 
   get componentDocs() {
     return this._componentDocs.value;
@@ -15,23 +15,31 @@ class State {
     this._componentDocs.value = value;
   }
 
-  get instance() {
-    return this._instance.value;
+  get target() {
+    return this._target.value;
   }
 
   constructor() {
     window.addEventListener("message", (event) => {
       if (event.data.pluginMessage) {
         const message = event.data.pluginMessage as MessageToUI;
-        if (message.type === "instanceChanged") {
-          this._instance.value = message.payload.instance;
+        if (message.type === "targetChanged") {
+          this._target.value = message.payload.target;
         }
       }
     });
   }
 
-  updateInstance(instance?: InstanceInfo) {
-    this._instance.value = instance;
+  updateInstance(instance: InstanceInfo) {
+    if (!this.target) {
+      return;
+    }
+
+    this._target.value = {
+      component: this.target.component,
+      instance,
+    };
+
     postMessageToPlugin({
       type: "updateInstance",
       payload: {
@@ -41,14 +49,14 @@ class State {
   }
 
   updateInstanceProps(values: Record<string, any>) {
-    if (!this.instance) {
+    if (!this.target) {
       return;
     }
 
     state.updateInstance({
-      ...this.instance,
+      ...this.target.instance,
       props: {
-        ...this.instance.props,
+        ...this.target.instance.props,
         ...values,
       },
     });
