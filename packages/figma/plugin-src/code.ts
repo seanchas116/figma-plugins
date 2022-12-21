@@ -1,28 +1,16 @@
-import { ComponentInfo, InstanceInfo, TargetInfo } from "../data";
-import { MessageToPlugin, MessageToUI } from "../message";
+import { InstanceInfo, TargetInfo } from "../data";
+import { MessageToPlugin } from "../message";
 import {
   setInstanceInfo,
   getComponentInfo,
   setComponentInfo,
   getRenderedSize,
-  setRenderedSize,
   getTargetInfo,
 } from "./pluginData";
-import { debounce } from "./util";
+import { debounce, postMessageToUI } from "./common";
+import { onRenderDone, renderInstance, renderInstanceImage } from "./render";
 
 figma.showUI(__html__, { width: 240, height: 240 });
-
-function postMessageToUI(msg: MessageToUI) {
-  figma.ui.postMessage(msg);
-}
-
-interface RenderResult {
-  png: ArrayBuffer;
-  width: number;
-  height: number;
-}
-
-const renderCallbacks = new Map<number, (payload: RenderResult) => void>();
 
 figma.ui.onmessage = async (msg: MessageToPlugin) => {
   switch (msg.type) {
@@ -64,12 +52,7 @@ figma.ui.onmessage = async (msg: MessageToPlugin) => {
     }
 
     case "renderDone": {
-      const callback = renderCallbacks.get(msg.requestID);
-      if (callback) {
-        renderCallbacks.delete(msg.requestID);
-        callback(msg.payload);
-      }
-
+      onRenderDone(msg.requestID, msg.payload);
       break;
     }
 
@@ -205,47 +188,3 @@ const onSelectionChange = () => {
 
 figma.on("documentchange", onDocumentChange);
 figma.on("selectionchange", onSelectionChange);
-
-async function renderInstanceImage(
-  target: TargetInfo,
-  width?: number,
-  height?: number
-): Promise<RenderResult> {
-  const requestID = Math.random();
-
-  const autoResize = target.instance.autoResize;
-
-  postMessageToUI({
-    type: "render",
-    requestID,
-    payload: {
-      ...target.component,
-      ...target.instance,
-      width: autoResize === "widthHeight" ? undefined : width,
-      height: autoResize !== "none" ? undefined : height,
-    },
-  });
-
-  return new Promise<RenderResult>((resolve) => {
-    renderCallbacks.set(requestID, resolve);
-  });
-}
-
-async function renderInstance(node: InstanceNode) {
-  const target = getTargetInfo(node);
-  if (!target) {
-    return;
-  }
-
-  const result = await renderInstanceImage(target, node.width, node.height);
-
-  const img = await figma.createImage(new Uint8Array(result.png));
-  console.log(img.hash);
-
-  setRenderedSize(node, {
-    width: result.width,
-    height: result.height,
-  });
-  node.fills = [{ type: "IMAGE", imageHash: img.hash, scaleMode: "CROP" }];
-  node.resize(result.width, result.height);
-}
