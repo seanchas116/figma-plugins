@@ -23,8 +23,9 @@ export type MessageFromRenderIFrame =
       };
     }
   | {
-      type: "components";
+      type: "assets";
       payload: {
         components: ComponentDoc[];
+        colors: Record<string, string>;
       };
     };

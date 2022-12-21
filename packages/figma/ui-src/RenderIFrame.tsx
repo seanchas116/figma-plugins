@@ -40,7 +40,7 @@ export const RenderIFrame: React.FC = () => {
             });
             break;
           }
-          case "components": {
+          case "assets": {
             console.log(message.payload);
             state.componentDocs = message.payload.components;
             break;
