@@ -11,7 +11,7 @@ import {
   getTextStyleMetadata,
   setTextStyleMetadata,
 } from "./pluginData";
-import { debounce, postMessageToUI } from "./common";
+import { debounce, findFontForWeight, postMessageToUI } from "./common";
 import { onRenderDone, renderInstance, renderInstanceImage } from "./render";
 import parseCSSColor from "parse-css-color";
 
@@ -117,6 +117,8 @@ figma.ui.onmessage = async (msg: MessageToPlugin) => {
         }
       }
 
+      const allFonts = await figma.listAvailableFontsAsync();
+
       for (const [name, value] of Object.entries(assets.textStyles)) {
         let style = textStyles.get(name);
         if (!style) {
@@ -125,25 +127,30 @@ figma.ui.onmessage = async (msg: MessageToPlugin) => {
         }
         style.name = name;
 
-        const font = {
-          family: value.fontFamily,
-          style: "Regular", // TODO: weight
-        };
-        await figma.loadFontAsync(font);
-        style.fontName = font;
-        style.fontSize = value.fontSize;
-        style.lineHeight = value.lineHeight
-          ? {
-              unit: "PERCENT",
-              value: value.lineHeight * 100,
-            }
-          : {
-              unit: "AUTO",
-            };
-        style.letterSpacing = {
-          unit: "PERCENT",
-          value: (value.letterSpacing ?? 0) * 100,
-        };
+        try {
+          const fonts = allFonts
+            .filter((font) => font.fontName.family === value.fontFamily)
+            .map((font) => font.fontName);
+
+          const font = findFontForWeight(fonts, value.fontWeight);
+          await figma.loadFontAsync(font);
+          style.fontName = font;
+          style.fontSize = value.fontSize;
+          style.lineHeight = value.lineHeight
+            ? {
+                unit: "PERCENT",
+                value: value.lineHeight * 100,
+              }
+            : {
+                unit: "AUTO",
+              };
+          style.letterSpacing = {
+            unit: "PERCENT",
+            value: (value.letterSpacing ?? 0) * 100,
+          };
+        } catch (e) {
+          console.error(e);
+        }
       }
 
       const components = new Map<string, ComponentNode>();

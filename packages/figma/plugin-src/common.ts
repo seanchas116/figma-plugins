@@ -16,3 +16,51 @@ export const debounce = (fn: (...args: any[]) => void, delay: number) => {
     }, delay);
   };
 };
+
+const fontWeightForName: Record<string, number> = {
+  thin: 100,
+  extralight: 200,
+  light: 300,
+  regular: 400,
+  medium: 500,
+  semibold: 600,
+  bold: 700,
+  extrabold: 800,
+  black: 900,
+  w1: 100,
+  w2: 200,
+  w3: 300,
+  w4: 400,
+  w5: 500,
+  w6: 600,
+  w7: 700,
+  w8: 800,
+  w9: 900,
+};
+
+export function findFontForWeight(fonts: FontName[], weight: number): FontName {
+  const candidates: [FontName, number][] = [];
+
+  for (const font of fonts) {
+    const style = font.style.toLowerCase();
+    if (style.includes("italic")) {
+      continue;
+    }
+    const styleName = style.replace("italic", "").trim();
+    const styleWeight = fontWeightForName[styleName];
+
+    if (styleWeight) {
+      candidates.push([font, styleWeight]);
+    }
+  }
+
+  candidates.sort((a, b) => a[1] - b[1]);
+
+  for (const [font, styleWeight] of candidates) {
+    if (styleWeight >= weight) {
+      return font;
+    }
+  }
+
+  return fonts[0];
+}
