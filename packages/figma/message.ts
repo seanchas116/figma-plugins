@@ -1,4 +1,4 @@
-import { ComponentInfo, InstanceInfo, Target } from "./data";
+import { ComponentInfo, InstanceInfo, TargetInfo } from "./data";
 import type { ComponentDoc } from "react-docgen-typescript";
 
 export type MessageToPlugin =
@@ -49,6 +49,6 @@ export type MessageToUI =
   | {
       type: "targetChanged";
       payload: {
-        target?: Target;
+        target?: TargetInfo;
       };
     };

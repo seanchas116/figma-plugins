@@ -8,7 +8,7 @@ export interface ComponentInfo {
   name: string;
 }
 
-export interface Target {
+export interface TargetInfo {
   component: ComponentInfo;
   instance: InstanceInfo;
 }

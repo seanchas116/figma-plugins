@@ -1,13 +1,12 @@
-import { ComponentInfo, InstanceInfo, Target } from "../data";
+import { ComponentInfo, InstanceInfo, TargetInfo } from "../data";
 import { MessageToPlugin, MessageToUI } from "../message";
 import {
   setInstanceInfo,
   getComponentInfo,
   setComponentInfo,
-  getInstanceInfo,
   getRenderedSize,
   setRenderedSize,
-  getTarget,
+  getTargetInfo,
 } from "./pluginData";
 import { debounce } from "./util";
 
@@ -143,7 +142,7 @@ const onDocumentChange = debounce((event: DocumentChangeEvent) => {
         change.properties.includes("height"))
     ) {
       const node = change.node;
-      const target = getTarget(node);
+      const target = getTargetInfo(node);
       if (!target) {
         continue;
       }
@@ -187,12 +186,12 @@ const onDocumentChange = debounce((event: DocumentChangeEvent) => {
 const onSelectionChange = () => {
   const selection = figma.currentPage.selection;
 
-  let target: Target | undefined;
+  let target: TargetInfo | undefined;
 
   if (selection.length > 0) {
     const current = selection[0];
     if (current.type === "INSTANCE") {
-      target = getTarget(current);
+      target = getTargetInfo(current);
     }
   }
 
@@ -208,7 +207,7 @@ figma.on("documentchange", onDocumentChange);
 figma.on("selectionchange", onSelectionChange);
 
 async function renderInstanceImage(
-  target: Target,
+  target: TargetInfo,
   width?: number,
   height?: number
 ): Promise<RenderResult> {
@@ -233,7 +232,7 @@ async function renderInstanceImage(
 }
 
 async function renderInstance(node: InstanceNode) {
-  const target = getTarget(node);
+  const target = getTargetInfo(node);
   if (!target) {
     return;
   }

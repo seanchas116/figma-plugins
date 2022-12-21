@@ -1,12 +1,12 @@
 import { signal } from "@preact/signals";
 import { ComponentDoc } from "react-docgen-typescript";
-import { InstanceInfo, Target } from "../data";
+import { InstanceInfo, TargetInfo } from "../data";
 import { MessageToUI } from "../message";
 import { postMessageToPlugin } from "./common";
 
 class State {
   private _componentDocs = signal<ComponentDoc[]>([]);
-  private _target = signal<Target | undefined>(undefined);
+  private _target = signal<TargetInfo | undefined>(undefined);
 
   get componentDocs() {
     return this._componentDocs.value;
