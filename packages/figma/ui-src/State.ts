@@ -1,31 +1,27 @@
 import { signal } from "@preact/signals";
 import { ComponentDoc } from "react-docgen-typescript";
-import { InstanceInfo, TargetInfo } from "../data";
+import { InstanceInfo, TargetInfo, TextStyleData } from "../data";
 import { MessageToUI } from "../message";
 import { postMessageToPlugin } from "./common";
 
 class State {
-  private _componentDocs = signal<ComponentDoc[]>([]);
-  private _colors = signal<Record<string, string>>({});
-  private _target = signal<TargetInfo | undefined>(undefined);
+  $assets = signal<{
+    components: ComponentDoc[];
+    colorStyles: Record<string, string>;
+    textStyles: Record<string, TextStyleData>;
+  }>({
+    components: [],
+    colorStyles: {},
+    textStyles: {},
+  });
+  private $target = signal<TargetInfo | undefined>(undefined);
 
   get componentDocs() {
-    return this._componentDocs.value;
-  }
-  set componentDocs(value: ComponentDoc[]) {
-    this._componentDocs.value = value;
-  }
-
-  get colors() {
-    return this._colors.value;
-  }
-
-  set colors(value: Record<string, string>) {
-    this._colors.value = value;
+    return this.$assets.value.components;
   }
 
   get target() {
-    return this._target.value;
+    return this.$target.value;
   }
 
   constructor() {
@@ -33,7 +29,7 @@ class State {
       if (event.data.pluginMessage) {
         const message = event.data.pluginMessage as MessageToUI;
         if (message.type === "targetChanged") {
-          this._target.value = message.payload.target;
+          this.$target.value = message.payload.target;
         }
       }
     });
@@ -44,7 +40,7 @@ class State {
       return;
     }
 
-    this._target.value = {
+    this.$target.value = {
       component: this.target.component,
       instance,
     };

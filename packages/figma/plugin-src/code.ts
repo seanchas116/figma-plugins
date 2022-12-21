@@ -70,6 +70,8 @@ figma.ui.onmessage = async (msg: MessageToPlugin) => {
         page.name = "Component Catalog";
       }
 
+      const assets = msg.payload.assets;
+
       const paintStyles = new Map<string, PaintStyle>();
 
       for (const style of figma.getLocalPaintStyles()) {
@@ -79,7 +81,7 @@ figma.ui.onmessage = async (msg: MessageToPlugin) => {
         }
       }
 
-      for (const [name, value] of Object.entries(msg.payload.colors)) {
+      for (const [name, value] of Object.entries(assets.colorStyles)) {
         let style = paintStyles.get(name);
         if (!style) {
           style = figma.createPaintStyle();
@@ -115,7 +117,7 @@ figma.ui.onmessage = async (msg: MessageToPlugin) => {
         }
       }
 
-      for (const componentDoc of msg.payload.componentDocs) {
+      for (const componentDoc of assets.components) {
         const key = componentDoc.filePath + "#" + componentDoc.displayName;
         let component = components.get(key);
         if (!component) {

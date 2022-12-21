@@ -4,7 +4,7 @@ import { MessageFromRenderIFrame, MessageToRenderIFrame } from "./message";
 import React from "react";
 import { ComponentDoc } from "react-docgen-typescript";
 import componentDocs from "./docs.json";
-import { colors } from "./tokens";
+import { colors, textStyles } from "./tokens";
 
 const root = document.getElementById("root") as HTMLElement;
 root.style.width = "max-content";
@@ -100,6 +100,7 @@ sendMessage({
   type: "assets",
   payload: {
     components: componentDocs as any as ComponentDoc[],
-    colors,
+    colorStyles: colors,
+    textStyles,
   },
 });

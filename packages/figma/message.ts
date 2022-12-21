@@ -1,4 +1,4 @@
-import { InstanceInfo, TargetInfo } from "./data";
+import { TextStyleData, InstanceInfo, TargetInfo, Assets } from "./data";
 import type { ComponentDoc } from "react-docgen-typescript";
 
 export type MessageToPlugin =
@@ -23,8 +23,7 @@ export type MessageToPlugin =
   | {
       type: "syncAssets";
       payload: {
-        componentDocs: ComponentDoc[];
-        colors: Record<string, string>;
+        assets: Assets;
       };
     }
   | {

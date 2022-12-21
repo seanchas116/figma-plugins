@@ -7,16 +7,19 @@ export const colors = {
 
 export const textStyles = {
   heading: {
+    fontFamily: "Noto Sans",
     fontSize: 24,
     fontWeight: 600,
     lineHeight: 1.25,
   },
   body: {
+    fontFamily: "Noto Sans",
     fontSize: 16,
     fontWeight: 400,
     lineHeight: 1.5,
   },
   small: {
+    fontFamily: "Noto Sans",
     fontSize: 14,
     fontWeight: 400,
     lineHeight: 1.5,

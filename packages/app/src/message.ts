@@ -26,6 +26,16 @@ export type MessageFromRenderIFrame =
       type: "assets";
       payload: {
         components: ComponentDoc[];
-        colors: Record<string, string>;
+        colorStyles: Record<string, string>;
+        textStyles: Record<
+          string,
+          {
+            fontFamily: string;
+            fontSize: number;
+            fontWeight: number;
+            lineHeight?: number;
+            letterSpacing?: number;
+          }
+        >;
       };
     };

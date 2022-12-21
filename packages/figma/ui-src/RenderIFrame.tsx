@@ -42,8 +42,11 @@ export const RenderIFrame: React.FC = () => {
           }
           case "assets": {
             console.log(message.payload);
-            state.componentDocs = message.payload.components;
-            state.colors = message.payload.colors;
+            state.$assets.value = {
+              components: message.payload.components,
+              colorStyles: message.payload.colorStyles,
+              textStyles: message.payload.textStyles,
+            };
             break;
           }
         }

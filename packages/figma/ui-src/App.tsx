@@ -10,8 +10,7 @@ export const App: FunctionComponent = () => {
     postMessageToPlugin({
       type: "syncAssets",
       payload: {
-        componentDocs: state.componentDocs,
-        colors: state.colors,
+        assets: state.$assets.value,
       },
     });
   };
