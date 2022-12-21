@@ -143,9 +143,8 @@ const onDocumentChange = debounce((event: DocumentChangeEvent) => {
         change.properties.includes("height"))
     ) {
       const node = change.node;
-      const componentInfo = getComponentInfo(node);
-      const instanceInfo = getInstanceInfo(node);
-      if (!componentInfo || !instanceInfo) {
+      const target = getTarget(node);
+      if (!target) {
         continue;
       }
 
@@ -158,13 +157,13 @@ const onDocumentChange = debounce((event: DocumentChangeEvent) => {
         continue;
       }
 
-      if (instanceInfo.autoResize !== "none") {
+      if (target.instance.autoResize !== "none") {
         const newAutoResize = change.properties.includes("height")
           ? "none"
           : "height";
 
         const newInstanceInfo: InstanceInfo = {
-          ...instanceInfo,
+          ...target.instance,
           autoResize: newAutoResize,
         };
 
@@ -173,7 +172,7 @@ const onDocumentChange = debounce((event: DocumentChangeEvent) => {
           type: "targetChanged",
           payload: {
             target: {
-              component: getComponentInfo(node)!,
+              ...target,
               instance: newInstanceInfo,
             },
           },
