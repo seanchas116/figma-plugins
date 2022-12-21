@@ -8,7 +8,7 @@ export function setComponentInfo(
 }
 
 export function getComponentInfo(
-  node: ComponentNode
+  node: ComponentNode | InstanceNode
 ): ComponentInfo | undefined {
   const data = node.getPluginData("component");
   if (data) {
@@ -33,7 +33,7 @@ export function getInstanceInfo(node: InstanceNode): InstanceInfo | undefined {
     return JSON.parse(data) as InstanceInfo;
   }
 
-  const componentInfo = getComponentInfo(node.mainComponent);
+  const componentInfo = getComponentInfo(node);
   if (componentInfo) {
     return {
       path: componentInfo.path,
