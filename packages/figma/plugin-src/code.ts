@@ -8,6 +8,8 @@ import {
   getTargetInfo,
   getPaintStyleMetadata,
   setPaintStyleMetadata,
+  getTextStyleMetadata,
+  setTextStyleMetadata,
 } from "./pluginData";
 import { debounce, postMessageToUI } from "./common";
 import { onRenderDone, renderInstance, renderInstanceImage } from "./render";
@@ -105,6 +107,43 @@ figma.ui.onmessage = async (msg: MessageToPlugin) => {
         }
 
         style.description = value;
+      }
+
+      const textStyles = new Map<string, TextStyle>();
+      for (const style of figma.getLocalTextStyles()) {
+        const metadata = getTextStyleMetadata(style);
+        if (metadata) {
+          textStyles.set(metadata.name, style);
+        }
+      }
+
+      for (const [name, value] of Object.entries(assets.textStyles)) {
+        let style = textStyles.get(name);
+        if (!style) {
+          style = figma.createTextStyle();
+          setTextStyleMetadata(style, { name });
+        }
+        style.name = name;
+
+        const font = {
+          family: value.fontFamily,
+          style: "Regular", // TODO: weight
+        };
+        await figma.loadFontAsync(font);
+        style.fontName = font;
+        style.fontSize = value.fontSize;
+        style.lineHeight = value.lineHeight
+          ? {
+              unit: "PERCENT",
+              value: value.lineHeight * 100,
+            }
+          : {
+              unit: "AUTO",
+            };
+        style.letterSpacing = {
+          unit: "PERCENT",
+          value: (value.letterSpacing ?? 0) * 100,
+        };
       }
 
       const components = new Map<string, ComponentNode>();

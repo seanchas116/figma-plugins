@@ -88,3 +88,23 @@ export function getPaintStyleMetadata(
     return JSON.parse(data) as PaintStyleMetadata;
   }
 }
+
+export interface TextStyleMetadata {
+  name: string;
+}
+
+export function setTextStyleMetadata(
+  node: TextStyle,
+  metadata: TextStyleMetadata
+) {
+  node.setPluginData("metadata", JSON.stringify(metadata));
+}
+
+export function getTextStyleMetadata(
+  node: TextStyle
+): TextStyleMetadata | undefined {
+  const data = node.getPluginData("metadata");
+  if (data) {
+    return JSON.parse(data) as TextStyleMetadata;
+  }
+}
