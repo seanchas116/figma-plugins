@@ -2,7 +2,7 @@ export const colors = {
   background: "#fff",
   text: "#333",
   primary: "#1ea7fd",
-  border: "#rgba(0, 0, 0, 0.15)",
+  border: "rgba(0, 0, 0, 0.15)",
 };
 
 export const textStyles = {
