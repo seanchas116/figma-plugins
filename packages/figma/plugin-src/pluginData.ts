@@ -68,3 +68,23 @@ export function getRenderedSize(node: InstanceNode): RenderedSize | undefined {
     return JSON.parse(data) as RenderedSize;
   }
 }
+
+export interface PaintStyleMetadata {
+  name: string;
+}
+
+export function setPaintStyleMetadata(
+  node: PaintStyle,
+  metadata: PaintStyleMetadata
+) {
+  node.setPluginData("metadata", JSON.stringify(metadata));
+}
+
+export function getPaintStyleMetadata(
+  node: PaintStyle
+): PaintStyleMetadata | undefined {
+  const data = node.getPluginData("metadata");
+  if (data) {
+    return JSON.parse(data) as PaintStyleMetadata;
+  }
+}

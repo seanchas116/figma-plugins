@@ -6,6 +6,8 @@ import {
   setComponentInfo,
   getRenderedSize,
   getTargetInfo,
+  getPaintStyleMetadata,
+  setPaintStyleMetadata,
 } from "./pluginData";
 import { debounce, postMessageToUI } from "./common";
 import { onRenderDone, renderInstance, renderInstanceImage } from "./render";
@@ -65,6 +67,26 @@ figma.ui.onmessage = async (msg: MessageToPlugin) => {
       if (!page) {
         page = figma.createPage();
         page.name = "Component Catalog";
+      }
+
+      const paintStyles = new Map<string, PaintStyle>();
+
+      for (const style of figma.getLocalPaintStyles()) {
+        const metadata = getPaintStyleMetadata(style);
+        if (metadata) {
+          paintStyles.set(metadata.name, style);
+        }
+      }
+
+      for (const [name, value] of Object.entries(msg.payload.colors)) {
+        let style = paintStyles.get(name);
+        if (!style) {
+          style = figma.createPaintStyle();
+          setPaintStyleMetadata(style, { name });
+        }
+        style.name = name;
+        style.paints = [{ type: "SOLID", color: { r: 1, g: 1, b: 1 } }];
+        style.description = value;
       }
 
       const components = new Map<string, ComponentNode>();
