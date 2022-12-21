@@ -25,6 +25,13 @@ export type MessageToPlugin =
       payload: {
         componentDocs?: ComponentDoc[];
       };
+    }
+  | {
+      type: "resize";
+      payload: {
+        width: number;
+        height: number;
+      };
     };
 
 export type MessageToUI =

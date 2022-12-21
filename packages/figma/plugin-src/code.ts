@@ -30,6 +30,10 @@ figma.ui.onmessage = async (msg: MessageToPlugin) => {
       onSelectionChange();
       break;
     }
+    case "resize": {
+      figma.ui.resize(msg.payload.width, msg.payload.height);
+      break;
+    }
     case "updateInstance": {
       console.log(msg);
 

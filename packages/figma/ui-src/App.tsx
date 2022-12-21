@@ -2,6 +2,7 @@ import { FunctionComponent } from "preact";
 import { postMessageToPlugin } from "./common";
 import { InstanceEdit } from "./InstanceEdit";
 import { RenderIFrame } from "./RenderIFrame";
+import { Resizer } from "./Resizer";
 import { state } from "./State";
 
 export const App: FunctionComponent = () => {
@@ -24,6 +25,7 @@ export const App: FunctionComponent = () => {
       </button>
       <InstanceEdit />
       <RenderIFrame />
+      <Resizer />
     </div>
   );
 };
