@@ -6,6 +6,7 @@ import { postMessageToPlugin } from "./common";
 
 class State {
   private _componentDocs = signal<ComponentDoc[]>([]);
+  private _colors = signal<Record<string, string>>({});
   private _target = signal<TargetInfo | undefined>(undefined);
 
   get componentDocs() {
@@ -13,6 +14,14 @@ class State {
   }
   set componentDocs(value: ComponentDoc[]) {
     this._componentDocs.value = value;
+  }
+
+  get colors() {
+    return this._colors.value;
+  }
+
+  set colors(value: Record<string, string>) {
+    this._colors.value = value;
   }
 
   get target() {
