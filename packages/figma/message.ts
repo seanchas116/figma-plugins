@@ -1,4 +1,4 @@
-import { ComponentInfo, InstanceInfo, TargetInfo } from "./data";
+import { InstanceInfo, TargetInfo } from "./data";
 import type { ComponentDoc } from "react-docgen-typescript";
 
 export type MessageToPlugin =
