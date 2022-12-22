@@ -15,6 +15,8 @@ import { debounce, findFontForWeight, postMessageToUI } from "./common";
 import { onRenderDone, renderInstance, renderInstanceImage } from "./render";
 import parseCSSColor from "parse-css-color";
 
+const productName = "Component Catalog";
+
 figma.showUI(__html__, { width: 240, height: 240 });
 
 figma.ui.onmessage = async (msg: MessageToPlugin) => {
@@ -64,12 +66,10 @@ figma.ui.onmessage = async (msg: MessageToPlugin) => {
     case "syncAssets": {
       // TODO: generate components
 
-      let page = figma.root.findChild(
-        (page) => page.name === "Component Catalog"
-      );
+      let page = figma.root.findChild((page) => page.name === productName);
       if (!page) {
         page = figma.createPage();
-        page.name = "Component Catalog";
+        page.name = productName;
       }
 
       const assets = msg.payload.assets;
@@ -89,7 +89,7 @@ figma.ui.onmessage = async (msg: MessageToPlugin) => {
           style = figma.createPaintStyle();
           setPaintStyleMetadata(style, { name });
         }
-        style.name = name;
+        style.name = `${productName}/${name}`;
         const color = parseCSSColor(value);
         if (color?.type === "rgb") {
           // TODO: support other color types
@@ -125,7 +125,7 @@ figma.ui.onmessage = async (msg: MessageToPlugin) => {
           style = figma.createTextStyle();
           setTextStyleMetadata(style, { name });
         }
-        style.name = name;
+        style.name = `${productName}/${name}`;
 
         try {
           const fonts = allFonts
@@ -174,6 +174,7 @@ figma.ui.onmessage = async (msg: MessageToPlugin) => {
           });
           page.appendChild(component);
         }
+        component.name = `${productName}/${componentDoc.displayName}`;
 
         const result = await renderInstanceImage({
           component: {
@@ -191,7 +192,6 @@ figma.ui.onmessage = async (msg: MessageToPlugin) => {
           { type: "IMAGE", imageHash: img.hash, scaleMode: "CROP" },
         ];
         component.resize(result.width, result.height);
-        component.name = componentDoc.displayName;
       }
 
       figma.notify("Components & tokens synced to your Figma file!");
