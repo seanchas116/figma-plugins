@@ -5,55 +5,48 @@ import { action } from "mobx";
 import { observer } from "mobx-react-lite";
 
 function renderFigmaRectLikeNodes(
-  node: Node<"FRAME"> | Node<"COMPONENT"> | Node<"INSTANCE"> | Node<"RECTANGLE">
+  node:
+    | Node<"FRAME">
+    | Node<"COMPONENT">
+    | Node<"INSTANCE">
+    | Node<"RECTANGLE">
+    | Node<"TEXT">,
+  offset: { x: number; y: number }
 ): JSX.Element {
-  let svgFill = "none";
-
-  for (const fill of node.fills) {
-    if (fill.type === "SOLID" && fill.color) {
-      const r = Math.round(fill.color.r * 255);
-      const g = Math.round(fill.color.g * 255);
-      const b = Math.round(fill.color.b * 255);
-      const a = fill.opacity ?? 1;
-      svgFill = `rgba(${r}, ${g}, ${b}, ${a})`;
-    }
-    if (fill.type === "IMAGE" && fill.imageRef) {
-      console.log(fill.imageRef);
-    }
-  }
-
   return (
     <>
-      <rect
-        x={node.absoluteBoundingBox.x}
-        y={node.absoluteBoundingBox.y}
-        width={node.absoluteBoundingBox.width}
-        height={node.absoluteBoundingBox.height}
-        fill={svgFill}
-      />
-      {"children" in node &&
-        node.children.map((child) => {
-          return renderFigmaNode(child);
-        })}
+      <div
+        className="absolute hover:ring-1 hover:ring-red-500"
+        style={{
+          left: node.absoluteBoundingBox.x - offset.x + "px",
+          top: node.absoluteBoundingBox.y - offset.y + "px",
+          width: node.absoluteBoundingBox.width + "px",
+          height: node.absoluteBoundingBox.height + "px",
+        }}
+      >
+        {"children" in node &&
+          node.children.map((child) => {
+            return renderFigmaNode(child, {
+              x: node.absoluteBoundingBox.x,
+              y: node.absoluteBoundingBox.y,
+            });
+          })}
+      </div>
     </>
   );
 }
 
-function renderFigmaNode(node: Node): JSX.Element | null {
+function renderFigmaNode(
+  node: Node,
+  offset: { x: number; y: number }
+): JSX.Element | null {
   switch (node.type) {
     case "FRAME":
     case "COMPONENT":
     case "INSTANCE":
     case "RECTANGLE":
-      return renderFigmaRectLikeNodes(node as any);
-    case "CANVAS":
-      return (
-        <>
-          {(node as Node<"CANVAS">).children.map((child) => {
-            return renderFigmaNode(child);
-          })}
-        </>
-      );
+    case "TEXT":
+      return renderFigmaRectLikeNodes(node as any, offset);
     default:
       return null;
   }
@@ -113,6 +106,13 @@ export const Inspector: React.FC = observer(() => {
               src={node.screenshotSVG}
             />
           );
+        })}
+
+        {state.rootNodes.map((node) => {
+          return renderFigmaNode(node.node, {
+            x: 0,
+            y: 0,
+          });
         })}
       </div>
 
