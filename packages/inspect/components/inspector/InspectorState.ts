@@ -1,6 +1,7 @@
 import { makeObservable, observable } from "mobx";
 import type { Node } from "figma-api/lib/ast-types";
 import type { GetFileResult } from "figma-api/lib/api-types";
+import { Vec2 } from "paintvec";
 
 function fileIDFromFigmaFileURL(fileURL: string): string | undefined {
   const match = fileURL.match(/https:\/\/www.figma.com\/file\/([^\/]*)/);
@@ -88,4 +89,6 @@ export class InspectorState {
   }
 
   @observable.ref hoveredNode: Node | undefined = undefined;
+
+  @observable.ref scroll = new Vec2(0);
 }

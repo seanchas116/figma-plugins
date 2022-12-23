@@ -1,9 +1,10 @@
-import { useMemo } from "react";
+import { createRef, useEffect, useMemo } from "react";
 import type { Node } from "figma-api/lib/ast-types";
 import { InspectorState } from "./InspectorState";
 import { action } from "mobx";
 import { observer } from "mobx-react-lite";
 import clsx from "clsx";
+import { Vec2 } from "paintvec";
 
 function renderFigmaNode(
   state: InspectorState,
@@ -48,41 +49,35 @@ function renderFigmaNode(
   );
 }
 
-export const Inspector: React.FC = observer(() => {
-  const state = useMemo(() => new InspectorState(), []);
+const Viewport: React.FC<{ state: InspectorState }> = observer(({ state }) => {
+  const ref = createRef<HTMLDivElement>();
+  useEffect(() => {
+    const onWheel = action((event: WheelEvent) => {
+      event.preventDefault();
+      event.stopPropagation();
+      state.scroll = state.scroll.sub(new Vec2(event.deltaX, event.deltaY));
+    });
+
+    const element = ref.current;
+    if (element) {
+      element.addEventListener("wheel", onWheel);
+      return () => {
+        element.removeEventListener("wheel", onWheel);
+      };
+    }
+  }, []);
 
   return (
-    <section className="flex flex-col gap-2 p-2">
-      <h1 className="text-2xl font-bold">Inspector</h1>
-      <dl>
-        <dt>Figma Access Token</dt>
-        <dd>
-          <input
-            className="border border-gray-300 rounded-md shadow-sm py-1 px-1 focus:outline-none focus:ring-blue-500 focus:border-blue-500 w-full"
-            value={state.accessToken}
-            onChange={action((event) => {
-              state.accessToken = event.currentTarget.value;
-            })}
-          />
-        </dd>
-        <dt>File URL</dt>
-        <dd>
-          <input
-            className="border border-gray-300 rounded-md shadow-sm py-1 px-1 focus:outline-none focus:ring-blue-500 focus:border-blue-500 w-full"
-            value={state.fileURL}
-            onChange={action((event) => {
-              state.fileURL = event.currentTarget.value;
-            })}
-          />
-        </dd>
-      </dl>
-      <button
-        className="border border-gray-300 rounded-md shadow-sm py-1 px-1 focus:outline-none focus:ring-blue-500 focus:border-blue-500 w-fit"
-        onClick={action(() => state.fetchFigma())}
+    <div
+      ref={ref}
+      className="relative w-full h-[640px] bg-gray-300 border border-gray-500 overflow-hidden"
+    >
+      <div
+        style={{
+          transformOrigin: "left top",
+          transform: `translate(${state.scroll.x}px, ${state.scroll.y}px)`,
+        }}
       >
-        Fetch
-      </button>
-      <div className="relative w-[640px] h-[480px] bg-gray-300 border border-gray-500 overflow-hidden">
         {state.rootNodes.map((node) => {
           const rect = (node.node as Node<"FRAME">).absoluteBoundingBox;
 
@@ -112,7 +107,44 @@ export const Inspector: React.FC = observer(() => {
           });
         })}
       </div>
+    </div>
+  );
+});
 
+export const Inspector: React.FC = observer(() => {
+  const state = useMemo(() => new InspectorState(), []);
+
+  return (
+    <section className="flex flex-col gap-2 p-2">
+      <dl>
+        <dt>Figma Access Token</dt>
+        <dd>
+          <input
+            className="border border-gray-300 rounded-md shadow-sm py-1 px-1 focus:outline-none focus:ring-blue-500 focus:border-blue-500 w-full"
+            value={state.accessToken}
+            onChange={action((event) => {
+              state.accessToken = event.currentTarget.value;
+            })}
+          />
+        </dd>
+        <dt>File URL</dt>
+        <dd>
+          <input
+            className="border border-gray-300 rounded-md shadow-sm py-1 px-1 focus:outline-none focus:ring-blue-500 focus:border-blue-500 w-full"
+            value={state.fileURL}
+            onChange={action((event) => {
+              state.fileURL = event.currentTarget.value;
+            })}
+          />
+        </dd>
+      </dl>
+      <button
+        className="border border-gray-300 rounded-md shadow-sm py-1 px-1 focus:outline-none focus:ring-blue-500 focus:border-blue-500 w-fit"
+        onClick={action(() => state.fetchFigma())}
+      >
+        Fetch
+      </button>
+      <Viewport state={state} />
       <pre
         className="
         text-xs
