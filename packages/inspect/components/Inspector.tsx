@@ -30,13 +30,13 @@ export const Inspector: React.FC = () => {
   };
 
   return (
-    <section>
+    <section className="flex flex-col gap-2 p-2">
       <h1 className="text-2xl font-bold">Inspector</h1>
       <dl>
         <dt>Figma Access Token</dt>
         <dd>
           <input
-            className="border border-gray-300 rounded-md shadow-sm py-1 px-1 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            className="border border-gray-300 rounded-md shadow-sm py-1 px-1 focus:outline-none focus:ring-blue-500 focus:border-blue-500 w-full"
             value={accessToken}
             onChange={(event) => setAccessToken(event.currentTarget.value)}
           />
@@ -44,14 +44,14 @@ export const Inspector: React.FC = () => {
         <dt>File URL</dt>
         <dd>
           <input
-            className="border border-gray-300 rounded-md shadow-sm py-1 px-1 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            className="border border-gray-300 rounded-md shadow-sm py-1 px-1 focus:outline-none focus:ring-blue-500 focus:border-blue-500 w-full"
             value={fileURL}
             onChange={(event) => setFileURL(event.currentTarget.value)}
           />
         </dd>
       </dl>
       <button
-        className="border border-gray-300 rounded-md shadow-sm py-1 px-1 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+        className="border border-gray-300 rounded-md shadow-sm py-1 px-1 focus:outline-none focus:ring-blue-500 focus:border-blue-500 w-fit"
         onClick={fetchFigma}
       >
         Fetch
