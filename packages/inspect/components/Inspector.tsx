@@ -9,7 +9,7 @@ function fileIDFromFigmaFileURL(fileURL: string): string | undefined {
 }
 
 export const Inspector: React.FC = () => {
-  const [data, setData] = useState("TODO");
+  const [data, setData] = useState<unknown>(undefined);
   const [accessToken, setAccessToken] = useState("");
   const [fileURL, setFileURL] = useState("");
 
@@ -25,7 +25,7 @@ export const Inspector: React.FC = () => {
           "X-Figma-Token": accessToken,
         },
       })
-    ).text();
+    ).json();
     setData(response);
   };
 
@@ -56,7 +56,17 @@ export const Inspector: React.FC = () => {
       >
         Fetch
       </button>
-      <pre>{data}</pre>
+      <pre
+        className="
+        bg-gray-100
+        border border-gray-300
+        rounded-md
+        p-2
+        whitespace-pre-wrap
+        "
+      >
+        {JSON.stringify(data, null, 2)}
+      </pre>
     </section>
   );
 };
