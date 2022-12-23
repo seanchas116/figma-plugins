@@ -70,7 +70,7 @@ const Viewport: React.FC<{ state: InspectorState }> = observer(({ state }) => {
   return (
     <div
       ref={ref}
-      className="relative w-full h-[640px] bg-gray-300 border border-gray-500 overflow-hidden"
+      className="relative w-full flex-1 bg-gray-300 overflow-hidden"
     >
       <div
         style={{
@@ -85,6 +85,7 @@ const Viewport: React.FC<{ state: InspectorState }> = observer(({ state }) => {
             <img
               key={node.node.id}
               style={{
+                willChange: "transform",
                 pointerEvents: "none",
                 maxWidth: "unset",
                 position: "absolute",
@@ -115,45 +116,50 @@ export const Inspector: React.FC = observer(() => {
   const state = useMemo(() => new InspectorState(), []);
 
   return (
-    <section className="flex flex-col gap-2 p-2">
-      <dl>
-        <dt>Figma Access Token</dt>
-        <dd>
-          <input
-            type="password"
-            className="border border-gray-300 rounded-md shadow-sm py-1 px-1 focus:outline-none focus:ring-blue-500 focus:border-blue-500 w-full"
-            value={state.accessToken}
-            onChange={action((event) => {
-              state.accessToken = event.currentTarget.value;
-            })}
-          />
-        </dd>
-        <dt>File URL</dt>
-        <dd>
-          <input
-            className="border border-gray-300 rounded-md shadow-sm py-1 px-1 focus:outline-none focus:ring-blue-500 focus:border-blue-500 w-full"
-            value={state.fileURL}
-            onChange={action((event) => {
-              state.fileURL = event.currentTarget.value;
-            })}
-          />
-        </dd>
-      </dl>
-      <button
-        className="border border-gray-300 rounded-md shadow-sm py-1 px-1 focus:outline-none focus:ring-blue-500 focus:border-blue-500 w-fit"
-        onClick={action(() => state.fetchFigma())}
-      >
-        Fetch
-      </button>
-      <Viewport state={state} />
+    <section className="flex flex-col h-screen w-screen font-xs">
+      <div className="flex-1 flex">
+        <div className="w-[256px] p-2 flex flex-col gap-2">
+          <dl>
+            <dt>Figma Access Token</dt>
+            <dd>
+              <input
+                type="password"
+                className="border border-gray-300 rounded-md shadow-sm py-1 px-1 focus:outline-none focus:ring-blue-500 focus:border-blue-500 w-full"
+                value={state.accessToken}
+                onChange={action((event) => {
+                  state.accessToken = event.currentTarget.value;
+                })}
+              />
+            </dd>
+            <dt>File URL</dt>
+            <dd>
+              <input
+                className="border border-gray-300 rounded-md shadow-sm py-1 px-1 focus:outline-none focus:ring-blue-500 focus:border-blue-500 w-full"
+                value={state.fileURL}
+                onChange={action((event) => {
+                  state.fileURL = event.currentTarget.value;
+                })}
+              />
+            </dd>
+          </dl>
+          <button
+            className="border border-gray-300 rounded-md shadow-sm py-1 px-1 focus:outline-none focus:ring-blue-500 focus:border-blue-500 w-fit"
+            onClick={action(() => state.fetchFigma())}
+          >
+            Fetch
+          </button>
+        </div>
+        <Viewport state={state} />
+      </div>
       <pre
         className="
+        h-[384px]
         text-xs
         bg-gray-100
-        border border-gray-300
-        rounded-md
+        border-t border-gray-300
         p-2
         whitespace-pre-wrap
+        overflow-scroll
         "
       >
         {JSON.stringify(state.document, null, 2)}
