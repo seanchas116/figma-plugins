@@ -41,8 +41,12 @@ function fileIDFromFigmaFileURL(fileURL: string): string | undefined {
 
 export const Inspector: React.FC = () => {
   const [data, setData] = useState<GetFileResult | undefined>(undefined);
-  const [accessToken, setAccessToken] = useState("");
-  const [fileURL, setFileURL] = useState("");
+  const [accessToken, setAccessToken] = useState(
+    localStorage.getItem("figmaAccessToken") ?? ""
+  );
+  const [fileURL, setFileURL] = useState(
+    localStorage.getItem("figmaFileURL") ?? ""
+  );
 
   const fetchFigma = async () => {
     const fileID = fileIDFromFigmaFileURL(fileURL);
@@ -69,7 +73,11 @@ export const Inspector: React.FC = () => {
           <input
             className="border border-gray-300 rounded-md shadow-sm py-1 px-1 focus:outline-none focus:ring-blue-500 focus:border-blue-500 w-full"
             value={accessToken}
-            onChange={(event) => setAccessToken(event.currentTarget.value)}
+            onChange={(event) => {
+              const value = event.currentTarget.value;
+              setAccessToken(value);
+              localStorage.setItem("figmaAccessToken", value);
+            }}
           />
         </dd>
         <dt>File URL</dt>
@@ -77,7 +85,11 @@ export const Inspector: React.FC = () => {
           <input
             className="border border-gray-300 rounded-md shadow-sm py-1 px-1 focus:outline-none focus:ring-blue-500 focus:border-blue-500 w-full"
             value={fileURL}
-            onChange={(event) => setFileURL(event.currentTarget.value)}
+            onChange={(event) => {
+              const value = event.currentTarget.value;
+              setFileURL(value);
+              localStorage.setItem("figmaFileURL", value);
+            }}
           />
         </dd>
       </dl>
