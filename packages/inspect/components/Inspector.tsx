@@ -1,5 +1,35 @@
 import { useState } from "react";
 import type { GetFileResult } from "figma-api/lib/api-types";
+import type { Node } from "figma-api/lib/ast-types";
+
+function renderFigmaNode(node: Node): JSX.Element | null {
+  if (node.type === "FRAME") {
+    const frameNode = node as Node<"FRAME">;
+    return (
+      <>
+        <rect
+          x={frameNode.absoluteBoundingBox.x}
+          y={frameNode.absoluteBoundingBox.y}
+          width={frameNode.absoluteBoundingBox.width}
+          height={frameNode.absoluteBoundingBox.height}
+        ></rect>
+        {frameNode.children.map((child) => {
+          return renderFigmaNode(child);
+        })}
+      </>
+    );
+  } else if (node.type === "CANVAS") {
+    const pageNode = node as Node<"CANVAS">;
+    return (
+      <>
+        {pageNode.children.map((child) => {
+          return renderFigmaNode(child);
+        })}
+      </>
+    );
+  }
+  return null;
+}
 
 function fileIDFromFigmaFileURL(fileURL: string): string | undefined {
   const match = fileURL.match(/https:\/\/www.figma.com\/file\/([^\/]*)/);
@@ -57,6 +87,9 @@ export const Inspector: React.FC = () => {
       >
         Fetch
       </button>
+      <svg className="w-[640px] h-[480px] bg-gray-300">
+        {data && renderFigmaNode(data.document.children[0])}
+      </svg>
       <pre
         className="
         text-xs
