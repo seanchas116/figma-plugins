@@ -88,6 +88,7 @@ export const Inspector: React.FC = observer(() => {
 
           return (
             <img
+              key={node.node.id}
               style={{
                 pointerEvents: "none",
                 maxWidth: "unset",
