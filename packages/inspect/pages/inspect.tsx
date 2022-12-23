@@ -2,7 +2,8 @@ import dynamic from "next/dynamic";
 import Head from "next/head";
 
 const DynamicInspector = dynamic(
-  () => import("../components/Inspector").then((mod) => mod.Inspector),
+  () =>
+    import("../components/inspector/Inspector").then((mod) => mod.Inspector),
   {
     ssr: false,
   }

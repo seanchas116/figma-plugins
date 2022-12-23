@@ -1,6 +1,8 @@
-import { useState } from "react";
-import type { GetFileResult } from "figma-api/lib/api-types";
+import { useMemo } from "react";
 import type { Node } from "figma-api/lib/ast-types";
+import { InspectorState } from "./InspectorState";
+import { action } from "mobx";
+import { observer } from "mobx-react-lite";
 
 function renderFigmaRectLikeNodes(
   node: Node<"FRAME"> | Node<"COMPONENT"> | Node<"INSTANCE"> | Node<"RECTANGLE">
@@ -57,38 +59,8 @@ function renderFigmaNode(node: Node): JSX.Element | null {
   }
 }
 
-function fileIDFromFigmaFileURL(fileURL: string): string | undefined {
-  const match = fileURL.match(/https:\/\/www.figma.com\/file\/([^\/]*)/);
-  if (!match) {
-    return undefined;
-  }
-  return match[1];
-}
-
-export const Inspector: React.FC = () => {
-  const [data, setData] = useState<GetFileResult | undefined>(undefined);
-  const [accessToken, setAccessToken] = useState(
-    localStorage.getItem("figmaAccessToken") ?? ""
-  );
-  const [fileURL, setFileURL] = useState(
-    localStorage.getItem("figmaFileURL") ?? ""
-  );
-
-  const fetchFigma = async () => {
-    const fileID = fileIDFromFigmaFileURL(fileURL);
-    console.log(fileID);
-    if (!fileID) {
-      return;
-    }
-    const response = await (
-      await fetch(`https://api.figma.com/v1/files/${fileID}`, {
-        headers: {
-          "X-Figma-Token": accessToken,
-        },
-      })
-    ).json();
-    setData(response);
-  };
+export const Inspector: React.FC = observer(() => {
+  const state = useMemo(() => new InspectorState(), []);
 
   return (
     <section className="flex flex-col gap-2 p-2">
@@ -98,35 +70,31 @@ export const Inspector: React.FC = () => {
         <dd>
           <input
             className="border border-gray-300 rounded-md shadow-sm py-1 px-1 focus:outline-none focus:ring-blue-500 focus:border-blue-500 w-full"
-            value={accessToken}
-            onChange={(event) => {
-              const value = event.currentTarget.value;
-              setAccessToken(value);
-              localStorage.setItem("figmaAccessToken", value);
-            }}
+            value={state.accessToken}
+            onChange={action((event) => {
+              state.accessToken = event.currentTarget.value;
+            })}
           />
         </dd>
         <dt>File URL</dt>
         <dd>
           <input
             className="border border-gray-300 rounded-md shadow-sm py-1 px-1 focus:outline-none focus:ring-blue-500 focus:border-blue-500 w-full"
-            value={fileURL}
-            onChange={(event) => {
-              const value = event.currentTarget.value;
-              setFileURL(value);
-              localStorage.setItem("figmaFileURL", value);
-            }}
+            value={state.fileURL}
+            onChange={action((event) => {
+              state.fileURL = event.currentTarget.value;
+            })}
           />
         </dd>
       </dl>
       <button
         className="border border-gray-300 rounded-md shadow-sm py-1 px-1 focus:outline-none focus:ring-blue-500 focus:border-blue-500 w-fit"
-        onClick={fetchFigma}
+        onClick={action(() => state.fetchFigma())}
       >
         Fetch
       </button>
       <svg className="w-[640px] h-[480px] bg-gray-300">
-        {data && renderFigmaNode(data.document.children[0])}
+        {state.document && renderFigmaNode(state.document.children[0])}
       </svg>
       <pre
         className="
@@ -138,8 +106,8 @@ export const Inspector: React.FC = () => {
         whitespace-pre-wrap
         "
       >
-        {JSON.stringify(data, null, 2)}
+        {JSON.stringify(state.document, null, 2)}
       </pre>
     </section>
   );
-};
+});
