@@ -120,6 +120,7 @@ export const Inspector: React.FC = observer(() => {
         <dt>Figma Access Token</dt>
         <dd>
           <input
+            type="password"
             className="border border-gray-300 rounded-md shadow-sm py-1 px-1 focus:outline-none focus:ring-blue-500 focus:border-blue-500 w-full"
             value={state.accessToken}
             onChange={action((event) => {
