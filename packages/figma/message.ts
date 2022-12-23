@@ -1,5 +1,4 @@
-import { TextStyleData, InstanceInfo, TargetInfo, Assets } from "./data";
-import type { ComponentDoc } from "react-docgen-typescript";
+import { InstanceInfo, TargetInfo, Assets } from "./data";
 
 export type MessageToPlugin =
   | {
