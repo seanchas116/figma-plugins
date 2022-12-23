@@ -93,9 +93,28 @@ export const Inspector: React.FC = observer(() => {
       >
         Fetch
       </button>
-      <svg className="w-[640px] h-[480px] bg-gray-300">
-        {state.document && renderFigmaNode(state.document.children[0])}
-      </svg>
+      <div className="relative w-[640px] h-[480px] bg-gray-300 overflow-hidden">
+        {state.rootNodes.map((node) => {
+          const rect = (node.node as Node<"FRAME">).absoluteBoundingBox;
+
+          return (
+            <img
+              style={{
+                maxWidth: "unset",
+                position: "absolute",
+                left: rect.x,
+                top: rect.y,
+                width: rect.width,
+                height: rect.height,
+              }}
+              width={rect.width}
+              height={rect.height}
+              src={node.screenshotSVG}
+            />
+          );
+        })}
+      </div>
+
       <pre
         className="
         text-xs
