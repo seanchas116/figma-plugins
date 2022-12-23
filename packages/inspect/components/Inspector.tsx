@@ -1,4 +1,5 @@
 import { useState } from "react";
+import type { GetFileResult } from "figma-api/lib/api-types";
 
 function fileIDFromFigmaFileURL(fileURL: string): string | undefined {
   const match = fileURL.match(/https:\/\/www.figma.com\/file\/([^\/]*)/);
@@ -9,7 +10,7 @@ function fileIDFromFigmaFileURL(fileURL: string): string | undefined {
 }
 
 export const Inspector: React.FC = () => {
-  const [data, setData] = useState<unknown>(undefined);
+  const [data, setData] = useState<GetFileResult | undefined>(undefined);
   const [accessToken, setAccessToken] = useState("");
   const [fileURL, setFileURL] = useState("");
 
@@ -58,6 +59,7 @@ export const Inspector: React.FC = () => {
       </button>
       <pre
         className="
+        text-xs
         bg-gray-100
         border border-gray-300
         rounded-md
