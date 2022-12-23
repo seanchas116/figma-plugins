@@ -4,52 +4,36 @@ import { InspectorState } from "./InspectorState";
 import { action } from "mobx";
 import { observer } from "mobx-react-lite";
 
-function renderFigmaRectLikeNodes(
-  node:
-    | Node<"FRAME">
-    | Node<"COMPONENT">
-    | Node<"INSTANCE">
-    | Node<"RECTANGLE">
-    | Node<"TEXT">,
+function renderFigmaNode(
+  node: Node,
   offset: { x: number; y: number }
-): JSX.Element {
+): JSX.Element | null {
+  if (!("absoluteBoundingBox" in node)) {
+    return null;
+  }
+  const bbox = node.absoluteBoundingBox;
+
   return (
     <>
       <div
         className="absolute hover:ring-1 hover:ring-red-500"
         style={{
-          left: node.absoluteBoundingBox.x - offset.x + "px",
-          top: node.absoluteBoundingBox.y - offset.y + "px",
-          width: node.absoluteBoundingBox.width + "px",
-          height: node.absoluteBoundingBox.height + "px",
+          left: bbox.x - offset.x + "px",
+          top: bbox.y - offset.y + "px",
+          width: bbox.width + "px",
+          height: bbox.height + "px",
         }}
       >
         {"children" in node &&
           node.children.map((child) => {
             return renderFigmaNode(child, {
-              x: node.absoluteBoundingBox.x,
-              y: node.absoluteBoundingBox.y,
+              x: bbox.x,
+              y: bbox.y,
             });
           })}
       </div>
     </>
   );
-}
-
-function renderFigmaNode(
-  node: Node,
-  offset: { x: number; y: number }
-): JSX.Element | null {
-  switch (node.type) {
-    case "FRAME":
-    case "COMPONENT":
-    case "INSTANCE":
-    case "RECTANGLE":
-    case "TEXT":
-      return renderFigmaRectLikeNodes(node as any, offset);
-    default:
-      return null;
-  }
 }
 
 export const Inspector: React.FC = observer(() => {
