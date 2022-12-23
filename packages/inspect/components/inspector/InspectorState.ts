@@ -86,4 +86,6 @@ export class InspectorState {
     const json = await response.json();
     return json.images[node.id];
   }
+
+  @observable.ref hoveredNode: Node | undefined = undefined;
 }

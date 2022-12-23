@@ -3,8 +3,10 @@ import type { Node } from "figma-api/lib/ast-types";
 import { InspectorState } from "./InspectorState";
 import { action } from "mobx";
 import { observer } from "mobx-react-lite";
+import clsx from "clsx";
 
 function renderFigmaNode(
+  state: InspectorState,
   node: Node,
   offset: { x: number; y: number }
 ): JSX.Element | null {
@@ -13,20 +15,30 @@ function renderFigmaNode(
   }
   const bbox = node.absoluteBoundingBox;
 
+  const hovered = state.hoveredNode === node;
+
   return (
     <>
       <div
-        className="absolute hover:ring-1 hover:ring-red-500"
+        className={clsx("absolute", {
+          "ring-1 ring-red-500": hovered,
+        })}
         style={{
           left: bbox.x - offset.x + "px",
           top: bbox.y - offset.y + "px",
           width: bbox.width + "px",
           height: bbox.height + "px",
         }}
+        onMouseEnter={action(() => {
+          state.hoveredNode = node;
+        })}
+        onMouseLeave={action(() => {
+          state.hoveredNode = undefined;
+        })}
       >
         {"children" in node &&
           node.children.map((child) => {
-            return renderFigmaNode(child, {
+            return renderFigmaNode(state, child, {
               x: bbox.x,
               y: bbox.y,
             });
@@ -93,7 +105,7 @@ export const Inspector: React.FC = observer(() => {
         })}
 
         {state.rootNodes.map((node) => {
-          return renderFigmaNode(node.node, {
+          return renderFigmaNode(state, node.node, {
             x: 0,
             y: 0,
           });
