@@ -2,33 +2,59 @@ import { useState } from "react";
 import type { GetFileResult } from "figma-api/lib/api-types";
 import type { Node } from "figma-api/lib/ast-types";
 
-function renderFigmaNode(node: Node): JSX.Element | null {
-  if (node.type === "FRAME") {
-    const frameNode = node as Node<"FRAME">;
-    return (
-      <>
-        <rect
-          x={frameNode.absoluteBoundingBox.x}
-          y={frameNode.absoluteBoundingBox.y}
-          width={frameNode.absoluteBoundingBox.width}
-          height={frameNode.absoluteBoundingBox.height}
-        ></rect>
-        {frameNode.children.map((child) => {
-          return renderFigmaNode(child);
-        })}
-      </>
-    );
-  } else if (node.type === "CANVAS") {
-    const pageNode = node as Node<"CANVAS">;
-    return (
-      <>
-        {pageNode.children.map((child) => {
-          return renderFigmaNode(child);
-        })}
-      </>
-    );
+function renderFigmaRectLikeNodes(
+  node: Node<"FRAME"> | Node<"COMPONENT"> | Node<"INSTANCE"> | Node<"RECTANGLE">
+): JSX.Element {
+  let svgFill = "none";
+
+  for (const fill of node.fills) {
+    if (fill.type === "SOLID" && fill.color) {
+      const r = Math.round(fill.color.r * 255);
+      const g = Math.round(fill.color.g * 255);
+      const b = Math.round(fill.color.b * 255);
+      const a = fill.opacity ?? 1;
+      svgFill = `rgba(${r}, ${g}, ${b}, ${a})`;
+    }
+    if (fill.type === "IMAGE" && fill.imageRef) {
+      console.log(fill.imageRef);
+    }
   }
-  return null;
+
+  return (
+    <>
+      <rect
+        x={node.absoluteBoundingBox.x}
+        y={node.absoluteBoundingBox.y}
+        width={node.absoluteBoundingBox.width}
+        height={node.absoluteBoundingBox.height}
+        fill={svgFill}
+      />
+      {"children" in node &&
+        node.children.map((child) => {
+          return renderFigmaNode(child);
+        })}
+    </>
+  );
+}
+
+function renderFigmaNode(node: Node): JSX.Element | null {
+  switch (node.type) {
+    case "FRAME":
+    case "COMPONENT":
+    case "INSTANCE":
+    case "RECTANGLE":
+      return renderFigmaRectLikeNodes(node as any);
+    case "CANVAS":
+      return (
+        <>
+          {(node as Node<"CANVAS">).children.map((child) => {
+            return renderFigmaNode(child);
+          })}
+        </>
+      );
+    default:
+      return null;
+  }
 }
 
 function fileIDFromFigmaFileURL(fileURL: string): string | undefined {
