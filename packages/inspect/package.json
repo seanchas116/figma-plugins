@@ -11,6 +11,8 @@
   "dependencies": {
     "@next/font": "^13.1.0",
     "figma-api": "github:seanchas116/figma-api",
+    "mobx": "^6.7.0",
+    "mobx-react-lite": "^3.4.0",
     "next": "^13.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
