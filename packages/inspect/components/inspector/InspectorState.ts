@@ -69,6 +69,15 @@ export class InspectorState {
         };
       })
     );
+
+    if (this.rootNodes.length) {
+      const firstNodeBBox = (this.rootNodes[0].node as Node<"FRAME">)
+        .absoluteBoundingBox;
+      this.scroll = new Vec2(
+        -(firstNodeBBox.x + firstNodeBBox.width / 2) + 320,
+        -(firstNodeBBox.y + firstNodeBBox.height / 2) + 320
+      );
+    }
   }
 
   private async fetchScreenshotSVG(node: Node): Promise<string> {
