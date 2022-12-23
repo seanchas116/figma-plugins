@@ -1,4 +1,5 @@
 import { ComponentDoc } from "react-docgen-typescript";
+import { ColorStyleData, TextStyleData } from "./types";
 
 export type MessageToRenderIFrame = {
   type: "render";
@@ -26,16 +27,7 @@ export type MessageFromRenderIFrame =
       type: "assets";
       payload: {
         components: ComponentDoc[];
-        colorStyles: Record<string, string>;
-        textStyles: Record<
-          string,
-          {
-            fontFamily: string;
-            fontSize: number;
-            fontWeight: number;
-            lineHeight?: number;
-            letterSpacing?: number;
-          }
-        >;
+        colorStyles: Record<string, ColorStyleData>;
+        textStyles: Record<string, TextStyleData>;
       };
     };

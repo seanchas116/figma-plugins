@@ -15,16 +15,24 @@ export interface TargetInfo {
   instance: InstanceInfo;
 }
 
+export interface ColorStyleData {
+  value: string;
+  comment?: string;
+}
+
 export interface TextStyleData {
-  fontFamily: string;
-  fontSize: number;
-  fontWeight: number;
-  lineHeight?: number;
-  letterSpacing?: number;
+  value: {
+    fontFamily: string;
+    fontSize: number;
+    fontWeight: number;
+    lineHeight?: number;
+    letterSpacing?: number;
+  };
+  comment?: string;
 }
 
 export interface Assets {
   components: ComponentDoc[];
-  colorStyles: Record<string, string>;
+  colorStyles: Record<string, ColorStyleData>;
   textStyles: Record<string, TextStyleData>;
 }

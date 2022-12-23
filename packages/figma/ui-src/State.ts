@@ -1,13 +1,18 @@
 import { signal } from "@preact/signals";
 import { ComponentDoc } from "react-docgen-typescript";
-import { InstanceInfo, TargetInfo, TextStyleData } from "../data";
+import {
+  ColorStyleData,
+  InstanceInfo,
+  TargetInfo,
+  TextStyleData,
+} from "../data";
 import { MessageToUI } from "../message";
 import { postMessageToPlugin } from "./common";
 
 class State {
   $assets = signal<{
     components: ComponentDoc[];
-    colorStyles: Record<string, string>;
+    colorStyles: Record<string, ColorStyleData>;
     textStyles: Record<string, TextStyleData>;
   }>({
     components: [],

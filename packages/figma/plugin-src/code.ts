@@ -83,13 +83,16 @@ figma.ui.onmessage = async (msg: MessageToPlugin) => {
         }
       }
 
-      for (const [name, value] of Object.entries(assets.colorStyles)) {
+      for (const [name, { value, comment }] of Object.entries(
+        assets.colorStyles
+      )) {
         let style = paintStyles.get(name);
         if (!style) {
           style = figma.createPaintStyle();
           setPaintStyleMetadata(style, { name });
         }
         style.name = `${productName}/${name}`;
+        style.description = comment ?? "";
         const color = parseCSSColor(value);
         if (color?.type === "rgb") {
           // TODO: support other color types
@@ -105,8 +108,6 @@ figma.ui.onmessage = async (msg: MessageToPlugin) => {
             },
           ];
         }
-
-        style.description = value;
       }
 
       const textStyles = new Map<string, TextStyle>();
@@ -119,13 +120,16 @@ figma.ui.onmessage = async (msg: MessageToPlugin) => {
 
       const allFonts = await figma.listAvailableFontsAsync();
 
-      for (const [name, value] of Object.entries(assets.textStyles)) {
+      for (const [name, { value, comment }] of Object.entries(
+        assets.textStyles
+      )) {
         let style = textStyles.get(name);
         if (!style) {
           style = figma.createTextStyle();
           setTextStyleMetadata(style, { name });
         }
         style.name = `${productName}/${name}`;
+        style.description = comment ?? "";
 
         try {
           const fonts = allFonts
