@@ -93,7 +93,7 @@ export const Inspector: React.FC = observer(() => {
       >
         Fetch
       </button>
-      <div className="relative w-[640px] h-[480px] bg-gray-300 overflow-hidden">
+      <div className="relative w-[640px] h-[480px] bg-gray-300 border border-gray-500 overflow-hidden">
         {state.rootNodes.map((node) => {
           const rect = (node.node as Node<"FRAME">).absoluteBoundingBox;
 
