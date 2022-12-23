@@ -1,2 +1,3 @@
-# component-catalog
-Component catalog as Vite plugin
+# UIInspect
+
+Code export & import system for Figma

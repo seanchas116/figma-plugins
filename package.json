@@ -1,6 +1,7 @@
 {
-  "name": "component-catalog",
+  "name": "uiinspect",
   "version": "1.0.0",
+  "private": true,
   "description": "Component catalog as Vite plugin",
   "homepage": "https://github.com/seanchas116/component-catalog#readme",
   "bugs": {

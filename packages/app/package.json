@@ -1,15 +1,15 @@
 {
-  "name": "component-catalog",
-  "private": true,
+  "name": "@uiinspect/demoapp",
   "version": "0.0.0",
+  "private": true,
   "type": "module",
   "scripts": {
-    "docgen": "ts-node --esm ./scripts/docgen.ts",
-    "dev": "vite",
     "build": "tsc && vite build",
+    "build-storybook": "build-storybook",
+    "dev": "vite",
+    "docgen": "ts-node --esm ./scripts/docgen.ts",
     "preview": "vite preview",
-    "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "storybook": "start-storybook -p 6006"
   },
   "dependencies": {
     "downloadjs": "^1.4.7",

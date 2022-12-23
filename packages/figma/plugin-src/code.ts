@@ -15,7 +15,7 @@ import { debounce, findFontForWeight, postMessageToUI } from "./common";
 import { onRenderDone, renderInstance, renderInstanceImage } from "./render";
 import parseCSSColor from "parse-css-color";
 
-const productName = "UIFlux";
+const productName = "UIInspect";
 
 figma.showUI(__html__, { width: 240, height: 240 });
 

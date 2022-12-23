@@ -1,5 +1,5 @@
 {
-  "name": "component-catalog-figma",
+  "name": "@uiinspect/figma",
   "version": "1.0.0",
   "private": true,
   "description": "Place React component in Figma documents",
