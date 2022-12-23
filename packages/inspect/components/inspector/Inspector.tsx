@@ -100,6 +100,7 @@ export const Inspector: React.FC = observer(() => {
           return (
             <img
               style={{
+                pointerEvents: "none",
                 maxWidth: "unset",
                 position: "absolute",
                 left: rect.x,
