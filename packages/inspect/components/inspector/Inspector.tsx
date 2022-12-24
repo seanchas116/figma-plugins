@@ -179,7 +179,7 @@ export const Inspector: React.FC<{
             className="border border-gray-300 rounded-md shadow-sm py-1 px-1 focus:outline-none focus:ring-blue-500 focus:border-blue-500 w-fit"
             onClick={action(() => state.fetchFigma())}
           >
-            Fetch
+            Refresh
           </button>
           <div className="relative overflow-scroll flex-1">
             <div className="absolute left-0 top-0 w-max">

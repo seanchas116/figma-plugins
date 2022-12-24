@@ -16,6 +16,7 @@ export class InspectorState {
     this._accessToken = localStorage.getItem("figmaAccessToken") ?? "";
     this.fileID = fileID;
     makeObservable(this);
+    this.fetchFigma();
   }
 
   readonly fileID: string;
