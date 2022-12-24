@@ -127,7 +127,10 @@ const Viewport: React.FC<{ state: InspectorState }> = observer(({ state }) => {
         }}
       >
         {state.artboards.map(({ node, screenshotSVG }) => {
-          const rect = (node as Node<"FRAME">).absoluteBoundingBox;
+          if (!("absoluteBoundingBox" in node)) {
+            return null;
+          }
+          const rect = node.absoluteBoundingBox;
 
           return (
             // eslint-disable-next-line @next/next/no-img-element
