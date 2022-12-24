@@ -3,13 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "dev": "next dev",
+    "lint": "next lint",
+    "start": "next start"
   },
   "dependencies": {
     "@next/font": "^13.1.0",
+    "@uiinspect/figma-node": "*",
     "clsx": "^1.2.1",
     "figma-api": "github:seanchas116/figma-api",
     "mobx": "^6.7.0",

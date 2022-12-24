@@ -1,10 +1,10 @@
 import { createRef, useEffect, useMemo } from "react";
-import type { Node } from "figma-api/lib/ast-types";
 import { InspectorState } from "./InspectorState";
 import { action } from "mobx";
 import { observer } from "mobx-react-lite";
 import clsx from "clsx";
 import { Vec2 } from "paintvec";
+import { Node } from "@uiinspect/figma-node";
 
 const NodeHitBox: React.FC<{
   state: InspectorState;

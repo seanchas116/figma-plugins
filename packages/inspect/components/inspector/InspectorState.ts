@@ -1,7 +1,12 @@
 import { computed, makeObservable, observable } from "mobx";
-import type { Node } from "figma-api/lib/ast-types";
 import type { GetFileResult } from "figma-api/lib/api-types";
 import { Vec2 } from "paintvec";
+import type {
+  CanvasNode,
+  DocumentNode,
+  FrameNode,
+  Node,
+} from "@uiinspect/figma-node";
 
 function fileIDFromFigmaFileURL(fileURL: string): string | undefined {
   const match = fileURL.match(/https:\/\/www.figma.com\/file\/([^\/]*)/);
@@ -31,14 +36,14 @@ export class InspectorState {
     localStorage.setItem("figmaAccessToken", value);
   }
 
-  @observable.ref document: Node<"DOCUMENT"> | undefined = undefined;
+  @observable.ref document: DocumentNode | undefined = undefined;
   @observable.ref artboards: {
     node: Node;
     screenshotSVG: string;
   }[] = [];
 
   async fetchFigma() {
-    const response: GetFileResult = await (
+    const response = await (
       await fetch(`https://api.figma.com/v1/files/${this.fileID}`, {
         headers: {
           "X-Figma-Token": this._accessToken,
@@ -46,9 +51,9 @@ export class InspectorState {
       })
     ).json();
 
-    this.document = response.document;
+    this.document = response.document as DocumentNode;
 
-    const rootNodes = (this.document.children[0] as Node<"CANVAS">).children;
+    const rootNodes = (this.document.children[0] as CanvasNode).children;
 
     const screenshots = await this.fetchScreenshotSVGs(rootNodes);
 
@@ -60,7 +65,7 @@ export class InspectorState {
     });
 
     if (this.artboards.length) {
-      const firstNodeBBox = (this.artboards[0].node as Node<"FRAME">)
+      const firstNodeBBox = (this.artboards[0].node as FrameNode)
         .absoluteBoundingBox;
       this.scroll = new Vec2(
         -(firstNodeBBox.x + firstNodeBBox.width / 2) + 320,
