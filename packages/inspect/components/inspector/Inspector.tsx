@@ -59,7 +59,7 @@ const TreeItem: React.FC<{
   return (
     <>
       <div
-        className={clsx("flex items-center gap-2", {
+        className={clsx("h-6 flex items-center gap-2", {
           "bg-gray-200": hovered,
         })}
         style={{
