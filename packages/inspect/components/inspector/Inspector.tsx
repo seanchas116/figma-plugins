@@ -126,12 +126,14 @@ const Viewport: React.FC<{ state: InspectorState }> = observer(({ state }) => {
           transform: `translate(${state.scroll.x}px, ${state.scroll.y}px)`,
         }}
       >
-        {state.rootNodes.map((node) => {
-          const rect = (node.node as Node<"FRAME">).absoluteBoundingBox;
+        {state.artboards.map(({ node, screenshotSVG }) => {
+          const rect = (node as Node<"FRAME">).absoluteBoundingBox;
 
           return (
+            // eslint-disable-next-line @next/next/no-img-element
             <img
-              key={node.node.id}
+              alt={node.name}
+              key={node.id}
               style={{
                 willChange: "transform",
                 pointerEvents: "none",
@@ -144,7 +146,7 @@ const Viewport: React.FC<{ state: InspectorState }> = observer(({ state }) => {
               }}
               width={rect.width}
               height={rect.height}
-              src={node.screenshotSVG}
+              src={screenshotSVG}
             />
           );
         })}
@@ -159,12 +161,12 @@ const Viewport: React.FC<{ state: InspectorState }> = observer(({ state }) => {
             state.hoveredNodeID = undefined;
           })}
         >
-          {state.rootNodes.map((node) => {
+          {state.artboards.map(({ node }) => {
             return (
               <NodeHitBox
-                key={node.node.id}
+                key={node.id}
                 state={state}
-                node={node.node}
+                node={node}
                 offsetX={0}
                 offsetY={0}
               />
@@ -206,14 +208,9 @@ export const Inspector: React.FC<{
           </button>
           <div className="relative overflow-scroll flex-1">
             <div className="absolute left-0 top-0 w-max">
-              {state.rootNodes.map((node) => {
+              {state.artboards.map(({ node }) => {
                 return (
-                  <TreeItem
-                    key={node.node.id}
-                    state={state}
-                    node={node.node}
-                    depth={0}
-                  />
+                  <TreeItem key={node.id} state={state} node={node} depth={0} />
                 );
               })}
             </div>

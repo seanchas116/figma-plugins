@@ -32,7 +32,7 @@ export class InspectorState {
   }
 
   @observable.ref document: Node<"DOCUMENT"> | undefined = undefined;
-  @observable.ref rootNodes: {
+  @observable.ref artboards: {
     node: Node;
     screenshotSVG: string;
   }[] = [];
@@ -52,15 +52,15 @@ export class InspectorState {
 
     const screenshots = await this.fetchScreenshotSVGs(rootNodes);
 
-    this.rootNodes = rootNodes.map((node) => {
+    this.artboards = rootNodes.map((node) => {
       return {
         node,
         screenshotSVG: screenshots[node.id],
       };
     });
 
-    if (this.rootNodes.length) {
-      const firstNodeBBox = (this.rootNodes[0].node as Node<"FRAME">)
+    if (this.artboards.length) {
+      const firstNodeBBox = (this.artboards[0].node as Node<"FRAME">)
         .absoluteBoundingBox;
       this.scroll = new Vec2(
         -(firstNodeBBox.x + firstNodeBBox.width / 2) + 320,
