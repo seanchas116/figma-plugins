@@ -50,14 +50,14 @@ export class InspectorState {
 
     const rootNodes = (this.document.children[0] as Node<"CANVAS">).children;
 
-    this.rootNodes = await Promise.all(
-      rootNodes.map(async (node) => {
-        return {
-          node,
-          screenshotSVG: await this.fetchScreenshotSVG(node),
-        };
-      })
-    );
+    const screenshots = await this.fetchScreenshotSVGs(rootNodes);
+
+    this.rootNodes = rootNodes.map((node) => {
+      return {
+        node,
+        screenshotSVG: screenshots[node.id],
+      };
+    });
 
     if (this.rootNodes.length) {
       const firstNodeBBox = (this.rootNodes[0].node as Node<"FRAME">)
@@ -69,9 +69,13 @@ export class InspectorState {
     }
   }
 
-  private async fetchScreenshotSVG(node: Node): Promise<string> {
+  private async fetchScreenshotSVGs(nodes: Node[]): Promise<{
+    [nodeID: string]: string;
+  }> {
+    const ids = nodes.map((node) => node.id).join(",");
+
     const response = await fetch(
-      `https://api.figma.com/v1/images/${this.fileID}?ids=${node.id}&format=svg`,
+      `https://api.figma.com/v1/images/${this.fileID}?ids=${ids}&format=svg`,
       {
         headers: {
           "X-Figma-Token": this._accessToken,
@@ -79,7 +83,7 @@ export class InspectorState {
       }
     );
     const json = await response.json();
-    return json.images[node.id];
+    return json.images;
   }
 
   @observable.ref hoveredNode: Node | undefined = undefined;
