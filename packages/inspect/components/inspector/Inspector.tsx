@@ -118,7 +118,7 @@ const Viewport: React.FC<{ state: InspectorState }> = observer(({ state }) => {
   return (
     <div
       ref={ref}
-      className="relative w-full flex-1 bg-gray-300 overflow-hidden"
+      className="relative w-full flex-1 bg-gray-300 overflow-hidden contain-strict"
     >
       <div
         style={{
@@ -209,7 +209,7 @@ export const Inspector: React.FC<{
           >
             Refresh
           </button>
-          <div className="relative overflow-scroll flex-1">
+          <div className="relative overflow-scroll flex-1 contain-strict">
             <div className="absolute left-0 top-0 w-max">
               {state.artboards.map(({ node }) => {
                 return (
