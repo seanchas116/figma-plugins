@@ -1,5 +1,4 @@
 import { computed, makeObservable, observable } from "mobx";
-import type { GetFileResult } from "figma-api/lib/api-types";
 import { Vec2 } from "paintvec";
 import type {
   CanvasNode,
