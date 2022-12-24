@@ -6,20 +6,23 @@ import { observer } from "mobx-react-lite";
 import clsx from "clsx";
 import { Vec2 } from "paintvec";
 
-function renderFigmaNode(
-  state: InspectorState,
-  node: Node,
-  offset: { x: number; y: number }
-): JSX.Element | null {
+const NodeHitBox: React.FC<{
+  state: InspectorState;
+  node: Node;
+  offsetX: number;
+  offsetY: number;
+}> = observer(({ state, node, offsetX, offsetY }) => {
   if (!("absoluteBoundingBox" in node)) {
     return null;
   }
   if (node.visible === false) {
     return null;
   }
+
   const bbox = node.absoluteBoundingBox;
 
-  const hovered = state.hoveredNode === node;
+  const nodeState = state.getNodeState(node);
+  const hovered = nodeState.isHovered;
 
   return (
     <>
@@ -28,12 +31,13 @@ function renderFigmaNode(
           "ring-1 ring-red-500": hovered,
         })}
         style={{
-          left: bbox.x - offset.x + "px",
-          top: bbox.y - offset.y + "px",
+          left: bbox.x - offsetX + "px",
+          top: bbox.y - offsetY + "px",
           width: bbox.width + "px",
           height: bbox.height + "px",
         }}
         onMouseEnter={action(() => {
+          console.log("hovered", node);
           state.hoveredNode = node;
         })}
         onMouseLeave={action(() => {
@@ -42,22 +46,28 @@ function renderFigmaNode(
       >
         {"children" in node &&
           node.children.map((child) => {
-            return renderFigmaNode(state, child, {
-              x: bbox.x,
-              y: bbox.y,
-            });
+            return (
+              <NodeHitBox
+                key={child.id}
+                state={state}
+                node={child}
+                offsetX={bbox.x}
+                offsetY={bbox.y}
+              />
+            );
           })}
       </div>
     </>
   );
-}
+});
 
 const TreeItem: React.FC<{
   state: InspectorState;
   node: Node;
   depth: number;
 }> = observer(({ state, node, depth }) => {
-  const hovered = state.hoveredNode === node;
+  const nodeState = state.getNodeState(node);
+  const hovered = nodeState.isHovered;
 
   return (
     <>
@@ -146,10 +156,15 @@ const Viewport: React.FC<{ state: InspectorState }> = observer(({ state }) => {
         })}
 
         {state.rootNodes.map((node) => {
-          return renderFigmaNode(state, node.node, {
-            x: 0,
-            y: 0,
-          });
+          return (
+            <NodeHitBox
+              key={node.node.id}
+              state={state}
+              node={node.node}
+              offsetX={0}
+              offsetY={0}
+            />
+          );
         })}
       </div>
     </div>

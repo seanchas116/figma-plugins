@@ -1,4 +1,4 @@
-import { makeObservable, observable } from "mobx";
+import { computed, makeObservable, observable } from "mobx";
 import type { Node } from "figma-api/lib/ast-types";
 import type { GetFileResult } from "figma-api/lib/api-types";
 import { Vec2 } from "paintvec";
@@ -89,4 +89,30 @@ export class InspectorState {
   @observable.ref hoveredNode: Node | undefined = undefined;
 
   @observable.ref scroll = new Vec2(0);
+
+  private readonly nodeStates = new Map<string, NodeState>();
+
+  getNodeState(node: Node): NodeState {
+    let state = this.nodeStates.get(node.id);
+    if (!state) {
+      state = new NodeState(this, node);
+      this.nodeStates.set(node.id, state);
+    }
+    return state;
+  }
+}
+
+export class NodeState {
+  constructor(inspectorState: InspectorState, node: Node) {
+    this.inspectorState = inspectorState;
+    this.node = node;
+    makeObservable(this);
+  }
+
+  readonly inspectorState: InspectorState;
+  readonly node: Node;
+
+  @computed get isHovered(): boolean {
+    return this.inspectorState.hoveredNode == this.node;
+  }
 }
