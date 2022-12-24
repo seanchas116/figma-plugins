@@ -27,6 +27,7 @@ const NodeHitBox: React.FC<{
   return (
     <>
       <div
+        data-nodeid={node.id}
         className={clsx("absolute", {
           "ring-1 ring-red-500": hovered,
         })}
@@ -36,13 +37,6 @@ const NodeHitBox: React.FC<{
           width: bbox.width + "px",
           height: bbox.height + "px",
         }}
-        onMouseEnter={action(() => {
-          console.log("hovered", node);
-          state.hoveredNode = node;
-        })}
-        onMouseLeave={action(() => {
-          state.hoveredNode = undefined;
-        })}
       >
         {"children" in node &&
           node.children.map((child) => {
@@ -79,10 +73,10 @@ const TreeItem: React.FC<{
           paddingLeft: depth * 12 + "px",
         }}
         onMouseEnter={action(() => {
-          state.hoveredNode = node;
+          state.hoveredNodeID = node.id;
         })}
         onMouseLeave={action(() => {
-          state.hoveredNode = undefined;
+          state.hoveredNodeID = undefined;
         })}
       >
         <div className="w-4 h-4 bg-gray-300" />
@@ -155,17 +149,28 @@ const Viewport: React.FC<{ state: InspectorState }> = observer(({ state }) => {
           );
         })}
 
-        {state.rootNodes.map((node) => {
-          return (
-            <NodeHitBox
-              key={node.node.id}
-              state={state}
-              node={node.node}
-              offsetX={0}
-              offsetY={0}
-            />
-          );
-        })}
+        <div
+          onMouseMove={action((e) => {
+            if (e.target instanceof HTMLElement && e.target.dataset.nodeid) {
+              state.hoveredNodeID = e.target.dataset.nodeid;
+            }
+          })}
+          onMouseLeave={action(() => {
+            state.hoveredNodeID = undefined;
+          })}
+        >
+          {state.rootNodes.map((node) => {
+            return (
+              <NodeHitBox
+                key={node.node.id}
+                state={state}
+                node={node.node}
+                offsetX={0}
+                offsetY={0}
+              />
+            );
+          })}
+        </div>
       </div>
     </div>
   );

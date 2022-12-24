@@ -86,7 +86,7 @@ export class InspectorState {
     return json.images;
   }
 
-  @observable.ref hoveredNode: Node | undefined = undefined;
+  @observable hoveredNodeID: string | undefined = undefined;
 
   @observable.ref scroll = new Vec2(0);
 
@@ -113,6 +113,6 @@ export class NodeState {
   readonly node: Node;
 
   @computed get isHovered(): boolean {
-    return this.inspectorState.hoveredNode == this.node;
+    return this.inspectorState.hoveredNodeID == this.node.id;
   }
 }
