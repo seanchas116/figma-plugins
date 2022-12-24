@@ -14,6 +14,9 @@ function renderFigmaNode(
   if (!("absoluteBoundingBox" in node)) {
     return null;
   }
+  if (node.visible === false) {
+    return null;
+  }
   const bbox = node.absoluteBoundingBox;
 
   const hovered = state.hoveredNode === node;
