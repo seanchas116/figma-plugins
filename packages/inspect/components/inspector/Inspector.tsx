@@ -49,6 +49,47 @@ function renderFigmaNode(
   );
 }
 
+const TreeItem: React.FC<{
+  state: InspectorState;
+  node: Node;
+  depth: number;
+}> = observer(({ state, node, depth }) => {
+  const hovered = state.hoveredNode === node;
+
+  return (
+    <>
+      <div
+        className={clsx("flex items-center gap-2", {
+          "bg-gray-200": hovered,
+        })}
+        style={{
+          paddingLeft: depth * 12 + "px",
+        }}
+        onMouseEnter={action(() => {
+          state.hoveredNode = node;
+        })}
+        onMouseLeave={action(() => {
+          state.hoveredNode = undefined;
+        })}
+      >
+        <div className="w-4 h-4 bg-gray-300" />
+        <div className="flex-1">{node.name}</div>
+      </div>
+      {"children" in node &&
+        node.children.map((child) => {
+          return (
+            <TreeItem
+              key={child.id}
+              state={state}
+              node={child}
+              depth={depth + 1}
+            />
+          );
+        })}
+    </>
+  );
+});
+
 const Viewport: React.FC<{ state: InspectorState }> = observer(({ state }) => {
   const ref = createRef<HTMLDivElement>();
   useEffect(() => {
@@ -148,6 +189,20 @@ export const Inspector: React.FC = observer(() => {
           >
             Fetch
           </button>
+          <div className="relative overflow-scroll flex-1">
+            <div className="absolute left-0 top-0 w-max">
+              {state.rootNodes.map((node) => {
+                return (
+                  <TreeItem
+                    key={node.node.id}
+                    state={state}
+                    node={node.node}
+                    depth={0}
+                  />
+                );
+              })}
+            </div>
+          </div>
         </div>
         <Viewport state={state} />
       </div>
