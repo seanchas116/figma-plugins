@@ -1,5 +1,6 @@
 import dynamic from "next/dynamic";
 import Head from "next/head";
+import { useRouter } from "next/router";
 
 const DynamicInspector = dynamic(
   () =>
@@ -9,7 +10,12 @@ const DynamicInspector = dynamic(
   }
 );
 
-export default function Home() {
+export default function Inspect() {
+  const router = useRouter();
+  console.log(router.query);
+
+  const fileID = router.query.file as string;
+
   return (
     <>
       <Head>
@@ -19,7 +25,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <DynamicInspector />
+        <DynamicInspector fileID={fileID} />
       </main>
     </>
   );

@@ -153,8 +153,10 @@ const Viewport: React.FC<{ state: InspectorState }> = observer(({ state }) => {
   );
 });
 
-export const Inspector: React.FC = observer(() => {
-  const state = useMemo(() => new InspectorState(), []);
+export const Inspector: React.FC<{
+  fileID: string;
+}> = observer(({ fileID }) => {
+  const state = useMemo(() => new InspectorState(fileID), [fileID]);
 
   return (
     <section className="flex flex-col h-screen w-screen font-xs">
@@ -169,16 +171,6 @@ export const Inspector: React.FC = observer(() => {
                 value={state.accessToken}
                 onChange={action((event) => {
                   state.accessToken = event.currentTarget.value;
-                })}
-              />
-            </dd>
-            <dt>File URL</dt>
-            <dd>
-              <input
-                className="border border-gray-300 rounded-md shadow-sm py-1 px-1 focus:outline-none focus:ring-blue-500 focus:border-blue-500 w-full"
-                value={state.fileURL}
-                onChange={action((event) => {
-                  state.fileURL = event.currentTarget.value;
                 })}
               />
             </dd>

@@ -12,14 +12,15 @@ function fileIDFromFigmaFileURL(fileURL: string): string | undefined {
 }
 
 export class InspectorState {
-  constructor() {
+  constructor(fileID: string) {
     this._accessToken = localStorage.getItem("figmaAccessToken") ?? "";
-    this._fileURL = localStorage.getItem("figmaFileURL") ?? "";
+    this.fileID = fileID;
     makeObservable(this);
   }
 
+  readonly fileID: string;
+
   @observable private _accessToken = "";
-  @observable private _fileURL = "";
 
   get accessToken() {
     return this._accessToken;
@@ -29,14 +30,6 @@ export class InspectorState {
     localStorage.setItem("figmaAccessToken", value);
   }
 
-  get fileURL() {
-    return this._fileURL;
-  }
-  set fileURL(value: string) {
-    this._fileURL = value;
-    localStorage.setItem("figmaFileURL", value);
-  }
-
   @observable.ref document: Node<"DOCUMENT"> | undefined = undefined;
   @observable.ref rootNodes: {
     node: Node;
@@ -44,13 +37,8 @@ export class InspectorState {
   }[] = [];
 
   async fetchFigma() {
-    const fileID = fileIDFromFigmaFileURL(this._fileURL);
-    console.log(fileID);
-    if (!fileID) {
-      return;
-    }
     const response: GetFileResult = await (
-      await fetch(`https://api.figma.com/v1/files/${fileID}`, {
+      await fetch(`https://api.figma.com/v1/files/${this.fileID}`, {
         headers: {
           "X-Figma-Token": this._accessToken,
         },
@@ -81,12 +69,8 @@ export class InspectorState {
   }
 
   private async fetchScreenshotSVG(node: Node): Promise<string> {
-    const fileID = fileIDFromFigmaFileURL(this._fileURL);
-    if (!fileID) {
-      return "";
-    }
     const response = await fetch(
-      `https://api.figma.com/v1/images/${fileID}?ids=${node.id}&format=svg`,
+      `https://api.figma.com/v1/images/${this.fileID}?ids=${node.id}&format=svg`,
       {
         headers: {
           "X-Figma-Token": this._accessToken,
