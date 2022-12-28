@@ -24,4 +24,4 @@ console.log(filePaths);
 // Parse a file for docgen info
 const docs = JSON.stringify(docgen.parse(filePaths, options), null, 2);
 
-fs.writeFileSync("./src/docs.json", docs);
+fs.writeFileSync("./src/designSystem/components.json", docs);

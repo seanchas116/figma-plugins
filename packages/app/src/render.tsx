@@ -3,8 +3,7 @@ import ReactDOMClient from "react-dom/client";
 import { MessageFromRenderIFrame, MessageToRenderIFrame } from "./message";
 import React from "react";
 import { ComponentDoc } from "react-docgen-typescript";
-import componentDocs from "./docs.json";
-import { colors, textStyles } from "./tokens";
+import { assets } from "./designSystem";
 
 const root = document.getElementById("root") as HTMLElement;
 root.style.width = "max-content";
@@ -49,7 +48,7 @@ async function renderComponent(
 }
 
 const componentDocMap = new Map<string, ComponentDoc>(
-  (componentDocs as any as ComponentDoc[]).map((componentDoc) => [
+  assets.components.map((componentDoc) => [
     componentDoc.filePath + "#" + componentDoc.displayName,
     componentDoc,
   ])
@@ -98,9 +97,5 @@ window.addEventListener("message", onMessage);
 
 sendMessage({
   type: "assets",
-  payload: {
-    components: componentDocs as any as ComponentDoc[],
-    colorStyles: colors,
-    textStyles,
-  },
+  payload: assets,
 });

@@ -1,6 +1,7 @@
-import { ColorStyleData, TextStyleData } from "./types";
+import { Assets, ColorStyleData, TextStyleData } from "../types";
+import components from "./components.json";
 
-export const colors: Record<string, ColorStyleData> = {
+export const colorStyles: Record<string, ColorStyleData> = {
   background: {
     value: "#fff",
     comment: "The background color of the app",
@@ -47,4 +48,10 @@ export const textStyles: Record<string, TextStyleData> = {
     },
     comment: "The small text style of the app",
   },
+};
+
+export const assets: Assets = {
+  components: components as any,
+  colorStyles,
+  textStyles,
 };
