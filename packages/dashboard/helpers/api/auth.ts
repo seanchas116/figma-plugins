@@ -1,9 +1,10 @@
-import { NextApiRequest } from "next";
+import { GetServerSidePropsContext, NextApiRequest } from "next";
 import { getToken } from "next-auth/jwt";
+import { NextRequest } from "next/server";
 import db from "../../lib/prismadb";
 
 export async function getGitHubToken(
-  req: NextApiRequest
+  req: GetServerSidePropsContext["req"] | NextRequest | NextApiRequest
 ): Promise<string | undefined> {
   const token = await getToken({
     req,
@@ -23,7 +24,7 @@ export async function getGitHubToken(
 }
 
 export async function getFigmaToken(
-  req: NextApiRequest
+  req: GetServerSidePropsContext["req"] | NextRequest | NextApiRequest
 ): Promise<string | undefined> {
   const token = await getToken({
     req,

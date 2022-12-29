@@ -183,26 +183,17 @@ const Viewport: React.FC<{ state: InspectorState }> = observer(({ state }) => {
 
 export const Inspector: React.FC<{
   fileID: string;
-}> = observer(({ fileID }) => {
-  const state = useMemo(() => new InspectorState(fileID), [fileID]);
+  accessToken: string;
+}> = observer(({ fileID, accessToken }) => {
+  const state = useMemo(
+    () => new InspectorState(fileID, accessToken),
+    [fileID, accessToken]
+  );
 
   return (
     <section className="flex flex-col h-screen w-screen font-xs">
       <div className="flex-1 flex">
         <div className="w-[256px] p-2 flex flex-col gap-2">
-          <dl>
-            <dt>Figma Access Token</dt>
-            <dd>
-              <input
-                type="password"
-                className="border border-gray-300 rounded-md shadow-sm py-1 px-1 focus:outline-none focus:ring-blue-500 focus:border-blue-500 w-full"
-                value={state.accessToken}
-                onChange={action((event) => {
-                  state.accessToken = event.currentTarget.value;
-                })}
-              />
-            </dd>
-          </dl>
           <button
             className="border border-gray-300 rounded-md shadow-sm py-1 px-1 focus:outline-none focus:ring-blue-500 focus:border-blue-500 w-fit"
             onClick={action(() => state.fetchFigma())}

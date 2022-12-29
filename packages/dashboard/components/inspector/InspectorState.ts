@@ -16,24 +16,15 @@ function fileIDFromFigmaFileURL(fileURL: string): string | undefined {
 }
 
 export class InspectorState {
-  constructor(fileID: string) {
-    this._accessToken = localStorage.getItem("figmaAccessToken") ?? "";
+  constructor(fileID: string, accessToken: string) {
     this.fileID = fileID;
+    this.accessToken = accessToken;
     makeObservable(this);
     this.fetchFigma();
   }
 
   readonly fileID: string;
-
-  @observable private _accessToken = "";
-
-  get accessToken() {
-    return this._accessToken;
-  }
-  set accessToken(value: string) {
-    this._accessToken = value;
-    localStorage.setItem("figmaAccessToken", value);
-  }
+  readonly accessToken: string;
 
   @observable.ref document: DocumentNode | undefined = undefined;
   @observable.ref artboards: {
@@ -45,7 +36,7 @@ export class InspectorState {
     const response = await (
       await fetch(`https://api.figma.com/v1/files/${this.fileID}`, {
         headers: {
-          "X-Figma-Token": this._accessToken,
+          Authorization: "Bearer " + this.accessToken,
         },
       })
     ).json();
@@ -82,7 +73,7 @@ export class InspectorState {
       `https://api.figma.com/v1/images/${this.fileID}?ids=${ids}&format=svg`,
       {
         headers: {
-          "X-Figma-Token": this._accessToken,
+          Authorization: "Bearer " + this.accessToken,
         },
       }
     );
