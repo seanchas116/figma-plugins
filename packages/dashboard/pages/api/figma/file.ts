@@ -1,11 +1,11 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { getFigmaToken } from "../../../helpers/api/auth";
+import { getAccountToken } from "../../../helpers/api/auth";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const accessToken = await getFigmaToken(req);
+  const accessToken = await getAccountToken(req, "figma");
 
   console.log(req.query.id);
 

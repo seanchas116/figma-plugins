@@ -2,7 +2,7 @@ import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import dynamic from "next/dynamic";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { getFigmaToken } from "../helpers/api/auth";
+import { getAccountToken } from "../helpers/api/auth";
 
 const DynamicInspector = dynamic(
   () =>
@@ -47,7 +47,7 @@ interface ServiceSideProps {
 export const getServerSideProps: GetServerSideProps<ServiceSideProps> = async (
   context
 ) => {
-  const figmaToken = await getFigmaToken(context.req);
+  const figmaToken = await getAccountToken(context.req, "figma");
 
   return {
     props: {

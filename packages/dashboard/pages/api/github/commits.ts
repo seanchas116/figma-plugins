@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { Octokit } from "octokit";
 import { z } from "zod";
-import { getGitHubToken } from "../../../helpers/api/auth";
+import { getAccountToken } from "../../../helpers/api/auth";
 
 const Query = z.object({
   owner: z.string(),
@@ -19,7 +19,7 @@ export default async function handler(
   }
   const query = queryParsed.data;
 
-  const accessToken = await getGitHubToken(req);
+  const accessToken = await getAccountToken(req, "github");
   if (!accessToken) {
     res.status(401).json({ error: "Unauthorized" });
     return;
