@@ -11,7 +11,7 @@ import {
 } from "./pluginData";
 import { renderInstanceImage } from "./render";
 
-const productName = "UIInspect";
+const productName = "UIMix";
 
 export async function syncAssets(assets: Assets) {
   let page = figma.root.findChild((page) => page.name === productName);

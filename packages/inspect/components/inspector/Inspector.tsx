@@ -4,7 +4,7 @@ import { action } from "mobx";
 import { observer } from "mobx-react-lite";
 import clsx from "clsx";
 import { Vec2 } from "paintvec";
-import { Node } from "@uiinspect/figma-node";
+import { Node } from "@uimix/figma-node";
 
 const NodeHitBox: React.FC<{
   state: InspectorState;

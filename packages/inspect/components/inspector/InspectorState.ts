@@ -5,7 +5,7 @@ import type {
   DocumentNode,
   FrameNode,
   Node,
-} from "@uiinspect/figma-node";
+} from "@uimix/figma-node";
 
 function fileIDFromFigmaFileURL(fileURL: string): string | undefined {
   const match = fileURL.match(/https:\/\/www.figma.com\/file\/([^\/]*)/);

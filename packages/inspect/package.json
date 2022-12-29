@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@next/font": "^13.1.0",
-    "@uiinspect/figma-node": "*",
+    "@uimix/figma-node": "*",
     "clsx": "^1.2.1",
     "figma-api": "github:seanchas116/figma-api",
     "mobx": "^6.7.0",
