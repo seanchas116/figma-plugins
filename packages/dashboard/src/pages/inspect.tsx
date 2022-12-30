@@ -6,9 +6,7 @@ import { getAccountToken } from "../helpers/api/auth";
 
 const DynamicInspector = dynamic(
   () =>
-    import("../../dashboard/components/inspector/Inspector").then(
-      (mod) => mod.Inspector
-    ),
+    import("../components/inspector/Inspector").then((mod) => mod.Inspector),
   {
     ssr: false,
   }
