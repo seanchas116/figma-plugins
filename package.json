@@ -18,6 +18,10 @@
     "packages/*"
   ],
   "scripts": {
+    "postinstall": "patch-package",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "patch-package": "^6.5.0"
   }
 }

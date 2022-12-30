@@ -1,0 +1,15 @@
+diff --git a/node_modules/trpc-panel/lib/index.mjs b/node_modules/trpc-panel/lib/index.mjs
+index bc84762..6ada3f7 100644
+--- a/node_modules/trpc-panel/lib/index.mjs
++++ b/node_modules/trpc-panel/lib/index.mjs
+@@ -357,8 +357,8 @@ let cache = {
+     val: null,
+ };
+ function renderTrpcPanel(router, options) {
+-    if (cache.val)
+-        return cache.val;
++    //if (cache.val)
++    //    return cache.val;
+     const bundleInjectionParams = [
+         {
+             searchFor: routerReplaceSymbol,
