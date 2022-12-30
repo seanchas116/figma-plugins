@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { getAccountToken } from "../../helpers/api/auth";
 import { baseProcedure, router } from "../trpc";
@@ -16,7 +17,10 @@ export const figmaRouter = router({
 
       const accessToken = await getAccountToken(req, "figma");
       if (!accessToken) {
-        return null;
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Unauthorized",
+        });
       }
 
       const fetchRes = await fetch(
@@ -28,6 +32,13 @@ export const figmaRouter = router({
           },
         }
       );
+      if (fetchRes.status === 404) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Not Found",
+        });
+      }
+
       const json = await fetchRes.json();
       console.log(json);
 
