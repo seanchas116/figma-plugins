@@ -1,7 +1,7 @@
 import { GetServerSidePropsContext, NextApiRequest } from "next";
 import { getToken } from "next-auth/jwt";
 import { NextRequest } from "next/server";
-import db from "../../lib/prismadb";
+import { db } from "../../lib/prismadb";
 
 export async function getAccountToken(
   req: GetServerSidePropsContext["req"] | NextRequest | NextApiRequest,
