@@ -1,8 +1,8 @@
-import { router } from '../trpc';
-import { todoRouter } from './todo';
+import { router } from "../trpc";
+import { figmaRouter } from "./figma";
 
 export const appRouter = router({
-  todo: todoRouter,
+  figma: figmaRouter,
 });
 
 export type AppRouter = typeof appRouter;
