@@ -62,7 +62,7 @@ const TreeItem: React.FC<{
   depth: number;
 }> = observer(({ state, node, depth }) => {
   const nodeState = state.getNodeState(node.id);
-  const { hovered, selected } = nodeState;
+  const { hovered, selected, ancestorSelected } = nodeState;
 
   return (
     <>
@@ -70,6 +70,7 @@ const TreeItem: React.FC<{
         className={clsx("h-6 flex items-center gap-2", {
           "bg-gray-200": hovered && !selected,
           "bg-blue-500 text-white": selected,
+          "bg-blue-100": ancestorSelected && !selected,
         })}
         style={{
           paddingLeft: depth * 12 + "px",

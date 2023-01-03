@@ -47,17 +47,20 @@ export class InspectorState {
 
     const screenshots = await this.fetchScreenshotSVGs(rootNodes);
 
-    const createNodeState = (node: Node) => {
-      const state = new NodeState(this, node);
+    const createNodeState = (
+      parentState: NodeState | undefined,
+      node: Node
+    ) => {
+      const state = new NodeState(this, parentState, node);
       this.nodeStates.set(node.id, state);
       if ("children" in node) {
         for (const child of node.children) {
-          createNodeState(child);
+          createNodeState(state, child);
         }
       }
     };
     for (const node of rootNodes) {
-      createNodeState(node);
+      createNodeState(undefined, node);
     }
 
     this.artboards = rootNodes.map((node) => {
@@ -116,14 +119,29 @@ export class InspectorState {
 }
 
 export class NodeState {
-  constructor(inspectorState: InspectorState, node: Node) {
+  constructor(
+    inspectorState: InspectorState,
+    parentState: NodeState | undefined,
+    node: Node
+  ) {
     this.inspectorState = inspectorState;
+    this.parentState = parentState;
     this.node = node;
     makeObservable(this);
   }
 
   readonly inspectorState: InspectorState;
+  readonly parentState: NodeState | undefined;
   readonly node: Node;
+
+  get childStates(): NodeState[] {
+    if ("children" in this.node) {
+      return this.node.children.map((child) => {
+        return this.inspectorState.getNodeState(child.id);
+      });
+    }
+    return [];
+  }
 
   @computed get hovered(): boolean {
     return this.inspectorState.hoveredNodeID == this.node.id;
@@ -135,11 +153,21 @@ export class NodeState {
     return this._selected;
   }
 
+  @computed get ancestorSelected(): boolean {
+    if (this._selected) {
+      return true;
+    }
+    if (this.parentState) {
+      return this.parentState.ancestorSelected;
+    }
+    return false;
+  }
+
   select() {
     this._selected = true;
     if ("children" in this.node) {
-      for (const child of this.node.children) {
-        this.inspectorState.getNodeState(child.id).deselect();
+      for (const child of this.childStates) {
+        child.deselect();
       }
     }
   }
@@ -147,8 +175,8 @@ export class NodeState {
   deselect() {
     this._selected = false;
     if ("children" in this.node) {
-      for (const child of this.node.children) {
-        this.inspectorState.getNodeState(child.id).deselect();
+      for (const child of this.childStates) {
+        child.deselect();
       }
     }
   }
