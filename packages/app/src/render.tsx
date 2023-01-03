@@ -1,8 +1,11 @@
 import * as htmlToImage from "html-to-image";
 import ReactDOMClient from "react-dom/client";
-import { MessageFromRenderIFrame, MessageToRenderIFrame } from "./message";
 import React from "react";
-import { ComponentDoc } from "react-docgen-typescript";
+import type { ComponentDoc } from "react-docgen-typescript";
+import type {
+  RenderIFrameToUIMessage,
+  UIToRenderIFrameMesssage,
+} from "../../figma/message";
 import { assets } from "./designSystem";
 
 const root = document.getElementById("root") as HTMLElement;
@@ -54,7 +57,7 @@ const onMessage = async (event: MessageEvent) => {
     return;
   }
 
-  const message: MessageToRenderIFrame = event.data;
+  const message: UIToRenderIFrameMesssage = event.data;
 
   const componentDoc = componentDocMap.get(
     message.payload.path + "#" + message.payload.name
@@ -86,7 +89,7 @@ const onMessage = async (event: MessageEvent) => {
   });
 };
 
-function sendMessage(message: MessageFromRenderIFrame) {
+function sendMessage(message: RenderIFrameToUIMessage) {
   window.parent.postMessage(message, "*");
 }
 

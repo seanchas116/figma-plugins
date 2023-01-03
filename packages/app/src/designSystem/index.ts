@@ -1,4 +1,4 @@
-import { Assets, ColorStyleData, TextStyleData } from "../types";
+import { Assets, ColorStyleData, TextStyleData } from "../../../figma/data";
 import components from "./components.json";
 
 export const colorStyles: Record<string, ColorStyleData> = {

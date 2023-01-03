@@ -1,10 +1,10 @@
 import { createRef } from "preact";
 import { useEffect } from "preact/hooks";
-import { PluginToUIMessage } from "../message";
-import type {
-  MessageFromRenderIFrame,
-  MessageToRenderIFrame,
-} from "../../app/src/message";
+import {
+  RenderIFrameToUIMessage,
+  UIToRenderIFrameMesssage,
+  PluginToUIMessage,
+} from "../message";
 import { postMessageToPlugin } from "./common";
 import { state } from "./State";
 
@@ -19,7 +19,7 @@ export const RenderIFrame: React.FC = () => {
         const message = event.data.pluginMessage as PluginToUIMessage;
 
         if (message.type === "render") {
-          const renderMessage: MessageToRenderIFrame = {
+          const renderMessage: UIToRenderIFrameMesssage = {
             type: "render",
             requestID: message.requestID,
             payload: message.payload,
@@ -29,7 +29,7 @@ export const RenderIFrame: React.FC = () => {
       }
 
       if (event.source === iframe.contentWindow) {
-        const message: MessageFromRenderIFrame = event.data;
+        const message: RenderIFrameToUIMessage = event.data;
 
         switch (message.type) {
           case "renderDone": {
