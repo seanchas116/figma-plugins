@@ -2,11 +2,11 @@ import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import dynamic from "next/dynamic";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { getAccountToken } from "../helpers/api/auth";
+import { getAccountToken } from "../../helpers/api/auth";
 
 const DynamicInspector = dynamic(
   () =>
-    import("../components/inspector/Inspector").then((mod) => mod.Inspector),
+    import("../../components/inspector/Inspector").then((mod) => mod.Inspector),
   {
     ssr: false,
   }
