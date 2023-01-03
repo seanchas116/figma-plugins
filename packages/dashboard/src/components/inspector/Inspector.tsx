@@ -245,7 +245,11 @@ export const Inspector: React.FC<{
         overflow-scroll
         "
       >
-        {JSON.stringify(state.document, null, 2)}
+        {JSON.stringify(
+          state.selectedNodeStates.map((nodeState) => nodeState.node),
+          null,
+          2
+        )}
       </pre>
     </section>
   );

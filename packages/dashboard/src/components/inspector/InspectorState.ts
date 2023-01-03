@@ -116,6 +116,12 @@ export class InspectorState {
       artboard.nodeState.deselect();
     }
   }
+
+  @computed get selectedNodeStates(): NodeState[] {
+    return this.artboards.flatMap(
+      (artboard) => artboard.nodeState.selectedDescendants
+    );
+  }
 }
 
 export class NodeState {
@@ -165,6 +171,13 @@ export class NodeState {
       return this.parentState.ancestorSelected;
     }
     return false;
+  }
+
+  @computed get selectedDescendants(): NodeState[] {
+    if (this._selected) {
+      return [this];
+    }
+    return this.childStates.flatMap((child) => child.selectedDescendants);
   }
 
   select() {
