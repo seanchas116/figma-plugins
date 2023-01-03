@@ -52,7 +52,7 @@ export type PluginToUIMessage =
       };
     };
 
-export type UIToRenderIFrameMesssage = {
+export type UIToRenderIFrameMessage = {
   type: "render";
   requestID: number;
   payload: {

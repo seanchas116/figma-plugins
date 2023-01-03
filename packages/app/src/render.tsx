@@ -4,7 +4,7 @@ import React from "react";
 import type { ComponentDoc } from "react-docgen-typescript";
 import type {
   RenderIFrameToUIMessage,
-  UIToRenderIFrameMesssage,
+  UIToRenderIFrameMessage,
 } from "../../figma/message";
 import { assets } from "./designSystem";
 
@@ -57,7 +57,7 @@ const onMessage = async (event: MessageEvent) => {
     return;
   }
 
-  const message: UIToRenderIFrameMesssage = event.data;
+  const message: UIToRenderIFrameMessage = event.data;
 
   const componentDoc = componentDocMap.get(
     message.payload.path + "#" + message.payload.name

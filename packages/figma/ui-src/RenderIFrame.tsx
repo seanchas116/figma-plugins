@@ -2,7 +2,7 @@ import { createRef } from "preact";
 import { useEffect } from "preact/hooks";
 import {
   RenderIFrameToUIMessage,
-  UIToRenderIFrameMesssage,
+  UIToRenderIFrameMessage,
   PluginToUIMessage,
 } from "../message";
 import { postMessageToPlugin } from "./common";
@@ -19,7 +19,7 @@ export const RenderIFrame: React.FC = () => {
         const message = event.data.pluginMessage as PluginToUIMessage;
 
         if (message.type === "render") {
-          const renderMessage: UIToRenderIFrameMesssage = {
+          const renderMessage: UIToRenderIFrameMessage = {
             type: "render",
             requestID: message.requestID,
             payload: message.payload,
