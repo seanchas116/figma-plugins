@@ -212,6 +212,15 @@ export const Inspector: React.FC<{
         </div>
         <Viewport state={state} />
       </div>
+      <div>
+        <select>
+          <option>Figma JSON</option>
+          <option>Intermediate</option>
+          <optgroup label="React">
+            <option>React + Tailwind</option>
+          </optgroup>
+        </select>
+      </div>
       <pre
         className="
         h-[384px]
