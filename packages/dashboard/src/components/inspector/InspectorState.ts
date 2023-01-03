@@ -28,7 +28,7 @@ export class InspectorState {
 
   @observable.ref document: DocumentNode | undefined = undefined;
   @observable.ref artboards: {
-    node: Node;
+    nodeState: NodeState;
     screenshotSVG: string;
   }[] = [];
 
@@ -65,13 +65,13 @@ export class InspectorState {
 
     this.artboards = rootNodes.map((node) => {
       return {
-        node,
+        nodeState: this.getNodeState(node.id),
         screenshotSVG: screenshots[node.id],
       };
     });
 
     if (this.artboards.length) {
-      const firstNodeBBox = (this.artboards[0].node as FrameNode)
+      const firstNodeBBox = (this.artboards[0].nodeState.node as FrameNode)
         .absoluteBoundingBox;
       this.scroll = new Vec2(
         -(firstNodeBBox.x + firstNodeBBox.width / 2) + 320,
@@ -113,7 +113,7 @@ export class InspectorState {
 
   deselectAll() {
     for (const artboard of this.artboards) {
-      this.getNodeState(artboard.node.id).deselect();
+      artboard.nodeState.deselect();
     }
   }
 }
@@ -133,6 +133,10 @@ export class NodeState {
   readonly inspectorState: InspectorState;
   readonly parentState: NodeState | undefined;
   readonly node: Node;
+
+  get id(): string {
+    return this.node.id;
+  }
 
   get childStates(): NodeState[] {
     if ("children" in this.node) {

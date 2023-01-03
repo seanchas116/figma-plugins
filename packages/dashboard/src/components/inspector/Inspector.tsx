@@ -1,17 +1,17 @@
 import { createRef, useEffect, useMemo } from "react";
-import { InspectorState } from "./InspectorState";
+import { InspectorState, NodeState } from "./InspectorState";
 import { action } from "mobx";
 import { observer } from "mobx-react-lite";
 import clsx from "clsx";
 import { Vec2 } from "paintvec";
-import { Node } from "@uimix/figma-node";
 
 const NodeHitBox: React.FC<{
-  state: InspectorState;
-  node: Node;
+  nodeState: NodeState;
   offsetX: number;
   offsetY: number;
-}> = observer(({ state, node, offsetX, offsetY }) => {
+}> = observer(({ nodeState, offsetX, offsetY }) => {
+  const node = nodeState.node;
+
   if (!("absoluteBoundingBox" in node)) {
     return null;
   }
@@ -21,7 +21,6 @@ const NodeHitBox: React.FC<{
 
   const bbox = node.absoluteBoundingBox;
 
-  const nodeState = state.getNodeState(node.id);
   const hovered = nodeState.hovered;
   const selected = nodeState.selected;
 
@@ -39,30 +38,26 @@ const NodeHitBox: React.FC<{
           height: bbox.height + "px",
         }}
       >
-        {"children" in node &&
-          node.children.map((child) => {
-            return (
-              <NodeHitBox
-                key={child.id}
-                state={state}
-                node={child}
-                offsetX={bbox.x}
-                offsetY={bbox.y}
-              />
-            );
-          })}
+        {nodeState.childStates.map((child) => {
+          return (
+            <NodeHitBox
+              key={child.id}
+              nodeState={child}
+              offsetX={bbox.x}
+              offsetY={bbox.y}
+            />
+          );
+        })}
       </div>
     </>
   );
 });
 
 const TreeItem: React.FC<{
-  state: InspectorState;
-  node: Node;
+  nodeState: NodeState;
   depth: number;
-}> = observer(({ state, node, depth }) => {
-  const nodeState = state.getNodeState(node.id);
-  const { hovered, selected, ancestorSelected } = nodeState;
+}> = observer(({ nodeState, depth }) => {
+  const { node, hovered, selected, ancestorSelected } = nodeState;
 
   return (
     <>
@@ -76,15 +71,15 @@ const TreeItem: React.FC<{
           paddingLeft: depth * 12 + "px",
         }}
         onMouseEnter={action(() => {
-          state.hoveredNodeID = node.id;
+          nodeState.inspectorState.hoveredNodeID = node.id;
         })}
         onMouseLeave={action(() => {
-          state.hoveredNodeID = undefined;
+          nodeState.inspectorState.hoveredNodeID = undefined;
         })}
         onMouseDown={action((event: React.MouseEvent) => {
           if (event.button === 0) {
             if (!event.shiftKey && !event.metaKey) {
-              state.deselectAll();
+              nodeState.inspectorState.deselectAll();
             }
             nodeState.select();
           }
@@ -93,17 +88,9 @@ const TreeItem: React.FC<{
         <div className="w-4 h-4 bg-gray-300" />
         <div className="flex-1">{node.name}</div>
       </div>
-      {"children" in node &&
-        node.children.map((child) => {
-          return (
-            <TreeItem
-              key={child.id}
-              state={state}
-              node={child}
-              depth={depth + 1}
-            />
-          );
-        })}
+      {nodeState.childStates.map((child) => {
+        return <TreeItem key={child.id} nodeState={child} depth={depth + 1} />;
+      })}
     </>
   );
 });
@@ -138,17 +125,17 @@ const Viewport: React.FC<{ state: InspectorState }> = observer(({ state }) => {
           transform: `translate(${state.scroll.x}px, ${state.scroll.y}px)`,
         }}
       >
-        {state.artboards.map(({ node, screenshotSVG }) => {
-          if (!("absoluteBoundingBox" in node)) {
+        {state.artboards.map(({ nodeState, screenshotSVG }) => {
+          if (!("absoluteBoundingBox" in nodeState.node)) {
             return null;
           }
-          const rect = node.absoluteBoundingBox;
+          const rect = nodeState.node.absoluteBoundingBox;
 
           return (
             // eslint-disable-next-line @next/next/no-img-element
             <img
-              alt={node.name}
-              key={node.id}
+              alt={nodeState.node.name}
+              key={nodeState.node.id}
               style={{
                 willChange: "transform",
                 pointerEvents: "none",
@@ -187,12 +174,11 @@ const Viewport: React.FC<{ state: InspectorState }> = observer(({ state }) => {
             }
           })}
         >
-          {state.artboards.map(({ node }) => {
+          {state.artboards.map(({ nodeState }) => {
             return (
               <NodeHitBox
-                key={node.id}
-                state={state}
-                node={node}
+                key={nodeState.id}
+                nodeState={nodeState}
                 offsetX={0}
                 offsetY={0}
               />
@@ -225,9 +211,13 @@ export const Inspector: React.FC<{
           </button>
           <div className="relative overflow-scroll flex-1 contain-strict">
             <div className="absolute left-0 top-0 w-max">
-              {state.artboards.map(({ node }) => {
+              {state.artboards.map(({ nodeState }) => {
                 return (
-                  <TreeItem key={node.id} state={state} node={node} depth={0} />
+                  <TreeItem
+                    key={nodeState.id}
+                    nodeState={nodeState}
+                    depth={0}
+                  />
                 );
               })}
             </div>
