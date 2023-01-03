@@ -21,7 +21,7 @@ const NodeHitBox: React.FC<{
 
   const bbox = node.absoluteBoundingBox;
 
-  const nodeState = state.getNodeState(node);
+  const nodeState = state.getNodeState(node.id);
   const hovered = nodeState.hovered;
   const selected = nodeState.selected;
 
@@ -61,7 +61,7 @@ const TreeItem: React.FC<{
   node: Node;
   depth: number;
 }> = observer(({ state, node, depth }) => {
-  const nodeState = state.getNodeState(node);
+  const nodeState = state.getNodeState(node.id);
   const { hovered, selected } = nodeState;
 
   return (
@@ -123,6 +123,7 @@ const Viewport: React.FC<{ state: InspectorState }> = observer(({ state }) => {
         element.removeEventListener("wheel", onWheel);
       };
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -179,8 +180,8 @@ const Viewport: React.FC<{ state: InspectorState }> = observer(({ state }) => {
                 if (!e.shiftKey && !e.metaKey) {
                   state.deselectAll();
                 }
-                // TODO
-                // nodeState.select();
+                const nodeState = state.getNodeState(e.target.dataset.nodeid);
+                nodeState.select();
               }
             }
           })}

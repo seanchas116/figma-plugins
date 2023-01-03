@@ -47,6 +47,19 @@ export class InspectorState {
 
     const screenshots = await this.fetchScreenshotSVGs(rootNodes);
 
+    const createNodeState = (node: Node) => {
+      const state = new NodeState(this, node);
+      this.nodeStates.set(node.id, state);
+      if ("children" in node) {
+        for (const child of node.children) {
+          createNodeState(child);
+        }
+      }
+    };
+    for (const node of rootNodes) {
+      createNodeState(node);
+    }
+
     this.artboards = rootNodes.map((node) => {
       return {
         node,
@@ -87,18 +100,17 @@ export class InspectorState {
 
   private readonly nodeStates = new Map<string, NodeState>();
 
-  getNodeState(node: Node): NodeState {
-    let state = this.nodeStates.get(node.id);
+  getNodeState(id: string): NodeState {
+    const state = this.nodeStates.get(id);
     if (!state) {
-      state = new NodeState(this, node);
-      this.nodeStates.set(node.id, state);
+      throw new Error(`NodeState not found: ${id}`);
     }
     return state;
   }
 
   deselectAll() {
-    for (const artborad of this.artboards) {
-      this.getNodeState(artborad.node).deselect();
+    for (const artboard of this.artboards) {
+      this.getNodeState(artboard.node.id).deselect();
     }
   }
 }
@@ -127,7 +139,7 @@ export class NodeState {
     this._selected = true;
     if ("children" in this.node) {
       for (const child of this.node.children) {
-        this.inspectorState.getNodeState(child).deselect();
+        this.inspectorState.getNodeState(child.id).deselect();
       }
     }
   }
@@ -136,7 +148,7 @@ export class NodeState {
     this._selected = false;
     if ("children" in this.node) {
       for (const child of this.node.children) {
-        this.inspectorState.getNodeState(child).deselect();
+        this.inspectorState.getNodeState(child.id).deselect();
       }
     }
   }
