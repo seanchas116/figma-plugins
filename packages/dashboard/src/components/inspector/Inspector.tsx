@@ -22,14 +22,15 @@ const NodeHitBox: React.FC<{
   const bbox = node.absoluteBoundingBox;
 
   const nodeState = state.getNodeState(node);
-  const hovered = nodeState.isHovered;
+  const hovered = nodeState.hovered;
+  const selected = nodeState.selected;
 
   return (
     <>
       <div
         data-nodeid={node.id}
         className={clsx("absolute", {
-          "ring-1 ring-red-500": hovered,
+          "ring-1 ring-red-500": hovered || selected,
         })}
         style={{
           left: bbox.x - offsetX + "px",
@@ -61,13 +62,14 @@ const TreeItem: React.FC<{
   depth: number;
 }> = observer(({ state, node, depth }) => {
   const nodeState = state.getNodeState(node);
-  const hovered = nodeState.isHovered;
+  const { hovered, selected } = nodeState;
 
   return (
     <>
       <div
         className={clsx("h-6 flex items-center gap-2", {
-          "bg-gray-200": hovered,
+          "bg-gray-200": hovered && !selected,
+          "bg-blue-500 text-white": selected,
         })}
         style={{
           paddingLeft: depth * 12 + "px",
@@ -77,6 +79,14 @@ const TreeItem: React.FC<{
         })}
         onMouseLeave={action(() => {
           state.hoveredNodeID = undefined;
+        })}
+        onMouseDown={action((event: React.MouseEvent) => {
+          if (event.button === 0) {
+            if (!event.shiftKey && !event.metaKey) {
+              state.deselectAll();
+            }
+            nodeState.select();
+          }
         })}
       >
         <div className="w-4 h-4 bg-gray-300" />
@@ -162,6 +172,17 @@ const Viewport: React.FC<{ state: InspectorState }> = observer(({ state }) => {
           })}
           onMouseLeave={action(() => {
             state.hoveredNodeID = undefined;
+          })}
+          onMouseDown={action((e) => {
+            if (e.target instanceof HTMLElement && e.target.dataset.nodeid) {
+              if (e.button === 0) {
+                if (!e.shiftKey && !e.metaKey) {
+                  state.deselectAll();
+                }
+                // TODO
+                // nodeState.select();
+              }
+            }
           })}
         >
           {state.artboards.map(({ node }) => {

@@ -95,6 +95,12 @@ export class InspectorState {
     }
     return state;
   }
+
+  deselectAll() {
+    for (const artborad of this.artboards) {
+      this.getNodeState(artborad.node).deselect();
+    }
+  }
 }
 
 export class NodeState {
@@ -107,7 +113,31 @@ export class NodeState {
   readonly inspectorState: InspectorState;
   readonly node: Node;
 
-  @computed get isHovered(): boolean {
+  @computed get hovered(): boolean {
     return this.inspectorState.hoveredNodeID == this.node.id;
+  }
+
+  @observable private _selected: boolean = false;
+
+  get selected(): boolean {
+    return this._selected;
+  }
+
+  select() {
+    this._selected = true;
+    if ("children" in this.node) {
+      for (const child of this.node.children) {
+        this.inspectorState.getNodeState(child).deselect();
+      }
+    }
+  }
+
+  deselect() {
+    this._selected = false;
+    if ("children" in this.node) {
+      for (const child of this.node.children) {
+        this.inspectorState.getNodeState(child).deselect();
+      }
+    }
   }
 }
