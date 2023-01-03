@@ -68,7 +68,7 @@ const TreeItem: React.FC<{
           "bg-blue-100": ancestorSelected && !selected,
         })}
         style={{
-          paddingLeft: depth * 12 + "px",
+          paddingLeft: `${depth * 12 + 8}px`,
         }}
         onMouseEnter={action(() => {
           nodeState.inspectorState.hoveredNodeID = node.id;
@@ -202,13 +202,15 @@ export const Inspector: React.FC<{
   return (
     <section className="flex flex-col h-screen w-screen font-xs">
       <div className="flex-1 flex">
-        <div className="w-[256px] p-2 flex flex-col gap-2">
-          <button
-            className="border border-gray-300 rounded-md shadow-sm py-1 px-1 focus:outline-none focus:ring-blue-500 focus:border-blue-500 w-fit"
-            onClick={action(() => state.fetchFigma())}
-          >
-            Refresh
-          </button>
+        <div className="w-[256px] flex flex-col">
+          <div className="p-2">
+            <button
+              className="border border-gray-300 rounded-md shadow-sm py-1 px-1 focus:outline-none focus:ring-blue-500 focus:border-blue-500 w-fit"
+              onClick={action(() => state.fetchFigma())}
+            >
+              Refresh
+            </button>
+          </div>
           <div className="relative overflow-scroll flex-1 contain-strict">
             <div className="absolute left-0 top-0 w-max">
               {state.artboards.map(({ nodeState }) => {
