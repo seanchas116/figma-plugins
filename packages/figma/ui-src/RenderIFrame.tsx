@@ -1,6 +1,6 @@
 import { createRef } from "preact";
 import { useEffect } from "preact/hooks";
-import { MessageToUI } from "../message";
+import { PluginToUIMessage } from "../message";
 import type {
   MessageFromRenderIFrame,
   MessageToRenderIFrame,
@@ -16,7 +16,7 @@ export const RenderIFrame: React.FC = () => {
 
     window.addEventListener("message", (event) => {
       if (event.data.pluginMessage) {
-        const message = event.data.pluginMessage as MessageToUI;
+        const message = event.data.pluginMessage as PluginToUIMessage;
 
         if (message.type === "render") {
           const renderMessage: MessageToRenderIFrame = {

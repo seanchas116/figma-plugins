@@ -1,6 +1,6 @@
 import { InstanceInfo, TargetInfo, Assets } from "./data";
 
-export type MessageToPlugin =
+export type UIToPluginMessage =
   | {
       type: "ready";
     }
@@ -33,7 +33,7 @@ export type MessageToPlugin =
       };
     };
 
-export type MessageToUI =
+export type PluginToUIMessage =
   | {
       type: "render";
       requestID: number;

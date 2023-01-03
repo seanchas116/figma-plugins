@@ -1,7 +1,7 @@
 import { signal } from "@preact/signals";
 import { Assets, InstanceInfo, TargetInfo } from "../data";
-import { MessageToUI } from "../message";
-import { postMessageToPlugin } from "./common";
+import { PluginToUIMessage } from "../message";
+import { onMessageFromPlugin, postMessageToPlugin } from "./common";
 
 class State {
   $assets = signal<Assets>({
@@ -20,12 +20,9 @@ class State {
   }
 
   constructor() {
-    window.addEventListener("message", (event) => {
-      if (event.data.pluginMessage) {
-        const message = event.data.pluginMessage as MessageToUI;
-        if (message.type === "targetChanged") {
-          this.$target.value = message.payload.target;
-        }
+    onMessageFromPlugin((message) => {
+      if (message.type === "targetChanged") {
+        this.$target.value = message.payload.target;
       }
     });
   }
