@@ -7,13 +7,13 @@ type User = {
   name: string;
 };
 
-interface HeaderProps {
+type HeaderProps = {
   productName?: string;
   user?: User;
   onLogin?: () => void;
   onLogout?: () => void;
   onCreateAccount?: () => void;
-}
+} & JSX.IntrinsicElements["header"];
 
 export const Header = ({
   productName,
@@ -21,8 +21,9 @@ export const Header = ({
   onLogin,
   onLogout,
   onCreateAccount,
+  ...props
 }: HeaderProps) => (
-  <header>
+  <header {...props}>
     <div className="wrapper">
       <div>
         <svg

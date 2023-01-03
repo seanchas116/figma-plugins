@@ -3,7 +3,7 @@ import "./button.css";
 
 type ButtonSize = "small" | "medium" | "large";
 
-interface ButtonProps {
+type ButtonProps = {
   /**
    * Is this the principal call to action on the page?
    */
@@ -24,7 +24,7 @@ interface ButtonProps {
    * Optional click handler
    */
   onClick?: () => void;
-}
+} & JSX.IntrinsicElements["button"];
 
 /**
  * Primary UI component for user interaction
@@ -34,6 +34,7 @@ export const Button = ({
   size = "medium",
   backgroundColor,
   label = "Button",
+  style,
   ...props
 }: ButtonProps) => {
   const mode = primary
@@ -45,7 +46,10 @@ export const Button = ({
       className={["storybook-button", `storybook-button--${size}`, mode].join(
         " "
       )}
-      style={{ backgroundColor }}
+      style={{
+        ...style,
+        backgroundColor,
+      }}
       {...props}
     >
       {label}

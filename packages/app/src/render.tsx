@@ -9,13 +9,7 @@ const root = document.getElementById("root") as HTMLElement;
 root.style.width = "max-content";
 const reactRoot = ReactDOMClient.createRoot(root);
 
-async function renderComponent(
-  node: JSX.Element,
-  options: {
-    width?: number;
-    height?: number;
-  }
-): Promise<{
+async function renderComponent(node: JSX.Element): Promise<{
   png: ArrayBuffer;
   width: number;
   height: number;
@@ -23,17 +17,10 @@ async function renderComponent(
   reactRoot.render(node);
   await new Promise((resolve) => setTimeout(resolve, 0));
 
-  const element = root.firstElementChild as HTMLElement;
-  element.style.width = options.width ? `${options.width}px` : "";
-  element.style.height = options.height ? `${options.height}px` : "";
-
   const pixelRatio = 2;
 
   console.time("htmlToImage");
-  const canvas = await htmlToImage.toCanvas(
-    root.firstElementChild as HTMLElement,
-    { pixelRatio }
-  );
+  const canvas = await htmlToImage.toCanvas(root, { pixelRatio });
   const width = Math.round(canvas.width / pixelRatio);
   const height = Math.round(canvas.height / pixelRatio);
   const pngURL = canvas.toDataURL("image/png");
@@ -75,11 +62,21 @@ const onMessage = async (event: MessageEvent) => {
   const Component = componentDoc && (await getComponent(componentDoc));
 
   const result = await renderComponent(
-    Component ? <Component {...message.payload.props} /> : <div />,
-    {
-      width: message.payload.width,
-      height: message.payload.height,
-    }
+    Component ? (
+      <Component
+        {...message.payload.props}
+        style={{
+          width: message.payload.width
+            ? message.payload.width + "px"
+            : undefined,
+          height: message.payload.height
+            ? message.payload.height + "px"
+            : undefined,
+        }}
+      />
+    ) : (
+      <div />
+    )
   );
 
   sendMessage({
