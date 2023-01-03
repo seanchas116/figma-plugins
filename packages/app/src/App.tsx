@@ -2,7 +2,7 @@ import { assets } from "./designSystem";
 
 function App() {
   return (
-    <main className="p-2">
+    <main className="p-2 text-gray-900">
       <section className="p-4">
         <h2 className="text-xl mb-2">Color Styles</h2>
         <ul>
@@ -13,8 +13,8 @@ function App() {
                 style={{ backgroundColor: data.value }}
               />
               <div>
-                <div className="text-gray-500">{name}</div>
-                <div className="">{data.value}</div>
+                <div>{name}</div>
+                <div className="text-gray-500">{data.value}</div>
               </div>
             </li>
           ))}
@@ -25,7 +25,7 @@ function App() {
         <ul className="flex flex-col gap-1">
           {Object.entries(assets.textStyles).map(([name, data]) => (
             <li key={name} className="flex flex-col">
-              <div className="text-gray-500">{name}</div>
+              <div>{name}</div>
               <div
                 style={{
                   fontFamily: data.value.fontFamily,
