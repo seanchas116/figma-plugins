@@ -14,12 +14,6 @@ import { renderInstanceImage } from "./render";
 const productName = "UIMix";
 
 export async function syncAssets(assets: Assets) {
-  let page = figma.root.findChild((page) => page.name === productName);
-  if (!page) {
-    page = figma.createPage();
-    page.name = productName;
-  }
-
   const paintStyles = new Map<string, PaintStyle>();
 
   for (const style of figma.getLocalPaintStyles()) {
@@ -35,7 +29,7 @@ export async function syncAssets(assets: Assets) {
       style = figma.createPaintStyle();
       setPaintStyleMetadata(style, { name });
     }
-    style.name = `${productName}/${name}`;
+    style.name = name;
     style.description = comment ?? "";
     const color = parseCSSColor(value);
     if (color?.type === "rgb") {
@@ -70,7 +64,7 @@ export async function syncAssets(assets: Assets) {
       style = figma.createTextStyle();
       setTextStyleMetadata(style, { name });
     }
-    style.name = `${productName}/${name}`;
+    style.name = name;
     style.description = comment ?? "";
 
     try {
@@ -100,13 +94,21 @@ export async function syncAssets(assets: Assets) {
   }
 
   const components = new Map<string, ComponentNode>();
-  for (const node of page.children) {
-    if (node.type === "COMPONENT") {
-      const info = getComponentInfo(node);
-      if (info) {
-        components.set(componentKey(info), node);
+  for (const page of figma.root.children) {
+    for (const node of page.children) {
+      if (node.type === "COMPONENT") {
+        const info = getComponentInfo(node);
+        if (info) {
+          components.set(componentKey(info), node);
+        }
       }
     }
+  }
+
+  let componentPage = figma.root.findChild((page) => page.name === productName);
+  if (!componentPage) {
+    componentPage = figma.createPage();
+    componentPage.name = productName;
   }
 
   for (const componentDoc of assets.components) {
@@ -119,9 +121,9 @@ export async function syncAssets(assets: Assets) {
         internalPath: componentDoc.internalPath,
         name: componentDoc.name,
       });
-      page.appendChild(component);
+      componentPage.appendChild(component);
     }
-    component.name = `${productName}/${componentDoc.name}`;
+    component.name = componentDoc.name;
 
     const result = await renderInstanceImage({
       component: {
