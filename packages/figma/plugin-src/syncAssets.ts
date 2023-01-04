@@ -111,6 +111,8 @@ export async function syncAssets(assets: Assets) {
     componentPage.name = productName;
   }
 
+  let offset = 0;
+
   for (const componentDoc of assets.components) {
     const key = componentKey(componentDoc);
     let component = components.get(key);
@@ -124,6 +126,8 @@ export async function syncAssets(assets: Assets) {
       componentPage.appendChild(component);
     }
     component.name = componentDoc.name;
+    component.x = 0;
+    component.y = offset;
 
     const result = await renderInstanceImage({
       component: {
@@ -142,5 +146,7 @@ export async function syncAssets(assets: Assets) {
       { type: "IMAGE", imageHash: img.hash, scaleMode: "CROP" },
     ];
     component.resize(result.width, result.height);
+
+    offset += result.height + 32;
   }
 }
