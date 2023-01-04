@@ -1,5 +1,5 @@
 import { InstanceInfo, TargetInfo } from "../data";
-import { MessageToPlugin } from "../message";
+import { UIToPluginMessage } from "../message";
 import { setInstanceInfo, getRenderedSize, getTargetInfo } from "./pluginData";
 import { debounce, postMessageToUI } from "./common";
 import { onRenderDone, renderInstance } from "./render";
@@ -7,7 +7,7 @@ import { syncAssets } from "./syncAssets";
 
 figma.showUI(__html__, { width: 240, height: 240 });
 
-figma.ui.onmessage = async (msg: MessageToPlugin) => {
+figma.ui.onmessage = async (msg: UIToPluginMessage) => {
   switch (msg.type) {
     case "ready": {
       onSelectionChange();

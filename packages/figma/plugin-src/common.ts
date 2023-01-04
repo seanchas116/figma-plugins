@@ -1,6 +1,6 @@
-import { MessageToUI } from "../message";
+import { PluginToUIMessage } from "../message";
 
-export function postMessageToUI(msg: MessageToUI) {
+export function postMessageToUI(msg: PluginToUIMessage) {
   figma.ui.postMessage(msg);
 }
 
