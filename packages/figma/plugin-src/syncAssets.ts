@@ -110,22 +110,22 @@ export async function syncAssets(assets: Assets) {
   }
 
   for (const componentDoc of assets.components) {
-    const key = componentDoc.filePath + "#" + componentDoc.displayName;
+    const key = componentDoc.path + "#" + componentDoc.name;
     let component = components.get(key);
     if (!component) {
       component = figma.createComponent();
       setComponentInfo(component, {
-        path: componentDoc.filePath,
-        name: componentDoc.displayName,
+        path: componentDoc.path,
+        name: componentDoc.name,
       });
       page.appendChild(component);
     }
-    component.name = `${productName}/${componentDoc.displayName}`;
+    component.name = `${productName}/${componentDoc.name}`;
 
     const result = await renderInstanceImage({
       component: {
-        path: componentDoc.filePath,
-        name: componentDoc.displayName,
+        path: componentDoc.path,
+        name: componentDoc.name,
       },
       instance: {
         props: {},

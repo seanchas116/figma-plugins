@@ -51,15 +51,14 @@ export const InstanceEdit: FunctionComponent = () => {
 
   const componentDoc = state.componentDocs.find(
     (doc) =>
-      doc.filePath === target.component.path &&
-      doc.displayName === target.component.name
+      doc.path === target.component.path && doc.name === target.component.name
   );
   const instance = target.instance;
 
   return (
     <div className="flex flex-col gap-2">
       <h1 className="mt-2 font-bold text-sm">
-        {componentDoc?.displayName ?? "Component Not Found"}
+        {componentDoc?.name ?? "Component Not Found"}
       </h1>
       <div>
         <button

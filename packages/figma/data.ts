@@ -1,4 +1,4 @@
-import type { ComponentDoc } from "react-docgen-typescript";
+import type { Props } from "react-docgen-typescript";
 
 export interface InstanceInfo {
   props: Record<string, any>;
@@ -13,6 +13,10 @@ export interface ComponentInfo {
 export interface TargetInfo {
   component: ComponentInfo;
   instance: InstanceInfo;
+}
+
+export interface ComponentMetadata extends ComponentInfo {
+  props: Props;
 }
 
 export interface ColorStyleData {
@@ -32,7 +36,7 @@ export interface TextStyleData {
 }
 
 export interface Assets {
-  components: ComponentDoc[];
+  components: ComponentMetadata[];
   colorStyles: Record<string, ColorStyleData>;
   textStyles: Record<string, TextStyleData>;
 }

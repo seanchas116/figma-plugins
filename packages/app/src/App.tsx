@@ -51,8 +51,8 @@ function App() {
           {assets.components.map((component) => (
             <li>
               <div className="mb-2">
-                <div>{component.displayName}</div>
-                <div className="text-gray-500">{component.filePath}</div>
+                <div>{component.name}</div>
+                <div className="text-gray-500">{component.path}</div>
               </div>
               <div className="w-60 h-60 shadow"></div>
             </li>

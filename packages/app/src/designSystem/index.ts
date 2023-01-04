@@ -1,3 +1,4 @@
+import { Props } from "react-docgen-typescript";
 import { Assets, ColorStyleData, TextStyleData } from "../../../figma/data";
 import components from "./components.json";
 
@@ -51,7 +52,11 @@ export const textStyles: Record<string, TextStyleData> = {
 };
 
 export const assets: Assets = {
-  components: components as any,
+  components: components.map((component) => ({
+    name: component.displayName,
+    path: component.filePath,
+    props: component.props as any as Props,
+  })),
   colorStyles,
   textStyles,
 };

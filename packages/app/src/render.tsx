@@ -1,12 +1,12 @@
 import * as htmlToImage from "html-to-image";
 import ReactDOMClient from "react-dom/client";
 import React from "react";
-import type { ComponentDoc } from "react-docgen-typescript";
 import type {
   RenderIFrameToUIMessage,
   UIToRenderIFrameMessage,
 } from "../../figma/message";
 import { assets } from "./designSystem";
+import { ComponentMetadata } from "../../figma/data";
 
 const root = document.getElementById("root") as HTMLElement;
 root.style.width = "max-content";
@@ -37,19 +37,17 @@ async function renderComponent(node: JSX.Element): Promise<{
   };
 }
 
-const componentDocMap = new Map<string, ComponentDoc>(
-  assets.components.map((componentDoc) => [
-    componentDoc.filePath + "#" + componentDoc.displayName,
-    componentDoc,
+const componentMetadataMap = new Map<string, ComponentMetadata>(
+  assets.components.map((metadata) => [
+    metadata.path + "#" + metadata.name,
+    metadata,
   ])
 );
 
 async function getComponent(
-  componentDoc: ComponentDoc
+  componentDoc: ComponentMetadata
 ): Promise<React.ComponentType<any> | undefined> {
-  return (await import("../../" + componentDoc.filePath))[
-    componentDoc.displayName
-  ];
+  return (await import("../../" + componentDoc.path))[componentDoc.name];
 }
 
 const onMessage = async (event: MessageEvent) => {
@@ -59,7 +57,7 @@ const onMessage = async (event: MessageEvent) => {
 
   const message: UIToRenderIFrameMessage = event.data;
 
-  const componentDoc = componentDocMap.get(
+  const componentDoc = componentMetadataMap.get(
     message.payload.path + "#" + message.payload.name
   );
   const Component = componentDoc && (await getComponent(componentDoc));
