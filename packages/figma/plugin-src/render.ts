@@ -31,7 +31,7 @@ export async function renderInstanceImage(
     type: "render",
     requestID,
     payload: {
-      ...target.component,
+      component: target.component,
       ...target.instance,
       width: autoResize === "widthHeight" ? undefined : width,
       height: autoResize !== "none" ? undefined : height,

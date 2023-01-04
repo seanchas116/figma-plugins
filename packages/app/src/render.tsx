@@ -6,7 +6,7 @@ import type {
   UIToRenderIFrameMessage,
 } from "../../figma/message";
 import { assets } from "./designSystem";
-import { ComponentMetadata } from "../../figma/data";
+import { componentKey, ComponentMetadata } from "../../figma/data";
 
 const root = document.getElementById("root") as HTMLElement;
 root.style.width = "max-content";
@@ -38,16 +38,15 @@ async function renderComponent(node: JSX.Element): Promise<{
 }
 
 const componentMetadataMap = new Map<string, ComponentMetadata>(
-  assets.components.map((metadata) => [
-    metadata.path + "#" + metadata.name,
-    metadata,
-  ])
+  assets.components.map((metadata) => [componentKey(metadata), metadata])
 );
 
 async function getComponent(
   componentDoc: ComponentMetadata
 ): Promise<React.ComponentType<any> | undefined> {
-  return (await import("../../" + componentDoc.path))[componentDoc.name];
+  return (await import("../../" + componentDoc.internalPath))[
+    componentDoc.name
+  ];
 }
 
 const onMessage = async (event: MessageEvent) => {
@@ -58,7 +57,7 @@ const onMessage = async (event: MessageEvent) => {
   const message: UIToRenderIFrameMessage = event.data;
 
   const componentDoc = componentMetadataMap.get(
-    message.payload.path + "#" + message.payload.name
+    componentKey(message.payload.component)
   );
   const Component = componentDoc && (await getComponent(componentDoc));
 

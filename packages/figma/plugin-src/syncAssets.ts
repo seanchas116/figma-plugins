@@ -1,5 +1,5 @@
 import parseCSSColor from "parse-css-color";
-import { Assets } from "../data";
+import { Assets, componentKey } from "../data";
 import { findFontForWeight } from "./common";
 import {
   getPaintStyleMetadata,
@@ -104,18 +104,19 @@ export async function syncAssets(assets: Assets) {
     if (node.type === "COMPONENT") {
       const info = getComponentInfo(node);
       if (info) {
-        components.set(info.path + "#" + info.name, node);
+        components.set(componentKey(info), node);
       }
     }
   }
 
   for (const componentDoc of assets.components) {
-    const key = componentDoc.path + "#" + componentDoc.name;
+    const key = componentKey(componentDoc);
     let component = components.get(key);
     if (!component) {
       component = figma.createComponent();
       setComponentInfo(component, {
-        path: componentDoc.path,
+        externalPath: componentDoc.externalPath,
+        internalPath: componentDoc.internalPath,
         name: componentDoc.name,
       });
       page.appendChild(component);
@@ -124,7 +125,8 @@ export async function syncAssets(assets: Assets) {
 
     const result = await renderInstanceImage({
       component: {
-        path: componentDoc.path,
+        externalPath: componentDoc.externalPath,
+        internalPath: componentDoc.internalPath,
         name: componentDoc.name,
       },
       instance: {

@@ -6,8 +6,13 @@ export interface InstanceInfo {
 }
 
 export interface ComponentInfo {
-  path: string;
-  name: string;
+  externalPath: string; // path used to import the component externally: e.g. '@uimix/components'
+  internalPath: string; // path used to import the component internally: e.g. './src/components/Button'
+  name: string; // export name of the component: e.g. 'Button' or 'default'
+}
+
+export function componentKey(info: ComponentInfo) {
+  return `${info.externalPath}:${info.internalPath}#${info.name}`;
 }
 
 export interface TargetInfo {

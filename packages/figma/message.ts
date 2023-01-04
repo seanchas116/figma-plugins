@@ -1,4 +1,4 @@
-import { InstanceInfo, TargetInfo, Assets } from "./data";
+import { InstanceInfo, TargetInfo, Assets, ComponentInfo } from "./data";
 
 export type UIToPluginMessage =
   | {
@@ -38,8 +38,7 @@ export type PluginToUIMessage =
       type: "render";
       requestID: number;
       payload: {
-        path: string;
-        name: string;
+        component: ComponentInfo;
         props: Record<string, any>;
         width?: number;
         height?: number;
@@ -56,8 +55,7 @@ export type UIToRenderIFrameMessage = {
   type: "render";
   requestID: number;
   payload: {
-    path: string;
-    name: string;
+    component: ComponentInfo;
     props: Record<string, any>;
     width?: number;
     height?: number;

@@ -1,4 +1,5 @@
 import { FunctionComponent } from "preact";
+import { componentKey } from "../data";
 import { state } from "./State";
 
 const AutoWidthIcon = () => {
@@ -50,8 +51,7 @@ export const InstanceEdit: FunctionComponent = () => {
   }
 
   const componentDoc = state.componentDocs.find(
-    (doc) =>
-      doc.path === target.component.path && doc.name === target.component.name
+    (doc) => componentKey(doc) === componentKey(target.component)
   );
   const instance = target.instance;
 

@@ -54,7 +54,8 @@ export const textStyles: Record<string, TextStyleData> = {
 export const assets: Assets = {
   components: components.map((component) => ({
     name: component.displayName,
-    path: component.filePath,
+    internalPath: component.filePath,
+    externalPath: "@uimix/example-app",
     props: component.props as any as Props,
   })),
   colorStyles,
