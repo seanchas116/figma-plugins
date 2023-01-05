@@ -60,7 +60,7 @@ export const RenderIFrame: React.FC = () => {
 
   return (
     <iframe
-      className="border border-gray-300"
+      className="border border-gray-200"
       ref={ref}
       src="http://localhost:5173/render.html"
     />
