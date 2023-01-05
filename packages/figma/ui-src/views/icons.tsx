@@ -6,8 +6,8 @@ export const AutoWidthIcon = (props: JSX.IntrinsicElements["svg"]) => {
       <path
         d="M2 8H14M2 8L4 10M2 8L4 6M14 8L12 6M14 8L12 10"
         stroke="currentColor"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );
@@ -19,8 +19,8 @@ export const AutoHeightIcon = (props: JSX.IntrinsicElements["svg"]) => {
       <path
         d="M2.5 4.5H13.5M2.5 8H13.5M2.5 11.5H8"
         stroke="currentColor"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );
@@ -63,6 +63,19 @@ export const CloseIcon = (props: JSX.IntrinsicElements["svg"]) => {
         stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
+      />
+    </svg>
+  );
+};
+
+export const ChevronDownIcon = (props: JSX.IntrinsicElements["svg"]) => {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" {...props}>
+      <path
+        d="M13 5.5L8 10.5L3 5.5"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
       />
     </svg>
   );

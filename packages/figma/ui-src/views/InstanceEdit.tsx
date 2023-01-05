@@ -1,7 +1,12 @@
 import { FunctionComponent } from "preact";
 import { componentKey } from "../../data";
 import { state } from "../state/State";
-import { AutoHeightIcon, AutoWidthIcon, FixedSizeIcon } from "./icons";
+import {
+  AutoHeightIcon,
+  AutoWidthIcon,
+  ChevronDownIcon,
+  FixedSizeIcon,
+} from "./icons";
 import { styled } from "./styled";
 
 const SizingButton = styled(
@@ -73,24 +78,31 @@ export const InstanceEdit: FunctionComponent = () => {
 
             if (prop.type.name === "enum") {
               input = (
-                <select
-                  className="p-0"
-                  value={value ?? ""}
-                  onChange={(event) => {
-                    state.updateInstanceProps({
-                      [name]: event.currentTarget.value,
-                    });
-                  }}
-                >
-                  {prop.type.value.map((value: { value: string }) => {
-                    try {
-                      const rawValue = JSON.parse(value.value);
-                      return <option value={rawValue}>{rawValue}</option>;
-                    } catch {
-                      return null;
-                    }
-                  })}
-                </select>
+                <div className="relative w-fit">
+                  <select
+                    className="appearance-none pr-4 p-1 -m-1 outline outline-1 outline-transparent hover:outline-gray-300 focus:outline-blue-500 placeholder:text-gray-400"
+                    value={value ?? ""}
+                    onChange={(event) => {
+                      state.updateInstanceProps({
+                        [name]: event.currentTarget.value,
+                      });
+                    }}
+                  >
+                    {prop.type.value.map((value: { value: string }) => {
+                      try {
+                        const rawValue = JSON.parse(value.value);
+                        return <option value={rawValue}>{rawValue}</option>;
+                      } catch {
+                        return null;
+                      }
+                    })}
+                  </select>
+                  <ChevronDownIcon
+                    width={12}
+                    height={12}
+                    className="pointer-events-none absolute right-0 top-0 bottom-0 my-auto"
+                  />
+                </div>
               );
             } else if (prop.type.name === "string") {
               input = (
