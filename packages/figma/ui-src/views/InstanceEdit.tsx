@@ -22,7 +22,7 @@ export const InstanceEdit: FunctionComponent = () => {
 
   return (
     <div className="flex flex-col gap-3">
-      <h1 className="font-semibold">
+      <h1 className="font-semibold text-xs">
         {componentDoc?.name ?? "Component Not Found"}
       </h1>
       <div className="flex -my-1">
@@ -118,6 +118,10 @@ export const InstanceEdit: FunctionComponent = () => {
                   }}
                 />
               );
+            }
+            // TODO: number
+            if (!input) {
+              return null;
             }
 
             return (
