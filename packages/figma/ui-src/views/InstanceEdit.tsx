@@ -25,7 +25,7 @@ export const InstanceEdit: FunctionComponent = () => {
       <h1 className="font-semibold">
         {componentDoc?.name ?? "Component Not Found"}
       </h1>
-      <div className="flex">
+      <div className="flex -my-1">
         <SizingButton
           title="Auto Width"
           aria-selected={instance.autoResize === "widthHeight"}
