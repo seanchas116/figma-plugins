@@ -90,7 +90,7 @@ export const App: FunctionComponent = () => {
       >
         <div className="flex flex-col gap-3">
           <div className="flex items-center justify-between">
-            <h1 className="font-bold">Settings</h1>
+            <h1 className="font-semibold">Settings</h1>
             <button
               className="rounded p-1 -m-1 hover:bg-gray-100 aria-pressed:bg-blue-500 aria-pressed:text-white"
               onClick={() => {
