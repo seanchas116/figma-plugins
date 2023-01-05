@@ -59,7 +59,6 @@ export const App: FunctionComponent = () => {
       <div className="p-2 flex flex-col gap-2">
         <InstanceEdit />
         <RenderIFrame />
-        <Resizer />
       </div>
       <div
         className="fixed inset-2 rounded bg-white border border-gray-200 shadow p-3"
@@ -85,6 +84,7 @@ export const App: FunctionComponent = () => {
           </button>
         </div>
       </div>
+      <Resizer />
     </div>
   );
 };
