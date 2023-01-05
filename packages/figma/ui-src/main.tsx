@@ -1,4 +1,4 @@
-import { App } from "./App";
+import { App } from "./views/App";
 import "./main.css";
 import { render } from "preact";
 

@@ -1,7 +1,7 @@
 import { signal } from "@preact/signals";
-import { Assets, InstanceInfo, TargetInfo } from "../data";
-import { PluginToUIMessage } from "../message";
-import { onMessageFromPlugin, postMessageToPlugin } from "./common";
+import { Assets, InstanceInfo, TargetInfo } from "../../data";
+import { PluginToUIMessage } from "../../message";
+import { onMessageFromPlugin, postMessageToPlugin } from "../common";
 
 class State {
   $assets = signal<Assets>({

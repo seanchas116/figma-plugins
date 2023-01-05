@@ -4,9 +4,9 @@ import {
   RenderIFrameToUIMessage,
   UIToRenderIFrameMessage,
   PluginToUIMessage,
-} from "../message";
-import { postMessageToPlugin } from "./common";
-import { state } from "./State";
+} from "../../message";
+import { postMessageToPlugin } from "../common";
+import { state } from "../state/State";
 
 export const RenderIFrame: React.FC = () => {
   const ref = createRef<HTMLIFrameElement>();

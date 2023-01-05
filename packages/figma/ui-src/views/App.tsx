@@ -1,9 +1,9 @@
 import { FunctionComponent } from "preact";
-import { postMessageToPlugin } from "./common";
+import { postMessageToPlugin } from "../common";
 import { InstanceEdit } from "./InstanceEdit";
 import { RenderIFrame } from "./RenderIFrame";
 import { Resizer } from "./Resizer";
-import { state } from "./State";
+import { state } from "../state/State";
 
 export const App: FunctionComponent = () => {
   const syncAssets = () => {

@@ -1,6 +1,6 @@
 import { FunctionComponent } from "preact";
 import { useState } from "preact/hooks";
-import { postMessageToPlugin } from "./common";
+import { postMessageToPlugin } from "../common";
 
 // Based on https://gist.github.com/sonnylazuardi/e55300f28fbe109db052f6568fee5a04
 
