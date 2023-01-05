@@ -1,6 +1,6 @@
 import { RenderResult, TargetInfo } from "../data";
 import { getTargetInfo, setRenderedSize } from "./pluginData";
-import { rpc } from "./rpc";
+import { rpc } from "./code";
 
 export async function renderInstanceImage(
   target: TargetInfo,

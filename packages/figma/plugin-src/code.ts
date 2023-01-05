@@ -1,12 +1,14 @@
-import { InstanceInfo, TargetInfo } from "../data";
+import { Assets, InstanceInfo, TargetInfo } from "../data";
 import { setInstanceInfo, getRenderedSize, getTargetInfo } from "./pluginData";
 import { debounce, encodeNode } from "./common";
-import { rpc } from "./rpc";
 import { renderInstance } from "./render";
+import { IPluginToUIRPC, IUIToPluginRPC } from "../rpc";
+import { RPC } from "@uimix/typed-rpc";
+import { syncAssets } from "./syncAssets";
 
 figma.showUI(__html__, { width: 240, height: 240 });
 
-export const onDocumentChange = debounce((event: DocumentChangeEvent) => {
+const onDocumentChange = debounce((event: DocumentChangeEvent) => {
   for (const change of event.documentChanges) {
     console.log(change);
     if (
@@ -54,7 +56,7 @@ export const onDocumentChange = debounce((event: DocumentChangeEvent) => {
   }
 }, 200);
 
-export const onSelectionChange = () => {
+const onSelectionChange = () => {
   const selection = figma.currentPage.selection;
 
   console.log(selection, selection.map(encodeNode));
@@ -73,3 +75,53 @@ export const onSelectionChange = () => {
 
 figma.on("documentchange", onDocumentChange);
 figma.on("selectionchange", onSelectionChange);
+
+class RPCHandler implements IUIToPluginRPC {
+  async ready(): Promise<void> {
+    onSelectionChange();
+  }
+  async updateInstance(instance?: InstanceInfo | undefined): Promise<void> {
+    const selection = figma.currentPage.selection;
+    if (!selection.length) {
+      return;
+    }
+
+    const node = selection[0];
+    if (node.type !== "INSTANCE") {
+      return;
+    }
+
+    console.log("setting instance info", instance);
+
+    const instanceInfo = instance;
+    setInstanceInfo(node, instanceInfo);
+    if (instanceInfo) {
+      node.setRelaunchData({
+        edit: "",
+      });
+      renderInstance(node);
+    } else {
+      node.setRelaunchData({});
+    }
+  }
+  async syncAssets(assets: Assets): Promise<void> {
+    await syncAssets(assets);
+    figma.notify("Components & tokens synced to your Figma file!");
+  }
+  async resize(width: number, height: number): Promise<void> {
+    figma.ui.resize(width, height);
+  }
+}
+
+export const rpc = new RPC<IUIToPluginRPC, IPluginToUIRPC>({
+  post: (msg) => {
+    figma.ui.postMessage(msg);
+  },
+  subscribe: (handler) => {
+    figma.ui.onmessage = handler;
+    return () => {
+      figma.ui.onmessage = undefined;
+    };
+  },
+  handler: new RPCHandler(),
+});
