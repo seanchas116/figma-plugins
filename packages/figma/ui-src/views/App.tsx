@@ -6,6 +6,7 @@ import { Resizer } from "./Resizer";
 import { state } from "../state/State";
 import { styled } from "./styled";
 import { CloseIcon, MenuIcon } from "./icons";
+import { useEffect } from "preact/hooks";
 
 const Tabs = styled(
   "div",
@@ -28,6 +29,36 @@ const TabItem = styled(
   `
 );
 
+const inputTypes = [
+  "text",
+  "password",
+  "number",
+  "email",
+  "url",
+  "search",
+  "date",
+  "datetime",
+  "datetime-local",
+  "time",
+  "month",
+  "week",
+];
+
+export function isTextInput(value: EventTarget | null | undefined): boolean {
+  if (!value) return false;
+
+  const elem = value as HTMLElement | SVGSVGElement;
+  if ("contentEditable" in elem && elem.isContentEditable) {
+    return true;
+  }
+  if (elem.tagName === "TEXTAREA") return true;
+  if (elem.tagName === "INPUT") {
+    return inputTypes.includes((elem as HTMLInputElement).type);
+  }
+
+  return false;
+}
+
 export const App: FunctionComponent = () => {
   const syncAssets = () => {
     postMessageToPlugin({
@@ -37,6 +68,19 @@ export const App: FunctionComponent = () => {
       },
     });
   };
+
+  useEffect(() => {
+    const onWindowKeyPress = (event: KeyboardEvent) => {
+      if (!isTextInput(event.target)) {
+        // let Figma handle shortcuts
+        event.preventDefault();
+      }
+    };
+    window.addEventListener("keypress", onWindowKeyPress);
+    return () => {
+      window.removeEventListener("keypress", onWindowKeyPress);
+    };
+  }, []);
 
   return (
     <div className="text-[11px] leading-4 text-gray-900 accent-blue-500">
