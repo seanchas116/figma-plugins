@@ -1,8 +1,8 @@
 import { rpcToIFrame } from "@uimix/typed-rpc/browser";
 import { createRef } from "preact";
 import { useEffect } from "preact/hooks";
-import { Assets } from "../../data";
-import { RenderIFrameToUIRPC, UIToRenderIFrameRPC } from "../../rpc";
+import { Assets } from "../../types/data";
+import { RenderIFrameToUIRPC, UIToRenderIFrameRPC } from "../../types/rpc";
 import { rpc, rpcHandler } from "../rpc";
 import { state } from "../state/State";
 

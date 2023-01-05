@@ -1,4 +1,4 @@
-import { RenderResult, TargetInfo } from "../data";
+import { RenderResult, TargetInfo } from "../types/data";
 import { getTargetInfo, setRenderedSize } from "./pluginData";
 import { rpc } from "./code";
 

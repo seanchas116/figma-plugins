@@ -1,6 +1,6 @@
 import { RPC } from "@uimix/typed-rpc";
-import { ComponentInfo, TargetInfo } from "../data";
-import { IPluginToUIRPC, IUIToPluginRPC } from "../rpc";
+import { ComponentInfo, TargetInfo } from "../types/data";
+import { IPluginToUIRPC, IUIToPluginRPC } from "../types/rpc";
 import { state } from "./state/State";
 
 export const rpcHandler: IPluginToUIRPC = {

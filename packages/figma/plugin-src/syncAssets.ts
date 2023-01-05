@@ -1,5 +1,5 @@
 import parseCSSColor from "parse-css-color";
-import { Assets, componentKey } from "../data";
+import { Assets, componentKey } from "../types/data";
 import { findFontForWeight } from "./common";
 import {
   getPaintStyleMetadata,

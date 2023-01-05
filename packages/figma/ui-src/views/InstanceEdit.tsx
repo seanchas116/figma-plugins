@@ -1,5 +1,5 @@
 import { FunctionComponent } from "preact";
-import { componentKey } from "../../data";
+import { componentKey } from "../../types/data";
 import { state } from "../state/State";
 import {
   AutoHeightIcon,

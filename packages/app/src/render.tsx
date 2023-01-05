@@ -1,13 +1,16 @@
 import * as htmlToImage from "html-to-image";
 import ReactDOMClient from "react-dom/client";
 import React from "react";
-import type { RenderIFrameToUIRPC, UIToRenderIFrameRPC } from "../../figma/rpc";
+import type {
+  RenderIFrameToUIRPC,
+  UIToRenderIFrameRPC,
+} from "../../figma/types/rpc";
 import { assets } from "./designSystem";
 import {
   ComponentInfo,
   componentKey,
   ComponentMetadata,
-} from "../../figma/data";
+} from "../../figma/types/data";
 import { rpcToParentWindow } from "@uimix/typed-rpc/browser";
 
 const root = document.getElementById("root") as HTMLElement;

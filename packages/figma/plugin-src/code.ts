@@ -1,8 +1,8 @@
-import { Assets, InstanceInfo, TargetInfo } from "../data";
+import { Assets, InstanceInfo, TargetInfo } from "../types/data";
 import { setInstanceInfo, getRenderedSize, getTargetInfo } from "./pluginData";
 import { debounce, encodeNode } from "./common";
 import { renderInstance } from "./render";
-import { IPluginToUIRPC, IUIToPluginRPC } from "../rpc";
+import { IPluginToUIRPC, IUIToPluginRPC } from "../types/rpc";
 import { RPC } from "@uimix/typed-rpc";
 import { syncAssets } from "./syncAssets";
 

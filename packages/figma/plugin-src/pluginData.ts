@@ -1,4 +1,4 @@
-import { ComponentInfo, InstanceInfo, TargetInfo } from "../data";
+import { ComponentInfo, InstanceInfo, TargetInfo } from "../types/data";
 
 export function setComponentInfo(
   node: ComponentNode,

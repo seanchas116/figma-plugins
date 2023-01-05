@@ -1,5 +1,5 @@
 import { signal } from "@preact/signals";
-import { Assets, InstanceInfo, TargetInfo } from "../../data";
+import { Assets, InstanceInfo, TargetInfo } from "../../types/data";
 import { rpc } from "../rpc";
 
 class State {
