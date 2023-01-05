@@ -5,11 +5,12 @@ import { RenderIFrame } from "./RenderIFrame";
 import { Resizer } from "./Resizer";
 import { state } from "../state/State";
 import { styled } from "./styled";
+import { MenuIcon } from "./icons";
 
 const Tabs = styled(
   "div",
   `
-   flex px-2 relative
+   flex items-center px-2 relative
    before:content-[''] before:absolute
    before:left-0 before:right-0 before:bottom-0 before:h-[1px]
    before:bg-gray-200
@@ -44,6 +45,10 @@ export const App: FunctionComponent = () => {
         <TabItem aria-selected>Layer</TabItem>
         <TabItem>Code</TabItem>
         <TabItem>Export</TabItem>
+        <div className="flex-1" />
+        <button className="p-2 rounded hover:bg-gray-100">
+          <MenuIcon />
+        </button>
       </Tabs>
       <div className="p-2 flex flex-col gap-2">
         <button
