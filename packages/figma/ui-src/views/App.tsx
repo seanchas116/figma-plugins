@@ -69,7 +69,7 @@ export const App: FunctionComponent = () => {
           <div className="flex items-center justify-between">
             <h1 className="font-bold">Settings</h1>
             <button
-              className="rounded hover:bg-gray-100 aria-pressed:bg-blue-500 aria-pressed:text-white"
+              className="rounded p-1 -m-1 hover:bg-gray-100 aria-pressed:bg-blue-500 aria-pressed:text-white"
               onClick={() => {
                 state.$showsSettings.value = false;
               }}
