@@ -1,10 +1,9 @@
+import { RPC } from "@uimix/typed-rpc";
 import { createRef } from "preact";
 import { useEffect } from "preact/hooks";
-import {
-  RenderIFrameToUIMessage,
-  UIToRenderIFrameMessage,
-  PluginToUIMessage,
-} from "../../message";
+import { Assets } from "../../data";
+import { PluginToUIMessage } from "../../message";
+import { RenderIFrameToUIRPC, UIToRenderIFrameRPC } from "../../rpc";
 import { postMessageToPlugin } from "../common";
 import { state } from "../state/State";
 
@@ -14,41 +13,43 @@ export const RenderIFrame: React.FC = () => {
   useEffect(() => {
     const iframe = ref.current!;
 
-    window.addEventListener("message", (event) => {
+    const rpcHandler: RenderIFrameToUIRPC = {
+      assets: async (assets: Assets) => {
+        state.$assets.value = assets;
+      },
+    };
+    const rpc = new RPC<RenderIFrameToUIRPC, UIToRenderIFrameRPC>(
+      (message) => iframe.contentWindow?.postMessage(message, "*"),
+      (handler) => {
+        const onMessage = (event: MessageEvent) => {
+          if (event.source === iframe.contentWindow) {
+            handler(event.data);
+          }
+        };
+        window.addEventListener("message", onMessage);
+        return () => {
+          window.removeEventListener("message", onMessage);
+        };
+      },
+      rpcHandler
+    );
+
+    window.addEventListener("message", async (event) => {
       if (event.data.pluginMessage) {
         const message = event.data.pluginMessage as PluginToUIMessage;
 
         if (message.type === "render") {
-          const renderMessage: UIToRenderIFrameMessage = {
-            type: "render",
+          const result = await rpc.remote.render(
+            message.payload.component,
+            message.payload.props,
+            message.payload.width,
+            message.payload.height
+          );
+          postMessageToPlugin({
+            type: "renderDone",
             requestID: message.requestID,
-            payload: message.payload,
-          };
-          iframe.contentWindow?.postMessage(renderMessage, "*");
-        }
-      }
-
-      if (event.source === iframe.contentWindow) {
-        const message: RenderIFrameToUIMessage = event.data;
-
-        switch (message.type) {
-          case "renderDone": {
-            postMessageToPlugin({
-              type: "renderDone",
-              requestID: message.requestID,
-              payload: message.payload,
-            });
-            break;
-          }
-          case "assets": {
-            console.log(message.payload);
-            state.$assets.value = {
-              components: message.payload.components,
-              colorStyles: message.payload.colorStyles,
-              textStyles: message.payload.textStyles,
-            };
-            break;
-          }
+            payload: result,
+          });
         }
       }
     });

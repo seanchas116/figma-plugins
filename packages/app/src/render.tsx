@@ -1,12 +1,14 @@
 import * as htmlToImage from "html-to-image";
 import ReactDOMClient from "react-dom/client";
 import React from "react";
-import type {
-  RenderIFrameToUIMessage,
-  UIToRenderIFrameMessage,
-} from "../../figma/message";
+import type { RenderIFrameToUIRPC, UIToRenderIFrameRPC } from "../../figma/rpc";
 import { assets } from "./designSystem";
-import { componentKey, ComponentMetadata } from "../../figma/data";
+import {
+  ComponentInfo,
+  componentKey,
+  ComponentMetadata,
+} from "../../figma/data";
+import { RPC } from "@uimix/typed-rpc";
 
 const root = document.getElementById("root") as HTMLElement;
 root.style.width = "max-content";
@@ -49,50 +51,44 @@ async function getComponent(
   ];
 }
 
-const onMessage = async (event: MessageEvent) => {
-  if (event.source === window || event.source !== window.parent) {
-    return;
+class RPCHandler implements UIToRenderIFrameRPC {
+  async render(
+    component: ComponentInfo,
+    props: Record<string, any>,
+    width?: number | undefined,
+    height?: number | undefined
+  ): Promise<{ png: ArrayBuffer; width: number; height: number }> {
+    const componentDoc = componentMetadataMap.get(componentKey(component));
+    const Component = componentDoc && (await getComponent(componentDoc));
+
+    const result = await renderComponent(
+      Component ? (
+        <Component
+          {...props}
+          style={{
+            width: width ? width + "px" : undefined,
+            height: height ? height + "px" : undefined,
+          }}
+        />
+      ) : (
+        <div />
+      )
+    );
+    return result;
   }
-
-  const message: UIToRenderIFrameMessage = event.data;
-
-  const componentDoc = componentMetadataMap.get(
-    componentKey(message.payload.component)
-  );
-  const Component = componentDoc && (await getComponent(componentDoc));
-
-  const result = await renderComponent(
-    Component ? (
-      <Component
-        {...message.payload.props}
-        style={{
-          width: message.payload.width
-            ? message.payload.width + "px"
-            : undefined,
-          height: message.payload.height
-            ? message.payload.height + "px"
-            : undefined,
-        }}
-      />
-    ) : (
-      <div />
-    )
-  );
-
-  sendMessage({
-    type: "renderDone",
-    requestID: message.requestID,
-    payload: result,
-  });
-};
-
-function sendMessage(message: RenderIFrameToUIMessage) {
-  window.parent.postMessage(message, "*");
 }
 
-window.addEventListener("message", onMessage);
+const rpc = new RPC<UIToRenderIFrameRPC, RenderIFrameToUIRPC>(
+  (message) => window.parent.postMessage(message, "*"),
+  (handler) => {
+    window.addEventListener("message", (event) => {
+      if (event.source === window || event.source !== window.parent) {
+        return;
+      }
+      handler(event.data);
+    });
+  },
+  new RPCHandler()
+);
 
-sendMessage({
-  type: "assets",
-  payload: assets,
-});
+rpc.remote.assets(assets);
