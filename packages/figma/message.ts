@@ -1,5 +1,26 @@
 import { InstanceInfo, TargetInfo, Assets, ComponentInfo } from "./data";
 
+interface UIToPluginRPC {
+  ready(): Promise<void>;
+  updateInstance(instance?: InstanceInfo): Promise<void>;
+  syncAssets(assets: Assets): Promise<void>;
+  resize(width: number, height: number): Promise<void>;
+}
+
+interface PluginToUIRPC {
+  render(
+    component: ComponentInfo,
+    props: Record<string, any>,
+    width?: number,
+    height?: number
+  ): Promise<{
+    png: ArrayBuffer;
+    width: number;
+    height: number;
+  }>;
+  onTargetChange(target: TargetInfo | undefined): Promise<void>;
+}
+
 export type UIToPluginMessage =
   | {
       type: "ready";
