@@ -100,7 +100,7 @@ export const App: FunctionComponent = () => {
           <MenuIcon />
         </button>
       </Tabs>
-      <div className="px-4 py-3 flex flex-col gap-2">
+      <div className="px-4 py-3 flex flex-col gap-3">
         <InstanceEdit />
         <RenderIFrame />
       </div>
