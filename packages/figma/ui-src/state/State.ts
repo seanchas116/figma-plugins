@@ -1,15 +1,15 @@
 import { signal } from "@preact/signals";
 import { Assets, InstanceInfo, TargetInfo } from "../../data";
-import { PluginToUIMessage } from "../../message";
 import { onMessageFromPlugin, postMessageToPlugin } from "../common";
 
 class State {
-  $assets = signal<Assets>({
+  readonly $showsSettings = signal(false);
+  readonly $assets = signal<Assets>({
     components: [],
     colorStyles: {},
     textStyles: {},
   });
-  private $target = signal<TargetInfo | undefined>(undefined);
+  private readonly $target = signal<TargetInfo | undefined>(undefined);
 
   get componentDocs() {
     return this.$assets.value.components;

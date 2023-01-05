@@ -5,7 +5,7 @@ import { RenderIFrame } from "./RenderIFrame";
 import { Resizer } from "./Resizer";
 import { state } from "../state/State";
 import { styled } from "./styled";
-import { MenuIcon } from "./icons";
+import { CloseIcon, MenuIcon } from "./icons";
 
 const Tabs = styled(
   "div",
@@ -39,27 +39,51 @@ export const App: FunctionComponent = () => {
   };
 
   return (
-    <div className="text-[11px] text-gray-900">
+    <div className="text-[11px] leading-4 text-gray-900">
       <Tabs>
         <TabItem>Insert</TabItem>
         <TabItem aria-selected>Layer</TabItem>
         <TabItem>Code</TabItem>
         <TabItem>Export</TabItem>
         <div className="flex-1" />
-        <button className="p-2 rounded hover:bg-gray-100">
+        <button
+          className="p-2 rounded hover:bg-gray-100 aria-pressed:bg-blue-500 aria-pressed:text-white"
+          aria-pressed={state.$showsSettings.value}
+          onClick={() => {
+            state.$showsSettings.value = !state.$showsSettings.value;
+          }}
+        >
           <MenuIcon />
         </button>
       </Tabs>
       <div className="p-2 flex flex-col gap-2">
-        <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
-          onClick={syncAssets}
-        >
-          Sync Components & Tokens
-        </button>
         <InstanceEdit />
         <RenderIFrame />
         <Resizer />
+      </div>
+      <div
+        className="fixed inset-2 rounded bg-white border border-gray-200 shadow p-3"
+        hidden={!state.$showsSettings.value}
+      >
+        <div className="flex flex-col gap-3">
+          <div className="flex items-center justify-between">
+            <h1 className="font-bold">Settings</h1>
+            <button
+              className="rounded hover:bg-gray-100 aria-pressed:bg-blue-500 aria-pressed:text-white"
+              onClick={() => {
+                state.$showsSettings.value = false;
+              }}
+            >
+              <CloseIcon />
+            </button>
+          </div>
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
+            onClick={syncAssets}
+          >
+            Sync Components & Tokens
+          </button>
+        </div>
       </div>
     </div>
   );
