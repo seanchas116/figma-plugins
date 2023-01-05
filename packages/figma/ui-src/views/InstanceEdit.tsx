@@ -108,7 +108,7 @@ export const InstanceEdit: FunctionComponent = () => {
               input = (
                 <input
                   type="text"
-                  className="w-full p-1 -m-1 outline outline-1 outline-transparent hover:outline-gray-300 focus:outline-blue-500 placeholder:text-gray-400"
+                  className="w-full p-1 -m-1 outline outline-1 outline-transparent hover:outline-gray-300 focus:outline-blue-500 placeholder:text-gray-300"
                   value={value ?? ""}
                   placeholder="String"
                   onChange={(event) => {
