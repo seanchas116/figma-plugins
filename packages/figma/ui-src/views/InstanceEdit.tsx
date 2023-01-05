@@ -6,7 +6,7 @@ import {
   AutoWidthIcon,
   ChevronDownIcon,
   FixedSizeIcon,
-} from "./icons";
+} from "../components/Icon";
 import { styled } from "./styled";
 
 const SizingButton = styled(
