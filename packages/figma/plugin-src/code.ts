@@ -1,4 +1,4 @@
-import { Assets, InstanceInfo, TargetInfo } from "../data";
+import { Assets, InstanceInfo, RenderResult, TargetInfo } from "../data";
 import {
   setInstanceInfo,
   getRenderedSize,
@@ -130,12 +130,6 @@ const onSelectionChange = () => {
 
 figma.on("documentchange", onDocumentChange);
 figma.on("selectionchange", onSelectionChange);
-
-interface RenderResult {
-  png: ArrayBuffer;
-  width: number;
-  height: number;
-}
 
 export async function renderInstanceImage(
   target: TargetInfo,

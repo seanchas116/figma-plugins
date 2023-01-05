@@ -45,3 +45,9 @@ export interface Assets {
   colorStyles: Record<string, ColorStyleData>;
   textStyles: Record<string, TextStyleData>;
 }
+
+export interface RenderResult {
+  png: ArrayBuffer;
+  width: number;
+  height: number;
+}

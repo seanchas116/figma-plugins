@@ -1,4 +1,10 @@
-import { InstanceInfo, TargetInfo, Assets, ComponentInfo } from "./data";
+import {
+  InstanceInfo,
+  TargetInfo,
+  Assets,
+  ComponentInfo,
+  RenderResult,
+} from "./data";
 
 export interface IUIToPluginRPC {
   ready(): Promise<void>;
@@ -13,11 +19,7 @@ export interface IPluginToUIRPC {
     props: Record<string, any>,
     width?: number,
     height?: number
-  ): Promise<{
-    png: ArrayBuffer;
-    width: number;
-    height: number;
-  }>;
+  ): Promise<RenderResult>;
   onTargetChange(target: TargetInfo | undefined): Promise<void>;
 }
 
@@ -27,11 +29,7 @@ export interface UIToRenderIFrameRPC {
     props: Record<string, any>,
     width?: number,
     height?: number
-  ): Promise<{
-    png: ArrayBuffer;
-    width: number;
-    height: number;
-  }>;
+  ): Promise<RenderResult>;
 }
 
 export interface RenderIFrameToUIRPC {
