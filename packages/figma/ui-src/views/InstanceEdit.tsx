@@ -2,6 +2,12 @@ import { FunctionComponent } from "preact";
 import { componentKey } from "../../data";
 import { state } from "../state/State";
 import { AutoHeightIcon, AutoWidthIcon, FixedSizeIcon } from "./icons";
+import { styled } from "./styled";
+
+const SizingButton = styled(
+  "button",
+  "p-1 rounded text-gray-500 hover:bg-gray-100 aria-selected:bg-blue-500 aria-selected:text-white"
+);
 
 export const InstanceEdit: FunctionComponent = () => {
   const target = state.target;
@@ -15,13 +21,12 @@ export const InstanceEdit: FunctionComponent = () => {
   const instance = target.instance;
 
   return (
-    <div className="flex flex-col gap-2">
-      <h1 className="mt-2 font-bold text-sm">
+    <div className="flex flex-col gap-3">
+      <h1 className="font-semibold">
         {componentDoc?.name ?? "Component Not Found"}
       </h1>
-      <div>
-        <button
-          className="p-0.5 rounded text-gray-500 hover:bg-gray-100 aria-selected:bg-blue-500 aria-selected:text-white"
+      <div className="flex">
+        <SizingButton
           title="Auto Width"
           aria-selected={instance.autoResize === "widthHeight"}
           onClick={() => {
@@ -32,9 +37,8 @@ export const InstanceEdit: FunctionComponent = () => {
           }}
         >
           <AutoWidthIcon />
-        </button>
-        <button
-          className="p-0.5 rounded text-gray-500 hover:bg-gray-100 aria-selected:bg-blue-500 aria-selected:text-white"
+        </SizingButton>
+        <SizingButton
           title="Auto Height"
           aria-selected={instance.autoResize === "height"}
           onClick={() => {
@@ -45,9 +49,8 @@ export const InstanceEdit: FunctionComponent = () => {
           }}
         >
           <AutoHeightIcon />
-        </button>
-        <button
-          className="p-0.5 rounded text-gray-500 hover:bg-gray-100 aria-selected:bg-blue-500 aria-selected:text-white"
+        </SizingButton>
+        <SizingButton
           title="Fixed Size"
           aria-selected={instance.autoResize === "none"}
           onClick={() => {
@@ -58,7 +61,7 @@ export const InstanceEdit: FunctionComponent = () => {
           }}
         >
           <FixedSizeIcon />
-        </button>
+        </SizingButton>
       </div>
       <dl className="grid grid-cols-[1fr_2fr] gap-1 items-center">
         {componentDoc &&
@@ -105,7 +108,6 @@ export const InstanceEdit: FunctionComponent = () => {
             } else if (prop.type.name === "boolean") {
               input = (
                 <input
-                  className="accent-blue-500"
                   type="checkbox"
                   checked={value ?? false}
                   onChange={(event) => {

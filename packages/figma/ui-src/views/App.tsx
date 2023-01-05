@@ -39,7 +39,7 @@ export const App: FunctionComponent = () => {
   };
 
   return (
-    <div className="text-[11px] leading-4 text-gray-900">
+    <div className="text-[11px] leading-4 text-gray-900 accent-blue-500">
       <Tabs>
         <TabItem>Insert</TabItem>
         <TabItem aria-selected>Layer</TabItem>
@@ -56,7 +56,7 @@ export const App: FunctionComponent = () => {
           <MenuIcon />
         </button>
       </Tabs>
-      <div className="p-2 flex flex-col gap-2">
+      <div className="px-4 py-3 flex flex-col gap-2">
         <InstanceEdit />
         <RenderIFrame />
       </div>
