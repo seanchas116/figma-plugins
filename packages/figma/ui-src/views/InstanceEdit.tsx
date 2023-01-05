@@ -63,7 +63,7 @@ export const InstanceEdit: FunctionComponent = () => {
           <FixedSizeIcon />
         </SizingButton>
       </div>
-      <dl className="grid grid-cols-[1fr_2fr] gap-1 items-center">
+      <dl className="grid grid-cols-[1fr_2fr] gap-3 items-center">
         {componentDoc &&
           Object.values(componentDoc.props).map((prop) => {
             const name = prop.name;
@@ -74,7 +74,7 @@ export const InstanceEdit: FunctionComponent = () => {
             if (prop.type.name === "enum") {
               input = (
                 <select
-                  className="border border-gray-300 rounded-md shadow-sm py-1 px-1 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  className="p-0"
                   value={value ?? ""}
                   onChange={(event) => {
                     state.updateInstanceProps({
@@ -95,9 +95,10 @@ export const InstanceEdit: FunctionComponent = () => {
             } else if (prop.type.name === "string") {
               input = (
                 <input
-                  className="border border-gray-300 rounded-md shadow-sm py-1 px-1 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                   type="text"
+                  className="p-1 -m-1 outline outline-1 outline-transparent hover:outline-gray-300 focus:outline-blue-500"
                   value={value ?? ""}
+                  placeholder="String"
                   onChange={(event) => {
                     state.updateInstanceProps({
                       [name]: event.currentTarget.value,
