@@ -1,9 +1,3 @@
-import { PluginToUIMessage } from "../message";
-
-export function postMessageToUI(msg: PluginToUIMessage) {
-  figma.ui.postMessage(msg);
-}
-
 export const debounce = (fn: (...args: any[]) => void, delay: number) => {
   let timer: NodeJS.Timeout | undefined;
   return (...args: any[]) => {

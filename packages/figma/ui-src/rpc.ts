@@ -1,24 +1,25 @@
 import { RPC } from "@uimix/typed-rpc";
 import { ComponentInfo, TargetInfo } from "../data";
 import { IPluginToUIRPC, IUIToPluginRPC } from "../rpc";
+import { state } from "./state/State";
 
-class RPCHandler implements IPluginToUIRPC {
-  render(
+export const rpcHandler: IPluginToUIRPC = {
+  render: async (
     component: ComponentInfo,
     props: Record<string, any>,
     width?: number | undefined,
     height?: number | undefined
-  ): Promise<{ png: ArrayBuffer; width: number; height: number }> {
-    throw new Error("Method not implemented.");
-  }
-  onTargetChange(target: TargetInfo | undefined): Promise<void> {
-    throw new Error("Method not implemented.");
-  }
-}
+  ): Promise<{ png: ArrayBuffer; width: number; height: number }> => {
+    throw new Error("Function not implemented.");
+  },
+  onTargetChange: async (target: TargetInfo | undefined) => {
+    state.$target.value = target;
+  },
+};
 
-export const rpc = new RPC<IPluginToUIRPC, IUIToPluginRPC>(
-  (data) => parent.postMessage({ pluginMessage: data }, "*"),
-  (handler) => {
+export const rpc = new RPC<IPluginToUIRPC, IUIToPluginRPC>({
+  post: (data) => parent.postMessage({ pluginMessage: data }, "*"),
+  subscribe: (handler) => {
     const onMessage = (event: MessageEvent) => {
       if (event.data.pluginMessage) {
         handler(event.data.pluginMessage);
@@ -27,5 +28,5 @@ export const rpc = new RPC<IPluginToUIRPC, IUIToPluginRPC>(
     window.addEventListener("message", onMessage);
     return () => window.removeEventListener("message", onMessage);
   },
-  new RPCHandler()
-);
+  handler: rpcHandler,
+});

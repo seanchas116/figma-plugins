@@ -1,5 +1,4 @@
 import { FunctionComponent } from "preact";
-import { postMessageToPlugin } from "../common";
 import { InstanceEdit } from "./InstanceEdit";
 import { RenderIFrame } from "./RenderIFrame";
 import { Resizer } from "./Resizer";
@@ -8,6 +7,7 @@ import { CloseIcon, MenuIcon } from "../components/Icon";
 import { useEffect } from "preact/hooks";
 import { Tabs, TabItem } from "../components/Tabs";
 import { Button } from "../components/Button";
+import { rpc } from "../rpc";
 
 const inputTypes = [
   "text",
@@ -41,12 +41,7 @@ export function isTextInput(value: EventTarget | null | undefined): boolean {
 
 export const App: FunctionComponent = () => {
   const syncAssets = () => {
-    postMessageToPlugin({
-      type: "syncAssets",
-      payload: {
-        assets: state.$assets.value,
-      },
-    });
+    rpc.remote.syncAssets(state.$assets.value);
   };
 
   useEffect(() => {

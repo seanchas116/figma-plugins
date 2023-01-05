@@ -8,7 +8,7 @@ import {
   componentKey,
   ComponentMetadata,
 } from "../../figma/data";
-import { RPC } from "@uimix/typed-rpc";
+import { rpcToParentWindow } from "@uimix/typed-rpc/browser";
 
 const root = document.getElementById("root") as HTMLElement;
 root.style.width = "max-content";
@@ -78,7 +78,7 @@ class RPCHandler implements UIToRenderIFrameRPC {
   }
 }
 
-const rpc = RPC.toParentWindow<UIToRenderIFrameRPC, RenderIFrameToUIRPC>(
+const rpc = rpcToParentWindow<UIToRenderIFrameRPC, RenderIFrameToUIRPC>(
   new RPCHandler()
 );
 

@@ -1,63 +1,67 @@
-import { InstanceInfo, TargetInfo } from "../data";
-import { UIToPluginMessage } from "../message";
-import { setInstanceInfo, getRenderedSize, getTargetInfo } from "./pluginData";
-import { debounce, encodeNode, postMessageToUI } from "./common";
-import { onRenderDone, renderInstance } from "./render";
+import { Assets, InstanceInfo, TargetInfo } from "../data";
+import {
+  setInstanceInfo,
+  getRenderedSize,
+  getTargetInfo,
+  setRenderedSize,
+} from "./pluginData";
+import { debounce, encodeNode } from "./common";
 import { syncAssets } from "./syncAssets";
+import { IPluginToUIRPC, IUIToPluginRPC } from "../rpc";
+import { RPC } from "@uimix/typed-rpc";
+import { removeListener } from "process";
 
 figma.showUI(__html__, { width: 240, height: 240 });
 
-figma.ui.onmessage = async (msg: UIToPluginMessage) => {
-  switch (msg.type) {
-    case "ready": {
-      onSelectionChange();
-      break;
-    }
-    case "resize": {
-      figma.ui.resize(msg.payload.width, msg.payload.height);
-      break;
-    }
-    case "updateInstance": {
-      console.log(msg);
-
-      const selection = figma.currentPage.selection;
-      if (!selection.length) {
-        return;
-      }
-
-      const node = selection[0];
-      if (node.type !== "INSTANCE") {
-        return;
-      }
-
-      console.log("setting instance info", msg.payload.instance);
-
-      const instanceInfo = msg.payload.instance;
-      setInstanceInfo(node, instanceInfo);
-      if (instanceInfo) {
-        node.setRelaunchData({
-          edit: "",
-        });
-        renderInstance(node);
-      } else {
-        node.setRelaunchData({});
-      }
-
-      break;
+class RPCHandler implements IUIToPluginRPC {
+  async ready(): Promise<void> {
+    onSelectionChange();
+  }
+  async updateInstance(instance?: InstanceInfo | undefined): Promise<void> {
+    const selection = figma.currentPage.selection;
+    if (!selection.length) {
+      return;
     }
 
-    case "renderDone": {
-      onRenderDone(msg.requestID, msg.payload);
-      break;
+    const node = selection[0];
+    if (node.type !== "INSTANCE") {
+      return;
     }
 
-    case "syncAssets": {
-      await syncAssets(msg.payload.assets);
-      figma.notify("Components & tokens synced to your Figma file!");
-      break;
+    console.log("setting instance info", instance);
+
+    const instanceInfo = instance;
+    setInstanceInfo(node, instanceInfo);
+    if (instanceInfo) {
+      node.setRelaunchData({
+        edit: "",
+      });
+      renderInstance(node);
+    } else {
+      node.setRelaunchData({});
     }
   }
-};
+  async syncAssets(assets: Assets): Promise<void> {
+    await syncAssets(assets);
+    figma.notify("Components & tokens synced to your Figma file!");
+  }
+  async resize(width: number, height: number): Promise<void> {
+    figma.ui.resize(width, height);
+  }
+}
+
+const rpc = new RPC<IUIToPluginRPC, IPluginToUIRPC>({
+  post: (msg) => {
+    figma.ui.postMessage(msg);
+  },
+  subscribe: (handler) => {
+    figma.ui.onmessage = handler;
+    return () => {
+      figma.ui.onmessage = undefined;
+    };
+  },
+  handler: new RPCHandler(),
+});
 
 const onDocumentChange = debounce((event: DocumentChangeEvent) => {
   for (const change of event.documentChanges) {
@@ -95,14 +99,10 @@ const onDocumentChange = debounce((event: DocumentChangeEvent) => {
         };
 
         setInstanceInfo(node, newInstanceInfo);
-        postMessageToUI({
-          type: "targetChanged",
-          payload: {
-            target: {
-              ...target,
-              instance: newInstanceInfo,
-            },
-          },
+
+        rpc.remote.onTargetChange({
+          ...target,
+          instance: newInstanceInfo,
         });
       }
 
@@ -125,13 +125,48 @@ const onSelectionChange = () => {
     }
   }
 
-  postMessageToUI({
-    type: "targetChanged",
-    payload: {
-      target,
-    },
-  });
+  rpc.remote.onTargetChange(target);
 };
 
 figma.on("documentchange", onDocumentChange);
 figma.on("selectionchange", onSelectionChange);
+
+interface RenderResult {
+  png: ArrayBuffer;
+  width: number;
+  height: number;
+}
+
+export async function renderInstanceImage(
+  target: TargetInfo,
+  width?: number,
+  height?: number
+): Promise<RenderResult> {
+  const autoResize = target.instance.autoResize;
+
+  return await rpc.remote.render(
+    target.component,
+    target.instance.props,
+    autoResize === "widthHeight" ? undefined : width,
+    autoResize !== "none" ? undefined : height
+  );
+}
+
+export async function renderInstance(node: InstanceNode) {
+  const target = getTargetInfo(node);
+  if (!target) {
+    return;
+  }
+
+  const result = await renderInstanceImage(target, node.width, node.height);
+
+  const img = await figma.createImage(new Uint8Array(result.png));
+  console.log(img.hash);
+
+  setRenderedSize(node, {
+    width: result.width,
+    height: result.height,
+  });
+  node.fills = [{ type: "IMAGE", imageHash: img.hash, scaleMode: "CROP" }];
+  node.resize(result.width, result.height);
+}

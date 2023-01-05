@@ -1,6 +1,6 @@
 import { FunctionComponent } from "preact";
 import { useState } from "preact/hooks";
-import { postMessageToPlugin } from "../common";
+import { rpc } from "../rpc";
 
 // Based on https://gist.github.com/sonnylazuardi/e55300f28fbe109db052f6568fee5a04
 
@@ -12,10 +12,7 @@ export const Resizer: FunctionComponent = () => {
       width: Math.max(50, Math.floor(e.clientX + 5)),
       height: Math.max(50, Math.floor(e.clientY + 5)),
     };
-    postMessageToPlugin({
-      type: "resize",
-      payload: size,
-    });
+    rpc.remote.resize(size.width, size.height);
   };
 
   return (

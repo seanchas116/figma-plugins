@@ -1,10 +1,9 @@
-import { RPC } from "@uimix/typed-rpc";
+import { rpcToIFrame } from "@uimix/typed-rpc/browser";
 import { createRef } from "preact";
 import { useEffect } from "preact/hooks";
 import { Assets } from "../../data";
-import { PluginToUIMessage } from "../../message";
 import { RenderIFrameToUIRPC, UIToRenderIFrameRPC } from "../../rpc";
-import { postMessageToPlugin } from "../common";
+import { rpc, rpcHandler } from "../rpc";
 import { state } from "../state/State";
 
 export const RenderIFrame: React.FC = () => {
@@ -13,39 +12,21 @@ export const RenderIFrame: React.FC = () => {
   useEffect(() => {
     const iframe = ref.current!;
 
-    const rpcHandler: RenderIFrameToUIRPC = {
+    const iframeRPCHandler: RenderIFrameToUIRPC = {
       assets: async (assets: Assets) => {
         state.$assets.value = assets;
       },
     };
-    const rpc = RPC.toIFrame<RenderIFrameToUIRPC, UIToRenderIFrameRPC>(
+    const iframeRPC = rpcToIFrame<RenderIFrameToUIRPC, UIToRenderIFrameRPC>(
       iframe,
-      rpcHandler
+      iframeRPCHandler
     );
 
-    window.addEventListener("message", async (event) => {
-      if (event.data.pluginMessage) {
-        const message = event.data.pluginMessage as PluginToUIMessage;
+    rpcHandler.render = async (component, props, width, height) => {
+      return iframeRPC.remote.render(component, props, width, height);
+    };
 
-        if (message.type === "render") {
-          const result = await rpc.remote.render(
-            message.payload.component,
-            message.payload.props,
-            message.payload.width,
-            message.payload.height
-          );
-          postMessageToPlugin({
-            type: "renderDone",
-            requestID: message.requestID,
-            payload: result,
-          });
-        }
-      }
-    });
-
-    postMessageToPlugin({
-      type: "ready",
-    });
+    rpc.remote.ready();
   }, []);
 
   return (

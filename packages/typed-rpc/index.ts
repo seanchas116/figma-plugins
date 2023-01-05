@@ -8,43 +8,6 @@ type MessageData =
     };
 
 export class RPC<Self, Remote> {
-  static toIFrame<Self, Remote>(iframe: HTMLIFrameElement, handler: Self) {
-    return new RPC<Self, Remote>({
-      post: (message) => iframe.contentWindow?.postMessage(message, "*"),
-      subscribe: (handler) => {
-        const onMessage = (event: MessageEvent) => {
-          if (event.source === iframe.contentWindow) {
-            handler(event.data);
-          }
-        };
-        window.addEventListener("message", onMessage);
-        return () => {
-          window.removeEventListener("message", onMessage);
-        };
-      },
-      handler,
-    });
-  }
-
-  static toParentWindow<Self, Remote>(handler: Self) {
-    return new RPC<Self, Remote>({
-      post: (message) => window.parent.postMessage(message, "*"),
-      subscribe: (handler) => {
-        const onMessage = (event: MessageEvent) => {
-          if (event.source === window || event.source !== window.parent) {
-            return;
-          }
-          handler(event.data);
-        };
-        window.addEventListener("message", onMessage);
-        return () => {
-          window.removeEventListener("message", onMessage);
-        };
-      },
-      handler,
-    });
-  }
-
   constructor({
     post,
     subscribe,
