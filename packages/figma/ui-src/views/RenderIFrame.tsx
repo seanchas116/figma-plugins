@@ -18,19 +18,8 @@ export const RenderIFrame: React.FC = () => {
         state.$assets.value = assets;
       },
     };
-    const rpc = new RPC<RenderIFrameToUIRPC, UIToRenderIFrameRPC>(
-      (message) => iframe.contentWindow?.postMessage(message, "*"),
-      (handler) => {
-        const onMessage = (event: MessageEvent) => {
-          if (event.source === iframe.contentWindow) {
-            handler(event.data);
-          }
-        };
-        window.addEventListener("message", onMessage);
-        return () => {
-          window.removeEventListener("message", onMessage);
-        };
-      },
+    const rpc = RPC.toIFrame<RenderIFrameToUIRPC, UIToRenderIFrameRPC>(
+      iframe,
       rpcHandler
     );
 

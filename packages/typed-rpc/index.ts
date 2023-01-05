@@ -8,23 +8,64 @@ type MessageData =
     };
 
 export class RPC<Self, Remote> {
-  constructor(
-    send: (data: MessageData) => void,
-    listen: (handler: (data: MessageData) => void) => () => void,
-    handler: Self
-  ) {
-    this.disposeHandler = listen(async (data) => {
+  static toIFrame<Self, Remote>(iframe: HTMLIFrameElement, handler: Self) {
+    return new RPC<Self, Remote>({
+      post: (message) => iframe.contentWindow?.postMessage(message, "*"),
+      subscribe: (handler) => {
+        const onMessage = (event: MessageEvent) => {
+          if (event.source === iframe.contentWindow) {
+            handler(event.data);
+          }
+        };
+        window.addEventListener("message", onMessage);
+        return () => {
+          window.removeEventListener("message", onMessage);
+        };
+      },
+      handler,
+    });
+  }
+
+  static toParentWindow<Self, Remote>(handler: Self) {
+    return new RPC<Self, Remote>({
+      post: (message) => window.parent.postMessage(message, "*"),
+      subscribe: (handler) => {
+        const onMessage = (event: MessageEvent) => {
+          if (event.source === window || event.source !== window.parent) {
+            return;
+          }
+          handler(event.data);
+        };
+        window.addEventListener("message", onMessage);
+        return () => {
+          window.removeEventListener("message", onMessage);
+        };
+      },
+      handler,
+    });
+  }
+
+  constructor({
+    post,
+    subscribe,
+    handler,
+  }: {
+    post: (data: MessageData) => void;
+    subscribe: (handler: (data: MessageData) => void) => () => void;
+    handler: Self;
+  }) {
+    this.disposeHandler = subscribe(async (data) => {
       if (data.type === "call") {
         try {
           const result = await (handler as any)[data.name](...data.args);
-          send({
+          post({
             type: "result",
             callID: data.callID,
             status: "success",
             value: result,
           });
         } catch (error) {
-          send({
+          post({
             type: "result",
             callID: data.callID,
             status: "error",
@@ -52,7 +93,7 @@ export class RPC<Self, Remote> {
             return new Promise((resolve, reject) => {
               const callID = Math.random();
               this.resolvers.set(callID, { resolve, reject });
-              send({ type: "call", callID, name, args });
+              post({ type: "call", callID, name, args });
             });
           };
         },

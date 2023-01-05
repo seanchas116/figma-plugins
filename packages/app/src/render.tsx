@@ -78,16 +78,7 @@ class RPCHandler implements UIToRenderIFrameRPC {
   }
 }
 
-const rpc = new RPC<UIToRenderIFrameRPC, RenderIFrameToUIRPC>(
-  (message) => window.parent.postMessage(message, "*"),
-  (handler) => {
-    window.addEventListener("message", (event) => {
-      if (event.source === window || event.source !== window.parent) {
-        return;
-      }
-      handler(event.data);
-    });
-  },
+const rpc = RPC.toParentWindow<UIToRenderIFrameRPC, RenderIFrameToUIRPC>(
   new RPCHandler()
 );
 
