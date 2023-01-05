@@ -1,7 +1,7 @@
 import { InstanceInfo, TargetInfo } from "../data";
 import { UIToPluginMessage } from "../message";
 import { setInstanceInfo, getRenderedSize, getTargetInfo } from "./pluginData";
-import { debounce, postMessageToUI } from "./common";
+import { debounce, encodeNode, postMessageToUI } from "./common";
 import { onRenderDone, renderInstance } from "./render";
 import { syncAssets } from "./syncAssets";
 
@@ -113,6 +113,8 @@ const onDocumentChange = debounce((event: DocumentChangeEvent) => {
 
 const onSelectionChange = () => {
   const selection = figma.currentPage.selection;
+
+  console.log(selection, selection.map(encodeNode));
 
   let target: TargetInfo | undefined;
 
