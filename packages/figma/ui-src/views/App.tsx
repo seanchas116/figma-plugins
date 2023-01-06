@@ -94,6 +94,19 @@ const SettingsDialog: FunctionComponent = () => {
   );
 };
 
+const LayerTabContent: FunctionComponent = () => {
+  return (
+    <div className="px-4 py-3 flex flex-col gap-3">
+      <InstanceEdit />
+      <CodeComponentIFrame />
+    </div>
+  );
+};
+
+const CodeTabContent: FunctionComponent = () => {
+  return <div className="px-4 py-3 flex flex-col gap-3">TODO</div>;
+};
+
 export const App: FunctionComponent = () => {
   useEffect(() => {
     const onWindowKeyPress = (event: KeyboardEvent) => {
@@ -111,10 +124,8 @@ export const App: FunctionComponent = () => {
   return (
     <div className="text-[11px] leading-4 text-gray-900 accent-blue-500">
       <AppTabs />
-      <div className="px-4 py-3 flex flex-col gap-3">
-        <InstanceEdit />
-        <CodeComponentIFrame />
-      </div>
+      {state.$selectedTab.value === "layer" && <LayerTabContent />}
+      {state.$selectedTab.value === "code" && <CodeTabContent />}
       <SettingsDialog />
       <Resizer />
     </div>
