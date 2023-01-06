@@ -6,7 +6,7 @@ import {
   ChevronDownIcon,
   FixedSizeIcon,
 } from "../components/Icon";
-import { styled } from "./styled";
+import { styled } from "../components/styled";
 import { CodeComponentInfo } from "../../types/data";
 
 const SizingButton = styled(

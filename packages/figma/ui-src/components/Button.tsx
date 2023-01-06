@@ -1,4 +1,4 @@
-import { styled } from "../views/styled";
+import { styled } from "./styled";
 
 export const Button = styled(
   "button",
