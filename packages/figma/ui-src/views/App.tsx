@@ -39,11 +39,62 @@ export function isTextInput(value: EventTarget | null | undefined): boolean {
   return false;
 }
 
-export const App: FunctionComponent = () => {
+const AppTabs: FunctionComponent = () => {
+  return (
+    <Tabs>
+      {tabs.map((tab) => (
+        <TabItem
+          aria-selected={tab.id === state.$selectedTab.value}
+          onClick={() => {
+            state.$selectedTab.value = tab.id;
+          }}
+        >
+          {tab.label}
+        </TabItem>
+      ))}
+      <div className="flex-1" />
+      <button
+        className="p-2 rounded hover:bg-gray-100 aria-pressed:bg-blue-500 aria-pressed:text-white"
+        aria-pressed={state.$showsSettings.value}
+        onClick={() => {
+          state.$showsSettings.value = !state.$showsSettings.value;
+        }}
+      >
+        <MenuIcon />
+      </button>
+    </Tabs>
+  );
+};
+
+const SettingsDialog: FunctionComponent = () => {
   const syncAssets = () => {
     rpc.remote.syncCodeAssets(state.$assets.value);
   };
 
+  return (
+    <div
+      className="fixed inset-2 rounded bg-white border border-gray-200 shadow p-3"
+      hidden={!state.$showsSettings.value}
+    >
+      <div className="flex flex-col gap-3">
+        <div className="flex items-center justify-between">
+          <h1 className="font-semibold">Settings</h1>
+          <button
+            className="rounded p-1 -m-1 hover:bg-gray-100 aria-pressed:bg-blue-500 aria-pressed:text-white"
+            onClick={() => {
+              state.$showsSettings.value = false;
+            }}
+          >
+            <CloseIcon />
+          </button>
+        </div>
+        <Button onClick={syncAssets}>Sync Components & Tokens</Button>
+      </div>
+    </div>
+  );
+};
+
+export const App: FunctionComponent = () => {
   useEffect(() => {
     const onWindowKeyPress = (event: KeyboardEvent) => {
       if (!isTextInput(event.target)) {
@@ -59,51 +110,12 @@ export const App: FunctionComponent = () => {
 
   return (
     <div className="text-[11px] leading-4 text-gray-900 accent-blue-500">
-      <Tabs>
-        {tabs.map((tab) => (
-          <TabItem
-            aria-selected={tab.id === state.$selectedTab.value}
-            onClick={() => {
-              state.$selectedTab.value = tab.id;
-            }}
-          >
-            {tab.label}
-          </TabItem>
-        ))}
-        <div className="flex-1" />
-        <button
-          className="p-2 rounded hover:bg-gray-100 aria-pressed:bg-blue-500 aria-pressed:text-white"
-          aria-pressed={state.$showsSettings.value}
-          onClick={() => {
-            state.$showsSettings.value = !state.$showsSettings.value;
-          }}
-        >
-          <MenuIcon />
-        </button>
-      </Tabs>
+      <AppTabs />
       <div className="px-4 py-3 flex flex-col gap-3">
         <InstanceEdit />
         <CodeComponentIFrame />
       </div>
-      <div
-        className="fixed inset-2 rounded bg-white border border-gray-200 shadow p-3"
-        hidden={!state.$showsSettings.value}
-      >
-        <div className="flex flex-col gap-3">
-          <div className="flex items-center justify-between">
-            <h1 className="font-semibold">Settings</h1>
-            <button
-              className="rounded p-1 -m-1 hover:bg-gray-100 aria-pressed:bg-blue-500 aria-pressed:text-white"
-              onClick={() => {
-                state.$showsSettings.value = false;
-              }}
-            >
-              <CloseIcon />
-            </button>
-          </div>
-          <Button onClick={syncAssets}>Sync Components & Tokens</Button>
-        </div>
-      </div>
+      <SettingsDialog />
       <Resizer />
     </div>
   );
