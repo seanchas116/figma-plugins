@@ -1,5 +1,5 @@
 import parseCSSColor from "parse-css-color";
-import { Assets, componentKey } from "../types/data";
+import { Assets, CodeComponentInfo } from "../types/data";
 import { findFontForWeight } from "./common";
 import {
   getPaintStyleMetadata,
@@ -99,7 +99,7 @@ export async function syncAssets(assets: Assets) {
       if (node.type === "COMPONENT") {
         const info = getComponentInfo(node);
         if (info) {
-          components.set(componentKey(info), node);
+          components.set(CodeComponentInfo.key(info), node);
         }
       }
     }
@@ -114,7 +114,7 @@ export async function syncAssets(assets: Assets) {
   let offset = 0;
 
   for (const componentDoc of assets.components) {
-    const key = componentKey(componentDoc);
+    const key = CodeComponentInfo.key(componentDoc);
     let component = components.get(key);
     if (!component) {
       component = figma.createComponent();

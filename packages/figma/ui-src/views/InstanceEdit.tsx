@@ -1,5 +1,4 @@
 import { FunctionComponent } from "preact";
-import { componentKey } from "../../types/data";
 import { state } from "../state/State";
 import {
   AutoHeightIcon,
@@ -8,6 +7,7 @@ import {
   FixedSizeIcon,
 } from "../components/Icon";
 import { styled } from "./styled";
+import { CodeComponentInfo } from "../../types/data";
 
 const SizingButton = styled(
   "button",
@@ -21,7 +21,8 @@ export const InstanceEdit: FunctionComponent = () => {
   }
 
   const componentDoc = state.componentDocs.find(
-    (doc) => componentKey(doc) === componentKey(instance.component)
+    (doc) =>
+      CodeComponentInfo.key(doc) === CodeComponentInfo.key(instance.component)
   );
 
   return (

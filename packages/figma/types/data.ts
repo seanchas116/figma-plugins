@@ -6,9 +6,11 @@ export interface CodeComponentInfo {
   name: string; // export name of the component: e.g. 'Button' or 'default'
 }
 
-export function componentKey(info: CodeComponentInfo) {
-  return `${info.externalPath}:${info.internalPath}#${info.name}`;
-}
+export const CodeComponentInfo = {
+  key(info: CodeComponentInfo) {
+    return `${info.externalPath}:${info.internalPath}#${info.name}`;
+  },
+};
 
 export interface CodeInstanceParams {
   props: Record<string, any>;

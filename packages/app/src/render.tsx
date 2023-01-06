@@ -8,7 +8,6 @@ import type {
 import { assets } from "./designSystem";
 import {
   CodeComponentInfo,
-  componentKey,
   CodeComponentMetadata,
 } from "../../figma/types/data";
 import { rpcToParentWindow } from "@uimix/typed-rpc/browser";
@@ -43,7 +42,10 @@ async function renderComponent(node: JSX.Element): Promise<{
 }
 
 const componentMetadataMap = new Map<string, CodeComponentMetadata>(
-  assets.components.map((metadata) => [componentKey(metadata), metadata])
+  assets.components.map((metadata) => [
+    CodeComponentInfo.key(metadata),
+    metadata,
+  ])
 );
 
 async function getComponent(
@@ -61,7 +63,9 @@ class RPCHandler implements UIToRenderIFrameRPC {
     width?: number | undefined,
     height?: number | undefined
   ): Promise<{ png: ArrayBuffer; width: number; height: number }> {
-    const componentDoc = componentMetadataMap.get(componentKey(component));
+    const componentDoc = componentMetadataMap.get(
+      CodeComponentInfo.key(component)
+    );
     const Component = componentDoc && (await getComponent(componentDoc));
 
     const result = await renderComponent(
