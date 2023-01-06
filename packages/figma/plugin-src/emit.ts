@@ -1,7 +1,34 @@
 import * as IR from "@uimix/element-ir";
 
 function convertPaint(paint: Paint): IR.Paint {
-  throw new Error("Not implemented");
+  if (paint.type === "SOLID") {
+    return {
+      type: "solid",
+      color: {
+        r: paint.color.r,
+        g: paint.color.g,
+        b: paint.color.b,
+        a: paint.opacity ?? 1,
+      },
+    };
+  }
+
+  if (paint.type === "IMAGE" && paint.imageHash) {
+    return {
+      type: "image",
+      imageID: paint.imageHash,
+      size:
+        paint.scaleMode === "FIT"
+          ? "contain"
+          : paint.scaleMode == "FILL"
+          ? "cover"
+          : "fill",
+    };
+  }
+
+  // TODO: gradients
+
+  return { type: "solid", color: { r: 0, g: 0, b: 0, a: 0 } };
 }
 
 function getRectangleStyleMixin(
