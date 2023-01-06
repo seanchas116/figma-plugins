@@ -108,7 +108,7 @@ const CodeTabContent: FunctionComponent = () => {
 
   return (
     <div className="px-4 py-3 flex flex-col gap-3">
-      <pre className="bg-gray-800 text-white p-2 rounded text-[10px] leading-tight">
+      <pre className="bg-gray-900 text-white p-2 rounded text-[10px] leading-tight">
         {code}
       </pre>
     </div>
