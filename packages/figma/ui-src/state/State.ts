@@ -1,6 +1,8 @@
 import { signal } from "@preact/signals";
+import { generateHTMLWithInlineCSS } from "@uimix/codegen";
 import { CodeAssets, CodeInstanceInfo, Target } from "../../types/data";
 import { rpc } from "../rpc";
+import { toHtml } from "hast-util-to-html";
 
 export const tabs = [
   { id: "insert", label: "Insert" },
@@ -18,6 +20,25 @@ class State {
   });
   readonly $target = signal<Target | undefined>(undefined);
   readonly $selectedTab = signal<typeof tabs[number]["id"]>("layer");
+
+  readonly $codeFormat = signal<"json" | "htmlInlineStyle">("json");
+
+  get code(): string {
+    if (this.$codeFormat.value === "json") {
+      return JSON.stringify(this.target?.elementIR, null, 2);
+    }
+    if (this.$codeFormat.value === "htmlInlineStyle") {
+      const elements = this.target?.elementIR ?? [];
+      const ast = elements.map((elem) => generateHTMLWithInlineCSS(elem));
+
+      const html = toHtml({
+        type: "root",
+        children: ast,
+      });
+      return html;
+    }
+    return "";
+  }
 
   get componentDocs() {
     return this.$assets.value.components;

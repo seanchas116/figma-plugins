@@ -156,7 +156,7 @@ function imageCSS(mixin: ImageStyleMixin): CSS.Properties {
   return props;
 }
 
-export function inlineCSS(element: Element): hast.Content {
+export function generateHTMLWithInlineCSS(element: Element): hast.Content {
   switch (element.type) {
     case "frame": {
       return h(
@@ -168,7 +168,7 @@ export function inlineCSS(element: Element): hast.Content {
             ...frameCSS(element.style),
           },
         },
-        ...element.children.map(inlineCSS)
+        ...element.children.map(generateHTMLWithInlineCSS)
       );
     }
     case "image": {
