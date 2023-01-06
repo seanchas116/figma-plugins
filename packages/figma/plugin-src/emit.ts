@@ -257,6 +257,8 @@ class SVGLikeNodeChecker {
       return true;
     }
 
+    // TODO: text layers with strokes should be treated as SVG
+
     if (
       node.type === "FRAME" ||
       node.type === "INSTANCE" ||
