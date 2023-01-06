@@ -1,4 +1,5 @@
 import * as IR from "@uimix/element-ir";
+import { parseFontName } from "./common";
 
 function convertPaint(paint: Paint): IR.Paint {
   if (paint.type === "SOLID") {
@@ -171,31 +172,188 @@ function getFrameStyleMixin(
   };
 }
 
-export function toElementIR(node: SceneNode): IR.Element[] {
-  if (
-    node.type === "FRAME" ||
-    node.type === "COMPONENT" ||
-    node.type === "COMPONENT_SET" ||
-    node.type === "INSTANCE"
-  ) {
-    return [
-      {
-        type: "frame",
-        id: node.id,
-        name: node.name,
-        children: node.children.flatMap(toElementIR),
-        style: {
-          ...getRectangleStyleMixin(node),
-          ...getFrameStyleMixin(node),
-        },
-      },
-    ];
-  }
-  if (node.type === "GROUP") {
-    // flatten groups
-    return node.children.flatMap(toElementIR);
+function getTextSpanStyleMixin(node: TextSublayerNode): IR.TextSpanStyleMixin {
+  const fontSize = node.fontSize !== figma.mixed ? node.fontSize : 16;
+
+  const { family, weight, italic } = parseFontName(
+    node.fontName !== figma.mixed
+      ? node.fontName
+      : { family: "Inter", style: "Regular" }
+  );
+
+  let lineHeight: IR.TextSpanStyleMixin["lineHeight"] = "normal";
+  if (node.lineHeight !== figma.mixed) {
+    if (node.lineHeight.unit === "PIXELS") {
+      lineHeight = node.lineHeight.value / fontSize;
+    } else if (node.lineHeight.unit === "PERCENT") {
+      lineHeight = node.lineHeight.value / 100;
+    }
   }
 
-  console.log("TODO");
-  return [];
+  let letterSpacing = 0;
+  if (node.letterSpacing !== figma.mixed) {
+    if (node.letterSpacing.unit === "PIXELS") {
+      letterSpacing = node.letterSpacing.value / fontSize;
+    } else if (node.letterSpacing.unit === "PERCENT") {
+      letterSpacing = node.letterSpacing.value / 100;
+    }
+  }
+
+  return {
+    fontFamily: family,
+    fontWeight: weight,
+    fontStyle: italic ? "italic" : "normal",
+    fontSize,
+    lineHeight,
+    letterSpacing,
+  };
+}
+
+function getTextStyleMixin(node: TextNode): IR.TextStyleMixin {
+  return {
+    textAlign:
+      node.textAlignHorizontal === "CENTER"
+        ? "center"
+        : node.textAlignHorizontal === "LEFT"
+        ? "left"
+        : "right",
+    justifyContent:
+      node.textAlignVertical === "CENTER"
+        ? "center"
+        : node.textAlignVertical === "TOP"
+        ? "flex-start"
+        : "flex-end",
+  };
+}
+
+const vectorLikeTypes: SceneNode["type"][] = [
+  "LINE",
+  "RECTANGLE",
+  "ELLIPSE",
+  "POLYGON",
+  "STAR",
+  "VECTOR",
+  "BOOLEAN_OPERATION",
+];
+
+class SVGLikeNodeChecker {
+  private readonly memo = new WeakMap<SceneNode, boolean>();
+
+  check(node: SceneNode): boolean {
+    const memo = this.memo.get(node);
+    if (memo != null) {
+      return memo;
+    }
+
+    if (vectorLikeTypes.includes(node.type)) {
+      return true;
+    }
+    if ("children" in node) {
+      return (
+        node.children.length > 0 &&
+        node.children.every((child) => this.check(child))
+      );
+    }
+    return false;
+  }
+}
+
+const svgLikeNodeChecker = new SVGLikeNodeChecker();
+
+export async function toElementIR(node: SceneNode): Promise<IR.Element[]> {
+  // ignore mask layers
+  if ("isMask" in node && node.isMask) {
+    return [];
+  }
+
+  // Image like node
+  if (
+    node.type == "RECTANGLE" &&
+    node.fills !== figma.mixed &&
+    node.fills.length
+  ) {
+    const fill = node.fills[0];
+    if (fill.type === "IMAGE" && fill.imageHash) {
+      return [
+        {
+          type: "image",
+          id: node.id,
+          name: node.name,
+          imageID: fill.imageHash,
+          style: {
+            ...getRectangleStyleMixin(node),
+          },
+        },
+      ];
+    }
+  }
+
+  if (svgLikeNodeChecker.check(node)) {
+    try {
+      const svg = await node.exportAsync({ format: "SVG" });
+      const svgText = String.fromCharCode(...svg);
+
+      return [
+        {
+          type: "svg",
+          id: node.id,
+          name: node.name,
+          svg: svgText,
+          style: {
+            ...getRectangleStyleMixin(node as FrameNode),
+          },
+        },
+      ];
+    } catch (error) {
+      console.error(`error exporting ${node.name} to SVG`);
+      console.error(String(error));
+      return [];
+    }
+  }
+
+  switch (node.type) {
+    case "TEXT": {
+      return [
+        {
+          type: "text",
+          id: node.id,
+          name: node.name,
+          content: node.characters,
+          style: {
+            ...getRectangleStyleMixin(node),
+            ...getTextSpanStyleMixin(node),
+            ...getTextStyleMixin(node),
+          },
+        },
+      ];
+    }
+    case "COMPONENT":
+    case "COMPONENT_SET":
+    case "INSTANCE":
+    case "FRAME": {
+      const children = (
+        await Promise.all(node.children.map(toElementIR))
+      ).flat();
+
+      return [
+        {
+          type: "frame",
+          id: node.id,
+          name: node.name,
+          children,
+          style: {
+            ...getRectangleStyleMixin(node),
+            ...getFrameStyleMixin(node),
+          },
+        },
+      ];
+    }
+    case "GROUP": {
+      return (await Promise.all(node.children.map(toElementIR))).flat();
+    }
+    default: {
+      console.log("ignoring", node.type);
+      return [];
+    }
+  }
 }

@@ -58,22 +58,24 @@ const onDocumentChange = debounce((event: DocumentChangeEvent) => {
   }
 }, 200);
 
-const onSelectionChange = () => {
+const onSelectionChange = async () => {
   const selection = figma.currentPage.selection;
 
   console.log(selection, selection.map(encodeNode));
 
-  const targets = selection.map((node): Target => {
-    let instance: CodeInstanceInfo | undefined;
-    if (node.type === "INSTANCE") {
-      instance = getInstanceInfo(node);
-    }
+  const targets = await Promise.all(
+    selection.map(async (node): Promise<Target> => {
+      let instance: CodeInstanceInfo | undefined;
+      if (node.type === "INSTANCE") {
+        instance = getInstanceInfo(node);
+      }
 
-    return {
-      instance,
-      elementIR: toElementIR(node),
-    };
-  });
+      return {
+        instance,
+        elementIR: await toElementIR(node),
+      };
+    })
+  );
 
   rpc.remote.onTargetsChange(targets);
 };

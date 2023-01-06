@@ -60,6 +60,24 @@ export function findFontForWeight(fonts: FontName[], weight: number): FontName {
   return fonts[0];
 }
 
+export function parseFontName(font: FontName): {
+  family: string;
+  weight: number;
+  italic: boolean;
+} {
+  const style = font.style.toLowerCase();
+  const styleWithoutItalic = style.replace("italic", "").replace(/\s+/g, "");
+
+  const weight = fontWeightForName[styleWithoutItalic] ?? 400;
+  const italic = style.includes("italic");
+
+  return {
+    family: font.family,
+    weight,
+    italic,
+  };
+}
+
 export function encodeNode(node: BaseNode): Omit<BaseNode, "parent"> {
   const result: Record<string, any> = {};
 

@@ -83,7 +83,7 @@ export interface TextSpanStyleMixin {
   fontStyle: "normal" | "italic";
   fontWeight: number;
   fontSize: number;
-  lineHeight: number;
+  lineHeight: number | "normal";
   letterSpacing: number; // em;
 }
 
