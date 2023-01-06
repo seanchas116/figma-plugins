@@ -47,9 +47,9 @@ export interface RectangleStyleMixin {
     | { bottom: number }
     | { center: number }
     | { top: number; bottom: number };
-  width: number | "fit-content";
-  height: number | "fit-content";
-  flex: 1 | "auto";
+  width: number | "fit-content" | "auto"; // auto if stretches
+  height: number | "fit-content" | "auto";
+  flexGrow: 1 | 0;
   alignSelf: "stretch" | "auto";
   overflow: "hidden" | "visible"; // TODO: scroll
 
