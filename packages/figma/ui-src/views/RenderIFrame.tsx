@@ -1,7 +1,7 @@
 import { rpcToIFrame } from "@uimix/typed-rpc/browser";
 import { createRef } from "preact";
 import { useEffect } from "preact/hooks";
-import { Assets } from "../../types/data";
+import { CodeAssets } from "../../types/data";
 import { RenderIFrameToUIRPC, UIToRenderIFrameRPC } from "../../types/rpc";
 import { rpc, rpcHandler } from "../rpc";
 import { state } from "../state/State";
@@ -13,7 +13,7 @@ export const RenderIFrame: React.FC = () => {
     const iframe = ref.current!;
 
     const iframeRPCHandler: RenderIFrameToUIRPC = {
-      assets: async (assets: Assets) => {
+      assets: async (assets: CodeAssets) => {
         state.$assets.value = assets;
       },
     };

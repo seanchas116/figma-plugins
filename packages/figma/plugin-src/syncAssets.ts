@@ -1,5 +1,5 @@
 import parseCSSColor from "parse-css-color";
-import { Assets, CodeComponentInfo } from "../types/data";
+import { CodeAssets, CodeComponentInfo } from "../types/data";
 import { findFontForWeight } from "./common";
 import {
   getPaintStyleMetadata,
@@ -13,7 +13,7 @@ import { renderInstanceImage } from "./render";
 
 const productName = "UIMix";
 
-export async function syncAssets(assets: Assets) {
+export async function syncAssets(assets: CodeAssets) {
   const paintStyles = new Map<string, PaintStyle>();
 
   for (const style of figma.getLocalPaintStyles()) {

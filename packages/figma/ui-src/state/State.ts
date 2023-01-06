@@ -1,10 +1,10 @@
 import { signal } from "@preact/signals";
-import { Assets, CodeInstanceInfo } from "../../types/data";
+import { CodeAssets, CodeInstanceInfo } from "../../types/data";
 import { rpc } from "../rpc";
 
 class State {
   readonly $showsSettings = signal(false);
-  readonly $assets = signal<Assets>({
+  readonly $assets = signal<CodeAssets>({
     components: [],
     colorStyles: {},
     textStyles: {},

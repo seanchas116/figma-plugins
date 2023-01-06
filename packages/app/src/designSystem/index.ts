@@ -1,12 +1,12 @@
 import { Props } from "react-docgen-typescript";
 import {
-  Assets,
-  ColorStyleData,
-  TextStyleData,
+  CodeAssets,
+  CodeColorStyle,
+  CodeTextStyle,
 } from "../../../figma/types/data";
 import components from "./components.json";
 
-export const colorStyles: Record<string, ColorStyleData> = {
+export const colorStyles: Record<string, CodeColorStyle> = {
   background: {
     value: "#fff",
     comment: "The background color of the app",
@@ -25,7 +25,7 @@ export const colorStyles: Record<string, ColorStyleData> = {
   },
 };
 
-export const textStyles: Record<string, TextStyleData> = {
+export const textStyles: Record<string, CodeTextStyle> = {
   heading: {
     value: {
       fontFamily: "Noto Sans",
@@ -55,7 +55,7 @@ export const textStyles: Record<string, TextStyleData> = {
   },
 };
 
-export const assets: Assets = {
+export const assets: CodeAssets = {
   components: components.map((component) => ({
     name: component.displayName,
     internalPath: component.filePath,

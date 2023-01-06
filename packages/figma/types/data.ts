@@ -25,12 +25,12 @@ export interface CodeComponentMetadata extends CodeComponentInfo {
   props: Props;
 }
 
-export interface ColorStyleData {
+export interface CodeColorStyle {
   value: string;
   comment?: string;
 }
 
-export interface TextStyleData {
+export interface CodeTextStyle {
   value: {
     fontFamily: string;
     fontSize: number;
@@ -41,10 +41,10 @@ export interface TextStyleData {
   comment?: string;
 }
 
-export interface Assets {
+export interface CodeAssets {
   components: CodeComponentMetadata[];
-  colorStyles: Record<string, ColorStyleData>;
-  textStyles: Record<string, TextStyleData>;
+  colorStyles: Record<string, CodeColorStyle>;
+  textStyles: Record<string, CodeTextStyle>;
 }
 
 export interface RenderResult {

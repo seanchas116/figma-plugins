@@ -1,4 +1,4 @@
-import { Assets, CodeInstanceInfo } from "../types/data";
+import { CodeAssets, CodeInstanceInfo } from "../types/data";
 import {
   setInstanceParams,
   getRenderedSize,
@@ -105,7 +105,7 @@ class RPCHandler implements IUIToPluginRPC {
       node.setRelaunchData({});
     }
   }
-  async syncAssets(assets: Assets): Promise<void> {
+  async syncAssets(assets: CodeAssets): Promise<void> {
     await syncAssets(assets);
     figma.notify("Components & tokens synced to your Figma file!");
   }
