@@ -2,7 +2,7 @@ import { FunctionComponent } from "preact";
 import { InstanceEdit } from "./InstanceEdit";
 import { CodeComponentIFrame } from "./CodeComponentIFrame";
 import { Resizer } from "./Resizer";
-import { state } from "../state/State";
+import { state, tabs } from "../state/State";
 import { CloseIcon, MenuIcon } from "../components/Icon";
 import { useEffect } from "preact/hooks";
 import { Tabs, TabItem } from "../components/Tabs";
@@ -60,10 +60,16 @@ export const App: FunctionComponent = () => {
   return (
     <div className="text-[11px] leading-4 text-gray-900 accent-blue-500">
       <Tabs>
-        <TabItem>Insert</TabItem>
-        <TabItem aria-selected>Layer</TabItem>
-        <TabItem>Code</TabItem>
-        <TabItem>Export</TabItem>
+        {tabs.map((tab) => (
+          <TabItem
+            aria-selected={tab.id === state.$selectedTab.value}
+            onClick={() => {
+              state.$selectedTab.value = tab.id;
+            }}
+          >
+            {tab.label}
+          </TabItem>
+        ))}
         <div className="flex-1" />
         <button
           className="p-2 rounded hover:bg-gray-100 aria-pressed:bg-blue-500 aria-pressed:text-white"
