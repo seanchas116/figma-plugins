@@ -1,15 +1,3 @@
-interface Vector {
-  x: number;
-  y: number;
-}
-
-interface Rectangle {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-}
-
 interface Color {
   r: number;
   g: number;
@@ -17,163 +5,102 @@ interface Color {
   a: number;
 }
 
-type BlendMode =
-  | "PASS_THROUGH"
-  | "NORMAL"
-  | "DARKEN"
-  | "MULTIPLY"
-  | "LINEAR_BURN"
-  | "COLOR_BURN"
-  | "LIGHTEN"
-  | "SCREEN"
-  | "LINEAR_DODGE"
-  | "COLOR_DODGE"
-  | "OVERLAY"
-  | "SOFT_LIGHT"
-  | "HARD_LIGHT"
-  | "DIFFERENCE"
-  | "EXCLUSION"
-  | "HUE"
-  | "SATURATION"
-  | "COLOR"
-  | "LUMINOSITY";
+interface SolidPaint {
+  type: "solid";
+  color: Color;
+}
+
+interface Vector {
+  x: number;
+  y: number;
+}
 
 interface ColorStop {
   position: number;
   color: Color;
 }
 
-// TODO: image paint
-type Paint =
-  | {
-      type: "SOLID";
-      visible: boolean;
-      opacity: number;
-      color: Color;
-    }
-  | {
-      type:
-        | "GRADIENT_LINEAR"
-        | "GRADIENT_RADIAL"
-        | "GRADIENT_ANGULAR"
-        | "GRADIENT_DIAMOND";
-      visible: boolean;
-      opacity: number;
-      blendMode: BlendMode;
-      gradientHandlePositions: Vector[];
-      gradientStops: ColorStop[];
-    };
-
-interface TypeStyle {
-  fontFamily: string;
-  fontPostScriptName: string;
-  paragraphSpacing: number;
-  paragraphIndent: number;
-  listSpacing: number;
-  italic: boolean;
-  fontWeight: number;
-  fontSize: number;
-  textCase:
-    | "ORIGINAL"
-    | "UPPER"
-    | "LOWER"
-    | "TITLE"
-    | "SMALL_CAPS"
-    | "SMALL_CAPS_FORCED";
-  textDecoration: "NONE" | "STRIKETHROUGH" | "UNDERLINE";
-  textAutoResize: "NONE" | "HEIGHT" | "WIDTH_AND_HEIGHT" | "TRUNCATE";
-  textAlignHorizontal: "LEFT" | "RIGHT" | "CENTER" | "JUSTIFIED";
-  textAlignVertical: "TOP" | "CENTER" | "BOTTOM";
-  letterSpacing: number;
-  fills: Paint[];
-  hyperlink: {
-    type: "URL" | "NODE";
-    url: string;
-    nodeID: string;
-  };
-  opentypeFlags: {
-    [flag: string]: number;
-  };
-  lineHeightPx: number;
-  lineHeightPercentFontSize: number;
-  lineHeightUnit: "PIXELS" | "FONT_SIZE_%" | "INTRINSIC_%";
+interface GradientPaint {
+  type: "gradientLinear" | "gradientRadial" | "gradientAngular";
+  handles: [Vector, Vector, Vector];
+  stops: ColorStop[];
 }
 
-interface MetadataProps {
-  id: string;
-  name: string;
-  visible?: boolean;
+interface ImagePaint {
+  type: "image";
+  imageID: string;
+  size: "fill" | "contain" | "cover";
 }
 
-interface RectangleProps {
-  absoluteBoundingBox: Rectangle;
-  constraints: {
-    horizontal: "TOP" | "BOTTOM" | "CENTER" | "TOP_BOTTOM" | "SCALE";
-    vertical: "LEFT" | "RIGHT" | "CENTER" | "LEFT_RIGHT" | "SCALE";
-  };
+type Paint = SolidPaint | GradientPaint | ImagePaint;
 
-  opacity: number;
-  clipsContent: boolean;
+interface RectangleStyleMixin {
+  position: "absolute" | "relative";
+  display: "flex" | "none";
+  x:
+    | { left: number }
+    | { right: number }
+    | { center: number }
+    | { left: number; right: number };
+  y:
+    | { top: number }
+    | { bottom: number }
+    | { center: number }
+    | { top: number; bottom: number };
+  width: number | "fit-content";
+  height: number | "fit-content";
+  flex: 1 | "auto";
+  alignSelf: "stretch" | "auto";
+  overflow: "hidden" | "visible"; // TODO: scroll
 
-  fills: Paint[];
-  strokes: Paint[];
-  individualStrokeWeights: {
-    top: number;
-    right: number;
-    left: number;
-    bottom: number;
-  };
-  strokeAlign: "INSIDE" | "OUTSIDE" | "CENTER";
+  borderTopLeftRadius: number;
+  borderTopRightRadius: number;
+  borderBottomLeftRadius: number;
+  borderBottomRightRadius: number;
 
-  rectangleCornerRadii: [number, number, number, number];
+  border: Paint[];
+  borderTopWidth: number;
+  borderRightWidth: number;
+  borderBottomWidth: number;
+  borderLeftWidth: number;
 
-  layoutAlign: "INHERIT" | "STRETCH" | "MIN" | "CENTER" | "MAX";
-  layoutGrow: number;
-  layoutPositioning: "AUTO" | "ABSOLUTE";
+  background: Paint[];
 }
 
-interface FrameProps {
-  layoutMode: "NONE" | "HORIZONTAL" | "VERTICAL";
-  primaryAxisSizingMode: "FIXED" | "AUTO";
-  counterAxisSizingMode: "FIXED" | "AUTO";
-  primaryAxisAlignItems: "MIN" | "CENTER" | "MAX" | "SPACE_BETWEEN";
-  counterAxisAlignItems: "MIN" | "CENTER" | "MAX" | "BASELINE";
-  paddingLeft: number;
-  paddingRight: number;
+interface LayoutStyleMixin {
+  flexDirection: "row" | "column";
+  gap: number;
   paddingTop: number;
   paddingBottom: number;
-  itemSpacing: number;
-  itemReverseZIndex: boolean;
-  strokesIncludedInLayout: boolean;
-  overflowDirection:
-    | "NONE"
-    | "HORIZONTAL_SCROLLING"
-    | "VERTICAL_SCROLLING"
-    | "HORIZONTAL_AND_VERTICAL_SCROLLING";
+  paddingLeft: number;
+  paddingRight: number;
+  alignItems: "center" | "flex-start" | "flex-end" | "baseline";
+  justifyContent: "center" | "flex-start" | "flex-end" | "space-between";
 }
 
-interface TextProps {
-  characters: string;
-  style: TypeStyle;
+interface TextSpanStyleMixin {
+  fontFamily: string;
+  fontStyle: "normal" | "italic";
+  fontWeight: number;
+  fontSize: number;
+  lineHeight: number;
+  letterSpacing: number; // em;
 }
 
-interface FrameElement extends MetadataProps, RectangleProps, FrameProps {
-  type: "frame";
-  children: Element[];
+interface TextStyleMixin {
+  textAlign: "left" | "center" | "right" | "justify";
+  justifyContent: "center" | "flex-start" | "flex-end"; // assuming a text element becomes a vertical flexbox
 }
 
-interface TextElement extends MetadataProps, RectangleProps, TextProps {
-  type: "text";
+interface ImageStyleMixin {
+  objectFit: "fill" | "contain" | "cover";
 }
 
-interface SVGElement extends MetadataProps, RectangleProps {
-  type: "svg";
-  content: string;
-}
+interface FrameStyle extends RectangleStyleMixin, LayoutStyleMixin {}
 
-interface ImageElement extends MetadataProps, RectangleProps {
-  type: "image";
-  dataURL: string;
-}
+interface TextStyle
+  extends RectangleStyleMixin,
+    TextSpanStyleMixin,
+    TextStyleMixin {}
 
-export type Element = FrameElement | TextElement | SVGElement | ImageElement;
+interface ImageStyle extends RectangleStyleMixin {}
