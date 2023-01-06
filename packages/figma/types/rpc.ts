@@ -4,6 +4,7 @@ import {
   CodeComponentInfo,
   RenderResult,
   CodeInstanceParams,
+  Target,
 } from "./data";
 
 export interface IUIToPluginRPC {
@@ -20,7 +21,7 @@ export interface IPluginToUIRPC {
     width?: number,
     height?: number
   ): Promise<RenderResult>;
-  onTargetChange(target: CodeInstanceInfo | undefined): Promise<void>;
+  onTargetsChange(targets: Target[]): Promise<void>;
 }
 
 export interface UIToCodeComponentIFrameRPC {

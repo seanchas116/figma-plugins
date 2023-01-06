@@ -15,7 +15,7 @@ const SizingButton = styled(
 );
 
 export const InstanceEdit: FunctionComponent = () => {
-  const instance = state.target;
+  const instance = state.target?.instance;
   if (!instance) {
     return null;
   }

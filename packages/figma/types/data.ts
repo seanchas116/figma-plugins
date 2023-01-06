@@ -52,3 +52,7 @@ export interface RenderResult {
   width: number;
   height: number;
 }
+
+export interface Target {
+  instance?: CodeInstanceInfo;
+}

@@ -49,7 +49,7 @@ const onDocumentChange = debounce((event: DocumentChangeEvent) => {
 
         setInstanceParams(node, newInstanceInfo);
 
-        rpc.remote.onTargetChange(newInstanceInfo);
+        onSelectionChange();
       }
 
       renderInstance(node);
@@ -62,16 +62,18 @@ const onSelectionChange = () => {
 
   console.log(selection, selection.map(encodeNode));
 
-  let instance: CodeInstanceInfo | undefined;
-
-  if (selection.length > 0) {
-    const current = selection[0];
-    if (current.type === "INSTANCE") {
-      instance = getInstanceInfo(current);
+  const targets = selection.map((node) => {
+    let instance: CodeInstanceInfo | undefined;
+    if (node.type === "INSTANCE") {
+      instance = getInstanceInfo(node);
     }
-  }
 
-  rpc.remote.onTargetChange(instance);
+    return {
+      instance,
+    };
+  });
+
+  rpc.remote.onTargetsChange(targets);
 };
 
 figma.on("documentchange", onDocumentChange);
