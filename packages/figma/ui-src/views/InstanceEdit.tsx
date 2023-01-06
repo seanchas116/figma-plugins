@@ -8,10 +8,11 @@ import {
 } from "../components/Icon";
 import { styled } from "../components/styled";
 import { CodeComponentInfo } from "../../types/data";
+import { Input, Select } from "../components/Input";
 
 const SizingButton = styled(
   "button",
-  "p-1 rounded text-gray-500 hover:bg-gray-100 aria-selected:bg-blue-500 aria-selected:text-white"
+  "p-1 rounded text-gray-900 hover:bg-gray-100 aria-selected:bg-gray-200"
 );
 
 export const InstanceEdit: FunctionComponent = () => {
@@ -27,46 +28,48 @@ export const InstanceEdit: FunctionComponent = () => {
 
   return (
     <div className="flex flex-col gap-3">
-      <h1 className="font-semibold text-xs">
-        {componentDoc?.name ?? "Component Not Found"}
-      </h1>
-      <div className="flex">
-        <SizingButton
-          title="Auto Width"
-          aria-selected={instance.autoResize === "widthHeight"}
-          onClick={() => {
-            state.updateInstance({
-              ...instance,
-              autoResize: "widthHeight",
-            });
-          }}
-        >
-          <AutoWidthIcon />
-        </SizingButton>
-        <SizingButton
-          title="Auto Height"
-          aria-selected={instance.autoResize === "height"}
-          onClick={() => {
-            state.updateInstance({
-              ...instance,
-              autoResize: "height",
-            });
-          }}
-        >
-          <AutoHeightIcon />
-        </SizingButton>
-        <SizingButton
-          title="Fixed Size"
-          aria-selected={instance.autoResize === "none"}
-          onClick={() => {
-            state.updateInstance({
-              ...instance,
-              autoResize: "none",
-            });
-          }}
-        >
-          <FixedSizeIcon />
-        </SizingButton>
+      <div className="flex justify-between">
+        <h1 className="font-semibold text-xs">
+          {componentDoc?.name ?? "Component Not Found"}
+        </h1>
+        <div className="flex -m-1">
+          <SizingButton
+            title="Auto Width"
+            aria-selected={instance.autoResize === "widthHeight"}
+            onClick={() => {
+              state.updateInstance({
+                ...instance,
+                autoResize: "widthHeight",
+              });
+            }}
+          >
+            <AutoWidthIcon />
+          </SizingButton>
+          <SizingButton
+            title="Auto Height"
+            aria-selected={instance.autoResize === "height"}
+            onClick={() => {
+              state.updateInstance({
+                ...instance,
+                autoResize: "height",
+              });
+            }}
+          >
+            <AutoHeightIcon />
+          </SizingButton>
+          <SizingButton
+            title="Fixed Size"
+            aria-selected={instance.autoResize === "none"}
+            onClick={() => {
+              state.updateInstance({
+                ...instance,
+                autoResize: "none",
+              });
+            }}
+          >
+            <FixedSizeIcon />
+          </SizingButton>
+        </div>
       </div>
       <dl className="grid grid-cols-[1fr_2fr] gap-3 items-center">
         {componentDoc &&
@@ -78,37 +81,28 @@ export const InstanceEdit: FunctionComponent = () => {
 
             if (prop.type.name === "enum") {
               input = (
-                <div className="relative w-fit">
-                  <select
-                    className="appearance-none pr-4 p-1 -m-1 outline outline-1 outline-transparent hover:outline-gray-300 focus:outline-blue-500 placeholder:text-gray-400"
-                    value={value ?? ""}
-                    onChange={(event) => {
-                      state.updateInstanceProps({
-                        [name]: event.currentTarget.value,
-                      });
-                    }}
-                  >
-                    {prop.type.value.map((value: { value: string }) => {
-                      try {
-                        const rawValue = JSON.parse(value.value);
-                        return <option value={rawValue}>{rawValue}</option>;
-                      } catch {
-                        return null;
-                      }
-                    })}
-                  </select>
-                  <ChevronDownIcon
-                    width={12}
-                    height={12}
-                    className="pointer-events-none absolute right-0 top-0 bottom-0 my-auto"
-                  />
-                </div>
+                <Select
+                  value={value ?? ""}
+                  onChange={(event) => {
+                    state.updateInstanceProps({
+                      [name]: event.currentTarget.value,
+                    });
+                  }}
+                >
+                  {prop.type.value.map((value: { value: string }) => {
+                    try {
+                      const rawValue = JSON.parse(value.value);
+                      return <option value={rawValue}>{rawValue}</option>;
+                    } catch {
+                      return null;
+                    }
+                  })}
+                </Select>
               );
             } else if (prop.type.name === "string") {
               input = (
-                <input
+                <Input
                   type="text"
-                  className="w-full p-1 -m-1 outline outline-1 outline-transparent hover:outline-gray-300 focus:outline-blue-500 placeholder:text-gray-300"
                   value={value ?? ""}
                   placeholder="String"
                   onChange={(event) => {
