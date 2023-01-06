@@ -9,7 +9,7 @@ export async function renderInstanceImage(
 ): Promise<RenderResult> {
   const autoResize = instance.autoResize;
 
-  return await rpc.remote.render(
+  return await rpc.remote.renderCodeComponent(
     instance.component,
     instance.props,
     autoResize === "widthHeight" ? undefined : width,

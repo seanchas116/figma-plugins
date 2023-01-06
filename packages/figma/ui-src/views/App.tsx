@@ -1,6 +1,6 @@
 import { FunctionComponent } from "preact";
 import { InstanceEdit } from "./InstanceEdit";
-import { RenderIFrame } from "./RenderIFrame";
+import { CodeComponentIFrame } from "./CodeComponentIFrame";
 import { Resizer } from "./Resizer";
 import { state } from "../state/State";
 import { CloseIcon, MenuIcon } from "../components/Icon";
@@ -41,7 +41,7 @@ export function isTextInput(value: EventTarget | null | undefined): boolean {
 
 export const App: FunctionComponent = () => {
   const syncAssets = () => {
-    rpc.remote.syncAssets(state.$assets.value);
+    rpc.remote.syncCodeAssets(state.$assets.value);
   };
 
   useEffect(() => {
@@ -77,7 +77,7 @@ export const App: FunctionComponent = () => {
       </Tabs>
       <div className="px-4 py-3 flex flex-col gap-3">
         <InstanceEdit />
-        <RenderIFrame />
+        <CodeComponentIFrame />
       </div>
       <div
         className="fixed inset-2 rounded bg-white border border-gray-200 shadow p-3"

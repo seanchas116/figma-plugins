@@ -9,12 +9,12 @@ import {
 export interface IUIToPluginRPC {
   ready(): Promise<void>;
   updateInstance(instance?: CodeInstanceParams): Promise<void>;
-  syncAssets(assets: CodeAssets): Promise<void>;
+  syncCodeAssets(assets: CodeAssets): Promise<void>;
   resize(width: number, height: number): Promise<void>;
 }
 
 export interface IPluginToUIRPC {
-  render(
+  renderCodeComponent(
     component: CodeComponentInfo,
     props: Record<string, any>,
     width?: number,
@@ -23,7 +23,7 @@ export interface IPluginToUIRPC {
   onTargetChange(target: CodeInstanceInfo | undefined): Promise<void>;
 }
 
-export interface UIToRenderIFrameRPC {
+export interface UIToCodeComponentIFrameRPC {
   render(
     component: CodeComponentInfo,
     props: Record<string, any>,
@@ -32,6 +32,6 @@ export interface UIToRenderIFrameRPC {
   ): Promise<RenderResult>;
 }
 
-export interface RenderIFrameToUIRPC {
+export interface CodeComponentIFrameToUIRPC {
   assets(assets: CodeAssets): Promise<void>;
 }

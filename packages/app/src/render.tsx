@@ -2,8 +2,8 @@ import * as htmlToImage from "html-to-image";
 import ReactDOMClient from "react-dom/client";
 import React from "react";
 import type {
-  RenderIFrameToUIRPC,
-  UIToRenderIFrameRPC,
+  CodeComponentIFrameToUIRPC,
+  UIToCodeComponentIFrameRPC,
 } from "../../figma/types/rpc";
 import { assets } from "./designSystem";
 import {
@@ -56,7 +56,7 @@ async function getComponent(
   ];
 }
 
-class RPCHandler implements UIToRenderIFrameRPC {
+class RPCHandler implements UIToCodeComponentIFrameRPC {
   async render(
     component: CodeComponentInfo,
     props: Record<string, any>,
@@ -85,8 +85,9 @@ class RPCHandler implements UIToRenderIFrameRPC {
   }
 }
 
-const rpc = rpcToParentWindow<UIToRenderIFrameRPC, RenderIFrameToUIRPC>(
-  new RPCHandler()
-);
+const rpc = rpcToParentWindow<
+  UIToCodeComponentIFrameRPC,
+  CodeComponentIFrameToUIRPC
+>(new RPCHandler());
 
 rpc.remote.assets(assets);

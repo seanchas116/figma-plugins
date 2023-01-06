@@ -4,7 +4,7 @@ import { IPluginToUIRPC, IUIToPluginRPC } from "../types/rpc";
 import { state } from "./state/State";
 
 export const rpcHandler: IPluginToUIRPC = {
-  render: async (
+  renderCodeComponent: async (
     component: CodeComponentInfo,
     props: Record<string, any>,
     width?: number | undefined,
