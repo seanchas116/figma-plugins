@@ -92,15 +92,8 @@ function rectangleCSS(mixin: RectangleFillBorderStyleMixin): CSS.Properties {
     }
   }
 
-  props.borderTopLeftRadius = `${mixin.borderTopLeftRadius}px`;
-  props.borderTopRightRadius = `${mixin.borderTopRightRadius}px`;
-  props.borderBottomLeftRadius = `${mixin.borderBottomLeftRadius}px`;
-  props.borderBottomRightRadius = `${mixin.borderBottomRightRadius}px`;
-
-  props.borderTopWidth = `${mixin.borderTopWidth}px`;
-  props.borderRightWidth = `${mixin.borderRightWidth}px`;
-  props.borderBottomWidth = `${mixin.borderBottomWidth}px`;
-  props.borderLeftWidth = `${mixin.borderLeftWidth}px`;
+  props.borderRadius = `${mixin.borderTopLeftRadius}px ${mixin.borderTopRightRadius}px ${mixin.borderBottomRightRadius}px ${mixin.borderBottomLeftRadius}px`;
+  props.borderWidth = `${mixin.borderTopWidth}px ${mixin.borderRightWidth}px ${mixin.borderBottomWidth}px ${mixin.borderLeftWidth}px`;
 
   return props;
 }
@@ -112,10 +105,7 @@ function frameCSS(mixin: FrameStyleMixin): CSS.Properties {
   props.flexDirection = mixin.flexDirection;
   props.gap = `${mixin.gap}px`;
   // TODO: adjust padding based on border width
-  props.paddingTop = `${mixin.paddingTop}px`;
-  props.paddingRight = `${mixin.paddingRight}px`;
-  props.paddingBottom = `${mixin.paddingBottom}px`;
-  props.paddingLeft = `${mixin.paddingLeft}px`;
+  props.padding = `${mixin.paddingTop}px ${mixin.paddingRight}px ${mixin.paddingBottom}px ${mixin.paddingLeft}px`;
   props.alignItems = mixin.alignItems;
   props.justifyContent = mixin.justifyContent;
 
