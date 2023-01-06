@@ -1,4 +1,4 @@
-import { Assets, InstanceInfo, TargetInfo } from "../types/data";
+import { Assets, InstanceInfo, ComponentInstanceInfo } from "../types/data";
 import { setInstanceInfo, getRenderedSize, getTargetInfo } from "./pluginData";
 import { debounce, encodeNode } from "./common";
 import { renderInstance } from "./render";
@@ -61,7 +61,7 @@ const onSelectionChange = () => {
 
   console.log(selection, selection.map(encodeNode));
 
-  let target: TargetInfo | undefined;
+  let target: ComponentInstanceInfo | undefined;
 
   if (selection.length > 0) {
     const current = selection[0];

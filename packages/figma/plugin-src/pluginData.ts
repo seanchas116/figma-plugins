@@ -1,4 +1,8 @@
-import { ComponentInfo, InstanceInfo, TargetInfo } from "../types/data";
+import {
+  ComponentInfo,
+  InstanceInfo,
+  ComponentInstanceInfo,
+} from "../types/data";
 
 export function setComponentInfo(
   node: ComponentNode,
@@ -42,7 +46,9 @@ export function getInstanceInfo(node: InstanceNode): InstanceInfo | undefined {
   }
 }
 
-export function getTargetInfo(node: InstanceNode): TargetInfo | undefined {
+export function getTargetInfo(
+  node: InstanceNode
+): ComponentInstanceInfo | undefined {
   const instance = getInstanceInfo(node);
   const component = getComponentInfo(node); // from main component
   if (instance && component) {

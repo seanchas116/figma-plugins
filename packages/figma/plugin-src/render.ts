@@ -1,9 +1,9 @@
-import { RenderResult, TargetInfo } from "../types/data";
+import { RenderResult, ComponentInstanceInfo } from "../types/data";
 import { getTargetInfo, setRenderedSize } from "./pluginData";
 import { rpc } from "./code";
 
 export async function renderInstanceImage(
-  target: TargetInfo,
+  target: ComponentInstanceInfo,
   width?: number,
   height?: number
 ): Promise<RenderResult> {

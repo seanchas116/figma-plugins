@@ -15,7 +15,7 @@ export function componentKey(info: ComponentInfo) {
   return `${info.externalPath}:${info.internalPath}#${info.name}`;
 }
 
-export interface TargetInfo {
+export interface ComponentInstanceInfo {
   component: ComponentInfo;
   instance: InstanceInfo;
 }

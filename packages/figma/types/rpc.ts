@@ -1,6 +1,6 @@
 import {
   InstanceInfo,
-  TargetInfo,
+  ComponentInstanceInfo,
   Assets,
   ComponentInfo,
   RenderResult,
@@ -20,7 +20,7 @@ export interface IPluginToUIRPC {
     width?: number,
     height?: number
   ): Promise<RenderResult>;
-  onTargetChange(target: TargetInfo | undefined): Promise<void>;
+  onTargetChange(target: ComponentInstanceInfo | undefined): Promise<void>;
 }
 
 export interface UIToRenderIFrameRPC {
