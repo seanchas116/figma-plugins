@@ -40,12 +40,12 @@ export interface DimensionStyleMixin {
   x:
     | { left: number }
     | { right: number }
-    | { center: number }
+    | { centerRatio: number }
     | { left: number; right: number };
   y:
     | { top: number }
     | { bottom: number }
-    | { center: number }
+    | { centerRatio: number }
     | { top: number; bottom: number };
   width: number | "fit-content" | "stretch";
   height: number | "fit-content" | "stretch";
@@ -107,6 +107,11 @@ export interface TextStyle
     TextSpanStyleMixin,
     TextStyleMixin {}
 
-export interface ImageStyle
+export interface SVGStyle
   extends DimensionStyleMixin,
     RectangleFillBorderStyleMixin {}
+
+export interface ImageStyle
+  extends DimensionStyleMixin,
+    RectangleFillBorderStyleMixin,
+    ImageStyleMixin {}

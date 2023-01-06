@@ -1,4 +1,4 @@
-import { FrameStyle, ImageStyle, TextStyle } from "./style";
+import { FrameStyle, ImageStyle, SVGStyle, TextStyle } from "./style";
 
 interface CommonProps {
   id: string;
@@ -25,7 +25,7 @@ export interface ImageElement extends CommonProps {
 
 export interface SVGElement extends CommonProps {
   type: "svg";
-  style: ImageStyle;
+  style: SVGStyle;
   svg: string;
 }
 

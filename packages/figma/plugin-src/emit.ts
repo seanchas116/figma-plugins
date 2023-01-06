@@ -1,6 +1,16 @@
 import * as IR from "@uimix/element-ir";
 import { parseFontName } from "./common";
 
+function convertScaleMode(
+  scaleMode: ImagePaint["scaleMode"]
+): "contain" | "cover" | "fill" {
+  return scaleMode === "FIT"
+    ? "contain"
+    : scaleMode == "FILL"
+    ? "cover"
+    : "fill";
+}
+
 function convertPaint(paint: Paint): IR.Paint {
   if (paint.type === "SOLID") {
     return {
@@ -18,12 +28,7 @@ function convertPaint(paint: Paint): IR.Paint {
     return {
       type: "image",
       imageID: paint.imageHash,
-      size:
-        paint.scaleMode === "FIT"
-          ? "contain"
-          : paint.scaleMode == "FILL"
-          ? "cover"
-          : "fill",
+      size: convertScaleMode(paint.scaleMode),
     };
   }
 
@@ -313,6 +318,7 @@ export async function toElementIR(node: SceneNode): Promise<IR.Element[]> {
           style: {
             ...getDimensionStyleMixin(node),
             ...getRectangleStyleMixin(node),
+            objectFit: convertScaleMode(fill.scaleMode),
           },
         },
       ];
