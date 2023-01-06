@@ -248,13 +248,41 @@ class SVGLikeNodeChecker {
     if (vectorLikeTypes.includes(node.type)) {
       return true;
     }
-    if ("children" in node) {
-      return (
-        node.children.length > 0 &&
-        node.children.every((child) => this.check(child))
-      );
+
+    if (
+      node.type === "FRAME" ||
+      node.type === "INSTANCE" ||
+      node.type === "COMPONENT" ||
+      node.type === "COMPONENT_SET"
+    ) {
+      return this.checkFrameLike(node);
     }
+
     return false;
+  }
+
+  private checkFrameLike(
+    node: FrameNode | ComponentNode | ComponentSetNode | InstanceNode
+  ): boolean {
+    if (node.children.length === 0) {
+      return false;
+    }
+
+    for (const child of node.children) {
+      if (!this.check(child)) {
+        return false;
+      }
+      if ("constraints" in child) {
+        if (
+          child.constraints.horizontal !== "SCALE" ||
+          child.constraints.vertical !== "SCALE"
+        ) {
+          return false;
+        }
+      }
+    }
+
+    return true;
   }
 }
 
