@@ -13,7 +13,7 @@ import * as CSS from "csstype";
 
 function dimensionCSS(
   mixin: DimensionStyleMixin,
-  parentFlexDirection?: "row" | "column"
+  parentFlexDirection: "row" | "column" | undefined
 ): CSS.Properties {
   const props: CSS.Properties = {};
 
@@ -47,7 +47,7 @@ function dimensionCSS(
   if (mixin.width === "stretch") {
     if (parentFlexDirection === "row") {
       props.flex = 1;
-    } else {
+    } else if (parentFlexDirection === "column") {
       props.alignSelf = "stretch";
     }
   } else if (mixin.width === "fit-content") {
@@ -59,7 +59,7 @@ function dimensionCSS(
   if (mixin.height === "stretch") {
     if (parentFlexDirection === "column") {
       props.flex = 1;
-    } else {
+    } else if (parentFlexDirection === "row") {
       props.alignSelf = "stretch";
     }
   } else if (mixin.height === "fit-content") {
@@ -156,25 +156,30 @@ function imageCSS(mixin: ImageStyleMixin): CSS.Properties {
   return props;
 }
 
-export function generateHTMLWithInlineCSS(element: Element): hast.Content {
+export function generateHTMLWithInlineCSS(
+  element: Element,
+  parentFlexDirection?: "row" | "column"
+): hast.Content {
   switch (element.type) {
     case "frame": {
       return h(
         "div",
         {
           style: {
-            ...dimensionCSS(element.style),
+            ...dimensionCSS(element.style, parentFlexDirection),
             ...rectangleCSS(element.style),
             ...frameCSS(element.style),
           },
         },
-        ...element.children.map(generateHTMLWithInlineCSS)
+        ...element.children.map((e) =>
+          generateHTMLWithInlineCSS(e, element.style.flexDirection)
+        )
       );
     }
     case "image": {
       return h("img", {
         style: {
-          ...dimensionCSS(element.style),
+          ...dimensionCSS(element.style, parentFlexDirection),
           ...rectangleCSS(element.style),
           ...imageCSS(element.style),
         },
@@ -183,7 +188,7 @@ export function generateHTMLWithInlineCSS(element: Element): hast.Content {
     case "svg": {
       return h("svg", {
         style: {
-          ...dimensionCSS(element.style),
+          ...dimensionCSS(element.style, parentFlexDirection),
           ...rectangleCSS(element.style),
         },
       });
@@ -193,7 +198,7 @@ export function generateHTMLWithInlineCSS(element: Element): hast.Content {
         "div",
         {
           style: {
-            ...dimensionCSS(element.style),
+            ...dimensionCSS(element.style, parentFlexDirection),
             ...textSpanCSS(element.style),
             ...textCSS(element.style),
           },
