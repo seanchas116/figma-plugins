@@ -54,7 +54,7 @@ function getRectangleStyleMixin(
   let flexGrow: 1 | 0 = 0;
   let alignSelf: "stretch" | "auto" = "auto";
 
-  if ("primaryAxisSizingMode" in node) {
+  if ("layoutMode" in node) {
     if (node.layoutMode === "VERTICAL") {
       if (node.primaryAxisSizingMode == "AUTO") {
         height = "fit-content";
@@ -62,7 +62,7 @@ function getRectangleStyleMixin(
       if (node.counterAxisSizingMode == "AUTO") {
         width = "fit-content";
       }
-    } else {
+    } else if (node.layoutMode === "HORIZONTAL") {
       if (node.primaryAxisSizingMode == "AUTO") {
         width = "fit-content";
       }
