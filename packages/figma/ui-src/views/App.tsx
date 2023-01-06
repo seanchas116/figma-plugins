@@ -104,7 +104,15 @@ const LayerTabContent: FunctionComponent = () => {
 };
 
 const CodeTabContent: FunctionComponent = () => {
-  return <div className="px-4 py-3 flex flex-col gap-3">TODO</div>;
+  const code = JSON.stringify(state.$target.value?.elementIR ?? [], null, 2);
+
+  return (
+    <div className="px-4 py-3 flex flex-col gap-3">
+      <pre className="bg-gray-800 text-white p-2 rounded text-[10px] leading-tight">
+        {code}
+      </pre>
+    </div>
+  );
 };
 
 export const App: FunctionComponent = () => {
