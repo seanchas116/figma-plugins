@@ -77,24 +77,3 @@ export function parseFontName(font: FontName): {
     italic,
   };
 }
-
-export function encodeNode(node: BaseNode): Omit<BaseNode, "parent"> {
-  const result: Record<string, any> = {};
-
-  for (const key in node) {
-    const value = (node as any)[key];
-
-    if (key === "parent") {
-      continue;
-    }
-    if (key === "children") {
-      result[key] = value.map(encodeNode);
-      continue;
-    }
-    if (typeof value === "function") {
-      continue;
-    }
-    result[key] = value;
-  }
-  return result as Omit<BaseNode, "parent">;
-}

@@ -4,7 +4,7 @@ import {
   getRenderedSize,
   getInstanceInfo,
 } from "./pluginData";
-import { debounce, encodeNode } from "./common";
+import { debounce } from "./common";
 import { renderInstance } from "./render";
 import { IPluginToUIRPC, IUIToPluginRPC } from "../types/rpc";
 import { RPC } from "@uimix/typed-rpc";
@@ -60,8 +60,6 @@ const onDocumentChange = debounce((event: DocumentChangeEvent) => {
 
 const onSelectionChange = async () => {
   const selection = figma.currentPage.selection;
-
-  console.log(selection, selection.map(encodeNode));
 
   const targets = await Promise.all(
     selection.map(async (node): Promise<Target> => {
