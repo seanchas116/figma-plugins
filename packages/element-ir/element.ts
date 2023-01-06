@@ -1,4 +1,4 @@
-import { FrameStyle, ImageStyle } from "./style";
+import { FrameStyle, ImageStyle, TextStyle } from "./style";
 
 export interface FrameElement {
   type: "frame";
