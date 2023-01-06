@@ -3,7 +3,7 @@ import { generateHTMLWithInlineCSS } from "@uimix/codegen";
 import { CodeAssets, CodeInstanceInfo, Target } from "../../types/data";
 import { rpc } from "../rpc";
 import { toHtml } from "hast-util-to-html";
-import { formatHTML } from "../util/format";
+import { formatHTML, formatJS } from "../util/format";
 
 export const tabs = [
   { id: "insert", label: "Insert" },
@@ -26,7 +26,7 @@ class State {
 
   get code(): string {
     if (this.$codeFormat.value === "json") {
-      return JSON.stringify(this.target?.elementIR, null, 2);
+      return formatJS(JSON.stringify(this.target?.elementIR));
     }
     if (this.$codeFormat.value === "htmlInlineStyle") {
       const elements = this.target?.elementIR ?? [];
