@@ -213,7 +213,7 @@ function getTextSpanStyleMixin(node: TextSublayerNode): IR.TextSpanStyleMixin {
     fontSize,
     lineHeight,
     letterSpacing,
-    background: node.fills === figma.mixed ? [] : node.fills.map(convertPaint),
+    color: node.fills === figma.mixed ? [] : node.fills.map(convertPaint),
   };
 }
 
@@ -231,8 +231,6 @@ function getTextStyleMixin(node: TextNode): IR.TextStyleMixin {
         : node.textAlignVertical === "TOP"
         ? "flex-start"
         : "flex-end",
-    border: node.strokes.map(convertPaint),
-    borderWidth: node.strokeWeight === figma.mixed ? 0 : node.strokeWeight,
   };
 }
 

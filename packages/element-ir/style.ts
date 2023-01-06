@@ -87,14 +87,12 @@ export interface TextSpanStyleMixin {
   fontSize: number;
   lineHeight: number | "normal";
   letterSpacing: number; // em;
-  background: Paint[];
+  color: Paint[];
 }
 
 export interface TextStyleMixin {
   textAlign: "left" | "center" | "right" | "justify";
   justifyContent: "center" | "flex-start" | "flex-end"; // assuming a text element becomes a vertical flexbox
-  border: Paint[];
-  borderWidth: number;
 }
 
 export interface ImageStyleMixin {
