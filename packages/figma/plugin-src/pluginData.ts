@@ -1,26 +1,30 @@
-import { ComponentInfo, InstanceInfo, InstanceParams } from "../types/data";
+import {
+  CodeComponentInfo,
+  CodeInstanceInfo,
+  CodeInstanceParams,
+} from "../types/data";
 
 export function setComponentInfo(
   node: ComponentNode,
-  info: ComponentInfo | undefined
+  info: CodeComponentInfo | undefined
 ) {
   node.setPluginData("component", info ? JSON.stringify(info) : "");
 }
 
 export function getComponentInfo(
   node: ComponentNode | InstanceNode
-): ComponentInfo | undefined {
+): CodeComponentInfo | undefined {
   const data = node.getPluginData("component");
   if (data) {
-    return JSON.parse(data) as ComponentInfo;
+    return JSON.parse(data) as CodeComponentInfo;
   }
 }
 
 export function setInstanceParams(
   node: InstanceNode,
-  info: InstanceParams | undefined
+  info: CodeInstanceParams | undefined
 ) {
-  const params: InstanceParams | undefined = info && {
+  const params: CodeInstanceParams | undefined = info && {
     props: info.props,
     autoResize: info.autoResize,
   };
@@ -28,7 +32,9 @@ export function setInstanceParams(
   node.setPluginData("instance", params ? JSON.stringify(params) : "");
 }
 
-export function getInstanceInfo(node: InstanceNode): InstanceInfo | undefined {
+export function getInstanceInfo(
+  node: InstanceNode
+): CodeInstanceInfo | undefined {
   if (!node.mainComponent) {
     return;
   }
@@ -40,7 +46,7 @@ export function getInstanceInfo(node: InstanceNode): InstanceInfo | undefined {
 
   const data = node.getPluginData("instance");
   if (data) {
-    const params = JSON.parse(data) as InstanceParams;
+    const params = JSON.parse(data) as CodeInstanceParams;
     return {
       ...params,
       component,

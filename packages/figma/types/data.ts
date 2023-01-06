@@ -1,25 +1,25 @@
 import type { Props } from "react-docgen-typescript";
 
-export interface InstanceParams {
-  props: Record<string, any>;
-  autoResize: "none" | "height" | "widthHeight"; // same as Figma text nodes
-}
-
-export interface ComponentInfo {
+export interface CodeComponentInfo {
   externalPath: string; // path used to import the component externally: e.g. '@uimix/components'
   internalPath: string; // path used to import the component internally: e.g. './src/components/Button'
   name: string; // export name of the component: e.g. 'Button' or 'default'
 }
 
-export function componentKey(info: ComponentInfo) {
+export function componentKey(info: CodeComponentInfo) {
   return `${info.externalPath}:${info.internalPath}#${info.name}`;
 }
 
-export interface InstanceInfo extends InstanceParams {
-  component: ComponentInfo;
+export interface CodeInstanceParams {
+  props: Record<string, any>;
+  autoResize: "none" | "height" | "widthHeight"; // same as Figma text nodes
 }
 
-export interface ComponentMetadata extends ComponentInfo {
+export interface CodeInstanceInfo extends CodeInstanceParams {
+  component: CodeComponentInfo;
+}
+
+export interface CodeComponentMetadata extends CodeComponentInfo {
   props: Props;
 }
 
@@ -40,7 +40,7 @@ export interface TextStyleData {
 }
 
 export interface Assets {
-  components: ComponentMetadata[];
+  components: CodeComponentMetadata[];
   colorStyles: Record<string, ColorStyleData>;
   textStyles: Record<string, TextStyleData>;
 }

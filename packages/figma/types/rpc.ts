@@ -1,31 +1,31 @@
 import {
-  InstanceInfo,
+  CodeInstanceInfo,
   Assets,
-  ComponentInfo,
+  CodeComponentInfo,
   RenderResult,
-  InstanceParams,
+  CodeInstanceParams,
 } from "./data";
 
 export interface IUIToPluginRPC {
   ready(): Promise<void>;
-  updateInstance(instance?: InstanceParams): Promise<void>;
+  updateInstance(instance?: CodeInstanceParams): Promise<void>;
   syncAssets(assets: Assets): Promise<void>;
   resize(width: number, height: number): Promise<void>;
 }
 
 export interface IPluginToUIRPC {
   render(
-    component: ComponentInfo,
+    component: CodeComponentInfo,
     props: Record<string, any>,
     width?: number,
     height?: number
   ): Promise<RenderResult>;
-  onTargetChange(target: InstanceInfo | undefined): Promise<void>;
+  onTargetChange(target: CodeInstanceInfo | undefined): Promise<void>;
 }
 
 export interface UIToRenderIFrameRPC {
   render(
-    component: ComponentInfo,
+    component: CodeComponentInfo,
     props: Record<string, any>,
     width?: number,
     height?: number

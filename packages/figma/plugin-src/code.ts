@@ -1,4 +1,4 @@
-import { Assets, InstanceInfo } from "../types/data";
+import { Assets, CodeInstanceInfo } from "../types/data";
 import {
   setInstanceParams,
   getRenderedSize,
@@ -42,7 +42,7 @@ const onDocumentChange = debounce((event: DocumentChangeEvent) => {
           ? "none"
           : "height";
 
-        const newInstanceInfo: InstanceInfo = {
+        const newInstanceInfo: CodeInstanceInfo = {
           ...instance,
           autoResize: newAutoResize,
         };
@@ -62,7 +62,7 @@ const onSelectionChange = () => {
 
   console.log(selection, selection.map(encodeNode));
 
-  let instance: InstanceInfo | undefined;
+  let instance: CodeInstanceInfo | undefined;
 
   if (selection.length > 0) {
     const current = selection[0];
@@ -81,7 +81,7 @@ class RPCHandler implements IUIToPluginRPC {
   async ready(): Promise<void> {
     onSelectionChange();
   }
-  async updateInstance(instance?: InstanceInfo | undefined): Promise<void> {
+  async updateInstance(instance?: CodeInstanceInfo | undefined): Promise<void> {
     const selection = figma.currentPage.selection;
     if (!selection.length) {
       return;
