@@ -8,6 +8,7 @@ import { useEffect } from "preact/hooks";
 import { Tabs, TabItem } from "../components/Tabs";
 import { Button } from "../components/Button";
 import { rpc } from "../rpc";
+import { Select } from "../components/Input";
 
 const inputTypes = [
   "text",
@@ -108,6 +109,10 @@ const CodeTabContent: FunctionComponent = () => {
 
   return (
     <div className="px-4 py-3 flex flex-col gap-3">
+      <Select value="json" onChange={() => {}}>
+        <option value="json">JSON</option>
+        <option value="react-tailwind">React + Tailwind</option>
+      </Select>
       <pre className="bg-gray-900 text-white p-2 rounded text-[10px] leading-tight">
         {code}
       </pre>

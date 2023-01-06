@@ -22,7 +22,7 @@ export function Select({
   return (
     <div className={twMerge("relative w-fit", className)}>
       <select
-        className="appearance-none pr-4 p-1 -m-1 outline outline-1 outline-transparent hover:outline-gray-300 focus:outline-blue-500 placeholder:text-gray-400"
+        className="appearance-none pr-5 p-1 -m-1 outline outline-1 outline-transparent hover:outline-gray-300 focus:outline-blue-500 placeholder:text-gray-400"
         value={value}
         onChange={onChange}
       >
