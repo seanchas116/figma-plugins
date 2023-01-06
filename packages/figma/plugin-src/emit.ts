@@ -95,6 +95,20 @@ function getRectangleStyleMixin(
     }
   }
 
+  if (node.type === "TEXT") {
+    switch (node.textAutoResize) {
+      case "WIDTH_AND_HEIGHT":
+        width = "auto";
+        height = "auto";
+        break;
+      case "HEIGHT":
+        height = "auto";
+        break;
+      case "NONE":
+        break;
+    }
+  }
+
   let borderTopLeftRadius = 0;
   let borderTopRightRadius = 0;
   let borderBottomLeftRadius = 0;
