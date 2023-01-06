@@ -1,4 +1,5 @@
 import type { Props } from "react-docgen-typescript";
+import { Element } from "@uimix/element-ir";
 
 export interface CodeComponentInfo {
   externalPath: string; // path used to import the component externally: e.g. '@uimix/components'
@@ -55,4 +56,5 @@ export interface RenderResult {
 
 export interface Target {
   instance?: CodeInstanceInfo;
+  elementIR: Element[];
 }

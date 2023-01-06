@@ -26,7 +26,10 @@ class State {
       return;
     }
 
-    this.$target.value = { instance };
+    this.$target.value = {
+      ...this.target,
+      instance,
+    };
 
     rpc.remote.updateInstance(instance);
   }

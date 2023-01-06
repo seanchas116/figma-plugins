@@ -14,6 +14,7 @@ export const rpcHandler: IPluginToUIRPC = {
   },
   onTargetsChange: async (targets: Target[]) => {
     state.$target.value = targets[0];
+    console.log("onTargetsChange", targets);
   },
 };
 

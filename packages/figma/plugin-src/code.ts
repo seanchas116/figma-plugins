@@ -1,4 +1,4 @@
-import { CodeAssets, CodeInstanceInfo } from "../types/data";
+import { CodeAssets, CodeInstanceInfo, Target } from "../types/data";
 import {
   setInstanceParams,
   getRenderedSize,
@@ -9,6 +9,7 @@ import { renderInstance } from "./render";
 import { IPluginToUIRPC, IUIToPluginRPC } from "../types/rpc";
 import { RPC } from "@uimix/typed-rpc";
 import { syncAssets } from "./syncAssets";
+import { toElementIR } from "./emit";
 
 figma.showUI(__html__, { width: 240, height: 240 });
 
@@ -62,7 +63,7 @@ const onSelectionChange = () => {
 
   console.log(selection, selection.map(encodeNode));
 
-  const targets = selection.map((node) => {
+  const targets = selection.map((node): Target => {
     let instance: CodeInstanceInfo | undefined;
     if (node.type === "INSTANCE") {
       instance = getInstanceInfo(node);
@@ -70,6 +71,7 @@ const onSelectionChange = () => {
 
     return {
       instance,
+      elementIR: toElementIR(node),
     };
   });
 
