@@ -51,7 +51,6 @@ export interface RectangleStyleMixin {
   height: number | "fit-content" | "auto";
   flexGrow: 1 | 0;
   alignSelf: "stretch" | "auto";
-  overflow: "hidden" | "visible"; // TODO: scroll
 
   borderTopLeftRadius: number;
   borderTopRightRadius: number;
@@ -67,7 +66,8 @@ export interface RectangleStyleMixin {
   background: Paint[];
 }
 
-export interface LayoutStyleMixin {
+export interface FrameStyleMixin {
+  overflow: "hidden" | "visible"; // TODO: scroll
   flexDirection: "row" | "column";
   gap: number;
   paddingTop: number;
@@ -96,7 +96,7 @@ export interface ImageStyleMixin {
   objectFit: "fill" | "contain" | "cover";
 }
 
-export interface FrameStyle extends RectangleStyleMixin, LayoutStyleMixin {}
+export interface FrameStyle extends RectangleStyleMixin, FrameStyleMixin {}
 
 export interface TextStyle
   extends RectangleStyleMixin,
