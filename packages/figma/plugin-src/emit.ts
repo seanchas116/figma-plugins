@@ -144,16 +144,24 @@ function getFrameStyleMixin(
   };
 }
 
-export function toElementIR(node: SceneNode): IR.Element {
+export function toElementIR(node: SceneNode): IR.Element[] {
   if (node.type === "FRAME") {
-    return {
-      type: "frame",
-      children: node.children.map(toElementIR),
-      style: {
-        ...getRectangleStyleMixin(node),
-        ...getFrameStyleMixin(node),
+    return [
+      {
+        type: "frame",
+        children: node.children.flatMap(toElementIR),
+        style: {
+          ...getRectangleStyleMixin(node),
+          ...getFrameStyleMixin(node),
+        },
       },
-    };
+    ];
   }
-  throw new Error("TODO");
+  if (node.type === "GROUP") {
+    // flatten groups
+    return node.children.flatMap(toElementIR);
+  }
+
+  console.log("TODO");
+  return [];
 }
