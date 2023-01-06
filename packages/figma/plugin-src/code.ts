@@ -1,5 +1,9 @@
-import { Assets, InstanceInfo, ComponentInstanceInfo } from "../types/data";
-import { setInstanceInfo, getRenderedSize, getTargetInfo } from "./pluginData";
+import { Assets, InstanceInfo } from "../types/data";
+import {
+  setInstanceParams,
+  getRenderedSize,
+  getInstanceInfo,
+} from "./pluginData";
 import { debounce, encodeNode } from "./common";
 import { renderInstance } from "./render";
 import { IPluginToUIRPC, IUIToPluginRPC } from "../types/rpc";
@@ -19,8 +23,8 @@ const onDocumentChange = debounce((event: DocumentChangeEvent) => {
         change.properties.includes("height"))
     ) {
       const node = change.node;
-      const target = getTargetInfo(node);
-      if (!target) {
+      const instance = getInstanceInfo(node);
+      if (!instance) {
         continue;
       }
 
@@ -33,22 +37,19 @@ const onDocumentChange = debounce((event: DocumentChangeEvent) => {
         continue;
       }
 
-      if (target.instance.autoResize !== "none") {
+      if (instance.autoResize !== "none") {
         const newAutoResize = change.properties.includes("height")
           ? "none"
           : "height";
 
         const newInstanceInfo: InstanceInfo = {
-          ...target.instance,
+          ...instance,
           autoResize: newAutoResize,
         };
 
-        setInstanceInfo(node, newInstanceInfo);
+        setInstanceParams(node, newInstanceInfo);
 
-        rpc.remote.onTargetChange({
-          ...target,
-          instance: newInstanceInfo,
-        });
+        rpc.remote.onTargetChange(newInstanceInfo);
       }
 
       renderInstance(node);
@@ -61,16 +62,16 @@ const onSelectionChange = () => {
 
   console.log(selection, selection.map(encodeNode));
 
-  let target: ComponentInstanceInfo | undefined;
+  let instance: InstanceInfo | undefined;
 
   if (selection.length > 0) {
     const current = selection[0];
     if (current.type === "INSTANCE") {
-      target = getTargetInfo(current);
+      instance = getInstanceInfo(current);
     }
   }
 
-  rpc.remote.onTargetChange(target);
+  rpc.remote.onTargetChange(instance);
 };
 
 figma.on("documentchange", onDocumentChange);
@@ -94,7 +95,7 @@ class RPCHandler implements IUIToPluginRPC {
     console.log("setting instance info", instance);
 
     const instanceInfo = instance;
-    setInstanceInfo(node, instanceInfo);
+    setInstanceParams(node, instanceInfo);
     if (instanceInfo) {
       node.setRelaunchData({
         edit: "",

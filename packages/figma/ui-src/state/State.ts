@@ -1,5 +1,5 @@
 import { signal } from "@preact/signals";
-import { Assets, InstanceInfo, TargetInfo } from "../../types/data";
+import { Assets, InstanceInfo } from "../../types/data";
 import { rpc } from "../rpc";
 
 class State {
@@ -9,7 +9,7 @@ class State {
     colorStyles: {},
     textStyles: {},
   });
-  readonly $target = signal<TargetInfo | undefined>(undefined);
+  readonly $target = signal<InstanceInfo | undefined>(undefined);
 
   get componentDocs() {
     return this.$assets.value.components;
@@ -26,10 +26,7 @@ class State {
       return;
     }
 
-    this.$target.value = {
-      component: this.target.component,
-      instance,
-    };
+    this.$target.value = instance;
 
     rpc.remote.updateInstance(instance);
   }
@@ -40,9 +37,9 @@ class State {
     }
 
     state.updateInstance({
-      ...this.target.instance,
+      ...this.target,
       props: {
-        ...this.target.instance.props,
+        ...this.target.props,
         ...values,
       },
     });

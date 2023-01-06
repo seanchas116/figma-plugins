@@ -135,10 +135,8 @@ export async function syncAssets(assets: Assets) {
         internalPath: componentDoc.internalPath,
         name: componentDoc.name,
       },
-      instance: {
-        props: {},
-        autoResize: "none",
-      },
+      props: {},
+      autoResize: "none",
     });
 
     const img = await figma.createImage(new Uint8Array(result.png));

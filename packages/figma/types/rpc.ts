@@ -1,14 +1,14 @@
 import {
   InstanceInfo,
-  ComponentInstanceInfo,
   Assets,
   ComponentInfo,
   RenderResult,
+  InstanceParams,
 } from "./data";
 
 export interface IUIToPluginRPC {
   ready(): Promise<void>;
-  updateInstance(instance?: InstanceInfo): Promise<void>;
+  updateInstance(instance?: InstanceParams): Promise<void>;
   syncAssets(assets: Assets): Promise<void>;
   resize(width: number, height: number): Promise<void>;
 }
@@ -20,7 +20,7 @@ export interface IPluginToUIRPC {
     width?: number,
     height?: number
   ): Promise<RenderResult>;
-  onTargetChange(target: ComponentInstanceInfo | undefined): Promise<void>;
+  onTargetChange(target: InstanceInfo | undefined): Promise<void>;
 }
 
 export interface UIToRenderIFrameRPC {

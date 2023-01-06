@@ -15,15 +15,14 @@ const SizingButton = styled(
 );
 
 export const InstanceEdit: FunctionComponent = () => {
-  const target = state.target;
-  if (!target) {
+  const instance = state.target;
+  if (!instance) {
     return null;
   }
 
   const componentDoc = state.componentDocs.find(
-    (doc) => componentKey(doc) === componentKey(target.component)
+    (doc) => componentKey(doc) === componentKey(instance.component)
   );
-  const instance = target.instance;
 
   return (
     <div className="flex flex-col gap-3">

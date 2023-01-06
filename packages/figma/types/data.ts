@@ -1,6 +1,6 @@
 import type { Props } from "react-docgen-typescript";
 
-export interface InstanceInfo {
+export interface InstanceParams {
   props: Record<string, any>;
   autoResize: "none" | "height" | "widthHeight"; // same as Figma text nodes
 }
@@ -15,9 +15,8 @@ export function componentKey(info: ComponentInfo) {
   return `${info.externalPath}:${info.internalPath}#${info.name}`;
 }
 
-export interface ComponentInstanceInfo {
+export interface InstanceInfo extends InstanceParams {
   component: ComponentInfo;
-  instance: InstanceInfo;
 }
 
 export interface ComponentMetadata extends ComponentInfo {

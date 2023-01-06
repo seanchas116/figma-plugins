@@ -1,8 +1,4 @@
-import {
-  ComponentInfo,
-  InstanceInfo,
-  ComponentInstanceInfo,
-} from "../types/data";
+import { ComponentInfo, InstanceInfo, InstanceParams } from "../types/data";
 
 export function setComponentInfo(
   node: ComponentNode,
@@ -20,11 +16,16 @@ export function getComponentInfo(
   }
 }
 
-export function setInstanceInfo(
+export function setInstanceParams(
   node: InstanceNode,
-  info: InstanceInfo | undefined
+  info: InstanceParams | undefined
 ) {
-  node.setPluginData("instance", info ? JSON.stringify(info) : "");
+  const params: InstanceParams | undefined = info && {
+    props: info.props,
+    autoResize: info.autoResize,
+  };
+
+  node.setPluginData("instance", params ? JSON.stringify(params) : "");
 }
 
 export function getInstanceInfo(node: InstanceNode): InstanceInfo | undefined {
@@ -32,28 +33,22 @@ export function getInstanceInfo(node: InstanceNode): InstanceInfo | undefined {
     return;
   }
 
-  const data = node.getPluginData("instance");
-  if (data) {
-    return JSON.parse(data) as InstanceInfo;
+  const component = getComponentInfo(node);
+  if (!component) {
+    return;
   }
 
-  const componentInfo = getComponentInfo(node);
-  if (componentInfo) {
+  const data = node.getPluginData("instance");
+  if (data) {
+    const params = JSON.parse(data) as InstanceParams;
+    return {
+      ...params,
+      component,
+    };
+  } else {
     return {
       props: {},
       autoResize: "widthHeight",
-    };
-  }
-}
-
-export function getTargetInfo(
-  node: InstanceNode
-): ComponentInstanceInfo | undefined {
-  const instance = getInstanceInfo(node);
-  const component = getComponentInfo(node); // from main component
-  if (instance && component) {
-    return {
-      instance,
       component,
     };
   }

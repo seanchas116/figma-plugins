@@ -1,29 +1,29 @@
-import { RenderResult, ComponentInstanceInfo } from "../types/data";
-import { getTargetInfo, setRenderedSize } from "./pluginData";
+import { RenderResult, InstanceInfo } from "../types/data";
+import { getInstanceInfo, setRenderedSize } from "./pluginData";
 import { rpc } from "./code";
 
 export async function renderInstanceImage(
-  target: ComponentInstanceInfo,
+  instance: InstanceInfo,
   width?: number,
   height?: number
 ): Promise<RenderResult> {
-  const autoResize = target.instance.autoResize;
+  const autoResize = instance.autoResize;
 
   return await rpc.remote.render(
-    target.component,
-    target.instance.props,
+    instance.component,
+    instance.props,
     autoResize === "widthHeight" ? undefined : width,
     autoResize !== "none" ? undefined : height
   );
 }
 
 export async function renderInstance(node: InstanceNode) {
-  const target = getTargetInfo(node);
-  if (!target) {
+  const instance = getInstanceInfo(node);
+  if (!instance) {
     return;
   }
 
-  const result = await renderInstanceImage(target, node.width, node.height);
+  const result = await renderInstanceImage(instance, node.width, node.height);
 
   const img = await figma.createImage(new Uint8Array(result.png));
   console.log(img.hash);
