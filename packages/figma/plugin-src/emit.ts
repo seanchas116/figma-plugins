@@ -172,10 +172,17 @@ function getFrameStyleMixin(
 }
 
 export function toElementIR(node: SceneNode): IR.Element[] {
-  if (node.type === "FRAME") {
+  if (
+    node.type === "FRAME" ||
+    node.type === "COMPONENT" ||
+    node.type === "COMPONENT_SET" ||
+    node.type === "INSTANCE"
+  ) {
     return [
       {
         type: "frame",
+        id: node.id,
+        name: node.name,
         children: node.children.flatMap(toElementIR),
         style: {
           ...getRectangleStyleMixin(node),
