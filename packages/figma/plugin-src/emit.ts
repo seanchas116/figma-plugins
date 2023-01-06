@@ -32,7 +32,7 @@ function convertPaint(paint: Paint): IR.Paint {
   return { type: "solid", color: { r: 0, g: 0, b: 0, a: 0 } };
 }
 
-function getRectangleStyleMixin(
+function getDimensionStyleMixin(
   node:
     | FrameNode
     | ComponentNode
@@ -40,7 +40,7 @@ function getRectangleStyleMixin(
     | InstanceNode
     | RectangleNode
     | TextNode
-): IR.RectangleStyleMixin {
+): IR.DimensionStyleMixin {
   const parent = node.parent;
 
   const parentLayout =
@@ -109,25 +109,6 @@ function getRectangleStyleMixin(
     }
   }
 
-  let borderTopLeftRadius = 0;
-  let borderTopRightRadius = 0;
-  let borderBottomLeftRadius = 0;
-  let borderBottomRightRadius = 0;
-  let borderTopWidth = 0;
-  let borderRightWidth = 0;
-  let borderBottomWidth = 0;
-  let borderLeftWidth = 0;
-  if (node.type !== "TEXT") {
-    borderTopLeftRadius = node.topLeftRadius;
-    borderTopRightRadius = node.topRightRadius;
-    borderBottomLeftRadius = node.bottomLeftRadius;
-    borderBottomRightRadius = node.bottomRightRadius;
-    borderTopWidth = node.strokeTopWeight;
-    borderRightWidth = node.strokeRightWeight;
-    borderBottomWidth = node.strokeBottomWeight;
-    borderLeftWidth = node.strokeLeftWeight;
-  }
-
   return {
     position: absolute ? "absolute" : "relative",
     display: node.visible ? "flex" : "none",
@@ -143,15 +124,27 @@ function getRectangleStyleMixin(
     height,
     flexGrow,
     alignSelf,
-    borderTopLeftRadius,
-    borderTopRightRadius,
-    borderBottomLeftRadius,
-    borderBottomRightRadius,
+  };
+}
+
+function getRectangleStyleMixin(
+  node:
+    | FrameNode
+    | ComponentNode
+    | ComponentSetNode
+    | InstanceNode
+    | RectangleNode
+): IR.RectangleFillBorderStyleMixin {
+  return {
+    borderTopLeftRadius: node.topLeftRadius,
+    borderTopRightRadius: node.topRightRadius,
+    borderBottomLeftRadius: node.bottomLeftRadius,
+    borderBottomRightRadius: node.bottomRightRadius,
+    borderTopWidth: node.strokeTopWeight,
+    borderRightWidth: node.strokeRightWeight,
+    borderBottomWidth: node.strokeBottomWeight,
+    borderLeftWidth: node.strokeLeftWeight,
     border: node.strokes.map(convertPaint),
-    borderTopWidth,
-    borderRightWidth,
-    borderBottomWidth,
-    borderLeftWidth,
     background: node.fills === figma.mixed ? [] : node.fills.map(convertPaint),
   };
 }
@@ -220,6 +213,7 @@ function getTextSpanStyleMixin(node: TextSublayerNode): IR.TextSpanStyleMixin {
     fontSize,
     lineHeight,
     letterSpacing,
+    background: node.fills === figma.mixed ? [] : node.fills.map(convertPaint),
   };
 }
 
@@ -237,6 +231,8 @@ function getTextStyleMixin(node: TextNode): IR.TextStyleMixin {
         : node.textAlignVertical === "TOP"
         ? "flex-start"
         : "flex-end",
+    border: node.strokes.map(convertPaint),
+    borderWidth: node.strokeWeight === figma.mixed ? 0 : node.strokeWeight,
   };
 }
 
@@ -323,6 +319,7 @@ export async function toElementIR(node: SceneNode): Promise<IR.Element[]> {
           name: node.name,
           imageID: fill.imageHash,
           style: {
+            ...getDimensionStyleMixin(node),
             ...getRectangleStyleMixin(node),
           },
         },
@@ -342,6 +339,7 @@ export async function toElementIR(node: SceneNode): Promise<IR.Element[]> {
           name: node.name,
           svg: svgText,
           style: {
+            ...getDimensionStyleMixin(node as FrameNode),
             ...getRectangleStyleMixin(node as FrameNode),
           },
         },
@@ -362,7 +360,7 @@ export async function toElementIR(node: SceneNode): Promise<IR.Element[]> {
           name: node.name,
           content: node.characters,
           style: {
-            ...getRectangleStyleMixin(node),
+            ...getDimensionStyleMixin(node),
             ...getTextSpanStyleMixin(node),
             ...getTextStyleMixin(node),
           },
@@ -384,6 +382,7 @@ export async function toElementIR(node: SceneNode): Promise<IR.Element[]> {
           name: node.name,
           children,
           style: {
+            ...getDimensionStyleMixin(node),
             ...getRectangleStyleMixin(node),
             ...getFrameStyleMixin(node),
           },

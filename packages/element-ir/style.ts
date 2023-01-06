@@ -34,7 +34,7 @@ export interface ImagePaint {
 
 export type Paint = SolidPaint | GradientPaint | ImagePaint;
 
-export interface RectangleStyleMixin {
+export interface DimensionStyleMixin {
   position: "absolute" | "relative";
   display: "flex" | "none";
   x:
@@ -51,7 +51,9 @@ export interface RectangleStyleMixin {
   height: number | "fit-content" | "auto";
   flexGrow: 1 | 0;
   alignSelf: "stretch" | "auto";
+}
 
+export interface RectangleFillBorderStyleMixin {
   borderTopLeftRadius: number;
   borderTopRightRadius: number;
   borderBottomLeftRadius: number;
@@ -85,22 +87,30 @@ export interface TextSpanStyleMixin {
   fontSize: number;
   lineHeight: number | "normal";
   letterSpacing: number; // em;
+  background: Paint[];
 }
 
 export interface TextStyleMixin {
   textAlign: "left" | "center" | "right" | "justify";
   justifyContent: "center" | "flex-start" | "flex-end"; // assuming a text element becomes a vertical flexbox
+  border: Paint[];
+  borderWidth: number;
 }
 
 export interface ImageStyleMixin {
   objectFit: "fill" | "contain" | "cover";
 }
 
-export interface FrameStyle extends RectangleStyleMixin, FrameStyleMixin {}
+export interface FrameStyle
+  extends DimensionStyleMixin,
+    RectangleFillBorderStyleMixin,
+    FrameStyleMixin {}
 
 export interface TextStyle
-  extends RectangleStyleMixin,
+  extends DimensionStyleMixin,
     TextSpanStyleMixin,
     TextStyleMixin {}
 
-export interface ImageStyle extends RectangleStyleMixin {}
+export interface ImageStyle
+  extends DimensionStyleMixin,
+    RectangleFillBorderStyleMixin {}
