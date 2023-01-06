@@ -50,10 +50,8 @@ function getDimensionStyleMixin(
     parentLayout === "NONE" ||
     ("layoutPositioning" in node && node.layoutPositioning === "ABSOLUTE");
 
-  let width: number | "fit-content" | "auto" = node.width;
-  let height: number | "fit-content" | "auto" = node.height;
-  let flexGrow: 1 | 0 = 0;
-  let alignSelf: "stretch" | "auto" = "auto";
+  let width: IR.DimensionStyleMixin["width"] = node.width;
+  let height: IR.DimensionStyleMixin["height"] = node.height;
 
   if ("layoutMode" in node) {
     if (node.layoutMode === "VERTICAL") {
@@ -76,21 +74,17 @@ function getDimensionStyleMixin(
   if ("layoutGrow" in node) {
     if (parentLayout === "VERTICAL") {
       if (node.layoutGrow) {
-        flexGrow = 1;
-        height = "auto";
+        height = "stretch";
       }
       if (node.layoutAlign === "STRETCH") {
-        alignSelf = "stretch";
-        width = "auto";
+        width = "stretch";
       }
     } else if (parentLayout === "HORIZONTAL") {
       if (node.layoutGrow) {
-        flexGrow = 1;
-        width = "auto";
+        width = "stretch";
       }
       if (node.layoutAlign === "STRETCH") {
-        alignSelf = "stretch";
-        height = "auto";
+        height = "stretch";
       }
     }
   }
@@ -98,11 +92,11 @@ function getDimensionStyleMixin(
   if (node.type === "TEXT") {
     switch (node.textAutoResize) {
       case "WIDTH_AND_HEIGHT":
-        width = "auto";
-        height = "auto";
+        width = "fit-content";
+        height = "fit-content";
         break;
       case "HEIGHT":
-        height = "auto";
+        height = "fit-content";
         break;
       case "NONE":
         break;
@@ -122,8 +116,6 @@ function getDimensionStyleMixin(
     },
     width,
     height,
-    flexGrow,
-    alignSelf,
   };
 }
 
