@@ -15,33 +15,39 @@ import { kebabCase } from "lodash-es";
 
 function dimensionCSS(
   mixin: DimensionStyleMixin,
-  parentFlexDirection: "row" | "column" | undefined
+  parentFlexDirection: "row" | "column" | undefined,
+  isRoot: boolean
 ): CSS.Properties {
   const props: CSS.Properties = {};
 
-  props.position = mixin.position;
   props.display = mixin.display;
 
-  if ("centerRatio" in mixin.x) {
-    props.left = `${mixin.x.centerRatio * 100}%`;
-    props.transform = `translateX(-50%)`;
-  }
-  if ("left" in mixin.x) {
-    props.left = `${mixin.x.left}px`;
-  }
-  if ("right" in mixin.x) {
-    props.right = `${mixin.x.right}px`;
-  }
+  if (isRoot) {
+    props.position = "relative";
+  } else {
+    props.position = mixin.position;
 
-  if ("centerRatio" in mixin.y) {
-    props.top = `${mixin.y.centerRatio * 100}%`;
-    props.transform = `translateY(-50%)`;
-  }
-  if ("top" in mixin.y) {
-    props.top = `${mixin.y.top}px`;
-  }
-  if ("bottom" in mixin.y) {
-    props.bottom = `${mixin.y.bottom}px`;
+    if ("centerRatio" in mixin.x) {
+      props.left = `${mixin.x.centerRatio * 100}%`;
+      props.transform = `translateX(-50%)`;
+    }
+    if ("left" in mixin.x) {
+      props.left = `${mixin.x.left}px`;
+    }
+    if ("right" in mixin.x) {
+      props.right = `${mixin.x.right}px`;
+    }
+
+    if ("centerRatio" in mixin.y) {
+      props.top = `${mixin.y.centerRatio * 100}%`;
+      props.transform = `translateY(-50%)`;
+    }
+    if ("top" in mixin.y) {
+      props.top = `${mixin.y.top}px`;
+    }
+    if ("bottom" in mixin.y) {
+      props.bottom = `${mixin.y.bottom}px`;
+    }
   }
 
   // width/height: stretch is experimental in CSS, so we use flex/align-self instead
@@ -162,9 +168,10 @@ function stringifyStyle(css: CSS.Properties): string {
     .join("; ");
 }
 
-export function generateHTMLWithInlineCSS(
+function generateInternalHTMLWithInlineCSS(
   element: Element,
-  parentFlexDirection?: "row" | "column"
+  parentFlexDirection: "row" | "column" | undefined,
+  isRoot: boolean
 ): hast.Content {
   switch (element.type) {
     case "frame": {
@@ -172,20 +179,24 @@ export function generateHTMLWithInlineCSS(
         "div",
         {
           style: stringifyStyle({
-            ...dimensionCSS(element.style, parentFlexDirection),
+            ...dimensionCSS(element.style, parentFlexDirection, isRoot),
             ...rectangleCSS(element.style),
             ...frameCSS(element.style),
           }),
         },
         ...element.children.map((e) =>
-          generateHTMLWithInlineCSS(e, element.style.flexDirection)
+          generateInternalHTMLWithInlineCSS(
+            e,
+            element.style.flexDirection,
+            false
+          )
         )
       );
     }
     case "image": {
       return h("img", {
         style: stringifyStyle({
-          ...dimensionCSS(element.style, parentFlexDirection),
+          ...dimensionCSS(element.style, parentFlexDirection, isRoot),
           ...rectangleCSS(element.style),
           ...imageCSS(element.style),
         }),
@@ -194,7 +205,7 @@ export function generateHTMLWithInlineCSS(
     case "svg": {
       return h("svg", {
         style: stringifyStyle({
-          ...dimensionCSS(element.style, parentFlexDirection),
+          ...dimensionCSS(element.style, parentFlexDirection, isRoot),
           ...rectangleCSS(element.style),
         }),
       });
@@ -204,7 +215,7 @@ export function generateHTMLWithInlineCSS(
         "div",
         {
           style: stringifyStyle({
-            ...dimensionCSS(element.style, parentFlexDirection),
+            ...dimensionCSS(element.style, parentFlexDirection, isRoot),
             ...textSpanCSS(element.style),
             ...textCSS(element.style),
           }),
@@ -213,4 +224,11 @@ export function generateHTMLWithInlineCSS(
       );
     }
   }
+}
+
+export function generateHTMLWithInlineCSS(
+  element: Element,
+  parentFlexDirection?: "row" | "column"
+): hast.Content {
+  return generateInternalHTMLWithInlineCSS(element, parentFlexDirection, true);
 }
