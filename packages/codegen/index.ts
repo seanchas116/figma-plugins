@@ -1,4 +1,5 @@
 import {
+  Color,
   DimensionStyleMixin,
   Element,
   FrameStyleMixin,
@@ -72,13 +73,21 @@ function dimensionCSS(
   return props;
 }
 
+function colorToCSS(color: Color): string {
+  const r = Math.round(color.r * 255);
+  const g = Math.round(color.g * 255);
+  const b = Math.round(color.b * 255);
+  const a = color.a;
+  return `rgba(${r}, ${g}, ${b}, ${a})`;
+}
+
 function rectangleCSS(mixin: RectangleFillBorderStyleMixin): CSS.Properties {
   const props: CSS.Properties = {};
 
   if (mixin.border.length > 0) {
     const border = mixin.border[0];
     if (border.type === "solid") {
-      props.borderColor = `rgba(${border.color.r}, ${border.color.g}, ${border.color.b}, ${border.color.a})`;
+      props.borderColor = colorToCSS(border.color);
     } else {
       // TODO
     }
@@ -87,7 +96,7 @@ function rectangleCSS(mixin: RectangleFillBorderStyleMixin): CSS.Properties {
   if (mixin.background.length > 0) {
     const background = mixin.background[0];
     if (background.type === "solid") {
-      props.backgroundColor = `rgba(${background.color.r}, ${background.color.g}, ${background.color.b}, ${background.color.a})`;
+      props.backgroundColor = colorToCSS(background.color);
     } else {
       // TODO
     }
@@ -125,7 +134,7 @@ function textSpanCSS(mixin: TextSpanStyleMixin): CSS.Properties {
   if (mixin.color.length > 0) {
     const color = mixin.color[0];
     if (color.type === "solid") {
-      props.color = `rgba(${color.color.r}, ${color.color.g}, ${color.color.b}, ${color.color.a})`;
+      props.color = colorToCSS(color.color);
     }
   }
 
