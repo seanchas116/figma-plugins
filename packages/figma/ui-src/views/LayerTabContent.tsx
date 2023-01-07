@@ -3,7 +3,6 @@ import { state } from "../state/State";
 import {
   AutoHeightIcon,
   AutoWidthIcon,
-  ChevronDownIcon,
   FixedSizeIcon,
 } from "../components/Icon";
 import { styled } from "../components/styled";
@@ -138,6 +137,14 @@ export const InstanceEdit: FunctionComponent = () => {
             );
           })}
       </dl>
+    </div>
+  );
+};
+
+export const LayerTabContent: FunctionComponent = () => {
+  return (
+    <div className="px-4 py-3 flex flex-col gap-3">
+      <InstanceEdit />
     </div>
   );
 };
