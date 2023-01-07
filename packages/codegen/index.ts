@@ -14,46 +14,39 @@ import { h } from "hastscript";
 import * as CSS from "csstype";
 import { kebabCase } from "lodash-es";
 
-type ParentLayout =
-  | "row" // parent is a horizontal flexbox
-  | "column" // parent is a vertical flexbox
-  | "root";
+type ParentLayout = "row" | "column";
 
 function dimensionCSS(
   mixin: DimensionStyleMixin,
-  parentLayout: ParentLayout
+  parentLayout: ParentLayout | undefined
 ): CSS.Properties {
   const props: CSS.Properties = {};
 
   props.display = mixin.display;
 
-  if (parentLayout === "root") {
-    props.position = "relative";
-  } else {
-    props.position = mixin.position;
+  props.position = mixin.position;
 
-    if (mixin.position === "absolute") {
-      if ("centerRatio" in mixin.x) {
-        props.left = `${mixin.x.centerRatio * 100}%`;
-        props.transform = `translateX(-50%)`;
-      }
-      if ("left" in mixin.x) {
-        props.left = `${mixin.x.left}px`;
-      }
-      if ("right" in mixin.x) {
-        props.right = `${mixin.x.right}px`;
-      }
+  if (mixin.position === "absolute") {
+    if ("centerRatio" in mixin.x) {
+      props.left = `${mixin.x.centerRatio * 100}%`;
+      props.transform = `translateX(-50%)`;
+    }
+    if ("left" in mixin.x) {
+      props.left = `${mixin.x.left}px`;
+    }
+    if ("right" in mixin.x) {
+      props.right = `${mixin.x.right}px`;
+    }
 
-      if ("centerRatio" in mixin.y) {
-        props.top = `${mixin.y.centerRatio * 100}%`;
-        props.transform = `translateY(-50%)`;
-      }
-      if ("top" in mixin.y) {
-        props.top = `${mixin.y.top}px`;
-      }
-      if ("bottom" in mixin.y) {
-        props.bottom = `${mixin.y.bottom}px`;
-      }
+    if ("centerRatio" in mixin.y) {
+      props.top = `${mixin.y.centerRatio * 100}%`;
+      props.transform = `translateY(-50%)`;
+    }
+    if ("top" in mixin.y) {
+      props.top = `${mixin.y.top}px`;
+    }
+    if ("bottom" in mixin.y) {
+      props.bottom = `${mixin.y.bottom}px`;
     }
   }
 
@@ -176,9 +169,9 @@ function stringifyStyle(css: CSS.Properties): string {
     .join("; ");
 }
 
-function generateInternalHTMLWithInlineCSS(
+export function generateHTMLWithInlineCSS(
   element: Element,
-  parentLayout: ParentLayout
+  parentLayout?: ParentLayout
 ): hast.Content {
   switch (element.type) {
     case "frame": {
@@ -192,7 +185,7 @@ function generateInternalHTMLWithInlineCSS(
           }),
         },
         ...element.children.map((e) =>
-          generateInternalHTMLWithInlineCSS(e, element.style.flexDirection)
+          generateHTMLWithInlineCSS(e, element.style.flexDirection)
         )
       );
     }
@@ -238,8 +231,4 @@ function generateInternalHTMLWithInlineCSS(
       );
     }
   }
-}
-
-export function generateHTMLWithInlineCSS(element: Element): hast.Content {
-  return generateInternalHTMLWithInlineCSS(element, "root");
 }

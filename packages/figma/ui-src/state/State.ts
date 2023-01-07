@@ -42,7 +42,13 @@ class State {
     }
     if (this.$codeFormat.value === "htmlInlineStyle") {
       const elements = this.target?.elementIR ?? [];
-      const ast = elements.map((elem) => generateHTMLWithInlineCSS(elem));
+      const ast = elements.map((elem) => {
+        // remove positions from root elements
+        elem.style.position = "relative";
+        elem.style.x = { left: 0 };
+        elem.style.y = { top: 0 };
+        return generateHTMLWithInlineCSS(elem);
+      });
 
       const html = toHtml({
         type: "root",
