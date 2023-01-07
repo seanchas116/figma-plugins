@@ -9,6 +9,7 @@ import {
   TextStyleMixin,
 } from "@uimix/element-ir";
 import type * as hast from "hast";
+import * as svgParser from "svg-parser";
 import { h } from "hastscript";
 import * as CSS from "csstype";
 import { kebabCase } from "lodash-es";
@@ -204,12 +205,23 @@ function generateInternalHTMLWithInlineCSS(
       });
     }
     case "svg": {
-      // TODO: svg content
-      return h("svg", {
+      const root = svgParser.parse(element.svg) as hast.Root;
+      const svgElem = root.children[0];
+      if (svgElem.type !== "element") {
+        throw new Error("Expected element type");
+      }
+
+      const properties: hast.Properties = {
+        ...svgElem.properties,
         style: stringifyStyle({
           ...dimensionCSS(element.style, parentFlexDirection, isRoot),
         }),
-      });
+      };
+      delete properties.xmlns;
+      return {
+        ...svgElem,
+        properties,
+      };
     }
     case "text": {
       return h(
