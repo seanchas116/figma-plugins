@@ -132,15 +132,16 @@ function getRectangleStyleMixin(
     | InstanceNode
     | RectangleNode
 ): IR.RectangleFillBorderStyleMixin {
+  const hasBorder = node.strokes.length > 0;
   return {
     borderTopLeftRadius: node.topLeftRadius,
     borderTopRightRadius: node.topRightRadius,
     borderBottomLeftRadius: node.bottomLeftRadius,
     borderBottomRightRadius: node.bottomRightRadius,
-    borderTopWidth: node.strokeTopWeight,
-    borderRightWidth: node.strokeRightWeight,
-    borderBottomWidth: node.strokeBottomWeight,
-    borderLeftWidth: node.strokeLeftWeight,
+    borderTopWidth: hasBorder ? node.strokeTopWeight : 0,
+    borderRightWidth: hasBorder ? node.strokeRightWeight : 0,
+    borderBottomWidth: hasBorder ? node.strokeBottomWeight : 0,
+    borderLeftWidth: hasBorder ? node.strokeLeftWeight : 0,
     border: node.strokes.map(convertPaint),
     background: node.fills === figma.mixed ? [] : node.fills.map(convertPaint),
   };
