@@ -2,7 +2,7 @@ import { FunctionComponent } from "preact";
 import { Select } from "../components/Input";
 import { state } from "../state/State";
 
-export const CodeTabContent: FunctionComponent = () => {
+export const CodePanel: FunctionComponent = () => {
   const code = state.code;
 
   return (

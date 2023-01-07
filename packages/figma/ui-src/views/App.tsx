@@ -1,12 +1,12 @@
 import { FunctionComponent } from "preact";
-import { LayerTabContent } from "./LayerTabContent";
+import { LayerPanel } from "./LayerPanel";
 import { CodeComponentIFrame } from "./CodeComponentIFrame";
 import { Resizer } from "./Resizer";
 import { state, tabs } from "../state/State";
 import { MenuIcon } from "../components/Icon";
 import { useEffect } from "preact/hooks";
 import { Tabs, TabItem } from "../components/Tabs";
-import { CodeTabContent } from "./CodeTabContent";
+import { CodePanel } from "./CodePanel";
 import { SettingsDialog } from "./SettingsDialog";
 import { isTextInput } from "../util/isTextInput";
 
@@ -54,8 +54,8 @@ export const App: FunctionComponent = () => {
   return (
     <div className="text-[11px] leading-4 text-gray-900 accent-blue-500">
       <AppTabs />
-      {state.$selectedTab.value === "layer" && <LayerTabContent />}
-      {state.$selectedTab.value === "code" && <CodeTabContent />}
+      {state.$selectedTab.value === "layer" && <LayerPanel />}
+      {state.$selectedTab.value === "code" && <CodePanel />}
       <CodeComponentIFrame />
       <SettingsDialog />
       <Resizer />

@@ -141,7 +141,7 @@ export const InstanceEdit: FunctionComponent = () => {
   );
 };
 
-export const LayerTabContent: FunctionComponent = () => {
+export const LayerPanel: FunctionComponent = () => {
   return (
     <div className="px-4 py-3 flex flex-col gap-3">
       <InstanceEdit />
