@@ -150,6 +150,7 @@ function textSpanCSS(mixin: TextSpanStyleMixin): CSS.Properties {
 function textCSS(mixin: TextStyleMixin): CSS.Properties {
   const props: CSS.Properties = {};
 
+  props.flexDirection = "column";
   props.textAlign = mixin.textAlign;
   props.justifyContent = mixin.justifyContent;
 
@@ -203,10 +204,10 @@ function generateInternalHTMLWithInlineCSS(
       });
     }
     case "svg": {
+      // TODO: svg content
       return h("svg", {
         style: stringifyStyle({
           ...dimensionCSS(element.style, parentFlexDirection, isRoot),
-          ...rectangleCSS(element.style),
         }),
       });
     }

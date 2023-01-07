@@ -107,9 +107,7 @@ export interface TextStyle
     TextSpanStyleMixin,
     TextStyleMixin {}
 
-export interface SVGStyle
-  extends DimensionStyleMixin,
-    RectangleFillBorderStyleMixin {}
+export interface SVGStyle extends DimensionStyleMixin {}
 
 export interface ImageStyle
   extends DimensionStyleMixin,

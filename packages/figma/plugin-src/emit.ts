@@ -39,12 +39,14 @@ function convertPaint(paint: Paint): IR.Paint {
 
 function getDimensionStyleMixin(
   node:
+    | GroupNode
     | FrameNode
     | ComponentNode
     | ComponentSetNode
     | InstanceNode
     | RectangleNode
-    | TextNode
+    | TextNode,
+  positionOffset: Vector
 ): IR.DimensionStyleMixin {
   const parent = node.parent;
 
@@ -108,16 +110,19 @@ function getDimensionStyleMixin(
     }
   }
 
+  const x = absolute ? node.x + positionOffset.x : 0;
+  const y = absolute ? node.y + positionOffset.y : 0;
+
   return {
     position: absolute ? "absolute" : "relative",
     display: node.visible ? "flex" : "none",
     x: {
       // TODO: support other constraints
-      left: node.x,
+      left: x,
     },
     y: {
       // TODO: support other constraints
-      top: node.y,
+      top: y,
     },
     width,
     height,
@@ -296,7 +301,10 @@ class SVGLikeNodeChecker {
 
 const svgLikeNodeChecker = new SVGLikeNodeChecker();
 
-export async function toElementIR(node: SceneNode): Promise<IR.Element[]> {
+export async function toElementIR(
+  node: SceneNode,
+  positionOffset: Vector = { x: 0, y: 0 }
+): Promise<IR.Element[]> {
   // ignore mask layers
   if ("isMask" in node && node.isMask) {
     return [];
@@ -317,7 +325,7 @@ export async function toElementIR(node: SceneNode): Promise<IR.Element[]> {
           name: node.name,
           imageID: fill.imageHash,
           style: {
-            ...getDimensionStyleMixin(node),
+            ...getDimensionStyleMixin(node, positionOffset),
             ...getRectangleStyleMixin(node),
             objectFit: convertScaleMode(fill.scaleMode),
           },
@@ -338,7 +346,7 @@ export async function toElementIR(node: SceneNode): Promise<IR.Element[]> {
           name: node.name,
           svg: svgText,
           style: {
-            ...getDimensionStyleMixin(node as FrameNode),
+            ...getDimensionStyleMixin(node as FrameNode, positionOffset),
             ...getRectangleStyleMixin(node as FrameNode),
           },
         },
@@ -359,7 +367,7 @@ export async function toElementIR(node: SceneNode): Promise<IR.Element[]> {
           name: node.name,
           content: node.characters,
           style: {
-            ...getDimensionStyleMixin(node),
+            ...getDimensionStyleMixin(node, positionOffset),
             ...getTextSpanStyleMixin(node),
             ...getTextStyleMixin(node),
           },
@@ -371,7 +379,7 @@ export async function toElementIR(node: SceneNode): Promise<IR.Element[]> {
     case "INSTANCE":
     case "FRAME": {
       const children = (
-        await Promise.all(node.children.map(toElementIR))
+        await Promise.all(node.children.map((child) => toElementIR(child)))
       ).flat();
 
       return [
@@ -381,7 +389,7 @@ export async function toElementIR(node: SceneNode): Promise<IR.Element[]> {
           name: node.name,
           children,
           style: {
-            ...getDimensionStyleMixin(node),
+            ...getDimensionStyleMixin(node, positionOffset),
             ...getRectangleStyleMixin(node),
             ...getFrameStyleMixin(node),
           },
@@ -389,7 +397,59 @@ export async function toElementIR(node: SceneNode): Promise<IR.Element[]> {
       ];
     }
     case "GROUP": {
-      return (await Promise.all(node.children.map(toElementIR))).flat();
+      const parent = node.parent;
+
+      if (parent && "layoutMode" in parent && parent.layoutMode !== "NONE") {
+        // treat as frame
+
+        const children = (
+          await Promise.all(
+            node.children.map((child) =>
+              toElementIR(child, {
+                x: -node.x,
+                y: -node.y,
+              })
+            )
+          )
+        ).flat();
+
+        return [
+          {
+            type: "frame",
+            id: node.id,
+            name: node.name,
+            children,
+            style: {
+              ...getDimensionStyleMixin(node, positionOffset),
+
+              borderTopLeftRadius: 0,
+              borderTopRightRadius: 0,
+              borderBottomLeftRadius: 0,
+              borderBottomRightRadius: 0,
+              borderTopWidth: 0,
+              borderRightWidth: 0,
+              borderBottomWidth: 0,
+              borderLeftWidth: 0,
+              border: [],
+              background: [],
+
+              overflow: "visible",
+              flexDirection: "row",
+              gap: 0,
+              paddingTop: 0,
+              paddingRight: 0,
+              paddingBottom: 0,
+              paddingLeft: 0,
+              alignItems: "flex-start",
+              justifyContent: "flex-start",
+            },
+          },
+        ];
+      }
+
+      return (
+        await Promise.all(node.children.map((child) => toElementIR(child)))
+      ).flat();
     }
     default: {
       console.log("ignoring", node.type);
