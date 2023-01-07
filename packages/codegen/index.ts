@@ -10,6 +10,7 @@ import {
 import type * as hast from "hast";
 import { h } from "hastscript";
 import * as CSS from "csstype";
+import { kebabCase } from "lodash-es";
 
 function dimensionCSS(
   mixin: DimensionStyleMixin,
@@ -146,6 +147,12 @@ function imageCSS(mixin: ImageStyleMixin): CSS.Properties {
   return props;
 }
 
+function stringifyStyle(css: CSS.Properties): string {
+  return Object.entries(css)
+    .map(([key, value]) => `${kebabCase(key)}: ${value}`)
+    .join("; ");
+}
+
 export function generateHTMLWithInlineCSS(
   element: Element,
   parentFlexDirection?: "row" | "column"
@@ -155,11 +162,11 @@ export function generateHTMLWithInlineCSS(
       return h(
         "div",
         {
-          style: {
+          style: stringifyStyle({
             ...dimensionCSS(element.style, parentFlexDirection),
             ...rectangleCSS(element.style),
             ...frameCSS(element.style),
-          },
+          }),
         },
         ...element.children.map((e) =>
           generateHTMLWithInlineCSS(e, element.style.flexDirection)
@@ -168,30 +175,30 @@ export function generateHTMLWithInlineCSS(
     }
     case "image": {
       return h("img", {
-        style: {
+        style: stringifyStyle({
           ...dimensionCSS(element.style, parentFlexDirection),
           ...rectangleCSS(element.style),
           ...imageCSS(element.style),
-        },
+        }),
       });
     }
     case "svg": {
       return h("svg", {
-        style: {
+        style: stringifyStyle({
           ...dimensionCSS(element.style, parentFlexDirection),
           ...rectangleCSS(element.style),
-        },
+        }),
       });
     }
     case "text": {
       return h(
         "div",
         {
-          style: {
+          style: stringifyStyle({
             ...dimensionCSS(element.style, parentFlexDirection),
             ...textSpanCSS(element.style),
             ...textCSS(element.style),
-          },
+          }),
         },
         element.content
       );
