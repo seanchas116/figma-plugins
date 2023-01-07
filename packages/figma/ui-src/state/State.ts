@@ -24,10 +24,16 @@ class State {
 
   readonly $codeFormat = signal<"json" | "htmlInlineStyle">("json");
 
-  get code(): {
-    content: string;
-    type: "json" | "html";
-  } {
+  get code():
+    | {
+        content: string;
+        type: "json" | "html";
+      }
+    | undefined {
+    if (!this.target) {
+      return;
+    }
+
     if (this.$codeFormat.value === "json") {
       return {
         content: formatJS(JSON.stringify(this.target?.elementIR)),
@@ -44,10 +50,6 @@ class State {
       });
       return { content: formatHTML(html), type: "html" };
     }
-    return {
-      content: "",
-      type: "json",
-    };
   }
 
   get componentDocs() {
