@@ -27,6 +27,7 @@
     "lodash-es": "^4.17.21",
     "parse-css-color": "^0.2.1",
     "preact": "^10.11.3",
+    "prism-themes": "^1.9.0",
     "prismjs": "^1.29.0",
     "tailwind-merge": "^1.8.1"
   },
@@ -36,6 +37,7 @@
     "@types/lodash-es": "^4.17.6",
     "@types/node": "^18.11.18",
     "@types/prettier": "^2.7.2",
+    "@types/prismjs": "^1.26.0",
     "concurrently": "^7.6.0",
     "esbuild": "^0.16.13",
     "postcss": "^8.4.20",

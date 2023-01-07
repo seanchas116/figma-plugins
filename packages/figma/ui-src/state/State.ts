@@ -24,9 +24,15 @@ class State {
 
   readonly $codeFormat = signal<"json" | "htmlInlineStyle">("json");
 
-  get code(): string {
+  get code(): {
+    content: string;
+    type: "json" | "html";
+  } {
     if (this.$codeFormat.value === "json") {
-      return formatJS(JSON.stringify(this.target?.elementIR));
+      return {
+        content: formatJS(JSON.stringify(this.target?.elementIR)),
+        type: "json",
+      };
     }
     if (this.$codeFormat.value === "htmlInlineStyle") {
       const elements = this.target?.elementIR ?? [];
@@ -36,9 +42,12 @@ class State {
         type: "root",
         children: ast,
       });
-      return formatHTML(html);
+      return { content: formatHTML(html), type: "html" };
     }
-    return "";
+    return {
+      content: "",
+      type: "json",
+    };
   }
 
   get componentDocs() {

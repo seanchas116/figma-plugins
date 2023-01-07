@@ -1,6 +1,9 @@
 import { FunctionComponent } from "preact";
 import { Select } from "../components/Input";
 import { state } from "../state/State";
+import Prism from "prismjs";
+import "prismjs/components/prism-json";
+import "prism-themes/themes/prism-material-dark.css";
 
 export const CodePanel: FunctionComponent = () => {
   const code = state.code;
@@ -17,7 +20,15 @@ export const CodePanel: FunctionComponent = () => {
         <option value="htmlInlineStyle">HTML + Inline Style</option>
       </Select>
       <pre className="bg-gray-900 text-white p-2 rounded text-[10px] leading-tight whitespace-pre-wrap">
-        {code}
+        <code
+          dangerouslySetInnerHTML={{
+            __html: Prism.highlight(
+              code.content,
+              Prism.languages[code.type],
+              code.type
+            ),
+          }}
+        />
       </pre>
     </div>
   );
