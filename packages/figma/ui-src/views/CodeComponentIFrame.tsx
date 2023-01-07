@@ -1,6 +1,7 @@
 import { rpcToIFrame } from "@uimix/typed-rpc/browser";
-import { createRef } from "preact";
+import { createRef, FunctionComponent } from "preact";
 import { useEffect } from "preact/hooks";
+import { twMerge } from "tailwind-merge";
 import { CodeAssets } from "../../types/data";
 import {
   CodeComponentIFrameToUIRPC,
@@ -9,7 +10,9 @@ import {
 import { rpc, rpcHandler } from "../rpc";
 import { state } from "../state/State";
 
-export const CodeComponentIFrame: React.FC = () => {
+export const CodeComponentIFrame: FunctionComponent<{
+  visible?: boolean;
+}> = ({ visible }) => {
   const ref = createRef<HTMLIFrameElement>();
 
   useEffect(() => {
@@ -39,7 +42,10 @@ export const CodeComponentIFrame: React.FC = () => {
 
   return (
     <iframe
-      className="border border-gray-200"
+      className={twMerge(
+        "border border-gray-200",
+        !visible ? "fixed left-[-1000px]" : ""
+      )}
       ref={ref}
       src="http://localhost:5173/render.html"
     />
