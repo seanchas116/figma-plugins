@@ -105,7 +105,7 @@ function rectangleCSSPartial(
   const props: CSS.Properties = {};
 
   if (mixin.border !== undefined) {
-    props.borderStyle = "noe";
+    props.borderStyle = "none";
     if (mixin.border.length > 0) {
       const border = mixin.border[0];
       if (border.type === "solid") {
