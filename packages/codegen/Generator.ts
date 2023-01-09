@@ -28,6 +28,7 @@ export class Generator {
   private generateTag(
     tagName: string,
     props: Record<string, any>,
+    additionalOpenTagContent = "",
     children: string[] = []
   ): string[] {
     const propsStr = Object.entries(props)
@@ -35,10 +36,16 @@ export class Generator {
         value ? `${key}={${JSON.stringify(value)}}` : key
       )
       .join(" ");
-    return [`<${tagName} ${propsStr}>`, ...children, `</${tagName}>`];
+    return [
+      `<${tagName} ${propsStr} ${additionalOpenTagContent}>`,
+      ...children,
+      `</${tagName}>`,
+    ];
   }
 
-  generateElement(element: Element): string[] {
+  generateElement(element: Element, depth = 0): string[] {
+    const propsSpread = depth === 0 ? "{...props}" : "";
+
     switch (element.type) {
       case "instance": {
         const component = this.options.components.get(element.componentKey);
@@ -64,7 +71,8 @@ export class Generator {
           {
             ...this.styleGenerator.frameCSS(element.style),
           },
-          element.children.flatMap((e) => this.generateElement(e))
+          propsSpread,
+          element.children.flatMap((e) => this.generateElement(e, depth + 1))
         );
       }
       case "image": {
@@ -90,7 +98,7 @@ export class Generator {
         };
         delete properties.xmlns;
 
-        return this.generateTag("svg", properties, [svgChildren]);
+        return this.generateTag("svg", properties, propsSpread, [svgChildren]);
       }
       case "text": {
         return this.generateTag(
@@ -98,6 +106,7 @@ export class Generator {
           {
             ...this.styleGenerator.textCSS(element.style),
           },
+          "",
           [element.content]
         );
       }
@@ -119,7 +128,7 @@ export class Generator {
     };
 
     return [
-      `export function ${name}() { return `,
+      `export function ${name}(props) { return `,
       ...this.generateElement(element as Element),
       `}`,
     ];
