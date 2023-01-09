@@ -1,7 +1,7 @@
 import * as IR from "@uimix/element-ir";
-import { parseFontName } from "./common";
+import { parseFontName } from "../common";
 
-function convertScaleMode(
+export function convertScaleMode(
   scaleMode: ImagePaint["scaleMode"]
 ): "contain" | "cover" | "fill" {
   return scaleMode === "FIT"
@@ -11,7 +11,7 @@ function convertScaleMode(
     : "fill";
 }
 
-function convertPaint(paint: Paint): IR.Paint {
+export function convertPaint(paint: Paint): IR.Paint {
   if (paint.type === "SOLID") {
     return {
       type: "solid",
@@ -37,7 +37,7 @@ function convertPaint(paint: Paint): IR.Paint {
   return { type: "solid", color: { r: 0, g: 0, b: 0, a: 0 } };
 }
 
-function getDimensionStyleMixin(
+export function getDimensionStyleMixin(
   node:
     | GroupNode
     | FrameNode
@@ -129,7 +129,7 @@ function getDimensionStyleMixin(
   };
 }
 
-function getRectangleStyleMixin(
+export function getRectangleStyleMixin(
   node:
     | FrameNode
     | ComponentNode
@@ -152,7 +152,7 @@ function getRectangleStyleMixin(
   };
 }
 
-function getFrameStyleMixin(
+export function getFrameStyleMixin(
   node: FrameNode | ComponentNode | ComponentSetNode | InstanceNode
 ): IR.FrameStyleMixin {
   return {
@@ -182,7 +182,9 @@ function getFrameStyleMixin(
   };
 }
 
-function getTextSpanStyleMixin(node: TextSublayerNode): IR.TextSpanStyleMixin {
+export function getTextSpanStyleMixin(
+  node: TextSublayerNode
+): IR.TextSpanStyleMixin {
   const fontSize = node.fontSize !== figma.mixed ? node.fontSize : 16;
 
   const { family, weight, italic } = parseFontName(
@@ -220,7 +222,7 @@ function getTextSpanStyleMixin(node: TextSublayerNode): IR.TextSpanStyleMixin {
   };
 }
 
-function getTextStyleMixin(node: TextNode): IR.TextStyleMixin {
+export function getTextStyleMixin(node: TextNode): IR.TextStyleMixin {
   return {
     textAlign:
       node.textAlignHorizontal === "CENTER"
@@ -235,225 +237,4 @@ function getTextStyleMixin(node: TextNode): IR.TextStyleMixin {
         ? "flex-start"
         : "flex-end",
   };
-}
-
-const vectorLikeTypes: SceneNode["type"][] = [
-  "LINE",
-  "RECTANGLE",
-  "ELLIPSE",
-  "POLYGON",
-  "STAR",
-  "VECTOR",
-  "BOOLEAN_OPERATION",
-];
-
-class SVGLikeNodeChecker {
-  private readonly memo = new WeakMap<SceneNode, boolean>();
-
-  check(node: SceneNode): boolean {
-    const memo = this.memo.get(node);
-    if (memo != null) {
-      return memo;
-    }
-
-    if (vectorLikeTypes.includes(node.type)) {
-      return true;
-    }
-
-    // TODO: text layers with strokes should be treated as SVG
-
-    if (
-      node.type === "FRAME" ||
-      node.type === "INSTANCE" ||
-      node.type === "COMPONENT" ||
-      node.type === "COMPONENT_SET"
-    ) {
-      return this.checkFrameLike(node);
-    }
-
-    return false;
-  }
-
-  private checkFrameLike(
-    node: FrameNode | ComponentNode | ComponentSetNode | InstanceNode
-  ): boolean {
-    if (node.children.length === 0) {
-      return false;
-    }
-
-    for (const child of node.children) {
-      if (!this.check(child)) {
-        return false;
-      }
-      if ("constraints" in child) {
-        if (
-          child.constraints.horizontal !== "SCALE" ||
-          child.constraints.vertical !== "SCALE"
-        ) {
-          return false;
-        }
-      }
-    }
-
-    return true;
-  }
-}
-
-const svgLikeNodeChecker = new SVGLikeNodeChecker();
-
-export async function toElementIR(
-  node: SceneNode,
-  positionOffset: Vector = { x: 0, y: 0 }
-): Promise<IR.Element[]> {
-  // ignore mask layers
-  if ("isMask" in node && node.isMask) {
-    return [];
-  }
-
-  // Image like node
-  if (
-    node.type == "RECTANGLE" &&
-    node.fills !== figma.mixed &&
-    node.fills.length
-  ) {
-    const fill = node.fills[0];
-    if (fill.type === "IMAGE" && fill.imageHash) {
-      return [
-        {
-          type: "image",
-          id: node.id,
-          name: node.name,
-          imageID: fill.imageHash,
-          style: {
-            ...getDimensionStyleMixin(node, positionOffset),
-            ...getRectangleStyleMixin(node),
-            objectFit: convertScaleMode(fill.scaleMode),
-          },
-        },
-      ];
-    }
-  }
-
-  if (svgLikeNodeChecker.check(node)) {
-    try {
-      const svg = await node.exportAsync({ format: "SVG" });
-      const svgText = String.fromCharCode(...svg);
-
-      return [
-        {
-          type: "svg",
-          id: node.id,
-          name: node.name,
-          svg: svgText,
-          style: {
-            ...getDimensionStyleMixin(node as FrameNode, positionOffset),
-            ...getRectangleStyleMixin(node as FrameNode),
-          },
-        },
-      ];
-    } catch (error) {
-      console.error(`error exporting ${node.name} to SVG`);
-      console.error(String(error));
-      return [];
-    }
-  }
-
-  switch (node.type) {
-    case "TEXT": {
-      return [
-        {
-          type: "text",
-          id: node.id,
-          name: node.name,
-          content: node.characters,
-          style: {
-            ...getDimensionStyleMixin(node, positionOffset),
-            ...getTextSpanStyleMixin(node),
-            ...getTextStyleMixin(node),
-          },
-        },
-      ];
-    }
-    case "COMPONENT":
-    case "COMPONENT_SET":
-    case "INSTANCE":
-    case "FRAME": {
-      const children = (
-        await Promise.all(node.children.map((child) => toElementIR(child)))
-      ).flat();
-
-      return [
-        {
-          type: "frame",
-          id: node.id,
-          name: node.name,
-          children,
-          style: {
-            ...getDimensionStyleMixin(node, positionOffset),
-            ...getRectangleStyleMixin(node),
-            ...getFrameStyleMixin(node),
-          },
-        },
-      ];
-    }
-    case "GROUP": {
-      const parent = node.parent;
-
-      if (parent && "layoutMode" in parent && parent.layoutMode !== "NONE") {
-        // treat as frame
-
-        const children = (
-          await Promise.all(
-            node.children.map((child) =>
-              toElementIR(child, {
-                x: -node.x,
-                y: -node.y,
-              })
-            )
-          )
-        ).flat();
-
-        return [
-          {
-            type: "frame",
-            id: node.id,
-            name: node.name,
-            children,
-            style: {
-              ...getDimensionStyleMixin(node, positionOffset),
-
-              borderTopLeftRadius: 0,
-              borderTopRightRadius: 0,
-              borderBottomLeftRadius: 0,
-              borderBottomRightRadius: 0,
-              borderTopWidth: 0,
-              borderRightWidth: 0,
-              borderBottomWidth: 0,
-              borderLeftWidth: 0,
-              border: [],
-              background: [],
-
-              overflow: "visible",
-              flexDirection: "row",
-              gap: 0,
-              paddingTop: 0,
-              paddingRight: 0,
-              paddingBottom: 0,
-              paddingLeft: 0,
-              alignItems: "flex-start",
-              justifyContent: "flex-start",
-            },
-          },
-        ];
-      }
-
-      return (
-        await Promise.all(node.children.map((child) => toElementIR(child)))
-      ).flat();
-    }
-    default: {
-      console.log("ignoring", node.type);
-      return [];
-    }
-  }
 }

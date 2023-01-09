@@ -9,7 +9,7 @@ import { renderInstance } from "./render";
 import { IPluginToUIRPC, IUIToPluginRPC } from "../types/rpc";
 import { RPC } from "@uimix/typed-rpc";
 import { syncAssets } from "./syncAssets";
-import { toElementIR } from "./emit";
+import { toElementIR } from "./codegen/toElementIR";
 
 figma.showUI(__html__, { width: 240, height: 240 });
 
