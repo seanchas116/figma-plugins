@@ -9,7 +9,7 @@ import {
 } from "./style";
 import { svgLikeNodeChecker } from "./SVGLikeNodeChecker";
 
-export async function toElementIR(
+export async function getElementIR(
   node: SceneNode,
   positionOffset: Vector = { x: 0, y: 0 }
 ): Promise<IR.Element[]> {
@@ -87,7 +87,7 @@ export async function toElementIR(
     case "INSTANCE":
     case "FRAME": {
       const children = (
-        await Promise.all(node.children.map((child) => toElementIR(child)))
+        await Promise.all(node.children.map((child) => getElementIR(child)))
       ).flat();
 
       return [
@@ -113,7 +113,7 @@ export async function toElementIR(
         const children = (
           await Promise.all(
             node.children.map((child) =>
-              toElementIR(child, {
+              getElementIR(child, {
                 x: -node.x,
                 y: -node.y,
               })
@@ -147,7 +147,7 @@ export async function toElementIR(
       }
 
       return (
-        await Promise.all(node.children.map((child) => toElementIR(child)))
+        await Promise.all(node.children.map((child) => getElementIR(child)))
       ).flat();
     }
     default: {

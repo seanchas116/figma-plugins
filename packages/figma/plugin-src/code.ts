@@ -9,9 +9,9 @@ import { renderInstance } from "./render";
 import { IPluginToUIRPC, IUIToPluginRPC } from "../types/rpc";
 import { RPC } from "@uimix/typed-rpc";
 import { syncAssets } from "./syncAssets";
-import { toElementIR } from "./codegen/toElementIR";
+import { getElementIR } from "./codegen/element";
 import { Component } from "@uimix/element-ir";
-import { toComponents } from "./codegen/toComponents";
+import { getComponentIRs } from "./codegen/component";
 
 figma.showUI(__html__, { width: 240, height: 240 });
 
@@ -72,7 +72,7 @@ const onSelectionChange = async () => {
 
       return {
         instance,
-        elementIR: await toElementIR(node),
+        elementIR: await getElementIR(node),
       };
     })
   );
@@ -120,7 +120,7 @@ class RPCHandler implements IUIToPluginRPC {
   }
 
   async exportWholeDocument(): Promise<Component[]> {
-    return await toComponents();
+    return await getComponentIRs(figma.currentPage);
   }
 }
 
