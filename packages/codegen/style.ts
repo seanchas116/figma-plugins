@@ -12,18 +12,6 @@ import { kebabCase } from "lodash-es";
 
 export type ParentLayout = "row" | "column";
 
-function clearUndefined(obj: CSS.Properties): CSS.Properties {
-  const result: CSS.Properties = {};
-  for (const key in obj) {
-    // @ts-ignore
-    if (obj[key] !== undefined) {
-      // @ts-ignore
-      result[key] = obj[key];
-    }
-  }
-  return result;
-}
-
 export function dimensionCSS(
   mixin: Partial<DimensionStyleMixin>
 ): CSS.Properties {

@@ -2,8 +2,6 @@ import { Component, Element } from "@uimix/element-ir";
 import { camelCase, capitalize } from "lodash-es";
 import * as svgParser from "svg-parser";
 import {
-  ParentLayout,
-  stringifyStyle,
   dimensionCSS,
   rectangleCSS,
   frameCSS,
