@@ -91,15 +91,19 @@ export async function getElementIR(
           // export as instance
           // TODO: load remote component?
 
+          const properties: Record<string, any> = {};
+          for (const [name, info] of Object.entries(node.componentProperties)) {
+            properties[name] = info.value;
+          }
+          console.log(properties);
+
           return [
             {
               type: "instance",
               id: node.id,
               name: node.name,
               componentKey: node.mainComponent.key,
-              properties: {
-                // TODO
-              },
+              properties,
             },
           ];
         }
