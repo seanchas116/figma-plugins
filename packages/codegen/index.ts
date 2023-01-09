@@ -106,13 +106,17 @@ export class Generator {
         return this.generateTag("svg", properties, [svgChildren]);
       }
       case "text": {
-        return this.generateTag("div", {
-          style: stringifyStyle({
-            ...dimensionCSS(element.style, parentLayout),
-            ...textSpanCSS(element.style),
-            ...textCSS(element.style),
-          }),
-        });
+        return this.generateTag(
+          "div",
+          {
+            style: stringifyStyle({
+              ...dimensionCSS(element.style, parentLayout),
+              ...textSpanCSS(element.style),
+              ...textCSS(element.style),
+            }),
+          },
+          [element.content]
+        );
       }
     }
   }
