@@ -1,4 +1,5 @@
 import { Component, Element } from "@uimix/element-ir";
+import { camelCase } from "lodash-es";
 import * as svgParser from "svg-parser";
 import {
   ParentLayout,
@@ -13,26 +14,31 @@ import {
 
 interface GeneratorOptions {
   jsx?: boolean;
+  components?: Record<string, Component>;
 }
 
 export class Generator {
   constructor(options: GeneratorOptions = {}) {
     this.options = {
       jsx: options.jsx ?? false,
+      components: new Map(Object.entries(options.components ?? {})),
     };
   }
 
   private options: {
     jsx: boolean;
+    components: Map<string, Component>;
   };
 
   private generateTag(
     tagName: string,
-    props: Record<string, string>,
+    props: Record<string, string | number | boolean>,
     children: string[] = []
   ): string[] {
     const propsStr = Object.entries(props)
-      .map(([key, value]) => (value ? `${key}=${JSON.stringify(value)}` : key))
+      .map(([key, value]) =>
+        value ? `${key}={${JSON.stringify(value)}}` : key
+      )
       .join(" ");
     return [`<${tagName} ${propsStr}>`, ...children, `</${tagName}>`];
   }
@@ -40,10 +46,18 @@ export class Generator {
   generateElement(element: Element, parentLayout?: ParentLayout): string[] {
     switch (element.type) {
       case "instance": {
-        // TODO
-        return this.generateTag("div", {
-          "component-key": element.componentKey,
-        });
+        const component = this.options.components.get(element.componentKey);
+        if (component) {
+          const props: Record<string, string> = {};
+          for (const [key, value] of Object.entries(element.properties)) {
+            const codeName = camelCase(key.split("#")[0]);
+            props[codeName] = value;
+          }
+          console.log(props);
+          return this.generateTag(component.element.name, props);
+        }
+        console.error('Component not found: "' + element.componentKey + '"');
+        return [];
       }
       case "frame": {
         return this.generateTag(
