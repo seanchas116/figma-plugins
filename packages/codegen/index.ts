@@ -1,11 +1,51 @@
-import { Component, Element } from "@uimix/element-ir";
+import {
+  Component,
+  Element,
+  FrameStyle,
+  ImageStyle,
+  SVGStyle,
+  TextStyle,
+} from "@uimix/element-ir";
 import { camelCase, capitalize } from "lodash-es";
 import * as svgParser from "svg-parser";
 import { textCSS, svgCSS, frameCSS, imageCSS } from "./style";
 
+export type Props = Record<string, any>;
+
+export interface IStyleGenerator {
+  frameCSS(style: Partial<FrameStyle>): Props;
+  imageCSS(style: Partial<ImageStyle>): Props;
+  svgCSS(style: Partial<SVGStyle>): Props;
+  textCSS(style: Partial<TextStyle>): Props;
+}
+
+export class InlineStyleGenerator implements IStyleGenerator {
+  frameCSS(style: Partial<FrameStyle>) {
+    return {
+      style: frameCSS(style),
+    };
+  }
+  imageCSS(style: Partial<ImageStyle>) {
+    return {
+      style: imageCSS(style),
+    };
+  }
+  svgCSS(style: Partial<SVGStyle>): Props {
+    return {
+      style: svgCSS(style),
+    };
+  }
+  textCSS(style: Partial<TextStyle>): Props {
+    return {
+      style: textCSS(style),
+    };
+  }
+}
+
 interface GeneratorOptions {
   jsx?: boolean;
   components?: Record<string, Component>;
+  styleGenerator?: IStyleGenerator;
 }
 
 export class Generator {
@@ -14,12 +54,14 @@ export class Generator {
       jsx: options.jsx ?? false,
       components: new Map(Object.entries(options.components ?? {})),
     };
+    this.styleGenerator = options.styleGenerator ?? new InlineStyleGenerator();
   }
 
   private options: {
     jsx: boolean;
     components: Map<string, Component>;
   };
+  readonly styleGenerator: IStyleGenerator;
 
   private generateTag(
     tagName: string,
@@ -56,14 +98,14 @@ export class Generator {
         return this.generateTag(
           "div",
           {
-            style: frameCSS(element.style),
+            style: this.styleGenerator.frameCSS(element.style),
           },
           element.children.flatMap((e) => this.generateElement(e))
         );
       }
       case "image": {
         return this.generateTag("img", {
-          style: imageCSS(element.style),
+          style: this.styleGenerator.imageCSS(element.style),
         });
       }
       case "svg": {
@@ -81,7 +123,7 @@ export class Generator {
         const properties: Record<string, any> = {
           ...svgElem.properties,
           style: {
-            ...svgCSS(element.style),
+            ...this.styleGenerator.svgCSS(element.style),
           },
         };
         delete properties.xmlns;
@@ -92,7 +134,7 @@ export class Generator {
         return this.generateTag(
           "div",
           {
-            style: textCSS(element.style),
+            style: this.styleGenerator.textCSS(element.style),
           },
           [element.content]
         );
