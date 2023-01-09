@@ -1,3 +1,5 @@
+import { Element } from "./element";
+
 export interface Component {
   key?: string;
   element: Element;

@@ -1,4 +1,4 @@
-import { Element } from "@uimix/element-ir";
+import { Component, Element } from "@uimix/element-ir";
 import * as svgParser from "svg-parser";
 import {
   ParentLayout,
@@ -101,5 +101,15 @@ export class Generator {
         });
       }
     }
+  }
+
+  generateComponent(component: Component) {
+    const name = component.element.name;
+
+    return [
+      `export function ${name}() { return `,
+      ...this.generateElement(component.element),
+      `}`,
+    ];
   }
 }
