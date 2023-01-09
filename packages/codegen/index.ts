@@ -95,7 +95,7 @@ export class Generator {
           .replace(/^<svg[^>]*>/, "")
           .replace(/<\/svg>$/, "");
 
-        const properties: Record<string, string> = {
+        const properties: Record<string, any> = {
           ...svgElem.properties,
           style: {
             ...dimensionCSS(element.style, parentLayout),
