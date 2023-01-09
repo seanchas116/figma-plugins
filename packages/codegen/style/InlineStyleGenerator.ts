@@ -6,7 +6,7 @@ import {
   ImageStyle,
   ImageStyleMixin,
   InstanceStyle,
-  RectangleFillBorderStyleMixin,
+  RectangleStyleMixin,
   SVGStyle,
   TextSpanStyleMixin,
   TextStyle,
@@ -100,7 +100,7 @@ function colorToCSS(color: Color): string {
 }
 
 function rectangleCSSPartial(
-  mixin: Partial<RectangleFillBorderStyleMixin>
+  mixin: Partial<RectangleStyleMixin>
 ): CSS.Properties {
   const props: CSS.Properties = {};
 

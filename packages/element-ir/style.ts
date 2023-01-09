@@ -53,7 +53,7 @@ export interface DimensionStyleMixin {
   alignSelf: "auto" | "stretch";
 }
 
-export interface RectangleFillBorderStyleMixin {
+export interface RectangleStyleMixin {
   borderRadius: [number, number, number, number]; // TR, TL, BL, BR
   border: Paint[];
   borderWidth: [number, number, number, number]; // T, R, B, L
@@ -90,7 +90,7 @@ export interface ImageStyleMixin {
 
 export interface FrameStyle
   extends DimensionStyleMixin,
-    RectangleFillBorderStyleMixin,
+    RectangleStyleMixin,
     FrameStyleMixin {}
 
 export interface TextStyle
@@ -102,12 +102,12 @@ export interface SVGStyle extends DimensionStyleMixin {}
 
 export interface ImageStyle
   extends DimensionStyleMixin,
-    RectangleFillBorderStyleMixin,
+    RectangleStyleMixin,
     ImageStyleMixin {}
 
 export type InstanceStyle = Partial<
   DimensionStyleMixin &
-    RectangleFillBorderStyleMixin &
+    RectangleStyleMixin &
     FrameStyleMixin &
     TextSpanStyleMixin &
     TextStyleMixin &

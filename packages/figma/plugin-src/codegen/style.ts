@@ -144,7 +144,7 @@ export function getRectangleStyleMixin(
     | ComponentSetNode
     | InstanceNode
     | RectangleNode
-): IR.RectangleFillBorderStyleMixin {
+): IR.RectangleStyleMixin {
   const hasBorder = node.strokes.length > 0;
   return {
     borderRadius: [
