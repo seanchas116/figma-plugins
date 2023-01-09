@@ -52,17 +52,9 @@ export interface DimensionStyleMixin {
 }
 
 export interface RectangleFillBorderStyleMixin {
-  borderTopLeftRadius: number;
-  borderTopRightRadius: number;
-  borderBottomLeftRadius: number;
-  borderBottomRightRadius: number;
-
+  borderRadius: [number, number, number, number]; // TR, TL, BL, BR
   border: Paint[];
-  borderTopWidth: number;
-  borderRightWidth: number;
-  borderBottomWidth: number;
-  borderLeftWidth: number;
-
+  borderWidth: [number, number, number, number]; // T, R, B, L
   background: Paint[];
 }
 
@@ -70,10 +62,7 @@ export interface FrameStyleMixin {
   overflow: "hidden" | "visible"; // TODO: scroll
   flexDirection: "row" | "column";
   gap: number;
-  paddingTop: number;
-  paddingBottom: number;
-  paddingLeft: number;
-  paddingRight: number;
+  padding: [number, number, number, number]; // T, R, B, L
   alignItems: "center" | "flex-start" | "flex-end" | "baseline";
   justifyContent: "center" | "flex-start" | "flex-end" | "space-between";
 }

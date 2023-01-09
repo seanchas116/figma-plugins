@@ -139,14 +139,20 @@ export function getRectangleStyleMixin(
 ): IR.RectangleFillBorderStyleMixin {
   const hasBorder = node.strokes.length > 0;
   return {
-    borderTopLeftRadius: node.topLeftRadius,
-    borderTopRightRadius: node.topRightRadius,
-    borderBottomLeftRadius: node.bottomLeftRadius,
-    borderBottomRightRadius: node.bottomRightRadius,
-    borderTopWidth: hasBorder ? node.strokeTopWeight : 0,
-    borderRightWidth: hasBorder ? node.strokeRightWeight : 0,
-    borderBottomWidth: hasBorder ? node.strokeBottomWeight : 0,
-    borderLeftWidth: hasBorder ? node.strokeLeftWeight : 0,
+    borderRadius: [
+      node.topLeftRadius,
+      node.topRightRadius,
+      node.bottomRightRadius,
+      node.bottomLeftRadius,
+    ],
+    borderWidth: hasBorder
+      ? [
+          node.strokeTopWeight,
+          node.strokeRightWeight,
+          node.strokeBottomWeight,
+          node.strokeLeftWeight,
+        ]
+      : [0, 0, 0, 0],
     border: node.strokes.map(convertPaint),
     background: node.fills === figma.mixed ? [] : node.fills.map(convertPaint),
   };
@@ -159,10 +165,12 @@ export function getFrameStyleMixin(
     overflow: node.clipsContent ? "hidden" : "visible",
     flexDirection: node.layoutMode === "HORIZONTAL" ? "row" : "column",
     gap: node.itemSpacing,
-    paddingTop: node.paddingTop,
-    paddingRight: node.paddingRight,
-    paddingBottom: node.paddingBottom,
-    paddingLeft: node.paddingLeft,
+    padding: [
+      node.paddingTop,
+      node.paddingRight,
+      node.paddingBottom,
+      node.paddingLeft,
+    ],
     alignItems:
       node.counterAxisAlignItems === "CENTER"
         ? "center"

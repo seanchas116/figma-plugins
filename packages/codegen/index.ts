@@ -108,8 +108,8 @@ function rectangleCSS(mixin: RectangleFillBorderStyleMixin): CSS.Properties {
     }
   }
 
-  props.borderRadius = `${mixin.borderTopLeftRadius}px ${mixin.borderTopRightRadius}px ${mixin.borderBottomRightRadius}px ${mixin.borderBottomLeftRadius}px`;
-  props.borderWidth = `${mixin.borderTopWidth}px ${mixin.borderRightWidth}px ${mixin.borderBottomWidth}px ${mixin.borderLeftWidth}px`;
+  props.borderRadius = mixin.borderRadius.map((r) => `${r}px`).join(" ");
+  props.borderWidth = mixin.borderWidth.map((r) => `${r}px`).join(" ");
 
   return props;
 }
@@ -121,7 +121,7 @@ function frameCSS(mixin: FrameStyleMixin): CSS.Properties {
   props.flexDirection = mixin.flexDirection;
   props.gap = `${mixin.gap}px`;
   // TODO: adjust padding based on border width
-  props.padding = `${mixin.paddingTop}px ${mixin.paddingRight}px ${mixin.paddingBottom}px ${mixin.paddingLeft}px`;
+  props.padding = mixin.padding.map((r) => `${r}px`).join(" ");
   props.alignItems = mixin.alignItems;
   props.justifyContent = mixin.justifyContent;
 
