@@ -104,6 +104,7 @@ export async function getElementIR(
               name: node.name,
               componentKey: node.mainComponent.key,
               properties,
+              style: {}, // TODO
             },
           ];
         }

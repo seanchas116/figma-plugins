@@ -44,11 +44,9 @@ class State {
       const html = elements
         .flatMap((elem) => {
           // remove positions from root elements
-          if ("style" in elem) {
-            elem.style.position = "relative";
-            elem.style.x = { left: 0 };
-            elem.style.y = { top: 0 };
-          }
+          elem.style.position = "relative";
+          elem.style.x = { left: 0 };
+          elem.style.y = { top: 0 };
           return new Generator().generateElement(elem);
         })
         .join("");

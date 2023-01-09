@@ -34,6 +34,7 @@ export interface InstanceElement extends CommonProps {
   componentKey: string;
   properties: Record<string, any>;
   // overrides are not supported (instances are inlined if any overrides are present)
+  style: Partial<FrameStyle>;
 }
 
 export type Element =

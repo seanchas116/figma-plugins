@@ -120,9 +120,19 @@ export class Generator {
   generateComponent(component: Component) {
     const name = component.element.name;
 
+    const element = {
+      ...component.element,
+      style: {
+        ...component.element.style,
+        position: "relative",
+        x: { left: 0 },
+        y: { top: 0 },
+      },
+    };
+
     return [
       `export function ${name}() { return `,
-      ...this.generateElement(component.element),
+      ...this.generateElement(element),
       `}`,
     ];
   }
