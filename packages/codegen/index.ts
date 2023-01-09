@@ -32,7 +32,7 @@ export class Generator {
 
   private generateTag(
     tagName: string,
-    props: Record<string, string | number | boolean>,
+    props: Record<string, any>,
     children: string[] = []
   ): string[] {
     const propsStr = Object.entries(props)
@@ -63,11 +63,11 @@ export class Generator {
         return this.generateTag(
           "div",
           {
-            style: stringifyStyle({
+            style: {
               ...dimensionCSS(element.style, parentLayout),
               ...rectangleCSS(element.style),
               ...frameCSS(element.style),
-            }),
+            },
           },
           element.children.flatMap((e) =>
             this.generateElement(e, element.style.flexDirection)
@@ -76,11 +76,11 @@ export class Generator {
       }
       case "image": {
         return this.generateTag("img", {
-          style: stringifyStyle({
+          style: {
             ...dimensionCSS(element.style, parentLayout),
             ...rectangleCSS(element.style),
             ...imageCSS(element.style),
-          }),
+          },
         });
       }
       case "svg": {
@@ -97,9 +97,9 @@ export class Generator {
 
         const properties: Record<string, string> = {
           ...svgElem.properties,
-          style: stringifyStyle({
+          style: {
             ...dimensionCSS(element.style, parentLayout),
-          }),
+          },
         };
         delete properties.xmlns;
 
@@ -109,11 +109,11 @@ export class Generator {
         return this.generateTag(
           "div",
           {
-            style: stringifyStyle({
+            style: {
               ...dimensionCSS(element.style, parentLayout),
               ...textSpanCSS(element.style),
               ...textCSS(element.style),
-            }),
+            },
           },
           [element.content]
         );
