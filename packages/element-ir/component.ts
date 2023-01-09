@@ -6,18 +6,20 @@ export interface Component {
 
 export interface PropertyDefinition {
   key: string;
-  type:
-    | {
-        type: "boolean";
-      }
-    | {
-        type: "string";
-      }
-    | {
-        type: "enum";
-        options: string[];
-      }
-    | {
-        type: "instance";
-      };
+  type: PropertyType;
 }
+
+export type PropertyType =
+  | {
+      type: "boolean";
+    }
+  | {
+      type: "string";
+    }
+  | {
+      type: "enum";
+      options: string[];
+    }
+  | {
+      type: "instance";
+    };
