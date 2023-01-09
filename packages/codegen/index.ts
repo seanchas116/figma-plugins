@@ -13,7 +13,21 @@ import {
   textCSS,
 } from "./style";
 
+interface GeneratorOptions {
+  jsx?: boolean;
+}
+
 export class Generator {
+  constructor(options: GeneratorOptions = {}) {
+    this.options = {
+      jsx: options.jsx ?? false,
+    };
+  }
+
+  private options: {
+    jsx: boolean;
+  };
+
   generate(element: Element, parentLayout?: ParentLayout): hast.Content {
     switch (element.type) {
       case "instance": {
