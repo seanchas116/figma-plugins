@@ -12,54 +12,88 @@ import { kebabCase } from "lodash-es";
 
 export type ParentLayout = "row" | "column";
 
-export function dimensionCSS(mixin: DimensionStyleMixin): CSS.Properties {
+function clearUndefined(obj: CSS.Properties): CSS.Properties {
+  const result: CSS.Properties = {};
+  for (const key in obj) {
+    // @ts-ignore
+    if (obj[key] !== undefined) {
+      // @ts-ignore
+      result[key] = obj[key];
+    }
+  }
+  return result;
+}
+
+export function dimensionCSS(
+  mixin: Partial<DimensionStyleMixin>
+): CSS.Properties {
   const props: CSS.Properties = {};
 
-  props.display = mixin.display;
-
-  props.position = mixin.position;
+  if (mixin.display !== undefined) {
+    props.display = mixin.display;
+  }
+  if (mixin.position !== undefined) {
+    props.position = mixin.position;
+  }
 
   if (mixin.position === "absolute") {
-    if ("fromCenter" in mixin.x) {
-      props.left = `${mixin.x.fromCenter}px`;
-      props.transform = `translateX(-50%)`;
-    }
-    if ("left" in mixin.x) {
-      props.left = `${mixin.x.left}px`;
-    }
-    if ("right" in mixin.x) {
-      props.right = `${mixin.x.right}px`;
-    }
-
-    if ("fromCenter" in mixin.y) {
-      props.top = `${mixin.y.fromCenter}px`;
-      props.transform = `translateY(-50%)`;
-    }
-    if ("top" in mixin.y) {
-      props.top = `${mixin.y.top}px`;
-    }
-    if ("bottom" in mixin.y) {
-      props.bottom = `${mixin.y.bottom}px`;
+    if (mixin.x !== undefined) {
+      if ("fromCenter" in mixin.x) {
+        props.left = `${mixin.x.fromCenter}px`;
+        props.transform = `translateX(-50%)`;
+      }
+      if ("left" in mixin.x) {
+        props.left = `${mixin.x.left}px`;
+      }
+      if ("right" in mixin.x) {
+        props.right = `${mixin.x.right}px`;
+      }
     }
 
-    if ("fromCenter" in mixin.x && "fromCenter" in mixin.y) {
+    if (mixin.y !== undefined) {
+      if ("fromCenter" in mixin.y) {
+        props.top = `${mixin.y.fromCenter}px`;
+        props.transform = `translateY(-50%)`;
+      }
+      if ("top" in mixin.y) {
+        props.top = `${mixin.y.top}px`;
+      }
+      if ("bottom" in mixin.y) {
+        props.bottom = `${mixin.y.bottom}px`;
+      }
+    }
+
+    if (
+      mixin.x &&
+      mixin.y &&
+      "fromCenter" in mixin.x &&
+      "fromCenter" in mixin.y
+    ) {
       props.transform = `translate(-50%, -50%)`;
     }
   }
 
-  props.flexGrow = mixin.flexGrow;
-  props.alignSelf = mixin.alignSelf;
-
-  if (typeof mixin.width === "number") {
-    props.width = `${mixin.width}px`;
-  } else {
-    props.width = mixin.width;
+  if (mixin.flexGrow !== undefined) {
+    props.flexGrow = mixin.flexGrow;
+  }
+  if (mixin.alignSelf !== undefined) {
+    props.alignSelf = mixin.alignSelf;
   }
 
-  if (typeof mixin.height === "number") {
-    props.height = `${mixin.height}px`;
-  } else {
-    props.height = mixin.height;
+  if (mixin.width !== undefined) {
+    if (typeof mixin.width === "number") {
+      props.width = `${mixin.width}px`;
+    } else {
+      props.width = mixin.width;
+    }
+  }
+
+  if (mixin.height !== undefined) {
+    if (typeof mixin.height === "number") {
+      props.height = `${mixin.height}px`;
+    } else {
+      props.height = mixin.height;
+    }
   }
 
   return props;
@@ -74,80 +108,127 @@ function colorToCSS(color: Color): string {
 }
 
 export function rectangleCSS(
-  mixin: RectangleFillBorderStyleMixin
+  mixin: Partial<RectangleFillBorderStyleMixin>
 ): CSS.Properties {
   const props: CSS.Properties = {};
 
-  if (mixin.border.length > 0) {
-    const border = mixin.border[0];
-    if (border.type === "solid") {
-      props.borderColor = colorToCSS(border.color);
-    } else {
-      // TODO
+  if (mixin.border !== undefined) {
+    props.borderStyle = "noe";
+    if (mixin.border.length > 0) {
+      const border = mixin.border[0];
+      if (border.type === "solid") {
+        props.borderStyle = "solid";
+        props.borderColor = colorToCSS(border.color);
+      } else {
+        // TODO
+      }
     }
   }
 
-  if (mixin.background.length > 0) {
-    const background = mixin.background[0];
-    if (background.type === "solid") {
-      props.backgroundColor = colorToCSS(background.color);
-    } else {
-      // TODO
+  if (mixin.background !== undefined) {
+    if (mixin.background.length > 0) {
+      props.background = "none";
+      const background = mixin.background[0];
+      if (background.type === "solid") {
+        props.background = colorToCSS(background.color);
+      } else {
+        // TODO
+      }
     }
   }
 
-  props.borderRadius = mixin.borderRadius.map((r) => `${r}px`).join(" ");
-  props.borderWidth = mixin.borderWidth.map((r) => `${r}px`).join(" ");
-
-  return props;
-}
-
-export function frameCSS(mixin: FrameStyleMixin): CSS.Properties {
-  const props: CSS.Properties = {};
-
-  props.overflow = mixin.overflow;
-  props.flexDirection = mixin.flexDirection;
-  props.gap = `${mixin.gap}px`;
-  // TODO: adjust padding based on border width
-  props.padding = mixin.padding.map((r) => `${r}px`).join(" ");
-  props.alignItems = mixin.alignItems;
-  props.justifyContent = mixin.justifyContent;
-
-  return props;
-}
-
-export function textSpanCSS(mixin: TextSpanStyleMixin): CSS.Properties {
-  const props: CSS.Properties = {};
-  props.fontFamily = mixin.fontFamily;
-  props.fontSize = `${mixin.fontSize}px`;
-  props.fontWeight = mixin.fontWeight;
-  props.fontStyle = mixin.fontStyle;
-  props.lineHeight = mixin.lineHeight;
-  props.letterSpacing = `${mixin.letterSpacing}em`;
-
-  if (mixin.color.length > 0) {
-    const color = mixin.color[0];
-    if (color.type === "solid") {
-      props.color = colorToCSS(color.color);
-    }
+  if (mixin.borderRadius !== undefined) {
+    props.borderRadius = mixin.borderRadius?.map((r) => `${r}px`).join(" ");
+  }
+  if (mixin.borderWidth !== undefined) {
+    props.borderWidth = mixin.borderWidth?.map((r) => `${r}px`).join(" ");
   }
 
   return props;
 }
 
-export function textCSS(mixin: TextStyleMixin): CSS.Properties {
+export function frameCSS(mixin: Partial<FrameStyleMixin>): CSS.Properties {
   const props: CSS.Properties = {};
 
-  props.flexDirection = "column";
-  props.textAlign = mixin.textAlign;
-  props.justifyContent = mixin.justifyContent;
+  if (mixin.overflow !== undefined) {
+    props.overflow = mixin.overflow;
+  }
+  if (mixin.flexDirection !== undefined) {
+    props.flexDirection = mixin.flexDirection;
+  }
+  if (mixin.gap !== undefined) {
+    props.gap = `${mixin.gap}px`;
+  }
+  if (mixin.padding !== undefined) {
+    // TODO: adjust padding based on border width
+    props.padding = mixin.padding.map((r) => `${r}px`).join(" ");
+  }
+  if (mixin.alignItems !== undefined) {
+    props.alignItems = mixin.alignItems;
+  }
+  if (mixin.justifyContent !== undefined) {
+    props.justifyContent = mixin.justifyContent;
+  }
 
   return props;
 }
 
-export function imageCSS(mixin: ImageStyleMixin): CSS.Properties {
+export function textSpanCSS(
+  mixin: Partial<TextSpanStyleMixin>
+): CSS.Properties {
   const props: CSS.Properties = {};
-  props.objectFit = mixin.objectFit;
+  if (mixin.fontFamily !== undefined) {
+    props.fontFamily = mixin.fontFamily;
+  }
+  if (mixin.fontSize !== undefined) {
+    props.fontSize = `${mixin.fontSize}px`;
+  }
+  if (mixin.fontWeight !== undefined) {
+    props.fontWeight = mixin.fontWeight;
+  }
+  if (mixin.fontStyle !== undefined) {
+    props.fontStyle = mixin.fontStyle;
+  }
+  if (mixin.lineHeight !== undefined) {
+    props.lineHeight = mixin.lineHeight;
+  }
+  if (mixin.letterSpacing !== undefined) {
+    props.letterSpacing = `${mixin.letterSpacing}em`;
+  }
+
+  if (mixin.color !== undefined) {
+    props.color = "black";
+    if (mixin.color.length > 0) {
+      const color = mixin.color[0];
+      if (color.type === "solid") {
+        props.color = colorToCSS(color.color);
+      }
+    }
+  }
+
+  return props;
+}
+
+export function textCSS(mixin: Partial<TextStyleMixin>): CSS.Properties {
+  const props: CSS.Properties = {};
+
+  if (mixin.textAlign !== undefined) {
+    props.textAlign = mixin.textAlign;
+  }
+  if (mixin.justifyContent !== undefined) {
+    props.flexDirection = "column";
+    props.justifyContent = mixin.justifyContent;
+  }
+
+  return props;
+}
+
+export function imageCSS(mixin: Partial<ImageStyleMixin>): CSS.Properties {
+  const props: CSS.Properties = {};
+
+  if (mixin.objectFit !== undefined) {
+    props.objectFit = mixin.objectFit;
+  }
   return props;
 }
 
