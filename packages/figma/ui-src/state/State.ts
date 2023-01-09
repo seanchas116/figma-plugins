@@ -1,5 +1,5 @@
 import { signal } from "@preact/signals";
-import { generateHTMLWithInlineCSS } from "@uimix/codegen";
+import { Generator } from "@uimix/codegen";
 import { CodeAssets, CodeInstanceInfo, Target } from "../../types/data";
 import { rpc } from "../rpc";
 import { toHtml } from "hast-util-to-html";
@@ -44,10 +44,12 @@ class State {
       const elements = this.target?.elementIR ?? [];
       const ast = elements.map((elem) => {
         // remove positions from root elements
-        elem.style.position = "relative";
-        elem.style.x = { left: 0 };
-        elem.style.y = { top: 0 };
-        return generateHTMLWithInlineCSS(elem);
+        if ("style" in elem) {
+          elem.style.position = "relative";
+          elem.style.x = { left: 0 };
+          elem.style.y = { top: 0 };
+        }
+        return new Generator().generate(elem);
       });
 
       const html = toHtml({

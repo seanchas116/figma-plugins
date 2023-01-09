@@ -13,72 +13,71 @@ import {
   textCSS,
 } from "./style";
 
-export function generateHTMLWithInlineCSS(
-  element: Element,
-  parentLayout?: ParentLayout
-): hast.Content {
-  switch (element.type) {
-    case "instance": {
-      // TODO
-      return h("div", {
-        "component-key": element.componentKey,
-      });
-    }
-    case "frame": {
-      return h(
-        "div",
-        {
+export class Generator {
+  generate(element: Element, parentLayout?: ParentLayout): hast.Content {
+    switch (element.type) {
+      case "instance": {
+        // TODO
+        return h("div", {
+          "component-key": element.componentKey,
+        });
+      }
+      case "frame": {
+        return h(
+          "div",
+          {
+            style: stringifyStyle({
+              ...dimensionCSS(element.style, parentLayout),
+              ...rectangleCSS(element.style),
+              ...frameCSS(element.style),
+            }),
+          },
+          ...element.children.map((e) =>
+            this.generate(e, element.style.flexDirection)
+          )
+        );
+      }
+      case "image": {
+        return h("img", {
           style: stringifyStyle({
             ...dimensionCSS(element.style, parentLayout),
             ...rectangleCSS(element.style),
-            ...frameCSS(element.style),
+            ...imageCSS(element.style),
           }),
-        },
-        ...element.children.map((e) =>
-          generateHTMLWithInlineCSS(e, element.style.flexDirection)
-        )
-      );
-    }
-    case "image": {
-      return h("img", {
-        style: stringifyStyle({
-          ...dimensionCSS(element.style, parentLayout),
-          ...rectangleCSS(element.style),
-          ...imageCSS(element.style),
-        }),
-      });
-    }
-    case "svg": {
-      const root = svgParser.parse(element.svg) as hast.Root;
-      const svgElem = root.children[0];
-      if (svgElem.type !== "element") {
-        throw new Error("Expected element type");
+        });
       }
+      case "svg": {
+        const root = svgParser.parse(element.svg) as hast.Root;
+        const svgElem = root.children[0];
+        if (svgElem.type !== "element") {
+          throw new Error("Expected element type");
+        }
 
-      const properties: hast.Properties = {
-        ...svgElem.properties,
-        style: stringifyStyle({
-          ...dimensionCSS(element.style, parentLayout),
-        }),
-      };
-      delete properties.xmlns;
-      return {
-        ...svgElem,
-        properties,
-      };
-    }
-    case "text": {
-      return h(
-        "div",
-        {
+        const properties: hast.Properties = {
+          ...svgElem.properties,
           style: stringifyStyle({
             ...dimensionCSS(element.style, parentLayout),
-            ...textSpanCSS(element.style),
-            ...textCSS(element.style),
           }),
-        },
-        element.content
-      );
+        };
+        delete properties.xmlns;
+        return {
+          ...svgElem,
+          properties,
+        };
+      }
+      case "text": {
+        return h(
+          "div",
+          {
+            style: stringifyStyle({
+              ...dimensionCSS(element.style, parentLayout),
+              ...textSpanCSS(element.style),
+              ...textCSS(element.style),
+            }),
+          },
+          element.content
+        );
+      }
     }
   }
 }
