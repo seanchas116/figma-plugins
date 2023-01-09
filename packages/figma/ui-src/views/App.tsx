@@ -9,6 +9,7 @@ import { Tabs, TabItem } from "../components/Tabs";
 import { CodePanel } from "./CodePanel";
 import { SettingsDialog } from "./SettingsDialog";
 import { isTextInput } from "../util/isTextInput";
+import { ExportPanel } from "./ExportPanel";
 
 const AppTabs: FunctionComponent = () => {
   return (
@@ -56,6 +57,7 @@ export const App: FunctionComponent = () => {
       <AppTabs />
       {state.$selectedTab.value === "layer" && <LayerPanel />}
       {state.$selectedTab.value === "code" && <CodePanel />}
+      {state.$selectedTab.value === "export" && <ExportPanel />}
       <CodeComponentIFrame />
       <SettingsDialog />
       <Resizer />
