@@ -1,5 +1,5 @@
 export interface Component {
-  key: string;
+  key?: string;
   element: Element;
   propertyDefinitions: PropertyDefinition[];
 }
