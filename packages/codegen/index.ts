@@ -43,7 +43,7 @@ export class Generator {
     return [`<${tagName} ${propsStr}>`, ...children, `</${tagName}>`];
   }
 
-  generateElement(element: Element, parentLayout?: ParentLayout): string[] {
+  generateElement(element: Element): string[] {
     switch (element.type) {
       case "instance": {
         const component = this.options.components.get(element.componentKey);
@@ -64,20 +64,18 @@ export class Generator {
           "div",
           {
             style: {
-              ...dimensionCSS(element.style, parentLayout),
+              ...dimensionCSS(element.style),
               ...rectangleCSS(element.style),
               ...frameCSS(element.style),
             },
           },
-          element.children.flatMap((e) =>
-            this.generateElement(e, element.style.flexDirection)
-          )
+          element.children.flatMap((e) => this.generateElement(e))
         );
       }
       case "image": {
         return this.generateTag("img", {
           style: {
-            ...dimensionCSS(element.style, parentLayout),
+            ...dimensionCSS(element.style),
             ...rectangleCSS(element.style),
             ...imageCSS(element.style),
           },
@@ -98,7 +96,7 @@ export class Generator {
         const properties: Record<string, any> = {
           ...svgElem.properties,
           style: {
-            ...dimensionCSS(element.style, parentLayout),
+            ...dimensionCSS(element.style),
           },
         };
         delete properties.xmlns;
@@ -110,7 +108,7 @@ export class Generator {
           "div",
           {
             style: {
-              ...dimensionCSS(element.style, parentLayout),
+              ...dimensionCSS(element.style),
               ...textSpanCSS(element.style),
               ...textCSS(element.style),
             },

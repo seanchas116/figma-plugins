@@ -1,25 +1,18 @@
 import {
   Color,
   DimensionStyleMixin,
-  Element,
   FrameStyleMixin,
   ImageStyleMixin,
   RectangleFillBorderStyleMixin,
   TextSpanStyleMixin,
   TextStyleMixin,
 } from "@uimix/element-ir";
-import type * as hast from "hast";
-import * as svgParser from "svg-parser";
-import { h } from "hastscript";
 import * as CSS from "csstype";
 import { kebabCase } from "lodash-es";
 
 export type ParentLayout = "row" | "column";
 
-export function dimensionCSS(
-  mixin: DimensionStyleMixin,
-  parentLayout: ParentLayout | undefined
-): CSS.Properties {
+export function dimensionCSS(mixin: DimensionStyleMixin): CSS.Properties {
   const props: CSS.Properties = {};
 
   props.display = mixin.display;
