@@ -1,18 +1,20 @@
 import {
   Color,
   DimensionStyleMixin,
+  FrameStyle,
   FrameStyleMixin,
+  ImageStyle,
   ImageStyleMixin,
   RectangleFillBorderStyleMixin,
+  SVGStyle,
   TextSpanStyleMixin,
+  TextStyle,
   TextStyleMixin,
 } from "@uimix/element-ir";
 import * as CSS from "csstype";
 import { kebabCase } from "lodash-es";
 
-export type ParentLayout = "row" | "column";
-
-export function dimensionCSS(
+function dimensionCSSPartial(
   mixin: Partial<DimensionStyleMixin>
 ): CSS.Properties {
   const props: CSS.Properties = {};
@@ -95,7 +97,7 @@ function colorToCSS(color: Color): string {
   return `rgba(${r}, ${g}, ${b}, ${a})`;
 }
 
-export function rectangleCSS(
+function rectangleCSSPartial(
   mixin: Partial<RectangleFillBorderStyleMixin>
 ): CSS.Properties {
   const props: CSS.Properties = {};
@@ -135,7 +137,7 @@ export function rectangleCSS(
   return props;
 }
 
-export function frameCSS(mixin: Partial<FrameStyleMixin>): CSS.Properties {
+function frameCSSPartial(mixin: Partial<FrameStyleMixin>): CSS.Properties {
   const props: CSS.Properties = {};
 
   if (mixin.overflow !== undefined) {
@@ -161,7 +163,7 @@ export function frameCSS(mixin: Partial<FrameStyleMixin>): CSS.Properties {
   return props;
 }
 
-export function textSpanCSS(
+function textSpanCSSPartial(
   mixin: Partial<TextSpanStyleMixin>
 ): CSS.Properties {
   const props: CSS.Properties = {};
@@ -197,7 +199,7 @@ export function textSpanCSS(
   return props;
 }
 
-export function textCSS(mixin: Partial<TextStyleMixin>): CSS.Properties {
+function textCSSPartial(mixin: Partial<TextStyleMixin>): CSS.Properties {
   const props: CSS.Properties = {};
 
   if (mixin.textAlign !== undefined) {
@@ -211,13 +213,43 @@ export function textCSS(mixin: Partial<TextStyleMixin>): CSS.Properties {
   return props;
 }
 
-export function imageCSS(mixin: Partial<ImageStyleMixin>): CSS.Properties {
+function imageCSSPartial(mixin: Partial<ImageStyleMixin>): CSS.Properties {
   const props: CSS.Properties = {};
 
   if (mixin.objectFit !== undefined) {
     props.objectFit = mixin.objectFit;
   }
   return props;
+}
+
+export function frameCSS(style: Partial<FrameStyle>): CSS.Properties {
+  return {
+    ...dimensionCSSPartial(style),
+    ...rectangleCSSPartial(style),
+    ...frameCSSPartial(style),
+  };
+}
+
+export function imageCSS(style: Partial<ImageStyle>): CSS.Properties {
+  return {
+    ...dimensionCSSPartial(style),
+    ...rectangleCSSPartial(style),
+    ...imageCSSPartial(style),
+  };
+}
+
+export function svgCSS(style: Partial<SVGStyle>): CSS.Properties {
+  return {
+    ...dimensionCSSPartial(style),
+  };
+}
+
+export function textCSS(style: Partial<TextStyle>): CSS.Properties {
+  return {
+    ...dimensionCSSPartial(style),
+    ...textSpanCSSPartial(style),
+    ...textCSSPartial(style),
+  };
 }
 
 export function stringifyStyle(css: CSS.Properties): string {

@@ -1,14 +1,7 @@
 import { Component, Element } from "@uimix/element-ir";
 import { camelCase, capitalize } from "lodash-es";
 import * as svgParser from "svg-parser";
-import {
-  dimensionCSS,
-  rectangleCSS,
-  frameCSS,
-  imageCSS,
-  textSpanCSS,
-  textCSS,
-} from "./style";
+import { textCSS, svgCSS, frameCSS, imageCSS } from "./style";
 
 interface GeneratorOptions {
   jsx?: boolean;
@@ -63,22 +56,14 @@ export class Generator {
         return this.generateTag(
           "div",
           {
-            style: {
-              ...dimensionCSS(element.style),
-              ...rectangleCSS(element.style),
-              ...frameCSS(element.style),
-            },
+            style: frameCSS(element.style),
           },
           element.children.flatMap((e) => this.generateElement(e))
         );
       }
       case "image": {
         return this.generateTag("img", {
-          style: {
-            ...dimensionCSS(element.style),
-            ...rectangleCSS(element.style),
-            ...imageCSS(element.style),
-          },
+          style: imageCSS(element.style),
         });
       }
       case "svg": {
@@ -96,7 +81,7 @@ export class Generator {
         const properties: Record<string, any> = {
           ...svgElem.properties,
           style: {
-            ...dimensionCSS(element.style),
+            ...svgCSS(element.style),
           },
         };
         delete properties.xmlns;
@@ -107,11 +92,7 @@ export class Generator {
         return this.generateTag(
           "div",
           {
-            style: {
-              ...dimensionCSS(element.style),
-              ...textSpanCSS(element.style),
-              ...textCSS(element.style),
-            },
+            style: textCSS(element.style),
           },
           [element.content]
         );
