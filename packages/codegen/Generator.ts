@@ -62,14 +62,14 @@ export class Generator {
         return this.generateTag(
           "div",
           {
-            style: this.styleGenerator.frameCSS(element.style),
+            ...this.styleGenerator.frameCSS(element.style),
           },
           element.children.flatMap((e) => this.generateElement(e))
         );
       }
       case "image": {
         return this.generateTag("img", {
-          style: this.styleGenerator.imageCSS(element.style),
+          ...this.styleGenerator.imageCSS(element.style),
         });
       }
       case "svg": {
@@ -86,9 +86,7 @@ export class Generator {
 
         const properties: Record<string, any> = {
           ...svgElem.properties,
-          style: {
-            ...this.styleGenerator.svgCSS(element.style),
-          },
+          ...this.styleGenerator.svgCSS(element.style),
         };
         delete properties.xmlns;
 
@@ -98,7 +96,7 @@ export class Generator {
         return this.generateTag(
           "div",
           {
-            style: this.styleGenerator.textCSS(element.style),
+            ...this.styleGenerator.textCSS(element.style),
           },
           [element.content]
         );
