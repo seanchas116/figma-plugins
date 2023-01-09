@@ -78,20 +78,26 @@ export function getDimensionStyleMixin(
     }
   }
 
+  let flexGrow = 0;
+  let alignSelf: "auto" | "stretch" = "auto";
+
   if ("layoutGrow" in node) {
+    flexGrow = node.layoutGrow;
+    alignSelf = node.layoutAlign === "STRETCH" ? "stretch" : "auto";
+
     if (parentLayout === "VERTICAL") {
       if (node.layoutGrow) {
-        height = "stretch";
+        height = "auto";
       }
       if (node.layoutAlign === "STRETCH") {
-        width = "stretch";
+        width = "auto";
       }
     } else if (parentLayout === "HORIZONTAL") {
       if (node.layoutGrow) {
-        width = "stretch";
+        width = "auto";
       }
       if (node.layoutAlign === "STRETCH") {
-        height = "stretch";
+        height = "auto";
       }
     }
   }
@@ -126,6 +132,8 @@ export function getDimensionStyleMixin(
     },
     width,
     height,
+    flexGrow,
+    alignSelf,
   };
 }
 

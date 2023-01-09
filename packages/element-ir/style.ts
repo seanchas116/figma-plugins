@@ -47,8 +47,10 @@ export interface DimensionStyleMixin {
     | { bottom: number }
     | { fromCenter: number }
     | { top: number; bottom: number };
-  width: number | "fit-content" | "stretch";
-  height: number | "fit-content" | "stretch";
+  width: number | "fit-content" | "auto"; // "auto" if stretches
+  height: number | "fit-content" | "auto"; // "auto" if stretches
+  flexGrow: number;
+  alignSelf: "auto" | "stretch";
 }
 
 export interface RectangleFillBorderStyleMixin {

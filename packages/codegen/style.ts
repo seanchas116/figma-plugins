@@ -54,30 +54,19 @@ export function dimensionCSS(
     }
   }
 
-  // width/height: stretch is experimental in CSS, so we use flex/align-self instead
+  props.flexGrow = mixin.flexGrow;
+  props.alignSelf = mixin.alignSelf;
 
-  if (mixin.width === "stretch") {
-    if (parentLayout === "row") {
-      props.flex = 1;
-    } else if (parentLayout === "column") {
-      props.alignSelf = "stretch";
-    }
-  } else if (mixin.width === "fit-content") {
-    props.width = mixin.width;
-  } else {
+  if (typeof mixin.width === "number") {
     props.width = `${mixin.width}px`;
+  } else {
+    props.width = mixin.width;
   }
 
-  if (mixin.height === "stretch") {
-    if (parentLayout === "column") {
-      props.flex = 1;
-    } else if (parentLayout === "row") {
-      props.alignSelf = "stretch";
-    }
-  } else if (mixin.height === "fit-content") {
-    props.height = mixin.height;
-  } else {
+  if (typeof mixin.height === "number") {
     props.height = `${mixin.height}px`;
+  } else {
+    props.height = mixin.height;
   }
 
   return props;
