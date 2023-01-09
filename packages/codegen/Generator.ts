@@ -43,7 +43,9 @@ export class Generator {
       case "instance": {
         const component = this.options.components.get(element.componentKey);
         if (component) {
-          const props: Record<string, string> = {};
+          const props: Record<string, string> = {
+            ...this.styleGenerator.instanceCSS(element.style),
+          };
           for (const [key, value] of Object.entries(element.properties)) {
             const codeName = camelCase(key.split("#")[0]);
             props[codeName] = value;
