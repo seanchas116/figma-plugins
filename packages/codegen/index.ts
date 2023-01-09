@@ -1,5 +1,5 @@
 import { Component, Element } from "@uimix/element-ir";
-import { camelCase } from "lodash-es";
+import { camelCase, capitalize } from "lodash-es";
 import * as svgParser from "svg-parser";
 import {
   ParentLayout,
@@ -54,7 +54,9 @@ export class Generator {
             props[codeName] = value;
           }
           console.log(props);
-          return this.generateTag(component.element.name, props);
+          // TODO: generate unique name
+          const name = capitalize(camelCase(component.element.name));
+          return this.generateTag(name, props);
         }
         console.error('Component not found: "' + element.componentKey + '"');
         return [];
@@ -120,7 +122,8 @@ export class Generator {
   }
 
   generateComponent(component: Component) {
-    const name = component.element.name;
+    // TODO: generate unique name
+    const name = capitalize(camelCase(component.element.name));
 
     const element = {
       ...component.element,
