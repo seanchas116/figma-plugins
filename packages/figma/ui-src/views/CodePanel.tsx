@@ -1,21 +1,12 @@
 import { FunctionComponent } from "preact";
 import { Select } from "../components/Input";
 import { state } from "../state/State";
-import Prism from "prismjs";
-import "prismjs/components/prism-json";
-import "prism-themes/themes/prism-material-dark.css";
+import { SyntaxHighlight } from "../components/SyntaxHighlight";
 
 export const CodePanel: FunctionComponent = () => {
   const code = state.code;
   if (!code) {
     return null;
-  }
-
-  let html = "";
-  try {
-    html = Prism.highlight(code.content, Prism.languages[code.type], code.type);
-  } catch (e) {
-    console.error(e);
   }
 
   return (
@@ -45,7 +36,7 @@ export const CodePanel: FunctionComponent = () => {
         <option value="svg">SwiftUI</option>
       </Select>
       <pre className="bg-gray-900 text-white p-2 rounded text-[10px] leading-tight whitespace-pre-wrap">
-        <code dangerouslySetInnerHTML={{ __html: html }} />
+        <SyntaxHighlight content={code.content} type={code.type} />
       </pre>
     </div>
   );
