@@ -45,16 +45,12 @@ export class Generator {
     ];
   }
 
-  generateElement(element: Element, depth = 0): string[] {
-    const propsSpread = depth === 0 ? "{...props}" : "";
-
+  generateElement(element: Element, isRoot = true): string[] {
     switch (element.type) {
       case "instance": {
         const component = this.options.components.get(element.componentKey);
         if (component) {
-          const props: Record<string, string> = {
-            ...this.styleGenerator.instanceCSS(element.style),
-          };
+          const props: Record<string, string> = {};
           for (const [key, value] of Object.entries(element.properties)) {
             const codeName = camelCase(key.split("#")[0]);
             props[codeName] = value;
@@ -62,7 +58,11 @@ export class Generator {
           console.log(props);
           // TODO: generate unique name
           const name = capitalize(camelCase(component.element.name));
-          return this.generateTag(name, props, []);
+          return this.generateTag(
+            name,
+            props,
+            this.styleGenerator.instanceCSS(element.style, isRoot)
+          );
         }
         console.error('Component not found: "' + element.componentKey + '"');
         return [];
@@ -70,20 +70,16 @@ export class Generator {
       case "frame": {
         return this.generateTag(
           "div",
-          {
-            ...this.styleGenerator.frameCSS(element.style),
-          },
-          [propsSpread],
-          element.children.flatMap((e) => this.generateElement(e, depth + 1))
+          {},
+          this.styleGenerator.frameCSS(element.style, isRoot),
+          element.children.flatMap((e) => this.generateElement(e, false))
         );
       }
       case "image": {
         return this.generateTag(
           "img",
-          {
-            ...this.styleGenerator.imageCSS(element.style),
-          },
-          []
+          {},
+          this.styleGenerator.imageCSS(element.style, isRoot)
         );
       }
       case "svg": {
@@ -100,19 +96,21 @@ export class Generator {
 
         const properties: Record<string, any> = {
           ...svgElem.properties,
-          ...this.styleGenerator.svgCSS(element.style),
         };
         delete properties.xmlns;
 
-        return this.generateTag("svg", properties, [], [svgChildren]);
+        return this.generateTag(
+          "svg",
+          properties,
+          this.styleGenerator.svgCSS(element.style, isRoot),
+          [svgChildren]
+        );
       }
       case "text": {
         return this.generateTag(
           "div",
-          {
-            ...this.styleGenerator.textCSS(element.style),
-          },
-          [],
+          {},
+          this.styleGenerator.textCSS(element.style, isRoot),
           [element.content]
         );
       }

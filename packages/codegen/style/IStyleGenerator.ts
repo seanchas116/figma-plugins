@@ -9,9 +9,9 @@ import {
 export type Props = Record<string, any>;
 
 export interface IStyleGenerator {
-  frameCSS(style: Partial<FrameStyle>): Props;
-  imageCSS(style: Partial<ImageStyle>): Props;
-  svgCSS(style: Partial<SVGStyle>): Props;
-  textCSS(style: Partial<TextStyle>): Props;
-  instanceCSS(style: Partial<InstanceStyle>): Props;
+  frameCSS(style: Partial<FrameStyle>, isRoot: boolean): string[];
+  imageCSS(style: Partial<ImageStyle>, isRoot: boolean): string[];
+  svgCSS(style: Partial<SVGStyle>, isRoot: boolean): string[];
+  textCSS(style: Partial<TextStyle>, isRoot: boolean): string[];
+  instanceCSS(style: Partial<InstanceStyle>, isRoot: boolean): string[];
 }

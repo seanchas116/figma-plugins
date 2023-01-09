@@ -261,33 +261,33 @@ export function stringifyStyle(css: CSS.Properties): string {
 }
 
 export class InlineStyleGenerator implements IStyleGenerator {
-  frameCSS(style: Partial<FrameStyle>) {
-    return {
-      style: frameCSS(style),
-    };
+  private generate(css: CSS.Properties, root: boolean): string[] {
+    let stringified = JSON.stringify(css);
+    if (root) {
+      stringified = stringified.slice(0, -1) + ", ...props.style}";
+    }
+
+    return ["style={" + stringified + "}"];
   }
-  imageCSS(style: Partial<ImageStyle>) {
-    return {
-      style: imageCSS(style),
-    };
+
+  frameCSS(style: Partial<FrameStyle>, isRoot: boolean) {
+    return this.generate(frameCSS(style), isRoot);
   }
-  svgCSS(style: Partial<SVGStyle>) {
-    return {
-      style: svgCSS(style),
-    };
+  imageCSS(style: Partial<ImageStyle>, isRoot: boolean) {
+    return this.generate(imageCSS(style), isRoot);
   }
-  textCSS(style: Partial<TextStyle>) {
-    return {
-      style: textCSS(style),
-    };
+  svgCSS(style: Partial<SVGStyle>, isRoot: boolean) {
+    return this.generate(svgCSS(style), isRoot);
   }
-  instanceCSS(style: Partial<InstanceStyle>) {
-    return {
-      style: {
-        ...dimensionCSSPartial(style),
-        ...rectangleCSSPartial(style),
-        ...frameCSSPartial(style),
-      },
+  textCSS(style: Partial<TextStyle>, isRoot: boolean) {
+    return this.generate(textCSS(style), isRoot);
+  }
+  instanceCSS(style: Partial<InstanceStyle>, isRoot: boolean) {
+    const css = {
+      ...dimensionCSSPartial(style),
+      ...rectangleCSSPartial(style),
+      ...frameCSSPartial(style),
     };
+    return this.generate(css, isRoot);
   }
 }
