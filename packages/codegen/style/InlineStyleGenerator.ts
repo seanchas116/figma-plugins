@@ -14,6 +14,7 @@ import {
 } from "@uimix/element-ir";
 import * as CSS from "csstype";
 import { kebabCase } from "lodash-es";
+import { colorToCSS } from "./common";
 import { IStyleGenerator } from "./IStyleGenerator";
 
 function dimensionCSSPartial(
@@ -89,14 +90,6 @@ function dimensionCSSPartial(
   }
 
   return props;
-}
-
-function colorToCSS(color: Color): string {
-  const r = Math.round(color.r * 255);
-  const g = Math.round(color.g * 255);
-  const b = Math.round(color.b * 255);
-  const a = color.a;
-  return `rgba(${r}, ${g}, ${b}, ${a})`;
 }
 
 function rectangleCSSPartial(
