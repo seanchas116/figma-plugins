@@ -5,7 +5,7 @@ export interface Component {
 }
 
 export interface PropertyDefinition {
-  key: string;
+  name: string;
   type: PropertyType;
 }
 
