@@ -136,7 +136,7 @@ export class Generator {
 
     return [
       `export function ${name}() { return `,
-      ...this.generateElement(element),
+      ...this.generateElement(element as Element),
       `}`,
     ];
   }
