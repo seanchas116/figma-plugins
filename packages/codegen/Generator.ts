@@ -35,7 +35,9 @@ export class Generator {
       value ? `${key}={${JSON.stringify(value)}}` : key
     );
     return [
-      `<${tagName} ${propsStr}`,
+      `<${tagName} `,
+      ...propsStr,
+      ` `,
       ...tagExtra,
       `>`,
       ...children,
