@@ -105,11 +105,4 @@ export interface ImageStyle
     RectangleStyleMixin,
     ImageStyleMixin {}
 
-export type InstanceStyle = Partial<
-  DimensionStyleMixin &
-    RectangleStyleMixin &
-    FrameStyleMixin &
-    TextSpanStyleMixin &
-    TextStyleMixin &
-    ImageStyleMixin
->;
+export type InstanceStyle = Partial<FrameStyle>;

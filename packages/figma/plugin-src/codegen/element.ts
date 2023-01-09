@@ -1,4 +1,5 @@
 import * as IR from "@uimix/element-ir";
+import { FrameStyle, InstanceStyle } from "@uimix/element-ir";
 import {
   getDimensionStyleMixin,
   getRectangleStyleMixin,
@@ -86,8 +87,18 @@ export async function getElementIR(
     case "COMPONENT_SET":
     case "INSTANCE":
     case "FRAME": {
+      const style = {
+        ...getDimensionStyleMixin(node, positionOffset),
+        ...getRectangleStyleMixin(node),
+        ...getFrameStyleMixin(node),
+      };
+
       if (node.type === "INSTANCE") {
-        if (node.overrides.length === 0 && node.mainComponent) {
+        const hasInnerOverrides = node.overrides.some(
+          (override) => override.id !== node.id
+        );
+
+        if (!hasInnerOverrides && node.mainComponent) {
           // export as instance
           // TODO: load remote component?
 
@@ -95,7 +106,22 @@ export async function getElementIR(
           for (const [name, info] of Object.entries(node.componentProperties)) {
             properties[name] = info.value;
           }
-          console.log(properties);
+
+          const mainStyle: FrameStyle = {
+            ...getDimensionStyleMixin(node.mainComponent, { x: 0, y: 0 }),
+            ...getRectangleStyleMixin(node.mainComponent),
+            ...getFrameStyleMixin(node.mainComponent),
+            position: "relative",
+            x: { left: 0 },
+            y: { top: 0 },
+          };
+          const overrideStyle: InstanceStyle = {};
+          for (const [_key, value] of Object.entries(style)) {
+            const key = _key as keyof InstanceStyle;
+            if (JSON.stringify(value) !== JSON.stringify(mainStyle[key])) {
+              overrideStyle[key] = value as any;
+            }
+          }
 
           return [
             {
@@ -104,7 +130,7 @@ export async function getElementIR(
               name: node.name,
               componentKey: node.mainComponent.key,
               properties,
-              style: {}, // TODO
+              style: overrideStyle,
             },
           ];
         }
@@ -120,11 +146,7 @@ export async function getElementIR(
           type: "frame",
           id: node.id,
           name: node.name,
-          style: {
-            ...getDimensionStyleMixin(node, positionOffset),
-            ...getRectangleStyleMixin(node),
-            ...getFrameStyleMixin(node),
-          },
+          style,
           children,
         },
       ];

@@ -287,9 +287,6 @@ export class InlineStyleGenerator implements IStyleGenerator {
         ...dimensionCSSPartial(style),
         ...rectangleCSSPartial(style),
         ...frameCSSPartial(style),
-        ...textSpanCSSPartial(style),
-        ...textCSSPartial(style),
-        ...imageCSSPartial(style),
       },
     };
   }
