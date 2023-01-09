@@ -10,6 +10,8 @@ import { IPluginToUIRPC, IUIToPluginRPC } from "../types/rpc";
 import { RPC } from "@uimix/typed-rpc";
 import { syncAssets } from "./syncAssets";
 import { toElementIR } from "./codegen/toElementIR";
+import { Component } from "@uimix/element-ir";
+import { toComponents } from "./codegen/toComponents";
 
 figma.showUI(__html__, { width: 240, height: 240 });
 
@@ -115,6 +117,10 @@ class RPCHandler implements IUIToPluginRPC {
   }
   async resize(width: number, height: number): Promise<void> {
     figma.ui.resize(width, height);
+  }
+
+  async exportWholeDocument(): Promise<Component[]> {
+    return await toComponents();
   }
 }
 

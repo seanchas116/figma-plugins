@@ -1,17 +1,18 @@
 import {
-  CodeInstanceInfo,
   CodeAssets,
   CodeComponentInfo,
   RenderResult,
   CodeInstanceParams,
   Target,
 } from "./data";
+import * as IR from "@uimix/element-ir";
 
 export interface IUIToPluginRPC {
   ready(): Promise<void>;
   updateInstance(instance?: CodeInstanceParams): Promise<void>;
   syncCodeAssets(assets: CodeAssets): Promise<void>;
   resize(width: number, height: number): Promise<void>;
+  exportWholeDocument(): Promise<IR.Component[]>;
 }
 
 export interface IPluginToUIRPC {
