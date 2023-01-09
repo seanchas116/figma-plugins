@@ -13,6 +13,7 @@ import {
 } from "@uimix/element-ir";
 import * as CSS from "csstype";
 import { kebabCase } from "lodash-es";
+import { IStyleGenerator } from "./IStyleGenerator";
 
 function dimensionCSSPartial(
   mixin: Partial<DimensionStyleMixin>
@@ -256,4 +257,27 @@ export function stringifyStyle(css: CSS.Properties): string {
   return Object.entries(css)
     .map(([key, value]) => `${kebabCase(key)}: ${value}`)
     .join("; ");
+}
+
+export class InlineStyleGenerator implements IStyleGenerator {
+  frameCSS(style: Partial<FrameStyle>) {
+    return {
+      style: frameCSS(style),
+    };
+  }
+  imageCSS(style: Partial<ImageStyle>) {
+    return {
+      style: imageCSS(style),
+    };
+  }
+  svgCSS(style: Partial<SVGStyle>) {
+    return {
+      style: svgCSS(style),
+    };
+  }
+  textCSS(style: Partial<TextStyle>) {
+    return {
+      style: textCSS(style),
+    };
+  }
 }
