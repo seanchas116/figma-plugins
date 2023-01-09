@@ -29,4 +29,10 @@ export interface SVGElement extends CommonProps {
   svg: string;
 }
 
+export interface InstanceElement extends CommonProps {
+  type: "instance";
+  componentKey: string;
+  properties: Record<string, any>;
+}
+
 export type Element = FrameElement | TextElement | ImageElement | SVGElement;
