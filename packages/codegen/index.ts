@@ -174,6 +174,12 @@ export function generateHTMLWithInlineCSS(
   parentLayout?: ParentLayout
 ): hast.Content {
   switch (element.type) {
+    case "instance": {
+      // TODO
+      return h("div", {
+        "component-key": element.componentKey,
+      });
+    }
     case "frame": {
       return h(
         "div",

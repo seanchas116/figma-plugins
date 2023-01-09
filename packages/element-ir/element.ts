@@ -36,4 +36,9 @@ export interface InstanceElement extends CommonProps {
   // overrides are not supported (instances are inlined if any overrides are present)
 }
 
-export type Element = FrameElement | TextElement | ImageElement | SVGElement;
+export type Element =
+  | FrameElement
+  | TextElement
+  | ImageElement
+  | SVGElement
+  | InstanceElement;

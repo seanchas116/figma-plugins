@@ -86,6 +86,26 @@ export async function getElementIR(
     case "COMPONENT_SET":
     case "INSTANCE":
     case "FRAME": {
+      if (node.type === "INSTANCE") {
+        if (node.overrides.length === 0 && node.mainComponent) {
+          // export as instance
+          // TODO: load remote component?
+
+          return [
+            {
+              type: "instance",
+              id: node.id,
+              name: node.name,
+              componentKey: node.mainComponent.key,
+              properties: {
+                // TODO
+              },
+            },
+          ];
+        }
+        console.log(node.overrides);
+      }
+
       const children = (
         await Promise.all(node.children.map((child) => getElementIR(child)))
       ).flat();
