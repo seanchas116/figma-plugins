@@ -120,12 +120,12 @@ export async function getElementIR(
           type: "frame",
           id: node.id,
           name: node.name,
-          children,
           style: {
             ...getDimensionStyleMixin(node, positionOffset),
             ...getRectangleStyleMixin(node),
             ...getFrameStyleMixin(node),
           },
+          children,
         },
       ];
     }
