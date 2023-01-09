@@ -33,6 +33,7 @@ export interface InstanceElement extends CommonProps {
   type: "instance";
   componentKey: string;
   properties: Record<string, any>;
+  // overrides are not supported (instances are inlined if any overrides are present)
 }
 
 export type Element = FrameElement | TextElement | ImageElement | SVGElement;
