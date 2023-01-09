@@ -1,7 +1,7 @@
 import { Element } from "@uimix/element-ir";
 import type * as hast from "hast";
 import * as svgParser from "svg-parser";
-import { h } from "hastscript";
+import { toHtml } from "hast-util-to-html";
 import {
   ParentLayout,
   stringifyStyle,
@@ -28,16 +28,27 @@ export class Generator {
     jsx: boolean;
   };
 
-  generate(element: Element, parentLayout?: ParentLayout): hast.Content {
+  private generateTag(
+    tagName: string,
+    props: Record<string, string>,
+    children: string[] = []
+  ): string[] {
+    const propsStr = Object.entries(props)
+      .map(([key, value]) => (value ? `${key}=${JSON.stringify(value)}` : key))
+      .join(" ");
+    return [`<${tagName} ${propsStr}>`, ...children, `</${tagName}>`];
+  }
+
+  generate(element: Element, parentLayout?: ParentLayout): string[] {
     switch (element.type) {
       case "instance": {
         // TODO
-        return h("div", {
+        return this.generateTag("div", {
           "component-key": element.componentKey,
         });
       }
       case "frame": {
-        return h(
+        return this.generateTag(
           "div",
           {
             style: stringifyStyle({
@@ -46,13 +57,13 @@ export class Generator {
               ...frameCSS(element.style),
             }),
           },
-          ...element.children.map((e) =>
+          element.children.flatMap((e) =>
             this.generate(e, element.style.flexDirection)
           )
         );
       }
       case "image": {
-        return h("img", {
+        return this.generateTag("img", {
           style: stringifyStyle({
             ...dimensionCSS(element.style, parentLayout),
             ...rectangleCSS(element.style),
@@ -67,30 +78,27 @@ export class Generator {
           throw new Error("Expected element type");
         }
 
-        const properties: hast.Properties = {
+        const children = toHtml(svgElem.children);
+
+        const properties: Record<string, string> = {
           ...svgElem.properties,
           style: stringifyStyle({
             ...dimensionCSS(element.style, parentLayout),
           }),
+          children,
         };
         delete properties.xmlns;
-        return {
-          ...svgElem,
-          properties,
-        };
+
+        return this.generateTag(svgElem.tagName, properties);
       }
       case "text": {
-        return h(
-          "div",
-          {
-            style: stringifyStyle({
-              ...dimensionCSS(element.style, parentLayout),
-              ...textSpanCSS(element.style),
-              ...textCSS(element.style),
-            }),
-          },
-          element.content
-        );
+        return this.generateTag("div", {
+          style: stringifyStyle({
+            ...dimensionCSS(element.style, parentLayout),
+            ...textSpanCSS(element.style),
+            ...textCSS(element.style),
+          }),
+        });
       }
     }
   }

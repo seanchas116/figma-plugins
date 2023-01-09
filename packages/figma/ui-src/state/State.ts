@@ -2,7 +2,6 @@ import { signal } from "@preact/signals";
 import { Generator } from "@uimix/codegen";
 import { CodeAssets, CodeInstanceInfo, Target } from "../../types/data";
 import { rpc } from "../rpc";
-import { toHtml } from "hast-util-to-html";
 import { formatHTML, formatJS } from "../util/format";
 
 export const tabs = [
@@ -42,20 +41,18 @@ class State {
     }
     if (this.$codeFormat.value === "htmlInlineStyle") {
       const elements = this.target?.elementIR ?? [];
-      const ast = elements.map((elem) => {
-        // remove positions from root elements
-        if ("style" in elem) {
-          elem.style.position = "relative";
-          elem.style.x = { left: 0 };
-          elem.style.y = { top: 0 };
-        }
-        return new Generator().generate(elem);
-      });
+      const html = elements
+        .flatMap((elem) => {
+          // remove positions from root elements
+          if ("style" in elem) {
+            elem.style.position = "relative";
+            elem.style.x = { left: 0 };
+            elem.style.y = { top: 0 };
+          }
+          return new Generator().generate(elem);
+        })
+        .join("");
 
-      const html = toHtml({
-        type: "root",
-        children: ast,
-      });
       return { content: formatHTML(html), type: "html" };
     }
   }
