@@ -49,7 +49,7 @@ class State {
             elem.style.x = { left: 0 };
             elem.style.y = { top: 0 };
           }
-          return new Generator().generate(elem);
+          return new Generator().generateElement(elem);
         })
         .join("");
 

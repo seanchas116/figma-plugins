@@ -37,7 +37,7 @@ export class Generator {
     return [`<${tagName} ${propsStr}>`, ...children, `</${tagName}>`];
   }
 
-  generate(element: Element, parentLayout?: ParentLayout): string[] {
+  generateElement(element: Element, parentLayout?: ParentLayout): string[] {
     switch (element.type) {
       case "instance": {
         // TODO
@@ -56,7 +56,7 @@ export class Generator {
             }),
           },
           element.children.flatMap((e) =>
-            this.generate(e, element.style.flexDirection)
+            this.generateElement(e, element.style.flexDirection)
           )
         );
       }
