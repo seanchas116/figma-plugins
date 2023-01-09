@@ -28,16 +28,16 @@ export class Generator {
   private generateTag(
     tagName: string,
     props: Record<string, any>,
-    additionalOpenTagContent = "",
+    tagExtra: string[],
     children: string[] = []
   ): string[] {
-    const propsStr = Object.entries(props)
-      .map(([key, value]) =>
-        value ? `${key}={${JSON.stringify(value)}}` : key
-      )
-      .join(" ");
+    const propsStr = Object.entries(props).map(([key, value]) =>
+      value ? `${key}={${JSON.stringify(value)}}` : key
+    );
     return [
-      `<${tagName} ${propsStr} ${additionalOpenTagContent}>`,
+      `<${tagName} ${propsStr}`,
+      ...tagExtra,
+      `>`,
       ...children,
       `</${tagName}>`,
     ];
@@ -60,7 +60,7 @@ export class Generator {
           console.log(props);
           // TODO: generate unique name
           const name = capitalize(camelCase(component.element.name));
-          return this.generateTag(name, props);
+          return this.generateTag(name, props, []);
         }
         console.error('Component not found: "' + element.componentKey + '"');
         return [];
@@ -71,14 +71,18 @@ export class Generator {
           {
             ...this.styleGenerator.frameCSS(element.style),
           },
-          propsSpread,
+          [propsSpread],
           element.children.flatMap((e) => this.generateElement(e, depth + 1))
         );
       }
       case "image": {
-        return this.generateTag("img", {
-          ...this.styleGenerator.imageCSS(element.style),
-        });
+        return this.generateTag(
+          "img",
+          {
+            ...this.styleGenerator.imageCSS(element.style),
+          },
+          []
+        );
       }
       case "svg": {
         const root = svgParser.parse(element.svg);
@@ -98,7 +102,7 @@ export class Generator {
         };
         delete properties.xmlns;
 
-        return this.generateTag("svg", properties, propsSpread, [svgChildren]);
+        return this.generateTag("svg", properties, [], [svgChildren]);
       }
       case "text": {
         return this.generateTag(
@@ -106,7 +110,7 @@ export class Generator {
           {
             ...this.styleGenerator.textCSS(element.style),
           },
-          "",
+          [],
           [element.content]
         );
       }
