@@ -26,6 +26,7 @@ export class Generator {
   readonly styleGenerator: IStyleGenerator;
 
   private generateTag(
+    isRoot: boolean,
     tagName: string,
     props: Record<string, any>,
     tagExtra: string[],
@@ -36,6 +37,7 @@ export class Generator {
     );
     return [
       `<${tagName} `,
+      ...(isRoot ? [" {...props}"] : []),
       ...propsStr,
       ` `,
       ...tagExtra,
@@ -59,6 +61,7 @@ export class Generator {
           // TODO: generate unique name
           const name = capitalize(camelCase(component.element.name));
           return this.generateTag(
+            isRoot,
             name,
             props,
             this.styleGenerator.instanceCSS(element.style, isRoot)
@@ -69,6 +72,7 @@ export class Generator {
       }
       case "frame": {
         return this.generateTag(
+          isRoot,
           "div",
           {},
           this.styleGenerator.frameCSS(element.style, isRoot),
@@ -77,6 +81,7 @@ export class Generator {
       }
       case "image": {
         return this.generateTag(
+          isRoot,
           "img",
           {},
           this.styleGenerator.imageCSS(element.style, isRoot)
@@ -100,6 +105,7 @@ export class Generator {
         delete properties.xmlns;
 
         return this.generateTag(
+          isRoot,
           "svg",
           properties,
           this.styleGenerator.svgCSS(element.style, isRoot),
@@ -108,6 +114,7 @@ export class Generator {
       }
       case "text": {
         return this.generateTag(
+          isRoot,
           "div",
           {},
           this.styleGenerator.textCSS(element.style, isRoot),
