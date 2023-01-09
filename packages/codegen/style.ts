@@ -27,8 +27,8 @@ export function dimensionCSS(
   props.position = mixin.position;
 
   if (mixin.position === "absolute") {
-    if ("centerRatio" in mixin.x) {
-      props.left = `${mixin.x.centerRatio * 100}%`;
+    if ("fromCenter" in mixin.x) {
+      props.left = `${mixin.x.fromCenter}px`;
       props.transform = `translateX(-50%)`;
     }
     if ("left" in mixin.x) {
@@ -38,8 +38,8 @@ export function dimensionCSS(
       props.right = `${mixin.x.right}px`;
     }
 
-    if ("centerRatio" in mixin.y) {
-      props.top = `${mixin.y.centerRatio * 100}%`;
+    if ("fromCenter" in mixin.y) {
+      props.top = `${mixin.y.fromCenter}px`;
       props.transform = `translateY(-50%)`;
     }
     if ("top" in mixin.y) {
@@ -47,6 +47,10 @@ export function dimensionCSS(
     }
     if ("bottom" in mixin.y) {
       props.bottom = `${mixin.y.bottom}px`;
+    }
+
+    if ("fromCenter" in mixin.x && "fromCenter" in mixin.y) {
+      props.transform = `translate(-50%, -50%)`;
     }
   }
 

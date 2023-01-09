@@ -40,12 +40,12 @@ export interface DimensionStyleMixin {
   x:
     | { left: number }
     | { right: number }
-    | { centerRatio: number }
+    | { fromCenter: number }
     | { left: number; right: number };
   y:
     | { top: number }
     | { bottom: number }
-    | { centerRatio: number }
+    | { fromCenter: number }
     | { top: number; bottom: number };
   width: number | "fit-content" | "stretch";
   height: number | "fit-content" | "stretch";
