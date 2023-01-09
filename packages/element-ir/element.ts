@@ -1,4 +1,10 @@
-import { FrameStyle, ImageStyle, SVGStyle, TextStyle } from "./style";
+import {
+  FrameStyle,
+  ImageStyle,
+  InstanceStyle,
+  SVGStyle,
+  TextStyle,
+} from "./style";
 
 interface CommonProps {
   id: string;
@@ -34,7 +40,7 @@ export interface InstanceElement extends CommonProps {
   componentKey: string;
   properties: Record<string, any>;
   // overrides are not supported (instances are inlined if any overrides are present)
-  style: Partial<FrameStyle>;
+  style: InstanceStyle;
 }
 
 export type Element =

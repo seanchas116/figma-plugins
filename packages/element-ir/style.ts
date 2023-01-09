@@ -104,3 +104,12 @@ export interface ImageStyle
   extends DimensionStyleMixin,
     RectangleFillBorderStyleMixin,
     ImageStyleMixin {}
+
+export type InstanceStyle = Partial<
+  DimensionStyleMixin &
+    RectangleFillBorderStyleMixin &
+    FrameStyleMixin &
+    TextSpanStyleMixin &
+    TextStyleMixin &
+    ImageStyleMixin
+>;

@@ -5,6 +5,7 @@ import {
   FrameStyleMixin,
   ImageStyle,
   ImageStyleMixin,
+  InstanceStyle,
   RectangleFillBorderStyleMixin,
   SVGStyle,
   TextSpanStyleMixin,
@@ -278,6 +279,18 @@ export class InlineStyleGenerator implements IStyleGenerator {
   textCSS(style: Partial<TextStyle>) {
     return {
       style: textCSS(style),
+    };
+  }
+  instanceCSS(style: Partial<InstanceStyle>) {
+    return {
+      style: {
+        ...dimensionCSSPartial(style),
+        ...rectangleCSSPartial(style),
+        ...frameCSSPartial(style),
+        ...textSpanCSSPartial(style),
+        ...textCSSPartial(style),
+        ...imageCSSPartial(style),
+      },
     };
   }
 }
