@@ -1,7 +1,5 @@
 import { Element } from "@uimix/element-ir";
-import type * as hast from "hast";
 import * as svgParser from "svg-parser";
-import { toHtml } from "hast-util-to-html";
 import {
   ParentLayout,
   stringifyStyle,
@@ -72,24 +70,26 @@ export class Generator {
         });
       }
       case "svg": {
-        const root = svgParser.parse(element.svg) as hast.Root;
+        const root = svgParser.parse(element.svg);
         const svgElem = root.children[0];
         if (svgElem.type !== "element") {
           throw new Error("Expected element type");
         }
 
-        const children = toHtml(svgElem.children);
+        const svgChildren = element.svg
+          .trim()
+          .replace(/^<svg[^>]*>/, "")
+          .replace(/<\/svg>$/, "");
 
         const properties: Record<string, string> = {
           ...svgElem.properties,
           style: stringifyStyle({
             ...dimensionCSS(element.style, parentLayout),
           }),
-          children,
         };
         delete properties.xmlns;
 
-        return this.generateTag(svgElem.tagName, properties);
+        return this.generateTag("svg", properties, [svgChildren]);
       }
       case "text": {
         return this.generateTag("div", {
