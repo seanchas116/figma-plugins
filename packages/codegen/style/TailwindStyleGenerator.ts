@@ -11,7 +11,6 @@ import {
   TextStyle,
   TextStyleMixin,
 } from "@uimix/element-ir";
-import { colorToCSS } from "./common";
 import { IStyleGenerator } from "./IStyleGenerator";
 import { TailwindKeywordResolver } from "./TailwindKeywordResolver";
 
