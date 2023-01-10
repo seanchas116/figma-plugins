@@ -126,7 +126,7 @@ export class Generator {
     }
   }
 
-  generateComponent(component: Component) {
+  generateComponent(component: Component): string[] {
     // TODO: generate unique name
     const name = capitalize(camelCase(component.element.name));
 
@@ -145,5 +145,17 @@ export class Generator {
       ...this.generateElement(element as Element),
       `}`,
     ];
+  }
+
+  generateProject(components: Component[]): string[] {
+    const componentMap: Record<string, Component> = {};
+    for (const component of components) {
+      if (component.key) {
+        componentMap[component.key] = component;
+      }
+    }
+
+    const generator = new Generator({ jsx: true, components: componentMap });
+    return components.flatMap((c) => generator.generateComponent(c));
   }
 }

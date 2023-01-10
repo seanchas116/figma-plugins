@@ -21,9 +21,7 @@ export const ExportPanel: FunctionComponent = () => {
     }
 
     const generator = new Generator({ jsx: true, components: componentMap });
-    const code = components
-      .flatMap((c) => generator.generateComponent(c))
-      .join("");
+    const code = generator.generateProject(components).join("");
 
     setCode(formatJS(code));
   };
