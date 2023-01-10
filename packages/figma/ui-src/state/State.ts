@@ -47,7 +47,9 @@ class State {
           elem.style.position = "relative";
           elem.style.x = { left: 0 };
           elem.style.y = { top: 0 };
-          return new Generator().generateElement(elem);
+          return new Generator({
+            components: [],
+          }).generateElement(elem);
         })
         .join("");
 

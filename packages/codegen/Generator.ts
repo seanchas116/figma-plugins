@@ -1,21 +1,27 @@
 import { Component, Element } from "@uimix/element-ir";
 import { camelCase, capitalize } from "lodash-es";
 import * as svgParser from "svg-parser";
-import { InlineStyleGenerator } from "./style/InlineStyleGenerator";
 import { IStyleGenerator } from "./style/IStyleGenerator";
 import { TailwindStyleGenerator } from "./style/TailwindStyleGenerator";
 
 export interface GeneratorOptions {
   jsx?: boolean;
-  components?: Record<string, Component>;
+  components: Component[];
   styleGenerator?: IStyleGenerator;
 }
 
 export class Generator {
-  constructor(options: GeneratorOptions = {}) {
+  constructor(options: GeneratorOptions) {
+    this.components = options.components;
+
+    for (const component of options.components) {
+      if (component.key) {
+        this.componentMap.set(component.key, component);
+      }
+    }
+
     this.options = {
       jsx: options.jsx ?? false,
-      components: new Map(Object.entries(options.components ?? {})),
     };
     this.styleGenerator =
       options.styleGenerator ?? new TailwindStyleGenerator();
@@ -23,8 +29,9 @@ export class Generator {
 
   private options: {
     jsx: boolean;
-    components: Map<string, Component>;
   };
+  readonly components: Component[];
+  readonly componentMap = new Map<string, Component>();
   readonly styleGenerator: IStyleGenerator;
 
   private generateTag(
@@ -52,7 +59,7 @@ export class Generator {
   generateElement(element: Element, isRoot = true): string[] {
     switch (element.type) {
       case "instance": {
-        const component = this.options.components.get(element.componentKey);
+        const component = this.componentMap.get(element.componentKey);
         if (component) {
           const props: Record<string, string> = {};
           for (const [key, value] of Object.entries(element.properties)) {
@@ -147,15 +154,7 @@ export class Generator {
     ];
   }
 
-  generateProject(components: Component[]): string[] {
-    const componentMap: Record<string, Component> = {};
-    for (const component of components) {
-      if (component.key) {
-        componentMap[component.key] = component;
-      }
-    }
-
-    const generator = new Generator({ jsx: true, components: componentMap });
-    return components.flatMap((c) => generator.generateComponent(c));
+  generateProject(): string[] {
+    return this.components.flatMap((c) => this.generateComponent(c));
   }
 }

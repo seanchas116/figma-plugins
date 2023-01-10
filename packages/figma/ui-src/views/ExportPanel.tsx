@@ -5,23 +5,14 @@ import { Button } from "../components/Button";
 import { SyntaxHighlight } from "../components/SyntaxHighlight";
 import { rpc } from "../rpc";
 import { formatJS } from "../util/format";
-import * as IR from "@uimix/element-ir";
 
 export const ExportPanel: FunctionComponent = () => {
   const [code, setCode] = useState<string>("");
 
   const onExport = async () => {
     const components = await rpc.remote.exportWholeDocument();
-
-    const componentMap: Record<string, IR.Component> = {};
-    for (const component of components) {
-      if (component.key) {
-        componentMap[component.key] = component;
-      }
-    }
-
-    const generator = new Generator({ jsx: true, components: componentMap });
-    const code = generator.generateProject(components).join("");
+    const generator = new Generator({ jsx: true, components });
+    const code = generator.generateProject().join("");
 
     setCode(formatJS(code));
   };
