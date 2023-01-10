@@ -1,8 +1,17 @@
-import { Component, Element } from "@uimix/element-ir";
+import { Component, Element, PropertyDefinition } from "@uimix/element-ir";
 import { camelCase, capitalize } from "lodash-es";
 import * as svgParser from "svg-parser";
 import { IStyleGenerator } from "./style/IStyleGenerator";
 import { TailwindStyleGenerator } from "./style/TailwindStyleGenerator";
+
+interface ExtendedPropertyDefinition extends PropertyDefinition {
+  nameForCode: string;
+}
+
+interface ExtendedComponent extends Component {
+  nameForCode: string;
+  propertyMap: Map<string /* name */, ExtendedPropertyDefinition>;
+}
 
 export interface GeneratorOptions {
   jsx?: boolean;
@@ -12,9 +21,29 @@ export interface GeneratorOptions {
 
 export class Generator {
   constructor(options: GeneratorOptions) {
-    this.components = options.components;
+    this.components = [];
 
     for (const component of options.components) {
+      const propertyMap = new Map<string, ExtendedPropertyDefinition>();
+
+      // TODO: avoid name conflicts
+
+      for (const prop of component.propertyDefinitions) {
+        const nameForCode = camelCase(prop.name.split("#")[0]);
+        propertyMap.set(nameForCode, {
+          ...prop,
+          nameForCode,
+        });
+      }
+
+      this.components.push({
+        ...component,
+        nameForCode: capitalize(camelCase(component.key ?? "")),
+        propertyMap,
+      });
+    }
+
+    for (const component of this.components) {
       if (component.key) {
         this.componentMap.set(component.key, component);
       }
@@ -30,8 +59,8 @@ export class Generator {
   private options: {
     jsx: boolean;
   };
-  readonly components: Component[];
-  readonly componentMap = new Map<string, Component>();
+  readonly components: ExtendedComponent[];
+  readonly componentMap = new Map<string, ExtendedComponent>();
   readonly styleGenerator: IStyleGenerator;
 
   private generateTag(
