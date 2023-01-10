@@ -19,6 +19,16 @@ export async function getElementIR(
     return [];
   }
 
+  const commonProps: IR.CommonProps = {
+    id: node.id,
+    name: node.name,
+    propertyRef: {
+      visible: node.componentPropertyReferences?.visible,
+      content: node.componentPropertyReferences?.characters,
+      component: node.componentPropertyReferences?.mainComponent,
+    },
+  };
+
   // Image like node
   if (
     node.type == "RECTANGLE" &&
@@ -30,8 +40,7 @@ export async function getElementIR(
       return [
         {
           type: "image",
-          id: node.id,
-          name: node.name,
+          ...commonProps,
           imageID: fill.imageHash,
           style: {
             ...getDimensionStyleMixin(node, positionOffset),
@@ -51,8 +60,7 @@ export async function getElementIR(
       return [
         {
           type: "svg",
-          id: node.id,
-          name: node.name,
+          ...commonProps,
           svg: svgText,
           style: {
             ...getDimensionStyleMixin(node as FrameNode, positionOffset),
@@ -72,8 +80,7 @@ export async function getElementIR(
       return [
         {
           type: "text",
-          id: node.id,
-          name: node.name,
+          ...commonProps,
           content: node.characters,
           style: {
             ...getDimensionStyleMixin(node, positionOffset),
@@ -126,8 +133,7 @@ export async function getElementIR(
           return [
             {
               type: "instance",
-              id: node.id,
-              name: node.name,
+              ...commonProps,
               componentKey: node.mainComponent.key,
               properties,
               style: overrideStyle,
@@ -144,8 +150,7 @@ export async function getElementIR(
       return [
         {
           type: "frame",
-          id: node.id,
-          name: node.name,
+          ...commonProps,
           style,
           children,
         },
@@ -171,8 +176,7 @@ export async function getElementIR(
         return [
           {
             type: "frame",
-            id: node.id,
-            name: node.name,
+            ...commonProps,
             children,
             style: {
               ...getDimensionStyleMixin(node, positionOffset),

@@ -6,9 +6,14 @@ import {
   TextStyle,
 } from "./style";
 
-interface CommonProps {
+export interface CommonProps {
   id: string;
   name: string;
+  propertyRef: {
+    visible?: string;
+    content?: string;
+    component?: string;
+  };
 }
 
 export interface FrameElement extends CommonProps {
