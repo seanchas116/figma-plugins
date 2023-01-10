@@ -4,6 +4,7 @@ import {
   FrameStyleMixin,
   ImageStyle,
   ImageStyleMixin,
+  InstanceStyle,
   RectangleStyleMixin,
   SVGStyle,
   TextSpanStyleMixin,
@@ -14,6 +15,7 @@ import * as CSS from "csstype";
 import resolveConfig from "tailwindcss/resolveConfig";
 import defaultConfig from "tailwindcss/defaultConfig";
 import { colorToCSS } from "./common";
+import { IStyleGenerator } from "./IStyleGenerator";
 const defaultTheme = resolveConfig(defaultConfig).theme!;
 
 function dimensionClassNamesPartial(
@@ -293,4 +295,37 @@ export function textClassNames(style: Partial<TextStyle>): string[] {
     ...textSpanClassNamesPartial(style),
     ...textClassNamesPartial(style),
   ];
+}
+
+export class TailwindStyleGenerator implements IStyleGenerator {
+  private generate(classNames: string[], root: boolean): string[] {
+    let stringified = JSON.stringify(classNames.join(" "));
+
+    if (root) {
+      return ["className={twMerge(", stringified, ", props.className)}"];
+    } else {
+      return ["className=", stringified];
+    }
+  }
+
+  frameCSS(style: Partial<FrameStyle>, isRoot: boolean) {
+    return this.generate(frameClassNames(style), isRoot);
+  }
+  imageCSS(style: Partial<ImageStyle>, isRoot: boolean) {
+    return this.generate(imageClassNames(style), isRoot);
+  }
+  svgCSS(style: Partial<SVGStyle>, isRoot: boolean) {
+    return this.generate(svgClassNames(style), isRoot);
+  }
+  textCSS(style: Partial<TextStyle>, isRoot: boolean) {
+    return this.generate(textClassNames(style), isRoot);
+  }
+  instanceCSS(style: Partial<InstanceStyle>, isRoot: boolean) {
+    const css = [
+      ...dimensionClassNamesPartial(style),
+      ...rectangleClassNamesPartial(style),
+      ...frameClassNamesPartial(style),
+    ];
+    return this.generate(css, isRoot);
+  }
 }

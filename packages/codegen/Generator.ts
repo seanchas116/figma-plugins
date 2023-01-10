@@ -3,6 +3,7 @@ import { camelCase, capitalize } from "lodash-es";
 import * as svgParser from "svg-parser";
 import { InlineStyleGenerator } from "./style/InlineStyleGenerator";
 import { IStyleGenerator } from "./style/IStyleGenerator";
+import { TailwindStyleGenerator } from "./style/TailwindStyleGenerator";
 
 export interface GeneratorOptions {
   jsx?: boolean;
@@ -16,7 +17,8 @@ export class Generator {
       jsx: options.jsx ?? false,
       components: new Map(Object.entries(options.components ?? {})),
     };
-    this.styleGenerator = options.styleGenerator ?? new InlineStyleGenerator();
+    this.styleGenerator =
+      options.styleGenerator ?? new TailwindStyleGenerator();
   }
 
   private options: {
