@@ -11,12 +11,11 @@ import {
   TextStyle,
   TextStyleMixin,
 } from "@uimix/element-ir";
-import * as CSS from "csstype";
-import resolveConfig from "tailwindcss/resolveConfig";
-import defaultConfig from "tailwindcss/defaultConfig";
 import { colorToCSS } from "./common";
 import { IStyleGenerator } from "./IStyleGenerator";
-const defaultTheme = resolveConfig(defaultConfig).theme!;
+import { TailwindKeywordResolver } from "./TailwindKeywordResolver";
+
+const kw = new TailwindKeywordResolver();
 
 function dimensionClassNamesPartial(
   mixin: Partial<DimensionStyleMixin>
@@ -33,27 +32,27 @@ function dimensionClassNamesPartial(
   if (mixin.position === "absolute") {
     if (mixin.x !== undefined) {
       if ("fromCenter" in mixin.x) {
-        classNames.push(`left-[${mixin.x.fromCenter}px]`);
+        classNames.push(`left${kw.spacing(mixin.x.fromCenter)}`);
         classNames.push(`translate-x-1/2`);
       }
       if ("left" in mixin.x) {
-        classNames.push(`left-[${mixin.x.left}px]`);
+        classNames.push(`left${kw.spacing(mixin.x.left)}`);
       }
       if ("right" in mixin.x) {
-        classNames.push(`right-[${mixin.x.right}px]`);
+        classNames.push(`right${kw.spacing(mixin.x.right)}`);
       }
     }
 
     if (mixin.y !== undefined) {
       if ("fromCenter" in mixin.y) {
-        classNames.push(`top-[${mixin.y.fromCenter}px]`);
+        classNames.push(`top${kw.spacing(mixin.y.fromCenter)}`);
         classNames.push(`translate-y-1/2`);
       }
       if ("top" in mixin.y) {
-        classNames.push(`top-[${mixin.y.top}px]`);
+        classNames.push(`top${kw.spacing(mixin.y.top)}`);
       }
       if ("bottom" in mixin.y) {
-        classNames.push(`bottom-[${mixin.y.bottom}px]`);
+        classNames.push(`bottom${kw.spacing(mixin.y.bottom)}`);
       }
     }
   }
@@ -67,7 +66,7 @@ function dimensionClassNamesPartial(
 
   if (mixin.width !== undefined) {
     if (typeof mixin.width === "number") {
-      classNames.push(`w-[${mixin.width}px]`);
+      classNames.push(`w${kw.spacing(mixin.width)}`);
     } else if (mixin.width === "fit-content") {
       classNames.push("w-fit");
     } else {
@@ -77,7 +76,7 @@ function dimensionClassNamesPartial(
 
   if (mixin.height !== undefined) {
     if (typeof mixin.height === "number") {
-      classNames.push(`h-[${mixin.height}px]`);
+      classNames.push(`h${kw.spacing(mixin.height)}`);
     } else if (mixin.height === "fit-content") {
       classNames.push("h-fit");
     } else {
@@ -98,9 +97,7 @@ function rectangleClassNamesPartial(
     if (mixin.border.length > 0) {
       const border = mixin.border[0];
       if (border.type === "solid") {
-        let borderClass = `border-[${colorToCSS(border.color)}]`;
-      } else {
-        // TODO
+        borderClass = `border${kw.color(border.color)}`;
       }
     }
     classNames.push(borderClass);
@@ -111,8 +108,7 @@ function rectangleClassNamesPartial(
     if (mixin.background.length > 0) {
       const background = mixin.background[0];
       if (background.type === "solid") {
-        bgClass = colorToCSS(background.color);
-        bgClass = `bg-[${bgClass}]`;
+        bgClass = `bg${kw.color(background.color)}`;
       } else {
         // TODO
       }
@@ -122,18 +118,18 @@ function rectangleClassNamesPartial(
 
   if (mixin.borderRadius !== undefined) {
     classNames.push(
-      `rounded-tl-[${mixin.borderRadius[0]}px]`,
-      `rounded-tr-[${mixin.borderRadius[1]}px]`,
-      `rounded-br-[${mixin.borderRadius[2]}px]`,
-      `rounded-bl-[${mixin.borderRadius[3]}px]`
+      `rounded-tl${kw.borderRadius(mixin.borderRadius[0])}`,
+      `rounded-tr${kw.borderRadius(mixin.borderRadius[1])}`,
+      `rounded-br${kw.borderRadius(mixin.borderRadius[2])}`,
+      `rounded-bl${kw.borderRadius(mixin.borderRadius[3])}`
     );
   }
   if (mixin.borderWidth !== undefined) {
     classNames.push(
-      `border-t-[${mixin.borderWidth[0]}px]`,
-      `border-r-[${mixin.borderWidth[1]}px]`,
-      `border-b-[${mixin.borderWidth[2]}px]`,
-      `border-l-[${mixin.borderWidth[3]}px]`
+      `border-t${kw.borderWidth(mixin.borderWidth[0])}`,
+      `border-r${kw.borderWidth(mixin.borderWidth[1])}`,
+      `border-b${kw.borderWidth(mixin.borderWidth[2])}`,
+      `border-l${kw.borderWidth(mixin.borderWidth[3])}`
     );
   }
 
@@ -150,15 +146,15 @@ function frameClassNamesPartial(mixin: Partial<FrameStyleMixin>): string[] {
     classNames.push(`flex-${mixin.flexDirection}`);
   }
   if (mixin.gap !== undefined) {
-    classNames.push(`gap-[${mixin.gap}px]`);
+    classNames.push(`gap${kw.spacing(mixin.gap)}`);
   }
   if (mixin.padding !== undefined) {
     // TODO: adjust padding based on border width
     classNames.push(
-      `pt-[${mixin.padding[0]}px]`,
-      `pr-[${mixin.padding[1]}px]`,
-      `pb-[${mixin.padding[2]}px]`,
-      `pl-[${mixin.padding[3]}px]`
+      `pt${kw.spacing(mixin.padding[0])}`,
+      `pr${kw.spacing(mixin.padding[1])}`,
+      `pb${kw.spacing(mixin.padding[2])}`,
+      `pl${kw.spacing(mixin.padding[3])}`
     );
   }
   if (mixin.alignItems !== undefined) {
@@ -206,19 +202,23 @@ function textSpanClassNamesPartial(
     classNames.push(`font-['${mixin.fontFamily.replace(/\s+/g, "_")}']`);
   }
   if (mixin.fontSize !== undefined) {
-    classNames.push(`text-[${mixin.fontSize}px]`);
+    classNames.push(`text${kw.fontSize(mixin.fontSize)}`);
   }
   if (mixin.fontWeight !== undefined) {
-    classNames.push(`font-${mixin.fontWeight}`);
+    classNames.push(`font${kw.fontWeight(mixin.fontWeight)}`);
   }
   if (mixin.fontStyle !== undefined) {
     classNames.push(mixin.fontStyle === "italic" ? "italic" : "not-italic");
   }
   if (mixin.lineHeight !== undefined) {
-    classNames.push(`leading-[${mixin.lineHeight}]`);
+    if (mixin.lineHeight === "normal") {
+      classNames.push(`leading-normal`);
+    } else {
+      classNames.push(`leading${kw.lineHeight(mixin.lineHeight)}`);
+    }
   }
   if (mixin.letterSpacing !== undefined) {
-    classNames.push(`tracking-[${mixin.letterSpacing}em]`);
+    classNames.push(`tracking${kw.letterSpacing(mixin.letterSpacing)}`);
   }
 
   if (mixin.color !== undefined) {
@@ -226,7 +226,7 @@ function textSpanClassNamesPartial(
     if (mixin.color.length > 0) {
       const color = mixin.color[0];
       if (color.type === "solid") {
-        colorClass = `text-[${colorToCSS(color.color)}]`;
+        colorClass = `text${kw.color(color.color)}`;
       }
     }
     classNames.push(colorClass);
