@@ -30,7 +30,7 @@ export class Generator {
 
       for (const prop of component.propertyDefinitions) {
         const nameForCode = camelCase(prop.name.split("#")[0]);
-        propertyMap.set(nameForCode, {
+        propertyMap.set(prop.name, {
           ...prop,
           nameForCode,
         });
@@ -38,7 +38,7 @@ export class Generator {
 
       this.components.push({
         ...component,
-        nameForCode: capitalize(camelCase(component.key ?? "")),
+        nameForCode: capitalize(camelCase(component.element.name ?? "")),
         propertyMap,
       });
     }
@@ -91,16 +91,16 @@ export class Generator {
         const component = this.componentMap.get(element.componentKey);
         if (component) {
           const props: Record<string, string> = {};
-          for (const [key, value] of Object.entries(element.properties)) {
-            const codeName = camelCase(key.split("#")[0]);
-            props[codeName] = value;
+          for (const [name, value] of Object.entries(element.properties)) {
+            const def = component.propertyMap.get(name);
+            if (def) {
+              props[def.nameForCode] = value;
+            }
           }
           console.log(props);
-          // TODO: generate unique name
-          const name = capitalize(camelCase(component.element.name));
           return this.generateTag(
             isRoot,
-            name,
+            component.nameForCode,
             props,
             this.styleGenerator.instanceCSS(element.style, isRoot)
           );
@@ -162,10 +162,7 @@ export class Generator {
     }
   }
 
-  generateComponent(component: Component): string[] {
-    // TODO: generate unique name
-    const name = capitalize(camelCase(component.element.name));
-
+  generateComponent(component: ExtendedComponent): string[] {
     const element = {
       ...component.element,
       style: {
@@ -177,7 +174,7 @@ export class Generator {
     };
 
     return [
-      `export function ${name}(props) { return `,
+      `export function ${component.nameForCode}(props) { return `,
       ...this.generateElement(element as Element),
       `}`,
     ];
