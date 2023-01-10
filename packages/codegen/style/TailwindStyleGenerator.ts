@@ -143,7 +143,11 @@ function frameClassNamesPartial(mixin: Partial<FrameStyleMixin>): string[] {
     classNames.push(`overflow-${mixin.overflow}`);
   }
   if (mixin.flexDirection !== undefined) {
-    classNames.push(`flex-${mixin.flexDirection}`);
+    if (mixin.flexDirection === "row") {
+      classNames.push("flex-row");
+    } else {
+      classNames.push("flex-col");
+    }
   }
   if (mixin.gap !== undefined) {
     classNames.push(`gap${kw.spacing(mixin.gap)}`);
