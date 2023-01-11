@@ -1,22 +1,15 @@
 import { Component, Element, PropertyDefinition } from "@uimix/element-ir";
 import { camelCase, capitalize } from "lodash-es";
 import * as svgParser from "svg-parser";
-import { formatJS } from "./format";
+import { ExtendedComponent, ExtendedPropertyDefinition } from "./component";
+import { formatCSS, formatJS } from "./format";
+import { CSSStyleGenerator } from "./style/CSSStyleGenerator";
 import { InlineStyleGenerator } from "./style/InlineStyleGenerator";
 import { IStyleGenerator } from "./style/IStyleGenerator";
 import { TailwindStyleGenerator } from "./style/TailwindStyleGenerator";
 
-interface ExtendedPropertyDefinition extends PropertyDefinition {
-  inCodeName: string;
-}
-
-interface ExtendedComponent extends Component {
-  inCodeName: string;
-  propertyForName: Map<string, ExtendedPropertyDefinition>;
-}
-
 export interface GeneratorOptions {
-  style: "tailwind" | "inline";
+  style: "tailwind" | "inline" | "css";
   components: Component[];
 }
 
@@ -54,6 +47,8 @@ export class Generator {
           return new TailwindStyleGenerator();
         case "inline":
           return new InlineStyleGenerator();
+        case "css":
+          return new CSSStyleGenerator();
         default:
           throw new Error("Unknown style: " + options.style);
       }
@@ -111,6 +106,7 @@ export class Generator {
 
     const tagExtra = this.styleGenerator.generate(element, {
       cssContents: cssContents ?? [],
+      component,
       isRoot,
     });
 
@@ -215,7 +211,7 @@ export class Generator {
     return result;
   }
 
-  generateComponent(component: ExtendedComponent): string[] {
+  generateComponent(component: ExtendedComponent): GeneratedFile[] {
     const usedComponents = new Set<string>();
 
     const cssContents: string[] = [];
@@ -235,6 +231,7 @@ export class Generator {
       ...this.generateElement(element as Element, {
         component,
         usedComponents,
+        cssContents,
       }),
       `}`,
     ];
@@ -243,18 +240,26 @@ export class Generator {
       (c) => `import { ${c} } from "./${c}.js";`
     );
 
-    return [...imports, "\n\n", ...body];
+    const source = [...imports, "\n\n", ...body];
+
+    return [
+      ...(cssContents.length > 0
+        ? [
+            {
+              filePath: `${component.inCodeName}.css`,
+              content: formatCSS(cssContents.join("")),
+            },
+          ]
+        : []),
+      {
+        filePath: `${component.inCodeName}.js`, // TODO: typescript
+        content: formatJS(source.join("")),
+      },
+    ];
   }
 
   generateProject(): GeneratedFile[] {
-    return this.components.map((c) => {
-      const content = formatJS(this.generateComponent(c).join(""));
-
-      return {
-        filePath: `${c.inCodeName}.js`, // TODO: typescript
-        content,
-      };
-    });
+    return this.components.flatMap((c) => this.generateComponent(c));
   }
 }
 
