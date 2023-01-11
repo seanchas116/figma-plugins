@@ -263,7 +263,7 @@ export function stringifyStyle(css: CSS.Properties): string {
 }
 
 export class InlineStyleGenerator implements IStyleGenerator {
-  generate(element: Element, isRoot: boolean): string[] {
+  generate(element: Element, { isRoot }: { isRoot: boolean }): string[] {
     const css = (() => {
       switch (element.type) {
         case "frame":

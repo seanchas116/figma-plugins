@@ -98,16 +98,21 @@ export class Generator {
     {
       component,
       usedComponents,
+      cssContents,
       isRoot = true,
     }: {
       component?: ExtendedComponent;
       usedComponents?: Set<string>;
+      cssContents?: string[];
       isRoot?: boolean;
     } = {}
   ): string[] {
     let result: string[];
 
-    const tagExtra = this.styleGenerator.generate(element, isRoot);
+    const tagExtra = this.styleGenerator.generate(element, {
+      cssContents: cssContents ?? [],
+      isRoot,
+    });
 
     switch (element.type) {
       case "instance": {
@@ -212,6 +217,8 @@ export class Generator {
 
   generateComponent(component: ExtendedComponent): string[] {
     const usedComponents = new Set<string>();
+
+    const cssContents: string[] = [];
 
     const element = {
       ...component.element,

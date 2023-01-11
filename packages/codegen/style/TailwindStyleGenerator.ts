@@ -310,7 +310,7 @@ export function instanceClassNames(style: Partial<InstanceStyle>): string[] {
 }
 
 export class TailwindStyleGenerator implements IStyleGenerator {
-  generate(element: Element, isRoot: boolean): string[] {
+  generate(element: Element, { isRoot }: { isRoot: boolean }): string[] {
     const classNames = (() => {
       switch (element.type) {
         case "frame":
