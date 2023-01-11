@@ -102,41 +102,47 @@ export class Generator {
       isRoot?: boolean;
     } = {}
   ): string[] {
+    let result: string[];
+
     switch (element.type) {
       case "instance": {
         const component = this.componentMap.get(element.componentKey);
-        if (component) {
-          const props: Record<string, string> = {};
-          for (const [name, value] of Object.entries(element.properties)) {
-            const def = component.propertyMap.get(name);
-            if (def) {
-              props[def.nameForCode] = value;
-            }
-          }
-          console.log(props);
-          return this.generateTag(component.nameForCode, {
-            isRoot,
-            props,
-            tagExtra: this.styleGenerator.instanceCSS(element.style, isRoot),
-          });
+        if (!component) {
+          console.error('Component not found: "' + element.componentKey + '"');
+          return [];
         }
-        console.error('Component not found: "' + element.componentKey + '"');
-        return [];
+
+        const props: Record<string, string> = {};
+        for (const [name, value] of Object.entries(element.properties)) {
+          const def = component.propertyMap.get(name);
+          if (def) {
+            props[def.nameForCode] = value;
+          }
+        }
+        console.log(props);
+        result = this.generateTag(component.nameForCode, {
+          isRoot,
+          props,
+          tagExtra: this.styleGenerator.instanceCSS(element.style, isRoot),
+        });
+        break;
       }
       case "frame": {
-        return this.generateTag("div", {
+        result = this.generateTag("div", {
           isRoot,
           tagExtra: this.styleGenerator.frameCSS(element.style, isRoot),
           children: element.children.flatMap((e) =>
             this.generateElement(e, { component, isRoot: false })
           ),
         });
+        break;
       }
       case "image": {
-        return this.generateTag("img", {
+        result = this.generateTag("img", {
           isRoot,
           tagExtra: this.styleGenerator.imageCSS(element.style, isRoot),
         });
+        break;
       }
       case "svg": {
         const root = svgParser.parse(element.svg);
@@ -155,12 +161,13 @@ export class Generator {
         };
         delete props.xmlns;
 
-        return this.generateTag("svg", {
+        result = this.generateTag("svg", {
           isRoot,
           props,
           tagExtra: this.styleGenerator.svgCSS(element.style, isRoot),
           children: [svgChildren],
         });
+        break;
       }
       case "text": {
         let children = [element.children];
@@ -172,13 +179,23 @@ export class Generator {
           }
         }
 
-        return this.generateTag("div", {
+        result = this.generateTag("div", {
           isRoot,
           tagExtra: this.styleGenerator.textCSS(element.style, isRoot),
           children,
         });
+        break;
       }
     }
+
+    if (element.propertyRef.visible) {
+      const prop = component?.propertyMap.get(element.propertyRef.visible);
+      if (prop) {
+        result = [`{props.${prop.nameForCode} && `, ...result, `}`];
+      }
+    }
+
+    return result;
   }
 
   generateComponent(component: ExtendedComponent): string[] {
