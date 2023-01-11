@@ -64,11 +64,18 @@ export class Generator {
   readonly styleGenerator: IStyleGenerator;
 
   private generateTag(
-    isRoot: boolean,
     tagName: string,
-    props: Record<string, any>,
-    tagExtra: string[],
-    children: string[] = []
+    {
+      isRoot,
+      props = {},
+      tagExtra = [],
+      children = [],
+    }: {
+      isRoot: boolean;
+      props?: Record<string, any>;
+      tagExtra?: string[];
+      children?: string[];
+    }
   ): string[] {
     const propsStr = Object.entries(props).map(
       ([key, value]) => `${key}={${JSON.stringify(value)}}`
@@ -87,8 +94,13 @@ export class Generator {
 
   generateElement(
     element: Element,
-    component?: ExtendedComponent,
-    isRoot = true
+    {
+      component,
+      isRoot = true,
+    }: {
+      component?: ExtendedComponent;
+      isRoot?: boolean;
+    } = {}
   ): string[] {
     switch (element.type) {
       case "instance": {
@@ -102,34 +114,29 @@ export class Generator {
             }
           }
           console.log(props);
-          return this.generateTag(
+          return this.generateTag(component.nameForCode, {
             isRoot,
-            component.nameForCode,
             props,
-            this.styleGenerator.instanceCSS(element.style, isRoot)
-          );
+            tagExtra: this.styleGenerator.instanceCSS(element.style, isRoot),
+          });
         }
         console.error('Component not found: "' + element.componentKey + '"');
         return [];
       }
       case "frame": {
-        return this.generateTag(
+        return this.generateTag("div", {
           isRoot,
-          "div",
-          {},
-          this.styleGenerator.frameCSS(element.style, isRoot),
-          element.children.flatMap((e) =>
-            this.generateElement(e, component, false)
-          )
-        );
+          tagExtra: this.styleGenerator.frameCSS(element.style, isRoot),
+          children: element.children.flatMap((e) =>
+            this.generateElement(e, { component, isRoot: false })
+          ),
+        });
       }
       case "image": {
-        return this.generateTag(
+        return this.generateTag("img", {
           isRoot,
-          "img",
-          {},
-          this.styleGenerator.imageCSS(element.style, isRoot)
-        );
+          tagExtra: this.styleGenerator.imageCSS(element.style, isRoot),
+        });
       }
       case "svg": {
         const root = svgParser.parse(element.svg);
@@ -143,18 +150,17 @@ export class Generator {
           .replace(/^<svg[^>]*>/, "")
           .replace(/<\/svg>$/, "");
 
-        const properties: Record<string, any> = {
+        const props: Record<string, any> = {
           ...svgElem.properties,
         };
-        delete properties.xmlns;
+        delete props.xmlns;
 
-        return this.generateTag(
+        return this.generateTag("svg", {
           isRoot,
-          "svg",
-          properties,
-          this.styleGenerator.svgCSS(element.style, isRoot),
-          [svgChildren]
-        );
+          props,
+          tagExtra: this.styleGenerator.svgCSS(element.style, isRoot),
+          children: [svgChildren],
+        });
       }
       case "text": {
         let content = [element.content];
@@ -166,13 +172,11 @@ export class Generator {
           }
         }
 
-        return this.generateTag(
+        return this.generateTag("div", {
           isRoot,
-          "div",
-          {},
-          this.styleGenerator.textCSS(element.style, isRoot),
-          content
-        );
+          tagExtra: this.styleGenerator.textCSS(element.style, isRoot),
+          children: content,
+        });
       }
     }
   }
@@ -190,7 +194,7 @@ export class Generator {
 
     return [
       `export function ${component.nameForCode}(props) { return `,
-      ...this.generateElement(element as Element, component, true),
+      ...this.generateElement(element as Element, { component }),
       `}`,
     ];
   }
