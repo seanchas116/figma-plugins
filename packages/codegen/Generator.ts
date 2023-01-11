@@ -10,7 +10,7 @@ interface ExtendedPropertyDefinition extends PropertyDefinition {
 
 interface ExtendedComponent extends Component {
   inCodeName: string;
-  propertyMap: Map<string /* name */, ExtendedPropertyDefinition>;
+  propertyForName: Map<string, ExtendedPropertyDefinition>;
 }
 
 export interface GeneratorOptions {
@@ -21,16 +21,14 @@ export interface GeneratorOptions {
 
 export class Generator {
   constructor(options: GeneratorOptions) {
-    this.components = [];
-
     for (const component of options.components) {
-      const propertyMap = new Map<string, ExtendedPropertyDefinition>();
+      const propertyForName = new Map<string, ExtendedPropertyDefinition>();
 
       // TODO: avoid name conflicts
 
       for (const prop of component.propertyDefinitions) {
         const inCodeName = camelCase(prop.name.split("#")[0]);
-        propertyMap.set(prop.name, {
+        propertyForName.set(prop.name, {
           ...prop,
           inCodeName,
         });
@@ -39,7 +37,7 @@ export class Generator {
       this.components.push({
         ...component,
         inCodeName: capitalize(camelCase(component.element.name ?? "")),
-        propertyMap,
+        propertyForName,
       });
     }
 
@@ -59,7 +57,7 @@ export class Generator {
   private options: {
     jsx: boolean;
   };
-  readonly components: ExtendedComponent[];
+  readonly components: ExtendedComponent[] = [];
   readonly componentMap = new Map<string, ExtendedComponent>();
   readonly styleGenerator: IStyleGenerator;
 
@@ -114,7 +112,7 @@ export class Generator {
 
         const props: Record<string, string> = {};
         for (const [name, value] of Object.entries(element.properties)) {
-          const def = component.propertyMap.get(name);
+          const def = component.propertyForName.get(name);
           if (def) {
             props[def.inCodeName] = value;
           }
@@ -173,7 +171,9 @@ export class Generator {
         let children = [element.children];
 
         if (component && element.propertyRef.children) {
-          const prop = component.propertyMap.get(element.propertyRef.children);
+          const prop = component.propertyForName.get(
+            element.propertyRef.children
+          );
           if (prop) {
             children = [`{props.${prop.inCodeName}}`];
           }
@@ -189,7 +189,7 @@ export class Generator {
     }
 
     if (element.propertyRef.visible) {
-      const prop = component?.propertyMap.get(element.propertyRef.visible);
+      const prop = component?.propertyForName.get(element.propertyRef.visible);
       if (prop) {
         result = [`{props.${prop.inCodeName} && `, ...result, `}`];
       }
