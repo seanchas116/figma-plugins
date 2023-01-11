@@ -140,7 +140,6 @@ export async function getElementIR(
             },
           ];
         }
-        console.log(node.overrides);
       }
 
       const children = (
@@ -202,7 +201,7 @@ export async function getElementIR(
       ).flat();
     }
     default: {
-      console.log("ignoring", node.type);
+      console.error("ignoring", node.type);
       return [];
     }
   }

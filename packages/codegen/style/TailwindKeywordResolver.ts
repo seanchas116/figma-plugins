@@ -3,7 +3,6 @@ import defaultConfig from "tailwindcss/defaultConfig";
 import { colorToCSS } from "./common";
 import { Color } from "@uimix/element-ir";
 const defaultTheme = resolveConfig(defaultConfig).theme!;
-console.log(defaultTheme);
 
 function flattenTheme(theme: Record<string, any>): Record<string, string> {
   const result: Record<string, string> = {};

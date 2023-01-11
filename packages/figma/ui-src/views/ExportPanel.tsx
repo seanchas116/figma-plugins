@@ -12,8 +12,8 @@ export const ExportPanel: FunctionComponent = () => {
   const onExport = async () => {
     const components = await rpc.remote.exportWholeDocument();
 
-    console.log("Generating...");
-    console.log(JSON.stringify(components));
+    console.info("Generating...");
+    console.info(JSON.stringify(components));
 
     const generator = new Generator({ jsx: true, components });
     const code = generator.generateProject().join("");

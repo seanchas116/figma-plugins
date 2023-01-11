@@ -21,7 +21,7 @@ figma.showUI(__html__, { width: 240, height: 240 });
 
 const onDocumentChange = debounce((event: DocumentChangeEvent) => {
   for (const change of event.documentChanges) {
-    console.log(change);
+    console.info(change);
     if (
       change.type === "PROPERTY_CHANGE" &&
       change.node.type === "INSTANCE" &&
@@ -101,8 +101,6 @@ class RPCHandler implements IUIToPluginRPC {
     if (node.type !== "INSTANCE") {
       return;
     }
-
-    console.log("setting instance info", instance);
 
     const instanceInfo = instance;
     setInstanceParams(node, instanceInfo);

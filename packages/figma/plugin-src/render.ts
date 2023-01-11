@@ -26,7 +26,6 @@ export async function renderInstance(node: InstanceNode) {
   const result = await renderInstanceImage(instance, node.width, node.height);
 
   const img = await figma.createImage(new Uint8Array(result.png));
-  console.log(img.hash);
 
   setRenderedSize(node, {
     width: result.width,
