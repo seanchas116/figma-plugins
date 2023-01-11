@@ -80,16 +80,16 @@ export class Generator {
     const propsStr = Object.entries(props).map(
       ([key, value]) => `${key}={${JSON.stringify(value)}}`
     );
-    return [
-      `<${tagName} `,
-      ...(isRoot ? [" {...props}"] : []),
-      ...propsStr,
-      ` `,
-      ...tagExtra,
-      `>`,
-      ...children,
-      `</${tagName}>`,
-    ];
+
+    const openTag =
+      `<${tagName} ` +
+      (isRoot ? "{...props} " : "") +
+      propsStr.join("") +
+      tagExtra.join("") +
+      `>`;
+    const closeTag = `</${tagName}>`;
+
+    return [openTag, ...children, closeTag];
   }
 
   generateElement(
