@@ -229,7 +229,7 @@ export class Generator {
     ];
 
     const imports = Array.from(usedComponents).map(
-      (c) => `import { ${c} } from "./${c}";`
+      (c) => `import { ${c} } from "./${c}.js";`
     );
 
     return [...imports, ...body];
