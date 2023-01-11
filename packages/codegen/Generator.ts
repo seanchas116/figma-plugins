@@ -237,26 +237,29 @@ export class Generator {
       `}`,
     ];
 
+    const cssFile: GeneratedFile | undefined = cssContents.length
+      ? {
+          filePath: `${component.inCodeName}.css`,
+          content: formatCSS(cssContents.join("")),
+        }
+      : undefined;
+
     const imports = Array.from(usedComponents).map(
       (c) => `import { ${c} } from "./${c}.js";`
     );
 
+    if (cssFile) {
+      imports.push(`import "./${component.inCodeName}.css";`);
+    }
+
     const source = [...imports, "\n\n", ...body];
 
-    return [
-      ...(cssContents.length > 0
-        ? [
-            {
-              filePath: `${component.inCodeName}.css`,
-              content: formatCSS(cssContents.join("")),
-            },
-          ]
-        : []),
-      {
-        filePath: `${component.inCodeName}.js`, // TODO: typescript
-        content: formatJS(source.join("")),
-      },
-    ];
+    const jsFile: GeneratedFile = {
+      filePath: `${component.inCodeName}.js`, // TODO: typescript
+      content: formatJS(source.join("")),
+    };
+
+    return cssFile ? [cssFile, jsFile] : [jsFile];
   }
 
   generateProject(): GeneratedFile[] {
