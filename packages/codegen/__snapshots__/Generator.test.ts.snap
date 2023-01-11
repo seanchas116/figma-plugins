@@ -1,0 +1,54 @@
+// Vitest Snapshot v1
+
+exports[`Generator > should work 1`] = `
+[
+  "export function Button(props) { return ",
+  "<div {...props} className={twMerge(\\"flex relative flex-none self-auto w-fit h-fit border-transparent bg-blue-500 rounded-tl rounded-tr rounded-br rounded-bl border-t-0 border-r-0 border-b-0 border-l-0 overflow-hidden flex-row gap-1.5 pt-1.5 pr-3 pb-1.5 pl-3 items-center justify-center\\", props.className)}>",
+  "<div className=\\"flex relative flex-none self-auto w-fit h-fit font-['Inter'] text-xs font-medium not-italic leading-normal tracking-normal text-white text-left flex-col justify-start\\">",
+  "{props.text}",
+  "</div>",
+  "{props.showChevron && ",
+  "<div className=\\"flex relative flex-none self-auto w-2 h-2 border-transparent bg-transparent rounded-tl-none rounded-tr-none rounded-br-none rounded-bl-none border-t-0 border-r-0 border-b-0 border-l-0 overflow-visible flex-row gap-0 pt-0 pr-0 pb-0 pl-0 items-start justify-start\\">",
+  "<svg width={5}height={7}viewBox={\\"0 0 5 7\\"}fill={\\"none\\"}className=\\"flex absolute left-[0.1302083283662796rem] top-[0.0416666679084301rem] flex-none self-auto w-[0.24531249701976776rem] h-[0.4166666567325592rem]\\">",
+  "
+<path d=\\"M0.674995 6.83334L0.0833282 6.24167L2.825 3.5L0.0833282 0.758338L0.674995 0.166672L4.00833 3.5L0.674995 6.83334Z\\" fill=\\"white\\"/>
+",
+  "</svg>",
+  "</div>",
+  "}",
+  "</div>",
+  "}",
+  "export function Form2(props) { return ",
+  "<div {...props} className={twMerge(\\"flex relative flex-none self-auto w-fit h-fit border-transparent bg-white rounded-tl-none rounded-tr-none rounded-br-none rounded-bl-none border-t-0 border-r-0 border-b-0 border-l-0 overflow-hidden flex-col gap-[0.8125rem] pt-4 pr-4 pb-4 pl-4 items-start justify-start\\", props.className)}>",
+  "<div className=\\"flex relative flex-none self-auto w-fit h-fit font-['Inter'] text-xs font-normal not-italic leading-normal tracking-normal text-black text-left flex-col justify-start\\">",
+  "Some Form (stretch)",
+  "</div>",
+  "<Button showChevron={false}text={\\"OK\\"}className=\\"self-stretch w-auto\\">",
+  "</Button>",
+  "</div>",
+  "}",
+  "export function Form(props) { return ",
+  "<div {...props} className={twMerge(\\"flex relative flex-none self-auto w-fit h-fit border-transparent bg-white rounded-tl-none rounded-tr-none rounded-br-none rounded-bl-none border-t-0 border-r-0 border-b-0 border-l-0 overflow-hidden flex-col gap-[0.8125rem] pt-4 pr-4 pb-4 pl-4 items-start justify-start\\", props.className)}>",
+  "<div className=\\"flex relative flex-none self-auto w-fit h-fit font-['Inter'] text-xs font-normal not-italic leading-normal tracking-normal text-black text-left flex-col justify-start\\">",
+  "Some Form",
+  "</div>",
+  "<Button showChevron={true}text={\\"OK\\"}className=\\"\\">",
+  "</Button>",
+  "</div>",
+  "}",
+  "export function Frame1(props) { return ",
+  "<div {...props} className={twMerge(\\"flex relative flex-none self-auto w-[21.5rem] h-[5.8125rem] border-transparent bg-white rounded-tl-none rounded-tr-none rounded-br-none rounded-bl-none border-t-0 border-r-0 border-b-0 border-l-0 overflow-hidden flex-col gap-0 pt-0 pr-0 pb-0 pl-0 items-start justify-start\\", props.className)}>",
+  "<svg width={128}height={64}viewBox={\\"0 0 128 64\\"}fill={\\"none\\"}className=\\"flex absolute left-2 top-5 flex-none self-auto w-32 h-16\\">",
+  "
+<rect width=\\"128\\" height=\\"64\\" fill=\\"#D9D9D9\\"/>
+",
+  "</svg>",
+  "<svg width={128}height={64}viewBox={\\"0 0 128 64\\"}fill={\\"none\\"}className=\\"flex absolute left-[9.5625rem] top-2 flex-none self-auto w-32 h-16\\">",
+  "
+<rect width=\\"128\\" height=\\"64\\" fill=\\"#FF0000\\"/>
+",
+  "</svg>",
+  "</div>",
+  "}",
+]
+`;

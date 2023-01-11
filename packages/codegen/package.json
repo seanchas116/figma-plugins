@@ -7,7 +7,8 @@
   "main": "index.js",
   "typings": "index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "vitest",
+    "coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@mapbox/hast-util-to-jsx": "^2.0.0",
@@ -21,6 +22,7 @@
   },
   "devDependencies": {
     "@types/lodash-es": "^4.17.6",
-    "@types/svg-parser": "^2.0.3"
+    "@types/svg-parser": "^2.0.3",
+    "vitest": "^0.27.0"
   }
 }
