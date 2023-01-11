@@ -1,6 +1,7 @@
 import { Component, Element, PropertyDefinition } from "@uimix/element-ir";
 import { camelCase, capitalize } from "lodash-es";
 import * as svgParser from "svg-parser";
+import { formatJS } from "./format";
 import { IStyleGenerator } from "./style/IStyleGenerator";
 import { TailwindStyleGenerator } from "./style/TailwindStyleGenerator";
 
@@ -215,7 +216,19 @@ export class Generator {
     ];
   }
 
-  generateProject(): string[] {
-    return this.components.flatMap((c) => this.generateComponent(c));
+  generateProject(): File[] {
+    return this.components.map((c) => {
+      const content = formatJS(this.generateComponent(c).join(""));
+
+      return {
+        filePath: `${c.inCodeName}.js`, // TODO: typescript
+        content,
+      };
+    });
   }
+}
+
+interface File {
+  filePath: string;
+  content: string;
 }
