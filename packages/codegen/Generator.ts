@@ -21,9 +21,6 @@ export interface GeneratorOptions {
 
 export class Generator {
   constructor(options: GeneratorOptions) {
-    console.log("Generator---------------");
-    console.log(JSON.stringify(options.components));
-
     for (const component of options.components) {
       const propertyForName = new Map<string, ExtendedPropertyDefinition>();
 
@@ -120,7 +117,6 @@ export class Generator {
             props[def.inCodeName] = value;
           }
         }
-        console.log(props);
         result = this.generateTag(component.inCodeName, {
           isRoot,
           props,
