@@ -6,11 +6,14 @@ import _components from "./__fixtures__/components.json";
 const components: Component[] = _components as any;
 
 describe("Generator", () => {
-  it("should work", () => {
-    const generator = new Generator({
-      components,
-    });
+  for (const style of ["tailwind", "inline"] as const) {
+    it(`should emit ${style}`, () => {
+      const generator = new Generator({
+        components,
+        style,
+      });
 
-    expect(generator.generateProject()).toMatchSnapshot();
-  });
+      expect(generator.generateProject()).toMatchSnapshot();
+    });
+  }
 });

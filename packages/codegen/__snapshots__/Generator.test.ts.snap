@@ -1,6 +1,290 @@
 // Vitest Snapshot v1
 
-exports[`Generator > should work 1`] = `
+exports[`Generator > should emit inline 1`] = `
+[
+  {
+    "content": "export function Button(props) {
+  return (
+    <div
+      {...props}
+      style={{
+        display: \\"flex\\",
+        position: \\"relative\\",
+        flexGrow: 0,
+        alignSelf: \\"auto\\",
+        width: \\"fit-content\\",
+        height: \\"fit-content\\",
+        borderStyle: \\"none\\",
+        background: \\"#3b82f6\\",
+        borderRadius: \\"4px 4px 4px 4px\\",
+        borderWidth: \\"0px 0px 0px 0px\\",
+        overflow: \\"hidden\\",
+        flexDirection: \\"row\\",
+        gap: \\"6px\\",
+        padding: \\"6px 12px 6px 12px\\",
+        alignItems: \\"center\\",
+        justifyContent: \\"center\\",
+        ...props.style,
+      }}
+    >
+      <div
+        style={{
+          display: \\"flex\\",
+          position: \\"relative\\",
+          flexGrow: 0,
+          alignSelf: \\"auto\\",
+          width: \\"fit-content\\",
+          height: \\"fit-content\\",
+          fontFamily: \\"Inter\\",
+          fontSize: \\"12px\\",
+          fontWeight: 500,
+          fontStyle: \\"normal\\",
+          lineHeight: \\"normal\\",
+          letterSpacing: \\"0em\\",
+          color: \\"#ffffff\\",
+          textAlign: \\"left\\",
+          flexDirection: \\"column\\",
+          justifyContent: \\"flex-start\\",
+        }}
+      >
+        {props.text}
+      </div>
+      {props.showChevron && (
+        <div
+          style={{
+            display: \\"flex\\",
+            position: \\"relative\\",
+            flexGrow: 0,
+            alignSelf: \\"auto\\",
+            width: \\"8px\\",
+            height: \\"8px\\",
+            borderStyle: \\"none\\",
+            borderRadius: \\"0px 0px 0px 0px\\",
+            borderWidth: \\"0px 0px 0px 0px\\",
+            overflow: \\"visible\\",
+            flexDirection: \\"row\\",
+            gap: \\"0px\\",
+            padding: \\"0px 0px 0px 0px\\",
+            alignItems: \\"flex-start\\",
+            justifyContent: \\"flex-start\\",
+          }}
+        >
+          <svg
+            width={5}
+            height={7}
+            viewBox={\\"0 0 5 7\\"}
+            fill={\\"none\\"}
+            style={{
+              display: \\"flex\\",
+              position: \\"absolute\\",
+              left: \\"2.0833332538604736px\\",
+              top: \\"0.6666666865348816px\\",
+              flexGrow: 0,
+              alignSelf: \\"auto\\",
+              width: \\"3.924999952316284px\\",
+              height: \\"6.666666507720947px\\",
+            }}
+          >
+            <path
+              d=\\"M0.674995 6.83334L0.0833282 6.24167L2.825 3.5L0.0833282 0.758338L0.674995 0.166672L4.00833 3.5L0.674995 6.83334Z\\"
+              fill=\\"white\\"
+            />
+          </svg>
+        </div>
+      )}
+    </div>
+  );
+}
+",
+    "filePath": "Button.js",
+  },
+  {
+    "content": "import { Button } from \\"./Button.js\\";
+
+export function Form2(props) {
+  return (
+    <div
+      {...props}
+      style={{
+        display: \\"flex\\",
+        position: \\"relative\\",
+        flexGrow: 0,
+        alignSelf: \\"auto\\",
+        width: \\"fit-content\\",
+        height: \\"fit-content\\",
+        borderStyle: \\"none\\",
+        background: \\"#ffffff\\",
+        borderRadius: \\"0px 0px 0px 0px\\",
+        borderWidth: \\"0px 0px 0px 0px\\",
+        overflow: \\"hidden\\",
+        flexDirection: \\"column\\",
+        gap: \\"13px\\",
+        padding: \\"16px 16px 16px 16px\\",
+        alignItems: \\"flex-start\\",
+        justifyContent: \\"flex-start\\",
+        ...props.style,
+      }}
+    >
+      <div
+        style={{
+          display: \\"flex\\",
+          position: \\"relative\\",
+          flexGrow: 0,
+          alignSelf: \\"auto\\",
+          width: \\"fit-content\\",
+          height: \\"fit-content\\",
+          fontFamily: \\"Inter\\",
+          fontSize: \\"12px\\",
+          fontWeight: 400,
+          fontStyle: \\"normal\\",
+          lineHeight: \\"normal\\",
+          letterSpacing: \\"0em\\",
+          color: \\"#000000\\",
+          textAlign: \\"left\\",
+          flexDirection: \\"column\\",
+          justifyContent: \\"flex-start\\",
+        }}
+      >
+        Some Form (stretch)
+      </div>
+      <Button
+        showChevron={false}
+        text={\\"OK\\"}
+        style={{ alignSelf: \\"stretch\\", width: \\"auto\\" }}
+      ></Button>
+    </div>
+  );
+}
+",
+    "filePath": "Form2.js",
+  },
+  {
+    "content": "import { Button } from \\"./Button.js\\";
+
+export function Form(props) {
+  return (
+    <div
+      {...props}
+      style={{
+        display: \\"flex\\",
+        position: \\"relative\\",
+        flexGrow: 0,
+        alignSelf: \\"auto\\",
+        width: \\"fit-content\\",
+        height: \\"fit-content\\",
+        borderStyle: \\"none\\",
+        background: \\"#ffffff\\",
+        borderRadius: \\"0px 0px 0px 0px\\",
+        borderWidth: \\"0px 0px 0px 0px\\",
+        overflow: \\"hidden\\",
+        flexDirection: \\"column\\",
+        gap: \\"13px\\",
+        padding: \\"16px 16px 16px 16px\\",
+        alignItems: \\"flex-start\\",
+        justifyContent: \\"flex-start\\",
+        ...props.style,
+      }}
+    >
+      <div
+        style={{
+          display: \\"flex\\",
+          position: \\"relative\\",
+          flexGrow: 0,
+          alignSelf: \\"auto\\",
+          width: \\"fit-content\\",
+          height: \\"fit-content\\",
+          fontFamily: \\"Inter\\",
+          fontSize: \\"12px\\",
+          fontWeight: 400,
+          fontStyle: \\"normal\\",
+          lineHeight: \\"normal\\",
+          letterSpacing: \\"0em\\",
+          color: \\"#000000\\",
+          textAlign: \\"left\\",
+          flexDirection: \\"column\\",
+          justifyContent: \\"flex-start\\",
+        }}
+      >
+        Some Form
+      </div>
+      <Button showChevron={true} text={\\"OK\\"} style={{}}></Button>
+    </div>
+  );
+}
+",
+    "filePath": "Form.js",
+  },
+  {
+    "content": "export function Frame1(props) {
+  return (
+    <div
+      {...props}
+      style={{
+        display: \\"flex\\",
+        position: \\"relative\\",
+        flexGrow: 0,
+        alignSelf: \\"auto\\",
+        width: \\"344px\\",
+        height: \\"93px\\",
+        borderStyle: \\"none\\",
+        background: \\"#ffffff\\",
+        borderRadius: \\"0px 0px 0px 0px\\",
+        borderWidth: \\"0px 0px 0px 0px\\",
+        overflow: \\"hidden\\",
+        flexDirection: \\"column\\",
+        gap: \\"0px\\",
+        padding: \\"0px 0px 0px 0px\\",
+        alignItems: \\"flex-start\\",
+        justifyContent: \\"flex-start\\",
+        ...props.style,
+      }}
+    >
+      <svg
+        width={128}
+        height={64}
+        viewBox={\\"0 0 128 64\\"}
+        fill={\\"none\\"}
+        style={{
+          display: \\"flex\\",
+          position: \\"absolute\\",
+          left: \\"8px\\",
+          top: \\"20px\\",
+          flexGrow: 0,
+          alignSelf: \\"auto\\",
+          width: \\"128px\\",
+          height: \\"64px\\",
+        }}
+      >
+        <rect width=\\"128\\" height=\\"64\\" fill=\\"#D9D9D9\\" />
+      </svg>
+      <svg
+        width={128}
+        height={64}
+        viewBox={\\"0 0 128 64\\"}
+        fill={\\"none\\"}
+        style={{
+          display: \\"flex\\",
+          position: \\"absolute\\",
+          left: \\"153px\\",
+          top: \\"8px\\",
+          flexGrow: 0,
+          alignSelf: \\"auto\\",
+          width: \\"128px\\",
+          height: \\"64px\\",
+        }}
+      >
+        <rect width=\\"128\\" height=\\"64\\" fill=\\"#FF0000\\" />
+      </svg>
+    </div>
+  );
+}
+",
+    "filePath": "Frame1.js",
+  },
+]
+`;
+
+exports[`Generator > should emit tailwind 1`] = `
 [
   {
     "content": "export function Button(props) {

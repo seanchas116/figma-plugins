@@ -1,12 +1,13 @@
-import { GeneratedFile, Generator } from "@uimix/codegen";
+import { GeneratedFile, Generator, GeneratorOptions } from "@uimix/codegen";
 import { FunctionComponent } from "preact";
 import { useState } from "preact/hooks";
 import { Button } from "../components/Button";
+import { Select } from "../components/Input";
 import { SyntaxHighlight } from "../components/SyntaxHighlight";
 import { rpc } from "../rpc";
-import { formatJS } from "../util/format";
 
 export const ExportPanel: FunctionComponent = () => {
+  const [style, setStyle] = useState<GeneratorOptions["style"]>("inline");
   const [codes, setCodes] = useState<GeneratedFile[]>([]);
 
   const onExport = async () => {
@@ -15,7 +16,7 @@ export const ExportPanel: FunctionComponent = () => {
     console.info("Generating...");
     console.info(JSON.stringify(components));
 
-    const generator = new Generator({ jsx: true, components });
+    const generator = new Generator({ components, style });
     const codes = generator.generateProject();
 
     setCodes(codes);
@@ -23,7 +24,18 @@ export const ExportPanel: FunctionComponent = () => {
 
   return (
     <div className="px-4 py-3 flex flex-col gap-3">
-      <Button onClick={onExport}>Export whole document</Button>
+      <div className="flex justify-between items-center">
+        <Button onClick={onExport}>Export whole document</Button>
+        <Select
+          value={style}
+          onChange={(e) => {
+            setStyle(e.currentTarget.value as GeneratorOptions["style"]);
+          }}
+        >
+          <option value="tailwind">Tailwind</option>
+          <option value="inline">Inline CSS</option>
+        </Select>
+      </div>
       {codes.map((code) => (
         <div className="flex flex-col gap-2">
           <h3 className="font-bold">{code.filePath}</h3>

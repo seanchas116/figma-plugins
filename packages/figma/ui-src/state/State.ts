@@ -49,6 +49,7 @@ class State {
           elem.style.y = { top: 0 };
           return new Generator({
             components: [],
+            style: "inline",
           }).generateElement(elem);
         })
         .join("");

@@ -2,6 +2,7 @@ import { Component, Element, PropertyDefinition } from "@uimix/element-ir";
 import { camelCase, capitalize } from "lodash-es";
 import * as svgParser from "svg-parser";
 import { formatJS } from "./format";
+import { InlineStyleGenerator } from "./style/InlineStyleGenerator";
 import { IStyleGenerator } from "./style/IStyleGenerator";
 import { TailwindStyleGenerator } from "./style/TailwindStyleGenerator";
 
@@ -15,9 +16,8 @@ interface ExtendedComponent extends Component {
 }
 
 export interface GeneratorOptions {
-  jsx?: boolean;
+  style: "tailwind" | "inline";
   components: Component[];
-  styleGenerator?: IStyleGenerator;
 }
 
 export class Generator {
@@ -48,16 +48,18 @@ export class Generator {
       }
     }
 
-    this.options = {
-      jsx: options.jsx ?? false,
-    };
-    this.styleGenerator =
-      options.styleGenerator ?? new TailwindStyleGenerator();
+    this.styleGenerator = (() => {
+      switch (options.style) {
+        case "tailwind":
+          return new TailwindStyleGenerator();
+        case "inline":
+          return new InlineStyleGenerator();
+        default:
+          throw new Error("Unknown style: " + options.style);
+      }
+    })();
   }
 
-  private options: {
-    jsx: boolean;
-  };
   readonly components: ExtendedComponent[] = [];
   readonly componentMap = new Map<string, ExtendedComponent>();
   readonly styleGenerator: IStyleGenerator;
