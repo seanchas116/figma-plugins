@@ -5,14 +5,25 @@ import { Button } from "../components/Button";
 import { Select } from "../components/Input";
 import { SyntaxHighlight } from "../components/SyntaxHighlight";
 import { rpc } from "../rpc";
+import JSZip from "jszip";
 
-function downloadFile(content: string, fileName: string) {
+function downloadZipFile(zip: string, fileName: string) {
   const link = document.createElement("a");
-  link.href = "data:text/plain;charset=utf-8," + encodeURIComponent(content);
+  link.href = `data:application/zip;base64,${zip}`;
   link.download = fileName;
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
+}
+
+async function makeZip(codes: GeneratedFile[]): Promise<string> {
+  const zip = new JSZip();
+
+  for (const code of codes) {
+    zip.file(code.filePath, code.content);
+  }
+
+  return zip.generateAsync({ type: "base64" });
 }
 
 export const ExportPanel: FunctionComponent = () => {
@@ -28,9 +39,11 @@ export const ExportPanel: FunctionComponent = () => {
     const generator = new Generator({ components, style });
     const codes = generator.generateProject();
 
-    downloadFile(codes[0].content, codes[0].filePath);
-
     setCodes(codes);
+
+    makeZip(codes).then((zip) => {
+      downloadZipFile(zip, "export.zip");
+    });
   };
 
   return (
