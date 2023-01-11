@@ -39,6 +39,7 @@ exports[`Generator > should work 1`] = `
   },
   {
     "content": "import { Button } from \\"./Button.js\\";
+
 export function Form2(props) {
   return (
     <div
@@ -64,6 +65,7 @@ export function Form2(props) {
   },
   {
     "content": "import { Button } from \\"./Button.js\\";
+
 export function Form(props) {
   return (
     <div

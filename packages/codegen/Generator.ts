@@ -232,7 +232,7 @@ export class Generator {
       (c) => `import { ${c} } from "./${c}.js";`
     );
 
-    return [...imports, ...body];
+    return [...imports, "\n\n", ...body];
   }
 
   generateProject(): GeneratedFile[] {
