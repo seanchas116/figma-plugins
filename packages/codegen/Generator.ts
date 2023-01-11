@@ -216,7 +216,7 @@ export class Generator {
     ];
   }
 
-  generateProject(): File[] {
+  generateProject(): GeneratedFile[] {
     return this.components.map((c) => {
       const content = formatJS(this.generateComponent(c).join(""));
 
@@ -228,7 +228,7 @@ export class Generator {
   }
 }
 
-interface File {
+export interface GeneratedFile {
   filePath: string;
   content: string;
 }
