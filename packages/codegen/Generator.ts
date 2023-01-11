@@ -70,8 +70,8 @@ export class Generator {
     tagExtra: string[],
     children: string[] = []
   ): string[] {
-    const propsStr = Object.entries(props).map(([key, value]) =>
-      value ? `${key}={${JSON.stringify(value)}}` : key
+    const propsStr = Object.entries(props).map(
+      ([key, value]) => `${key}={${JSON.stringify(value)}}`
     );
     return [
       `<${tagName} `,
