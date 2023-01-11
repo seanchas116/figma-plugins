@@ -59,6 +59,7 @@ export const ExportPanel: FunctionComponent = () => {
           <option value="tailwind">Tailwind</option>
           <option value="inline">Inline Style</option>
           <option value="css">CSS</option>
+          <option value="cssModules">CSS Modules</option>
         </Select>
       </div>
       {codes.map((code) => (

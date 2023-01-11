@@ -3,13 +3,14 @@ import { camelCase, capitalize } from "lodash-es";
 import * as svgParser from "svg-parser";
 import { ExtendedComponent, ExtendedPropertyDefinition } from "./component";
 import { formatCSS, formatJS } from "./format";
+import { CSSModulesStyleGenerator } from "./style/CSSModulesStyleGenerator";
 import { CSSStyleGenerator } from "./style/CSSStyleGenerator";
 import { InlineStyleGenerator } from "./style/InlineStyleGenerator";
 import { IStyleGenerator } from "./style/IStyleGenerator";
 import { TailwindStyleGenerator } from "./style/TailwindStyleGenerator";
 
 export interface GeneratorOptions {
-  style: "tailwind" | "inline" | "css";
+  style: "tailwind" | "inline" | "css" | "cssModules";
   components: Component[];
 }
 
@@ -49,6 +50,8 @@ export class Generator {
           return new InlineStyleGenerator();
         case "css":
           return new CSSStyleGenerator();
+        case "cssModules":
+          return new CSSModulesStyleGenerator();
         default:
           throw new Error("Unknown style: " + options.style);
       }
@@ -239,7 +242,9 @@ export class Generator {
 
     const cssFile: GeneratedFile | undefined = cssContents.length
       ? {
-          filePath: `${component.inCodeName}.css`,
+          filePath: `${component.inCodeName}${
+            this.styleGenerator.styleSuffix ?? ".css"
+          }`,
           content: formatCSS(cssContents.join("")),
         }
       : undefined;

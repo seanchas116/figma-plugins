@@ -14,4 +14,6 @@ export interface IStyleGenerator {
   ): string[];
 
   additionalImports?(component: ExtendedComponent): string[];
+
+  styleSuffix?: string;
 }
