@@ -6,6 +6,15 @@ import { Select } from "../components/Input";
 import { SyntaxHighlight } from "../components/SyntaxHighlight";
 import { rpc } from "../rpc";
 
+function downloadFile(content: string, fileName: string) {
+  const link = document.createElement("a");
+  link.href = "data:text/plain;charset=utf-8," + encodeURIComponent(content);
+  link.download = fileName;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
 export const ExportPanel: FunctionComponent = () => {
   const [style, setStyle] = useState<GeneratorOptions["style"]>("inline");
   const [codes, setCodes] = useState<GeneratedFile[]>([]);
@@ -18,6 +27,8 @@ export const ExportPanel: FunctionComponent = () => {
 
     const generator = new Generator({ components, style });
     const codes = generator.generateProject();
+
+    downloadFile(codes[0].content, codes[0].filePath);
 
     setCodes(codes);
   };
