@@ -309,22 +309,24 @@ export function instanceClassNames(style: Partial<InstanceStyle>): string[] {
   ];
 }
 
+function elementClassNames(element: Element): string[] {
+  switch (element.type) {
+    case "frame":
+      return frameClassNames(element.style);
+    case "image":
+      return imageClassNames(element.style);
+    case "svg":
+      return svgClassNames(element.style);
+    case "text":
+      return textClassNames(element.style);
+    case "instance":
+      return instanceClassNames(element.style);
+  }
+}
+
 export class TailwindStyleGenerator implements IStyleGenerator {
   generate(element: Element, { isRoot }: { isRoot: boolean }): string[] {
-    const classNames = (() => {
-      switch (element.type) {
-        case "frame":
-          return frameClassNames(element.style);
-        case "image":
-          return imageClassNames(element.style);
-        case "svg":
-          return svgClassNames(element.style);
-        case "text":
-          return textClassNames(element.style);
-        case "instance":
-          return instanceClassNames(element.style);
-      }
-    })();
+    const classNames = elementClassNames(element);
 
     let stringified = JSON.stringify(classNames.join(" "));
 

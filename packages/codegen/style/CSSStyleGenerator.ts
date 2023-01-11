@@ -1,14 +1,15 @@
 import { Element } from "@uimix/element-ir";
+import * as CSS from "csstype";
+import { kebabCase } from "lodash-es";
 import { ExtendedComponent } from "../component";
-import {
-  frameCSS,
-  imageCSS,
-  instanceCSS,
-  stringifyStyle,
-  svgCSS,
-  textCSS,
-} from "./InlineStyleGenerator";
+import { elementCSS } from "./InlineStyleGenerator";
 import { IStyleGenerator } from "./IStyleGenerator";
+
+export function stringifyStyle(css: CSS.Properties): string {
+  return Object.entries(css)
+    .map(([key, value]) => `${kebabCase(key)}: ${value}`)
+    .join("; ");
+}
 
 export class CSSStyleGenerator implements IStyleGenerator {
   generate(
@@ -23,20 +24,7 @@ export class CSSStyleGenerator implements IStyleGenerator {
       component?: ExtendedComponent;
     }
   ): string[] {
-    const css = (() => {
-      switch (element.type) {
-        case "frame":
-          return frameCSS(element.style);
-        case "image":
-          return imageCSS(element.style);
-        case "text":
-          return textCSS(element.style);
-        case "svg":
-          return svgCSS(element.style);
-        case "instance":
-          return instanceCSS(element.style);
-      }
-    })();
+    const css = elementCSS(element);
 
     const className = `${
       component?.inCodeName ?? "element"

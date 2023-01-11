@@ -14,7 +14,6 @@ import {
   TextStyleMixin,
 } from "@uimix/element-ir";
 import * as CSS from "csstype";
-import { kebabCase } from "lodash-es";
 import { colorToCSS } from "./common";
 import { IStyleGenerator } from "./IStyleGenerator";
 
@@ -218,7 +217,7 @@ function imageCSSPartial(mixin: Partial<ImageStyleMixin>): CSS.Properties {
   return props;
 }
 
-export function frameCSS(style: Partial<FrameStyle>): CSS.Properties {
+function frameCSS(style: Partial<FrameStyle>): CSS.Properties {
   return {
     ...dimensionCSSPartial(style),
     ...rectangleCSSPartial(style),
@@ -226,7 +225,7 @@ export function frameCSS(style: Partial<FrameStyle>): CSS.Properties {
   };
 }
 
-export function imageCSS(style: Partial<ImageStyle>): CSS.Properties {
+function imageCSS(style: Partial<ImageStyle>): CSS.Properties {
   return {
     ...dimensionCSSPartial(style),
     ...rectangleCSSPartial(style),
@@ -234,13 +233,13 @@ export function imageCSS(style: Partial<ImageStyle>): CSS.Properties {
   };
 }
 
-export function svgCSS(style: Partial<SVGStyle>): CSS.Properties {
+function svgCSS(style: Partial<SVGStyle>): CSS.Properties {
   return {
     ...dimensionCSSPartial(style),
   };
 }
 
-export function textCSS(style: Partial<TextStyle>): CSS.Properties {
+function textCSS(style: Partial<TextStyle>): CSS.Properties {
   return {
     ...dimensionCSSPartial(style),
     ...textSpanCSSPartial(style),
@@ -248,7 +247,7 @@ export function textCSS(style: Partial<TextStyle>): CSS.Properties {
   };
 }
 
-export function instanceCSS(style: Partial<InstanceStyle>): CSS.Properties {
+function instanceCSS(style: Partial<InstanceStyle>): CSS.Properties {
   return {
     ...dimensionCSSPartial(style),
     ...rectangleCSSPartial(style),
@@ -256,28 +255,24 @@ export function instanceCSS(style: Partial<InstanceStyle>): CSS.Properties {
   };
 }
 
-export function stringifyStyle(css: CSS.Properties): string {
-  return Object.entries(css)
-    .map(([key, value]) => `${kebabCase(key)}: ${value}`)
-    .join("; ");
+export function elementCSS(element: Element): CSS.Properties {
+  switch (element.type) {
+    case "frame":
+      return frameCSS(element.style);
+    case "image":
+      return imageCSS(element.style);
+    case "text":
+      return textCSS(element.style);
+    case "svg":
+      return svgCSS(element.style);
+    case "instance":
+      return instanceCSS(element.style);
+  }
 }
 
 export class InlineStyleGenerator implements IStyleGenerator {
   generate(element: Element, { isRoot }: { isRoot: boolean }): string[] {
-    const css = (() => {
-      switch (element.type) {
-        case "frame":
-          return frameCSS(element.style);
-        case "image":
-          return imageCSS(element.style);
-        case "text":
-          return textCSS(element.style);
-        case "svg":
-          return svgCSS(element.style);
-        case "instance":
-          return instanceCSS(element.style);
-      }
-    })();
+    const css = elementCSS(element);
 
     let stringified = JSON.stringify(css);
     if (isRoot) {
