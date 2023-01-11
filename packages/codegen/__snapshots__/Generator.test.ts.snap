@@ -38,7 +38,8 @@ exports[`Generator > should work 1`] = `
     "filePath": "Button.js",
   },
   {
-    "content": "export function Form2(props) {
+    "content": "import { Button } from \\"./Button\\";
+export function Form2(props) {
   return (
     <div
       {...props}
@@ -62,7 +63,8 @@ exports[`Generator > should work 1`] = `
     "filePath": "Form2.js",
   },
   {
-    "content": "export function Form(props) {
+    "content": "import { Button } from \\"./Button\\";
+export function Form(props) {
   return (
     <div
       {...props}

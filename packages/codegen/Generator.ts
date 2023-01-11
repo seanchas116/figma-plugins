@@ -95,9 +95,11 @@ export class Generator {
     element: Element,
     {
       component,
+      usedComponents,
       isRoot = true,
     }: {
       component?: ExtendedComponent;
+      usedComponents?: Set<string>;
       isRoot?: boolean;
     } = {}
   ): string[] {
@@ -110,6 +112,8 @@ export class Generator {
           console.error('Component not found: "' + element.componentKey + '"');
           return [];
         }
+
+        usedComponents?.add(component.inCodeName);
 
         const props: Record<string, string> = {};
         for (const [name, value] of Object.entries(element.properties)) {
@@ -130,7 +134,11 @@ export class Generator {
           isRoot,
           tagExtra: this.styleGenerator.frameCSS(element.style, isRoot),
           children: element.children.flatMap((e) =>
-            this.generateElement(e, { component, isRoot: false })
+            this.generateElement(e, {
+              component,
+              isRoot: false,
+              usedComponents,
+            })
           ),
         });
         break;
@@ -199,6 +207,8 @@ export class Generator {
   }
 
   generateComponent(component: ExtendedComponent): string[] {
+    const usedComponents = new Set<string>();
+
     const element = {
       ...component.element,
       style: {
@@ -209,11 +219,20 @@ export class Generator {
       },
     };
 
-    return [
+    const body = [
       `export function ${component.inCodeName}(props) { return `,
-      ...this.generateElement(element as Element, { component }),
+      ...this.generateElement(element as Element, {
+        component,
+        usedComponents,
+      }),
       `}`,
     ];
+
+    const imports = Array.from(usedComponents).map(
+      (c) => `import { ${c} } from "./${c}";`
+    );
+
+    return [...imports, ...body];
   }
 
   generateProject(): GeneratedFile[] {
