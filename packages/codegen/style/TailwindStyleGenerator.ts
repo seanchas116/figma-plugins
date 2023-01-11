@@ -1,5 +1,6 @@
 import {
   DimensionStyleMixin,
+  Element,
   FrameStyle,
   FrameStyleMixin,
   ImageStyle,
@@ -300,35 +301,37 @@ export function textClassNames(style: Partial<TextStyle>): string[] {
   ];
 }
 
+export function instanceClassNames(style: Partial<InstanceStyle>): string[] {
+  return [
+    ...dimensionClassNamesPartial(style),
+    ...rectangleClassNamesPartial(style),
+    ...frameClassNamesPartial(style),
+  ];
+}
+
 export class TailwindStyleGenerator implements IStyleGenerator {
-  private generate(classNames: string[], root: boolean): string[] {
+  generate(element: Element, isRoot: boolean): string[] {
+    const classNames = (() => {
+      switch (element.type) {
+        case "frame":
+          return frameClassNames(element.style);
+        case "image":
+          return imageClassNames(element.style);
+        case "svg":
+          return svgClassNames(element.style);
+        case "text":
+          return textClassNames(element.style);
+        case "instance":
+          return instanceClassNames(element.style);
+      }
+    })();
+
     let stringified = JSON.stringify(classNames.join(" "));
 
-    if (root) {
+    if (isRoot) {
       return ["className={twMerge(", stringified, ", props.className)}"];
     } else {
       return ["className=", stringified];
     }
-  }
-
-  frameCSS(style: Partial<FrameStyle>, isRoot: boolean) {
-    return this.generate(frameClassNames(style), isRoot);
-  }
-  imageCSS(style: Partial<ImageStyle>, isRoot: boolean) {
-    return this.generate(imageClassNames(style), isRoot);
-  }
-  svgCSS(style: Partial<SVGStyle>, isRoot: boolean) {
-    return this.generate(svgClassNames(style), isRoot);
-  }
-  textCSS(style: Partial<TextStyle>, isRoot: boolean) {
-    return this.generate(textClassNames(style), isRoot);
-  }
-  instanceCSS(style: Partial<InstanceStyle>, isRoot: boolean) {
-    const css = [
-      ...dimensionClassNamesPartial(style),
-      ...rectangleClassNamesPartial(style),
-      ...frameClassNamesPartial(style),
-    ];
-    return this.generate(css, isRoot);
   }
 }

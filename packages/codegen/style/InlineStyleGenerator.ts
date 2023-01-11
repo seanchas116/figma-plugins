@@ -1,6 +1,7 @@
 import {
   Color,
   DimensionStyleMixin,
+  Element,
   FrameStyle,
   FrameStyleMixin,
   ImageStyle,
@@ -247,6 +248,14 @@ export function textCSS(style: Partial<TextStyle>): CSS.Properties {
   };
 }
 
+export function instanceCSS(style: Partial<InstanceStyle>): CSS.Properties {
+  return {
+    ...dimensionCSSPartial(style),
+    ...rectangleCSSPartial(style),
+    ...frameCSSPartial(style),
+  };
+}
+
 export function stringifyStyle(css: CSS.Properties): string {
   return Object.entries(css)
     .map(([key, value]) => `${kebabCase(key)}: ${value}`)
@@ -254,33 +263,27 @@ export function stringifyStyle(css: CSS.Properties): string {
 }
 
 export class InlineStyleGenerator implements IStyleGenerator {
-  private generate(css: CSS.Properties, root: boolean): string[] {
+  generate(element: Element, isRoot: boolean): string[] {
+    const css = (() => {
+      switch (element.type) {
+        case "frame":
+          return frameCSS(element.style);
+        case "image":
+          return imageCSS(element.style);
+        case "text":
+          return textCSS(element.style);
+        case "svg":
+          return svgCSS(element.style);
+        case "instance":
+          return instanceCSS(element.style);
+      }
+    })();
+
     let stringified = JSON.stringify(css);
-    if (root) {
+    if (isRoot) {
       stringified = stringified.slice(0, -1) + ", ...props.style}";
     }
 
     return ["style={" + stringified + "}"];
-  }
-
-  frameCSS(style: Partial<FrameStyle>, isRoot: boolean) {
-    return this.generate(frameCSS(style), isRoot);
-  }
-  imageCSS(style: Partial<ImageStyle>, isRoot: boolean) {
-    return this.generate(imageCSS(style), isRoot);
-  }
-  svgCSS(style: Partial<SVGStyle>, isRoot: boolean) {
-    return this.generate(svgCSS(style), isRoot);
-  }
-  textCSS(style: Partial<TextStyle>, isRoot: boolean) {
-    return this.generate(textCSS(style), isRoot);
-  }
-  instanceCSS(style: Partial<InstanceStyle>, isRoot: boolean) {
-    const css = {
-      ...dimensionCSSPartial(style),
-      ...rectangleCSSPartial(style),
-      ...frameCSSPartial(style),
-    };
-    return this.generate(css, isRoot);
   }
 }

@@ -107,6 +107,8 @@ export class Generator {
   ): string[] {
     let result: string[];
 
+    const tagExtra = this.styleGenerator.generate(element, isRoot);
+
     switch (element.type) {
       case "instance": {
         const component = this.componentMap.get(element.componentKey);
@@ -127,14 +129,14 @@ export class Generator {
         result = this.generateTag(component.inCodeName, {
           isRoot,
           props,
-          tagExtra: this.styleGenerator.instanceCSS(element.style, isRoot),
+          tagExtra,
         });
         break;
       }
       case "frame": {
         result = this.generateTag("div", {
           isRoot,
-          tagExtra: this.styleGenerator.frameCSS(element.style, isRoot),
+          tagExtra,
           children: element.children.flatMap((e) =>
             this.generateElement(e, {
               component,
@@ -148,7 +150,7 @@ export class Generator {
       case "image": {
         result = this.generateTag("img", {
           isRoot,
-          tagExtra: this.styleGenerator.imageCSS(element.style, isRoot),
+          tagExtra,
         });
         break;
       }
@@ -172,7 +174,7 @@ export class Generator {
         result = this.generateTag("svg", {
           isRoot,
           props,
-          tagExtra: this.styleGenerator.svgCSS(element.style, isRoot),
+          tagExtra,
           children: [svgChildren],
         });
         break;
@@ -191,7 +193,7 @@ export class Generator {
 
         result = this.generateTag("div", {
           isRoot,
-          tagExtra: this.styleGenerator.textCSS(element.style, isRoot),
+          tagExtra,
           children,
         });
         break;
