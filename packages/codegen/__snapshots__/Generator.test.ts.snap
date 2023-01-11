@@ -576,7 +576,9 @@ export function Form(props) {
 exports[`Generator > should emit tailwind 1`] = `
 [
   {
-    "content": "export function Button(props) {
+    "content": "import { twMerge } from \\"tailwind-merge\\";
+
+export function Button(props) {
   return (
     <div
       {...props}
@@ -612,6 +614,7 @@ exports[`Generator > should emit tailwind 1`] = `
   },
   {
     "content": "import { Button } from \\"./Button.js\\";
+import { twMerge } from \\"tailwind-merge\\";
 
 export function Form2(props) {
   return (
@@ -638,6 +641,7 @@ export function Form2(props) {
   },
   {
     "content": "import { Button } from \\"./Button.js\\";
+import { twMerge } from \\"tailwind-merge\\";
 
 export function Form(props) {
   return (
@@ -659,7 +663,9 @@ export function Form(props) {
     "filePath": "Form.js",
   },
   {
-    "content": "export function Frame1(props) {
+    "content": "import { twMerge } from \\"tailwind-merge\\";
+
+export function Frame1(props) {
   return (
     <div
       {...props}

@@ -336,4 +336,8 @@ export class TailwindStyleGenerator implements IStyleGenerator {
       return ["className=", stringified];
     }
   }
+
+  additionalImports?(): string[] {
+    return [`import {twMerge} from "tailwind-merge";`];
+  }
 }
