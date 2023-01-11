@@ -85,7 +85,11 @@ export class Generator {
     ];
   }
 
-  generateElement(element: Element, isRoot = true): string[] {
+  generateElement(
+    element: Element,
+    component?: ExtendedComponent,
+    isRoot = true
+  ): string[] {
     switch (element.type) {
       case "instance": {
         const component = this.componentMap.get(element.componentKey);
@@ -114,7 +118,9 @@ export class Generator {
           "div",
           {},
           this.styleGenerator.frameCSS(element.style, isRoot),
-          element.children.flatMap((e) => this.generateElement(e, false))
+          element.children.flatMap((e) =>
+            this.generateElement(e, component, false)
+          )
         );
       }
       case "image": {
@@ -151,12 +157,21 @@ export class Generator {
         );
       }
       case "text": {
+        let content = [element.content];
+
+        if (component && element.propertyRef.content) {
+          const prop = component.propertyMap.get(element.propertyRef.content);
+          if (prop) {
+            content = [`{props.${prop.nameForCode}}`];
+          }
+        }
+
         return this.generateTag(
           isRoot,
           "div",
           {},
           this.styleGenerator.textCSS(element.style, isRoot),
-          [element.content]
+          content
         );
       }
     }
@@ -175,7 +190,7 @@ export class Generator {
 
     return [
       `export function ${component.nameForCode}(props) { return `,
-      ...this.generateElement(element as Element),
+      ...this.generateElement(element as Element, component, true),
       `}`,
     ];
   }
