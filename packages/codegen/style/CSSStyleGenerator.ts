@@ -40,4 +40,8 @@ export class CSSStyleGenerator implements IStyleGenerator {
       return [`className="${className}"`];
     }
   }
+
+  additionalImports?(component: ExtendedComponent): string[] {
+    return [`import "./${component.inCodeName}.css";`];
+  }
 }

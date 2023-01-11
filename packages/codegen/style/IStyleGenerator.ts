@@ -12,4 +12,6 @@ export interface IStyleGenerator {
       isRoot: boolean;
     }
   ): string[];
+
+  additionalImports?(component: ExtendedComponent): string[];
 }

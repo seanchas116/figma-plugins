@@ -248,8 +248,10 @@ export class Generator {
       (c) => `import { ${c} } from "./${c}.js";`
     );
 
-    if (cssFile) {
-      imports.push(`import "./${component.inCodeName}.css";`);
+    const additionalImports =
+      this.styleGenerator.additionalImports?.(component);
+    if (additionalImports) {
+      imports.push(...additionalImports);
     }
 
     const source = [...imports, "\n\n", ...body];
