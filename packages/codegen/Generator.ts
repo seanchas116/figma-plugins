@@ -5,11 +5,11 @@ import { IStyleGenerator } from "./style/IStyleGenerator";
 import { TailwindStyleGenerator } from "./style/TailwindStyleGenerator";
 
 interface ExtendedPropertyDefinition extends PropertyDefinition {
-  nameForCode: string;
+  inCodeName: string;
 }
 
 interface ExtendedComponent extends Component {
-  nameForCode: string;
+  inCodeName: string;
   propertyMap: Map<string /* name */, ExtendedPropertyDefinition>;
 }
 
@@ -29,16 +29,16 @@ export class Generator {
       // TODO: avoid name conflicts
 
       for (const prop of component.propertyDefinitions) {
-        const nameForCode = camelCase(prop.name.split("#")[0]);
+        const inCodeName = camelCase(prop.name.split("#")[0]);
         propertyMap.set(prop.name, {
           ...prop,
-          nameForCode,
+          inCodeName,
         });
       }
 
       this.components.push({
         ...component,
-        nameForCode: capitalize(camelCase(component.element.name ?? "")),
+        inCodeName: capitalize(camelCase(component.element.name ?? "")),
         propertyMap,
       });
     }
@@ -116,11 +116,11 @@ export class Generator {
         for (const [name, value] of Object.entries(element.properties)) {
           const def = component.propertyMap.get(name);
           if (def) {
-            props[def.nameForCode] = value;
+            props[def.inCodeName] = value;
           }
         }
         console.log(props);
-        result = this.generateTag(component.nameForCode, {
+        result = this.generateTag(component.inCodeName, {
           isRoot,
           props,
           tagExtra: this.styleGenerator.instanceCSS(element.style, isRoot),
@@ -175,7 +175,7 @@ export class Generator {
         if (component && element.propertyRef.children) {
           const prop = component.propertyMap.get(element.propertyRef.children);
           if (prop) {
-            children = [`{props.${prop.nameForCode}}`];
+            children = [`{props.${prop.inCodeName}}`];
           }
         }
 
@@ -191,7 +191,7 @@ export class Generator {
     if (element.propertyRef.visible) {
       const prop = component?.propertyMap.get(element.propertyRef.visible);
       if (prop) {
-        result = [`{props.${prop.nameForCode} && `, ...result, `}`];
+        result = [`{props.${prop.inCodeName} && `, ...result, `}`];
       }
     }
 
@@ -210,7 +210,7 @@ export class Generator {
     };
 
     return [
-      `export function ${component.nameForCode}(props) { return `,
+      `export function ${component.inCodeName}(props) { return `,
       ...this.generateElement(element as Element, { component }),
       `}`,
     ];
