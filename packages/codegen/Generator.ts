@@ -143,6 +143,7 @@ export class Generator {
               component,
               isRoot: false,
               usedComponents,
+              cssContents,
             })
           ),
         });
