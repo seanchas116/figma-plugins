@@ -24,7 +24,7 @@ export async function getElementIR(
     name: node.name,
     propertyRef: {
       visible: node.componentPropertyReferences?.visible,
-      content: node.componentPropertyReferences?.characters,
+      children: node.componentPropertyReferences?.characters,
       component: node.componentPropertyReferences?.mainComponent,
     },
   };
@@ -81,7 +81,7 @@ export async function getElementIR(
         {
           type: "text",
           ...commonProps,
-          content: node.characters,
+          children: node.characters,
           style: {
             ...getDimensionStyleMixin(node, positionOffset),
             ...getTextSpanStyleMixin(node),

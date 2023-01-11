@@ -11,7 +11,7 @@ export interface CommonProps {
   name: string;
   propertyRef: {
     visible?: string;
-    content?: string;
+    children?: string;
     component?: string;
   };
 }
@@ -25,7 +25,7 @@ export interface FrameElement extends CommonProps {
 export interface TextElement extends CommonProps {
   type: "text";
   style: TextStyle;
-  content: string; // TODO: spans
+  children: string; // TODO: spans
 }
 
 export interface ImageElement extends CommonProps {

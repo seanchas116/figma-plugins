@@ -163,19 +163,19 @@ export class Generator {
         });
       }
       case "text": {
-        let content = [element.content];
+        let children = [element.children];
 
-        if (component && element.propertyRef.content) {
-          const prop = component.propertyMap.get(element.propertyRef.content);
+        if (component && element.propertyRef.children) {
+          const prop = component.propertyMap.get(element.propertyRef.children);
           if (prop) {
-            content = [`{props.${prop.nameForCode}}`];
+            children = [`{props.${prop.nameForCode}}`];
           }
         }
 
         return this.generateTag("div", {
           isRoot,
           tagExtra: this.styleGenerator.textCSS(element.style, isRoot),
-          children: content,
+          children,
         });
       }
     }
