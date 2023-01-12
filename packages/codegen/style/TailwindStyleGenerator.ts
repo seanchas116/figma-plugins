@@ -15,6 +15,34 @@ import {
 import { IStyleGenerator } from "../types";
 import { TailwindKeywordResolver } from "./TailwindKeywordResolver";
 
+const initialClassNames = new Set([
+  "w-auto",
+  "h-auto",
+  "flex-none",
+  "self-auto",
+  "bg-none",
+  "bg-transparent",
+  "border-transparent",
+  "rounded-tr-none",
+  "rounded-br-none",
+  "rounded-bl-none",
+  "rounded-tl-none",
+  "border-t-0",
+  "border-r-0",
+  "border-b-0",
+  "border-l-0",
+  "overflow-visible",
+  "flex-row",
+  "gap-0",
+  "pt-0",
+  "pr-0",
+  "pb-0",
+  "pl-0",
+  "not-italic",
+  "leading-normal",
+  "tracking-normal",
+]);
+
 const kw = new TailwindKeywordResolver();
 
 function dimensionClassNamesPartial(
@@ -275,32 +303,36 @@ function imageClassNamesPartial(mixin: Partial<ImageStyleMixin>): string[] {
   return classNames;
 }
 
+export function removeInitialClassNames(classNames: string[]): string[] {
+  return classNames.filter((className) => !initialClassNames.has(className));
+}
+
 export function frameClassNames(style: Partial<FrameStyle>): string[] {
-  return [
+  return removeInitialClassNames([
     ...dimensionClassNamesPartial(style),
     ...rectangleClassNamesPartial(style),
     ...frameClassNamesPartial(style),
-  ];
+  ]);
 }
 
 export function imageClassNames(style: Partial<ImageStyle>): string[] {
-  return [
+  return removeInitialClassNames([
     ...dimensionClassNamesPartial(style),
     ...rectangleClassNamesPartial(style),
     ...imageClassNamesPartial(style),
-  ];
+  ]);
 }
 
 export function svgClassNames(style: Partial<SVGStyle>): string[] {
-  return [...dimensionClassNamesPartial(style)];
+  return removeInitialClassNames([...dimensionClassNamesPartial(style)]);
 }
 
 export function textClassNames(style: Partial<TextStyle>): string[] {
-  return [
+  return removeInitialClassNames([
     ...dimensionClassNamesPartial(style),
     ...textSpanClassNamesPartial(style),
     ...textClassNamesPartial(style),
-  ];
+  ]);
 }
 
 export function instanceClassNames(style: Partial<InstanceStyle>): string[] {
