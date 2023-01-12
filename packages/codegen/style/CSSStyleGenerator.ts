@@ -2,7 +2,7 @@ import { Element } from "@uimix/element-ir";
 import * as CSS from "csstype";
 import { kebabCase } from "lodash-es";
 import { ExtendedComponent } from "../component";
-import { formatCSS } from "../format";
+import { formatCSS } from "../util/format";
 import { GeneratedFile } from "../Generator";
 import { elementCSS } from "./InlineStyleGenerator";
 import { IStyleGenerator } from "./IStyleGenerator";

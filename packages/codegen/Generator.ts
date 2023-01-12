@@ -2,7 +2,7 @@ import { Component, Element, PropertyDefinition } from "@uimix/element-ir";
 import { camelCase, capitalize } from "lodash-es";
 import * as svgParser from "svg-parser";
 import { ExtendedComponent, ExtendedPropertyDefinition } from "./component";
-import { formatCSS, formatJS } from "./format";
+import { formatCSS, formatJS } from "./util/format";
 import { CSSModulesStyleGenerator } from "./style/CSSModulesStyleGenerator";
 import { CSSStyleGenerator } from "./style/CSSStyleGenerator";
 import { InlineStyleGenerator } from "./style/InlineStyleGenerator";
