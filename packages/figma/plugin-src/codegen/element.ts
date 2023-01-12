@@ -79,16 +79,23 @@ export async function getElementIR(
   if (node.type === "INSTANCE") {
     const codeInstanceInfo = getInstanceInfo(node);
     if (codeInstanceInfo) {
-      const { props, component } = codeInstanceInfo;
+      const { props, component, autoResize } = codeInstanceInfo;
+
+      const style = getDimensionStyleMixin(node, positionOffset);
+      if (autoResize === "widthHeight") {
+        style.width = "fit-content";
+        style.height = "fit-content";
+      } else if (autoResize === "height") {
+        style.height = "fit-content";
+      }
+
       return [
         {
           type: "codeInstance",
           ...commonProps,
           component,
           properties: props,
-          style: {
-            ...getDimensionStyleMixin(node, positionOffset),
-          },
+          style,
         },
       ];
     }
