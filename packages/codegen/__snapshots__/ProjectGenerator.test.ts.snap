@@ -172,64 +172,162 @@ export function Form(props) {
     "filePath": "Form.js",
   },
   {
-    "content": ".Frame1 {
+    "content": ".Main {
   display: flex;
   position: relative;
-  width: 344px;
-  height: 93px;
+  width: 353px;
+  height: 205px;
+  background: #ffffff;
+  overflow: hidden;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px 16px 16px 16px;
+  align-items: flex-start;
+}
+.Main__Hello__UIMix_ {
+  display: flex;
+  position: relative;
+  width: fit-content;
+  height: fit-content;
+  font-family: Inter, sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.5;
+  color: #000000;
+  text-align: left;
+  flex-direction: column;
+}
+.Main__Lorem_ipsum_dolor_sit_amet__consectetur_adipiscing_elit__sed_do_eiusmod_tempor_incididunt_ut_labore_et_dolore_magna_aliqua_ {
+  display: flex;
+  position: relative;
+  align-self: stretch;
+  height: fit-content;
+  font-family: Inter, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #000000;
+  text-align: left;
+  flex-direction: column;
+}
+.Main__Button {
+  align-self: stretch;
+  width: auto;
+}
+",
+    "filePath": "Main.css",
+  },
+  {
+    "content": "import { Button } from \\"./Button.js\\";
+import \\"./Main.css\\";
+
+export function Main(props) {
+  return (
+    <div {...props} className={\\"Main \\" + props.className}>
+      <div className=\\"Main__Hello__UIMix_\\">Hello, UIMix!</div>
+      <div className=\\"Main__Lorem_ipsum_dolor_sit_amet__consectetur_adipiscing_elit__sed_do_eiusmod_tempor_incididunt_ut_labore_et_dolore_magna_aliqua_\\">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+        tempor incididunt ut labore et dolore magna aliqua.
+      </div>
+      <Button showChevron={false} text={\\"OK\\"} className=\\"Main__Button\\"></Button>
+    </div>
+  );
+}
+",
+    "filePath": "Main.js",
+  },
+  {
+    "content": ".Frame2 {
+  display: flex;
+  position: relative;
+  width: 517px;
+  height: fit-content;
   background: #ffffff;
   overflow: hidden;
   flex-direction: column;
   align-items: flex-start;
 }
-.Frame1__Rectangle_1 {
+.Frame2__Header {
   display: flex;
-  position: absolute;
-  left: 8px;
-  top: 20px;
-  width: 128px;
-  height: 64px;
+  position: relative;
+  flex-grow: 0;
+  align-self: stretch;
+  width: auto;
+  height: fit-content;
 }
-.Frame1__Rectangle_2 {
+.Frame2__Frame_1 {
   display: flex;
-  position: absolute;
-  left: 153px;
-  top: 8px;
-  width: 128px;
-  height: 64px;
+  position: relative;
+  align-self: stretch;
+  height: fit-content;
+  flex-direction: column;
+  gap: 24px;
+  padding: 24px 24px 24px 24px;
+  align-items: flex-start;
+}
+.Frame2__Hello__UIMix_ {
+  display: flex;
+  position: relative;
+  align-self: stretch;
+  height: fit-content;
+  font-family: Inter, sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.5;
+  color: #000000;
+  text-align: left;
+  flex-direction: column;
+}
+.Frame2__Lorem_ipsum_dolor_sit_amet__consectetur_adipiscing_elit__sed_do_eiusmod_tempor_incididunt_ut_labore_et_dolore_magna_aliqua_ {
+  display: flex;
+  position: relative;
+  align-self: stretch;
+  height: fit-content;
+  font-family: Inter, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #000000;
+  text-align: left;
+  flex-direction: column;
+}
+.Frame2__Button {
+  display: flex;
+  position: relative;
+  flex-grow: 0;
+  align-self: auto;
+  width: fit-content;
+  height: fit-content;
 }
 ",
-    "filePath": "Frame1.css",
+    "filePath": "Frame2.css",
   },
   {
-    "content": "import \\"./Frame1.css\\";
+    "content": "import \\"./Frame2.css\\";
 
-export function Frame1(props) {
+export function Frame2(props) {
   return (
-    <div {...props} className={\\"Frame1 \\" + props.className}>
-      <svg
-        width={128}
-        height={64}
-        viewBox={\\"0 0 128 64\\"}
-        fill={\\"none\\"}
-        className=\\"Frame1__Rectangle_1\\"
-      >
-        <rect width=\\"128\\" height=\\"64\\" fill=\\"#D9D9D9\\" />
-      </svg>
-      <svg
-        width={128}
-        height={64}
-        viewBox={\\"0 0 128 64\\"}
-        fill={\\"none\\"}
-        className=\\"Frame1__Rectangle_2\\"
-      >
-        <rect width=\\"128\\" height=\\"64\\" fill=\\"#FF0000\\" />
-      </svg>
+    <div {...props} className={\\"Frame2 \\" + props.className}>
+      <Header productName={\\"Hello, world!\\"} className=\\"Frame2__Header\\"></Header>
+      <div className=\\"Frame2__Frame_1\\">
+        <div className=\\"Frame2__Hello__UIMix_\\">Hello, UIMix!</div>
+        <div className=\\"Frame2__Lorem_ipsum_dolor_sit_amet__consectetur_adipiscing_elit__sed_do_eiusmod_tempor_incididunt_ut_labore_et_dolore_magna_aliqua_\\">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        </div>
+        <Button
+          primary={true}
+          size={\\"large\\"}
+          label={\\"Press Me\\"}
+          backgroundColor={\\"\\"}
+          className=\\"Frame2__Button\\"
+        ></Button>
+      </div>
     </div>
   );
 }
 ",
-    "filePath": "Frame1.js",
+    "filePath": "Frame2.js",
   },
 ]
 `;
@@ -402,15 +500,82 @@ export function Form(props) {
     "filePath": "Form.js",
   },
   {
-    "content": "export function Frame1(props) {
+    "content": "import { Button } from \\"./Button.js\\";
+
+export function Main(props) {
   return (
     <div
       {...props}
       style={{
         display: \\"flex\\",
         position: \\"relative\\",
-        width: \\"344px\\",
-        height: \\"93px\\",
+        width: \\"353px\\",
+        height: \\"205px\\",
+        background: \\"#ffffff\\",
+        overflow: \\"hidden\\",
+        flexDirection: \\"column\\",
+        gap: \\"12px\\",
+        padding: \\"16px 16px 16px 16px\\",
+        alignItems: \\"flex-start\\",
+        ...props.style,
+      }}
+    >
+      <div
+        style={{
+          display: \\"flex\\",
+          position: \\"relative\\",
+          width: \\"fit-content\\",
+          height: \\"fit-content\\",
+          fontFamily: \\"Inter, sans-serif\\",
+          fontSize: \\"16px\\",
+          fontWeight: 700,
+          lineHeight: 1.5,
+          color: \\"#000000\\",
+          textAlign: \\"left\\",
+          flexDirection: \\"column\\",
+        }}
+      >
+        Hello, UIMix!
+      </div>
+      <div
+        style={{
+          display: \\"flex\\",
+          position: \\"relative\\",
+          alignSelf: \\"stretch\\",
+          height: \\"fit-content\\",
+          fontFamily: \\"Inter, sans-serif\\",
+          fontSize: \\"16px\\",
+          fontWeight: 400,
+          lineHeight: 1.5,
+          color: \\"#000000\\",
+          textAlign: \\"left\\",
+          flexDirection: \\"column\\",
+        }}
+      >
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+        tempor incididunt ut labore et dolore magna aliqua.
+      </div>
+      <Button
+        showChevron={false}
+        text={\\"OK\\"}
+        style={{ alignSelf: \\"stretch\\", width: \\"auto\\" }}
+      ></Button>
+    </div>
+  );
+}
+",
+    "filePath": "Main.js",
+  },
+  {
+    "content": "export function Frame2(props) {
+  return (
+    <div
+      {...props}
+      style={{
+        display: \\"flex\\",
+        position: \\"relative\\",
+        width: \\"517px\\",
+        height: \\"fit-content\\",
         background: \\"#ffffff\\",
         overflow: \\"hidden\\",
         flexDirection: \\"column\\",
@@ -418,43 +583,84 @@ export function Form(props) {
         ...props.style,
       }}
     >
-      <svg
-        width={128}
-        height={64}
-        viewBox={\\"0 0 128 64\\"}
-        fill={\\"none\\"}
+      <Header
+        productName={\\"Hello, world!\\"}
         style={{
           display: \\"flex\\",
-          position: \\"absolute\\",
-          left: \\"8px\\",
-          top: \\"20px\\",
-          width: \\"128px\\",
-          height: \\"64px\\",
+          position: \\"relative\\",
+          flexGrow: 0,
+          alignSelf: \\"stretch\\",
+          width: \\"auto\\",
+          height: \\"fit-content\\",
         }}
-      >
-        <rect width=\\"128\\" height=\\"64\\" fill=\\"#D9D9D9\\" />
-      </svg>
-      <svg
-        width={128}
-        height={64}
-        viewBox={\\"0 0 128 64\\"}
-        fill={\\"none\\"}
+      ></Header>
+      <div
         style={{
           display: \\"flex\\",
-          position: \\"absolute\\",
-          left: \\"153px\\",
-          top: \\"8px\\",
-          width: \\"128px\\",
-          height: \\"64px\\",
+          position: \\"relative\\",
+          alignSelf: \\"stretch\\",
+          height: \\"fit-content\\",
+          flexDirection: \\"column\\",
+          gap: \\"24px\\",
+          padding: \\"24px 24px 24px 24px\\",
+          alignItems: \\"flex-start\\",
         }}
       >
-        <rect width=\\"128\\" height=\\"64\\" fill=\\"#FF0000\\" />
-      </svg>
+        <div
+          style={{
+            display: \\"flex\\",
+            position: \\"relative\\",
+            alignSelf: \\"stretch\\",
+            height: \\"fit-content\\",
+            fontFamily: \\"Inter, sans-serif\\",
+            fontSize: \\"16px\\",
+            fontWeight: 700,
+            lineHeight: 1.5,
+            color: \\"#000000\\",
+            textAlign: \\"left\\",
+            flexDirection: \\"column\\",
+          }}
+        >
+          Hello, UIMix!
+        </div>
+        <div
+          style={{
+            display: \\"flex\\",
+            position: \\"relative\\",
+            alignSelf: \\"stretch\\",
+            height: \\"fit-content\\",
+            fontFamily: \\"Inter, sans-serif\\",
+            fontSize: \\"16px\\",
+            fontWeight: 400,
+            lineHeight: 1.5,
+            color: \\"#000000\\",
+            textAlign: \\"left\\",
+            flexDirection: \\"column\\",
+          }}
+        >
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        </div>
+        <Button
+          primary={true}
+          size={\\"large\\"}
+          label={\\"Press Me\\"}
+          backgroundColor={\\"\\"}
+          style={{
+            display: \\"flex\\",
+            position: \\"relative\\",
+            flexGrow: 0,
+            alignSelf: \\"auto\\",
+            width: \\"fit-content\\",
+            height: \\"fit-content\\",
+          }}
+        ></Button>
+      </div>
     </div>
   );
 }
 ",
-    "filePath": "Frame1.js",
+    "filePath": "Frame2.js",
   },
 ]
 `;
@@ -549,40 +755,73 @@ export function Form(props) {
     "filePath": "Form.js",
   },
   {
-    "content": "import { twMerge } from \\"tailwind-merge\\";
+    "content": "import { Button } from \\"./Button.js\\";
+import { twMerge } from \\"tailwind-merge\\";
 
-export function Frame1(props) {
+export function Main(props) {
   return (
     <div
       {...props}
       className={twMerge(
-        \\"flex relative w-[21.5rem] h-[5.8125rem] bg-white overflow-hidden flex-col items-start\\",
+        \\"flex relative w-[22.0625rem] h-[12.8125rem] bg-white overflow-hidden flex-col gap-3 pt-4 pr-4 pb-4 pl-4 items-start\\",
         props.className
       )}
     >
-      <svg
-        width={128}
-        height={64}
-        viewBox={\\"0 0 128 64\\"}
-        fill={\\"none\\"}
-        className=\\"flex absolute left-2 top-5 w-32 h-16\\"
-      >
-        <rect width=\\"128\\" height=\\"64\\" fill=\\"#D9D9D9\\" />
-      </svg>
-      <svg
-        width={128}
-        height={64}
-        viewBox={\\"0 0 128 64\\"}
-        fill={\\"none\\"}
-        className=\\"flex absolute left-[9.5625rem] top-2 w-32 h-16\\"
-      >
-        <rect width=\\"128\\" height=\\"64\\" fill=\\"#FF0000\\" />
-      </svg>
+      <div className=\\"flex relative w-fit font-['Inter',sans-serif] font-bold text-black text-left flex-col\\">
+        Hello, UIMix!
+      </div>
+      <div className=\\"flex relative self-stretch font-['Inter',sans-serif] text-black text-left flex-col\\">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+        tempor incididunt ut labore et dolore magna aliqua.
+      </div>
+      <Button
+        showChevron={false}
+        text={\\"OK\\"}
+        className=\\"self-stretch w-auto\\"
+      ></Button>
     </div>
   );
 }
 ",
-    "filePath": "Frame1.js",
+    "filePath": "Main.js",
+  },
+  {
+    "content": "import { twMerge } from \\"tailwind-merge\\";
+
+export function Frame2(props) {
+  return (
+    <div
+      {...props}
+      className={twMerge(
+        \\"flex relative w-[32.3125rem] bg-white overflow-hidden flex-col items-start\\",
+        props.className
+      )}
+    >
+      <Header
+        productName={\\"Hello, world!\\"}
+        className=\\"flex relative flex-none self-stretch w-auto h-fit\\"
+      ></Header>
+      <div className=\\"flex relative self-stretch flex-col gap-6 pt-6 pr-6 pb-6 pl-6 items-start\\">
+        <div className=\\"flex relative self-stretch font-['Inter',sans-serif] font-bold text-black text-left flex-col\\">
+          Hello, UIMix!
+        </div>
+        <div className=\\"flex relative self-stretch font-['Inter',sans-serif] text-black text-left flex-col\\">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        </div>
+        <Button
+          primary={true}
+          size={\\"large\\"}
+          label={\\"Press Me\\"}
+          backgroundColor={\\"\\"}
+          className=\\"flex relative flex-none self-auto w-fit h-fit\\"
+        ></Button>
+      </div>
+    </div>
+  );
+}
+",
+    "filePath": "Frame2.js",
   },
 ]
 `;
