@@ -27,7 +27,6 @@ exports[`Generator > should emit css 1`] = `
   color: #ffffff;
   text-align: left;
   flex-direction: column;
-  justify-content: flex-start;
 }
 .Button__chevron {
   display: flex;
@@ -35,7 +34,6 @@ exports[`Generator > should emit css 1`] = `
   width: 8px;
   height: 8px;
   align-items: flex-start;
-  justify-content: flex-start;
 }
 .Button__arrow_forward_ios {
   display: flex;
@@ -89,7 +87,6 @@ export function Button(props) {
   gap: 13px;
   padding: 16px 16px 16px 16px;
   align-items: flex-start;
-  justify-content: flex-start;
 }
 .Form2__h1_____ {
   display: flex;
@@ -102,7 +99,6 @@ export function Button(props) {
   color: #000000;
   text-align: left;
   flex-direction: column;
-  justify-content: flex-start;
 }
 .Form2__Button {
   align-self: stretch;
@@ -142,7 +138,6 @@ export function Form2(props) {
   gap: 13px;
   padding: 16px 16px 16px 16px;
   align-items: flex-start;
-  justify-content: flex-start;
 }
 .Form__h1_____ {
   display: flex;
@@ -155,7 +150,6 @@ export function Form2(props) {
   color: #000000;
   text-align: left;
   flex-direction: column;
-  justify-content: flex-start;
 }
 .Form__Button {
 }
@@ -187,7 +181,6 @@ export function Form(props) {
   overflow: hidden;
   flex-direction: column;
   align-items: flex-start;
-  justify-content: flex-start;
 }
 .Frame1__Rectangle_1 {
   display: flex;
@@ -275,7 +268,6 @@ exports[`Generator > should emit inline 1`] = `
           color: \\"#ffffff\\",
           textAlign: \\"left\\",
           flexDirection: \\"column\\",
-          justifyContent: \\"flex-start\\",
         }}
       >
         {props.text}
@@ -288,7 +280,6 @@ exports[`Generator > should emit inline 1`] = `
             width: \\"8px\\",
             height: \\"8px\\",
             alignItems: \\"flex-start\\",
-            justifyContent: \\"flex-start\\",
           }}
         >
           <svg
@@ -336,7 +327,6 @@ export function Form2(props) {
         gap: \\"13px\\",
         padding: \\"16px 16px 16px 16px\\",
         alignItems: \\"flex-start\\",
-        justifyContent: \\"flex-start\\",
         ...props.style,
       }}
     >
@@ -352,7 +342,6 @@ export function Form2(props) {
           color: \\"#000000\\",
           textAlign: \\"left\\",
           flexDirection: \\"column\\",
-          justifyContent: \\"flex-start\\",
         }}
       >
         Some Form (stretch)
@@ -386,7 +375,6 @@ export function Form(props) {
         gap: \\"13px\\",
         padding: \\"16px 16px 16px 16px\\",
         alignItems: \\"flex-start\\",
-        justifyContent: \\"flex-start\\",
         ...props.style,
       }}
     >
@@ -402,7 +390,6 @@ export function Form(props) {
           color: \\"#000000\\",
           textAlign: \\"left\\",
           flexDirection: \\"column\\",
-          justifyContent: \\"flex-start\\",
         }}
       >
         Some Form
@@ -428,7 +415,6 @@ export function Form(props) {
         overflow: \\"hidden\\",
         flexDirection: \\"column\\",
         alignItems: \\"flex-start\\",
-        justifyContent: \\"flex-start\\",
         ...props.style,
       }}
     >
@@ -487,11 +473,11 @@ export function Button(props) {
         props.className
       )}
     >
-      <div className=\\"flex relative w-fit h-fit font-['Inter',sans-serif] text-xs font-medium text-white text-left flex-col justify-start\\">
+      <div className=\\"flex relative w-fit h-fit font-['Inter',sans-serif] text-xs font-medium text-white text-left flex-col\\">
         {props.text}
       </div>
       {props.showChevron && (
-        <div className=\\"flex relative w-2 h-2 items-start justify-start\\">
+        <div className=\\"flex relative w-2 h-2 items-start\\">
           <svg
             width={5}
             height={7}
@@ -521,11 +507,11 @@ export function Form2(props) {
     <div
       {...props}
       className={twMerge(
-        \\"flex relative w-fit h-fit bg-white overflow-hidden flex-col gap-[0.8125rem] pt-4 pr-4 pb-4 pl-4 items-start justify-start\\",
+        \\"flex relative w-fit h-fit bg-white overflow-hidden flex-col gap-[0.8125rem] pt-4 pr-4 pb-4 pl-4 items-start\\",
         props.className
       )}
     >
-      <div className=\\"flex relative w-fit h-fit font-['Inter',sans-serif] text-xs font-normal text-black text-left flex-col justify-start\\">
+      <div className=\\"flex relative w-fit h-fit font-['Inter',sans-serif] text-xs font-normal text-black text-left flex-col\\">
         Some Form (stretch)
       </div>
       <Button
@@ -548,11 +534,11 @@ export function Form(props) {
     <div
       {...props}
       className={twMerge(
-        \\"flex relative w-fit h-fit bg-white overflow-hidden flex-col gap-[0.8125rem] pt-4 pr-4 pb-4 pl-4 items-start justify-start\\",
+        \\"flex relative w-fit h-fit bg-white overflow-hidden flex-col gap-[0.8125rem] pt-4 pr-4 pb-4 pl-4 items-start\\",
         props.className
       )}
     >
-      <div className=\\"flex relative w-fit h-fit font-['Inter',sans-serif] text-xs font-normal text-black text-left flex-col justify-start\\">
+      <div className=\\"flex relative w-fit h-fit font-['Inter',sans-serif] text-xs font-normal text-black text-left flex-col\\">
         Some Form
       </div>
       <Button showChevron={true} text={\\"OK\\"} className=\\"\\"></Button>
@@ -570,7 +556,7 @@ export function Frame1(props) {
     <div
       {...props}
       className={twMerge(
-        \\"flex relative w-[21.5rem] h-[5.8125rem] bg-white overflow-hidden flex-col items-start justify-start\\",
+        \\"flex relative w-[21.5rem] h-[5.8125rem] bg-white overflow-hidden flex-col items-start\\",
         props.className
       )}
     >

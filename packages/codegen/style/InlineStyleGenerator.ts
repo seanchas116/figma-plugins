@@ -30,6 +30,7 @@ const initialStyles: CSS.Properties = {
   flexDirection: "row",
   gap: "0px",
   padding: "0px 0px 0px 0px",
+  justifyContent: "flex-start",
   fontStyle: "normal",
   lineHeight: "normal",
   letterSpacing: "0em",
