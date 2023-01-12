@@ -14,15 +14,10 @@ import JSZip from "jszip";
 
 const codesandboxIndexJS = formatJS(`import React from 'react';
 import ReactDOM from 'react-dom';
-
-const element = (
-  <h1>
-    Hello, CodeSandBox!
-  </h1>
-);
+import {Main} from './Main.js';
 
 ReactDOM.render(
-  element,
+  <Main />,
   document.getElementById('root')
 );`);
 
