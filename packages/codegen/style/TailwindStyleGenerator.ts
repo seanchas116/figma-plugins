@@ -203,7 +203,9 @@ function textSpanClassNamesPartial(
   const classNames: string[] = [];
 
   if (mixin.fontFamily !== undefined) {
-    classNames.push(`font-['${mixin.fontFamily.replace(/\s+/g, "_")}']`);
+    classNames.push(
+      `font-['${mixin.fontFamily.replace(/\s+/g, "_")}',sans-serif]`
+    );
   }
   if (mixin.fontSize !== undefined) {
     classNames.push(`text${kw.fontSize(mixin.fontSize)}`);
