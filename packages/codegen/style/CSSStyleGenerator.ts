@@ -3,6 +3,7 @@ import * as CSS from "csstype";
 import { kebabCase } from "lodash-es";
 import { ExtendedComponent, GeneratedFile, IStyleGenerator } from "../types";
 import { formatCSS } from "../util/format";
+import { IDGenerator } from "../util/IDGenerator";
 import { stringifyStyle } from "./common";
 import { elementCSS } from "./InlineStyleGenerator";
 
@@ -13,13 +14,16 @@ export class CSSStyleGenerator implements IStyleGenerator {
 
   component: ExtendedComponent;
   cssContents: string[] = [];
+  idGenerator = new IDGenerator();
 
   generate(element: Element, { isRoot }: { isRoot: boolean }): string[] {
     const css = elementCSS(element);
 
-    const className = `${
-      this.component.inCodeName ?? "element"
-    }-${element.id.replace(":", "-")}`; // TODO: better ID
+    const className = isRoot
+      ? this.component.inCodeName
+      : this.component.inCodeName +
+        "__" +
+        this.idGenerator.generate(element.name);
 
     this.cssContents.push(`.${className} { ${stringifyStyle(css)} }`);
 
