@@ -47,4 +47,7 @@ describe(generateJSIdentifier.name, () => {
     expect(generateJSIdentifier("do")).toEqual("do_");
     expect(generateJSIdentifier("if")).toEqual("if_");
   });
+  it("generates a single underscore if the name is empty", () => {
+    expect(generateJSIdentifier("")).toEqual("_");
+  });
 });

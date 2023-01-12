@@ -72,6 +72,10 @@ export const jsReservedWords = new Set([
 ]);
 
 export function generateJSIdentifier(name: string): string {
+  if (name.length === 0) {
+    return "_";
+  }
+
   const result = name
     .replace(/[^a-zA-Z0-9_$]/g, "_")
     .replace(/^([0-9])/, "_$1");
