@@ -26,7 +26,7 @@ export class ComponentGenerator {
   readonly component: ExtendedComponent;
   readonly otherComponents: Map<string, ExtendedComponent>;
   readonly styleGenerator: IStyleGenerator;
-  readonly usedComponents = new Set<string>();
+  readonly importedComponents = new Set<string>();
 
   private createStyleGenerator(
     style: ComponentGeneratorOptions["style"]
@@ -92,7 +92,7 @@ export class ComponentGenerator {
           return [];
         }
 
-        this.usedComponents.add(mainComponent.inCodeName);
+        this.importedComponents.add(mainComponent.inCodeName);
 
         const props: Record<string, string> = {};
         for (const [name, value] of Object.entries(element.properties)) {
@@ -211,7 +211,7 @@ export class ComponentGenerator {
       `}`,
     ];
 
-    const imports = Array.from(this.usedComponents).map(
+    const imports = Array.from(this.importedComponents).map(
       (c) => `import { ${c} } from "./${c}.js";`
     );
 
