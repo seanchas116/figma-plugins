@@ -469,11 +469,11 @@ export function Button(props) {
     <div
       {...props}
       className={twMerge(
-        \\"flex relative w-fit h-fit bg-blue-500 rounded-tl rounded-tr rounded-br rounded-bl overflow-hidden gap-1.5 pt-1.5 pr-3 pb-1.5 pl-3 items-center justify-center\\",
+        \\"flex relative w-fit bg-blue-500 rounded-tl rounded-tr rounded-br rounded-bl overflow-hidden gap-1.5 pt-1.5 pr-3 pb-1.5 pl-3 items-center justify-center\\",
         props.className
       )}
     >
-      <div className=\\"flex relative w-fit h-fit font-['Inter',sans-serif] text-xs font-medium text-white text-left flex-col\\">
+      <div className=\\"flex relative w-fit font-['Inter',sans-serif] text-xs font-medium text-white text-left flex-col\\">
         {props.text}
       </div>
       {props.showChevron && (
@@ -507,11 +507,11 @@ export function Form2(props) {
     <div
       {...props}
       className={twMerge(
-        \\"flex relative w-fit h-fit bg-white overflow-hidden flex-col gap-[0.8125rem] pt-4 pr-4 pb-4 pl-4 items-start\\",
+        \\"flex relative w-fit bg-white overflow-hidden flex-col gap-[0.8125rem] pt-4 pr-4 pb-4 pl-4 items-start\\",
         props.className
       )}
     >
-      <div className=\\"flex relative w-fit h-fit font-['Inter',sans-serif] text-xs text-black text-left flex-col\\">
+      <div className=\\"flex relative w-fit font-['Inter',sans-serif] text-xs text-black text-left flex-col\\">
         Some Form (stretch)
       </div>
       <Button
@@ -534,11 +534,11 @@ export function Form(props) {
     <div
       {...props}
       className={twMerge(
-        \\"flex relative w-fit h-fit bg-white overflow-hidden flex-col gap-[0.8125rem] pt-4 pr-4 pb-4 pl-4 items-start\\",
+        \\"flex relative w-fit bg-white overflow-hidden flex-col gap-[0.8125rem] pt-4 pr-4 pb-4 pl-4 items-start\\",
         props.className
       )}
     >
-      <div className=\\"flex relative w-fit h-fit font-['Inter',sans-serif] text-xs text-black text-left flex-col\\">
+      <div className=\\"flex relative w-fit font-['Inter',sans-serif] text-xs text-black text-left flex-col\\">
         Some Form
       </div>
       <Button showChevron={true} text={\\"OK\\"} className=\\"\\"></Button>

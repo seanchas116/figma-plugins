@@ -19,6 +19,7 @@ import { TailwindKeywordResolver } from "./TailwindKeywordResolver";
 const initialClassNames = new Set([
   "w-auto",
   "h-auto",
+  "h-fit",
   "flex-none",
   "self-auto",
   "bg-none",
