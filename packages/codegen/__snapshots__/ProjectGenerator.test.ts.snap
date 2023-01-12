@@ -6,16 +6,11 @@ exports[`Generator > should emit css 1`] = `
     "content": ".Button {
   display: flex;
   position: relative;
-  flex-grow: 0;
-  align-self: auto;
   width: fit-content;
   height: fit-content;
-  border-style: none;
   background: #3b82f6;
   border-radius: 4px 4px 4px 4px;
-  border-width: 0px 0px 0px 0px;
   overflow: hidden;
-  flex-direction: row;
   gap: 6px;
   padding: 6px 12px 6px 12px;
   align-items: center;
@@ -24,16 +19,11 @@ exports[`Generator > should emit css 1`] = `
 .Button__Button {
   display: flex;
   position: relative;
-  flex-grow: 0;
-  align-self: auto;
   width: fit-content;
   height: fit-content;
-  font-family: Inter;
+  font-family: Inter, sans-serif;
   font-size: 12px;
   font-weight: 500;
-  font-style: normal;
-  line-height: normal;
-  letter-spacing: 0em;
   color: #ffffff;
   text-align: left;
   flex-direction: column;
@@ -42,17 +32,8 @@ exports[`Generator > should emit css 1`] = `
 .Button__chevron {
   display: flex;
   position: relative;
-  flex-grow: 0;
-  align-self: auto;
   width: 8px;
   height: 8px;
-  border-style: none;
-  border-radius: 0px 0px 0px 0px;
-  border-width: 0px 0px 0px 0px;
-  overflow: visible;
-  flex-direction: row;
-  gap: 0px;
-  padding: 0px 0px 0px 0px;
   align-items: flex-start;
   justify-content: flex-start;
 }
@@ -61,8 +42,6 @@ exports[`Generator > should emit css 1`] = `
   position: absolute;
   left: 2.0833332538604736px;
   top: 0.6666666865348816px;
-  flex-grow: 0;
-  align-self: auto;
   width: 3.924999952316284px;
   height: 6.666666507720947px;
 }
@@ -102,14 +81,9 @@ export function Button(props) {
     "content": ".Form2 {
   display: flex;
   position: relative;
-  flex-grow: 0;
-  align-self: auto;
   width: fit-content;
   height: fit-content;
-  border-style: none;
   background: #ffffff;
-  border-radius: 0px 0px 0px 0px;
-  border-width: 0px 0px 0px 0px;
   overflow: hidden;
   flex-direction: column;
   gap: 13px;
@@ -120,16 +94,11 @@ export function Button(props) {
 .Form2__h1_____ {
   display: flex;
   position: relative;
-  flex-grow: 0;
-  align-self: auto;
   width: fit-content;
   height: fit-content;
-  font-family: Inter;
+  font-family: Inter, sans-serif;
   font-size: 12px;
   font-weight: 400;
-  font-style: normal;
-  line-height: normal;
-  letter-spacing: 0em;
   color: #000000;
   text-align: left;
   flex-direction: column;
@@ -165,14 +134,9 @@ export function Form2(props) {
     "content": ".Form {
   display: flex;
   position: relative;
-  flex-grow: 0;
-  align-self: auto;
   width: fit-content;
   height: fit-content;
-  border-style: none;
   background: #ffffff;
-  border-radius: 0px 0px 0px 0px;
-  border-width: 0px 0px 0px 0px;
   overflow: hidden;
   flex-direction: column;
   gap: 13px;
@@ -183,16 +147,11 @@ export function Form2(props) {
 .Form__h1_____ {
   display: flex;
   position: relative;
-  flex-grow: 0;
-  align-self: auto;
   width: fit-content;
   height: fit-content;
-  font-family: Inter;
+  font-family: Inter, sans-serif;
   font-size: 12px;
   font-weight: 400;
-  font-style: normal;
-  line-height: normal;
-  letter-spacing: 0em;
   color: #000000;
   text-align: left;
   flex-direction: column;
@@ -222,18 +181,11 @@ export function Form(props) {
     "content": ".Frame1 {
   display: flex;
   position: relative;
-  flex-grow: 0;
-  align-self: auto;
   width: 344px;
   height: 93px;
-  border-style: none;
   background: #ffffff;
-  border-radius: 0px 0px 0px 0px;
-  border-width: 0px 0px 0px 0px;
   overflow: hidden;
   flex-direction: column;
-  gap: 0px;
-  padding: 0px 0px 0px 0px;
   align-items: flex-start;
   justify-content: flex-start;
 }
@@ -242,8 +194,6 @@ export function Form(props) {
   position: absolute;
   left: 8px;
   top: 20px;
-  flex-grow: 0;
-  align-self: auto;
   width: 128px;
   height: 64px;
 }
@@ -252,8 +202,6 @@ export function Form(props) {
   position: absolute;
   left: 153px;
   top: 8px;
-  flex-grow: 0;
-  align-self: auto;
   width: 128px;
   height: 64px;
 }
@@ -303,16 +251,11 @@ exports[`Generator > should emit inline 1`] = `
       style={{
         display: \\"flex\\",
         position: \\"relative\\",
-        flexGrow: 0,
-        alignSelf: \\"auto\\",
         width: \\"fit-content\\",
         height: \\"fit-content\\",
-        borderStyle: \\"none\\",
         background: \\"#3b82f6\\",
         borderRadius: \\"4px 4px 4px 4px\\",
-        borderWidth: \\"0px 0px 0px 0px\\",
         overflow: \\"hidden\\",
-        flexDirection: \\"row\\",
         gap: \\"6px\\",
         padding: \\"6px 12px 6px 12px\\",
         alignItems: \\"center\\",
@@ -324,16 +267,11 @@ exports[`Generator > should emit inline 1`] = `
         style={{
           display: \\"flex\\",
           position: \\"relative\\",
-          flexGrow: 0,
-          alignSelf: \\"auto\\",
           width: \\"fit-content\\",
           height: \\"fit-content\\",
-          fontFamily: \\"Inter\\",
+          fontFamily: \\"Inter, sans-serif\\",
           fontSize: \\"12px\\",
           fontWeight: 500,
-          fontStyle: \\"normal\\",
-          lineHeight: \\"normal\\",
-          letterSpacing: \\"0em\\",
           color: \\"#ffffff\\",
           textAlign: \\"left\\",
           flexDirection: \\"column\\",
@@ -347,17 +285,8 @@ exports[`Generator > should emit inline 1`] = `
           style={{
             display: \\"flex\\",
             position: \\"relative\\",
-            flexGrow: 0,
-            alignSelf: \\"auto\\",
             width: \\"8px\\",
             height: \\"8px\\",
-            borderStyle: \\"none\\",
-            borderRadius: \\"0px 0px 0px 0px\\",
-            borderWidth: \\"0px 0px 0px 0px\\",
-            overflow: \\"visible\\",
-            flexDirection: \\"row\\",
-            gap: \\"0px\\",
-            padding: \\"0px 0px 0px 0px\\",
             alignItems: \\"flex-start\\",
             justifyContent: \\"flex-start\\",
           }}
@@ -372,8 +301,6 @@ exports[`Generator > should emit inline 1`] = `
               position: \\"absolute\\",
               left: \\"2.0833332538604736px\\",
               top: \\"0.6666666865348816px\\",
-              flexGrow: 0,
-              alignSelf: \\"auto\\",
               width: \\"3.924999952316284px\\",
               height: \\"6.666666507720947px\\",
             }}
@@ -401,14 +328,9 @@ export function Form2(props) {
       style={{
         display: \\"flex\\",
         position: \\"relative\\",
-        flexGrow: 0,
-        alignSelf: \\"auto\\",
         width: \\"fit-content\\",
         height: \\"fit-content\\",
-        borderStyle: \\"none\\",
         background: \\"#ffffff\\",
-        borderRadius: \\"0px 0px 0px 0px\\",
-        borderWidth: \\"0px 0px 0px 0px\\",
         overflow: \\"hidden\\",
         flexDirection: \\"column\\",
         gap: \\"13px\\",
@@ -422,16 +344,11 @@ export function Form2(props) {
         style={{
           display: \\"flex\\",
           position: \\"relative\\",
-          flexGrow: 0,
-          alignSelf: \\"auto\\",
           width: \\"fit-content\\",
           height: \\"fit-content\\",
-          fontFamily: \\"Inter\\",
+          fontFamily: \\"Inter, sans-serif\\",
           fontSize: \\"12px\\",
           fontWeight: 400,
-          fontStyle: \\"normal\\",
-          lineHeight: \\"normal\\",
-          letterSpacing: \\"0em\\",
           color: \\"#000000\\",
           textAlign: \\"left\\",
           flexDirection: \\"column\\",
@@ -461,14 +378,9 @@ export function Form(props) {
       style={{
         display: \\"flex\\",
         position: \\"relative\\",
-        flexGrow: 0,
-        alignSelf: \\"auto\\",
         width: \\"fit-content\\",
         height: \\"fit-content\\",
-        borderStyle: \\"none\\",
         background: \\"#ffffff\\",
-        borderRadius: \\"0px 0px 0px 0px\\",
-        borderWidth: \\"0px 0px 0px 0px\\",
         overflow: \\"hidden\\",
         flexDirection: \\"column\\",
         gap: \\"13px\\",
@@ -482,16 +394,11 @@ export function Form(props) {
         style={{
           display: \\"flex\\",
           position: \\"relative\\",
-          flexGrow: 0,
-          alignSelf: \\"auto\\",
           width: \\"fit-content\\",
           height: \\"fit-content\\",
-          fontFamily: \\"Inter\\",
+          fontFamily: \\"Inter, sans-serif\\",
           fontSize: \\"12px\\",
           fontWeight: 400,
-          fontStyle: \\"normal\\",
-          lineHeight: \\"normal\\",
-          letterSpacing: \\"0em\\",
           color: \\"#000000\\",
           textAlign: \\"left\\",
           flexDirection: \\"column\\",
@@ -515,18 +422,11 @@ export function Form(props) {
       style={{
         display: \\"flex\\",
         position: \\"relative\\",
-        flexGrow: 0,
-        alignSelf: \\"auto\\",
         width: \\"344px\\",
         height: \\"93px\\",
-        borderStyle: \\"none\\",
         background: \\"#ffffff\\",
-        borderRadius: \\"0px 0px 0px 0px\\",
-        borderWidth: \\"0px 0px 0px 0px\\",
         overflow: \\"hidden\\",
         flexDirection: \\"column\\",
-        gap: \\"0px\\",
-        padding: \\"0px 0px 0px 0px\\",
         alignItems: \\"flex-start\\",
         justifyContent: \\"flex-start\\",
         ...props.style,
@@ -542,8 +442,6 @@ export function Form(props) {
           position: \\"absolute\\",
           left: \\"8px\\",
           top: \\"20px\\",
-          flexGrow: 0,
-          alignSelf: \\"auto\\",
           width: \\"128px\\",
           height: \\"64px\\",
         }}
@@ -560,8 +458,6 @@ export function Form(props) {
           position: \\"absolute\\",
           left: \\"153px\\",
           top: \\"8px\\",
-          flexGrow: 0,
-          alignSelf: \\"auto\\",
           width: \\"128px\\",
           height: \\"64px\\",
         }}
@@ -587,21 +483,21 @@ export function Button(props) {
     <div
       {...props}
       className={twMerge(
-        \\"flex relative flex-none self-auto w-fit h-fit border-transparent bg-blue-500 rounded-tl rounded-tr rounded-br rounded-bl border-t-0 border-r-0 border-b-0 border-l-0 overflow-hidden flex-row gap-1.5 pt-1.5 pr-3 pb-1.5 pl-3 items-center justify-center\\",
+        \\"flex relative w-fit h-fit bg-blue-500 rounded-tl rounded-tr rounded-br rounded-bl overflow-hidden gap-1.5 pt-1.5 pr-3 pb-1.5 pl-3 items-center justify-center\\",
         props.className
       )}
     >
-      <div className=\\"flex relative flex-none self-auto w-fit h-fit font-['Inter'] text-xs font-medium not-italic leading-normal tracking-normal text-white text-left flex-col justify-start\\">
+      <div className=\\"flex relative w-fit h-fit font-['Inter',sans-serif] text-xs font-medium text-white text-left flex-col justify-start\\">
         {props.text}
       </div>
       {props.showChevron && (
-        <div className=\\"flex relative flex-none self-auto w-2 h-2 border-transparent bg-transparent rounded-tl-none rounded-tr-none rounded-br-none rounded-bl-none border-t-0 border-r-0 border-b-0 border-l-0 overflow-visible flex-row gap-0 pt-0 pr-0 pb-0 pl-0 items-start justify-start\\">
+        <div className=\\"flex relative w-2 h-2 items-start justify-start\\">
           <svg
             width={5}
             height={7}
             viewBox={\\"0 0 5 7\\"}
             fill={\\"none\\"}
-            className=\\"flex absolute left-[0.1302083283662796rem] top-[0.0416666679084301rem] flex-none self-auto w-[0.24531249701976776rem] h-[0.4166666567325592rem]\\"
+            className=\\"flex absolute left-[0.1302083283662796rem] top-[0.0416666679084301rem] w-[0.24531249701976776rem] h-[0.4166666567325592rem]\\"
           >
             <path
               d=\\"M0.674995 6.83334L0.0833282 6.24167L2.825 3.5L0.0833282 0.758338L0.674995 0.166672L4.00833 3.5L0.674995 6.83334Z\\"
@@ -625,11 +521,11 @@ export function Form2(props) {
     <div
       {...props}
       className={twMerge(
-        \\"flex relative flex-none self-auto w-fit h-fit border-transparent bg-white rounded-tl-none rounded-tr-none rounded-br-none rounded-bl-none border-t-0 border-r-0 border-b-0 border-l-0 overflow-hidden flex-col gap-[0.8125rem] pt-4 pr-4 pb-4 pl-4 items-start justify-start\\",
+        \\"flex relative w-fit h-fit bg-white overflow-hidden flex-col gap-[0.8125rem] pt-4 pr-4 pb-4 pl-4 items-start justify-start\\",
         props.className
       )}
     >
-      <div className=\\"flex relative flex-none self-auto w-fit h-fit font-['Inter'] text-xs font-normal not-italic leading-normal tracking-normal text-black text-left flex-col justify-start\\">
+      <div className=\\"flex relative w-fit h-fit font-['Inter',sans-serif] text-xs font-normal text-black text-left flex-col justify-start\\">
         Some Form (stretch)
       </div>
       <Button
@@ -652,11 +548,11 @@ export function Form(props) {
     <div
       {...props}
       className={twMerge(
-        \\"flex relative flex-none self-auto w-fit h-fit border-transparent bg-white rounded-tl-none rounded-tr-none rounded-br-none rounded-bl-none border-t-0 border-r-0 border-b-0 border-l-0 overflow-hidden flex-col gap-[0.8125rem] pt-4 pr-4 pb-4 pl-4 items-start justify-start\\",
+        \\"flex relative w-fit h-fit bg-white overflow-hidden flex-col gap-[0.8125rem] pt-4 pr-4 pb-4 pl-4 items-start justify-start\\",
         props.className
       )}
     >
-      <div className=\\"flex relative flex-none self-auto w-fit h-fit font-['Inter'] text-xs font-normal not-italic leading-normal tracking-normal text-black text-left flex-col justify-start\\">
+      <div className=\\"flex relative w-fit h-fit font-['Inter',sans-serif] text-xs font-normal text-black text-left flex-col justify-start\\">
         Some Form
       </div>
       <Button showChevron={true} text={\\"OK\\"} className=\\"\\"></Button>
@@ -674,7 +570,7 @@ export function Frame1(props) {
     <div
       {...props}
       className={twMerge(
-        \\"flex relative flex-none self-auto w-[21.5rem] h-[5.8125rem] border-transparent bg-white rounded-tl-none rounded-tr-none rounded-br-none rounded-bl-none border-t-0 border-r-0 border-b-0 border-l-0 overflow-hidden flex-col gap-0 pt-0 pr-0 pb-0 pl-0 items-start justify-start\\",
+        \\"flex relative w-[21.5rem] h-[5.8125rem] bg-white overflow-hidden flex-col items-start justify-start\\",
         props.className
       )}
     >
@@ -683,7 +579,7 @@ export function Frame1(props) {
         height={64}
         viewBox={\\"0 0 128 64\\"}
         fill={\\"none\\"}
-        className=\\"flex absolute left-2 top-5 flex-none self-auto w-32 h-16\\"
+        className=\\"flex absolute left-2 top-5 w-32 h-16\\"
       >
         <rect width=\\"128\\" height=\\"64\\" fill=\\"#D9D9D9\\" />
       </svg>
@@ -692,7 +588,7 @@ export function Frame1(props) {
         height={64}
         viewBox={\\"0 0 128 64\\"}
         fill={\\"none\\"}
-        className=\\"flex absolute left-[9.5625rem] top-2 flex-none self-auto w-32 h-16\\"
+        className=\\"flex absolute left-[9.5625rem] top-2 w-32 h-16\\"
       >
         <rect width=\\"128\\" height=\\"64\\" fill=\\"#FF0000\\" />
       </svg>
