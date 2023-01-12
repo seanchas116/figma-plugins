@@ -4,6 +4,7 @@ import { kebabCase } from "lodash-es";
 import { ExtendedComponent } from "../component";
 import { formatCSS } from "../format";
 import { GeneratedFile } from "../Generator";
+import { generateJSIdentifier, getIncrementalUniqueName } from "../util/name";
 import { elementCSS } from "./InlineStyleGenerator";
 import { IStyleGenerator } from "./IStyleGenerator";
 
@@ -20,6 +21,7 @@ export class CSSModulesStyleGenerator implements IStyleGenerator {
 
   component: ExtendedComponent;
   cssContents: string[] = [];
+  classNames = new Set<string>();
 
   generate(
     element: Element,
@@ -31,16 +33,18 @@ export class CSSModulesStyleGenerator implements IStyleGenerator {
   ): string[] {
     const css = elementCSS(element);
 
-    const className = `${
-      this.component.inCodeName ?? "element"
-    }-${element.id.replace(":", "-")}`; // TODO: better ID
+    const className = getIncrementalUniqueName(
+      this.classNames,
+      generateJSIdentifier(element.name || "element")
+    );
+    this.classNames.add(className);
 
     this.cssContents.push(`.${className} { ${stringifyStyle(css)} }`);
 
     if (isRoot) {
-      return [`className={styles["${className}"] + props.className}`];
+      return [`className={styles.${className} + props.className}`];
     } else {
-      return [`className={styles["${className}"]}`];
+      return [`className={styles.${className}}`];
     }
   }
 
