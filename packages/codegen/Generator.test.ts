@@ -3,17 +3,18 @@ import { Generator } from "./Generator";
 import { Component } from "@uimix/element-ir";
 
 import _components from "./__fixtures__/components.json";
+import { ProjectGenerator } from "./ProjectGenerator";
 const components: Component[] = _components as any;
 
 describe("Generator", () => {
   for (const style of ["tailwind", "inline", "css"] as const) {
     it(`should emit ${style}`, () => {
-      const generator = new Generator({
+      const generator = new ProjectGenerator({
         components,
         style,
       });
 
-      expect(generator.generateProject()).toMatchSnapshot();
+      expect(generator.generate()).toMatchSnapshot();
     });
   }
 });

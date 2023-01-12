@@ -1,4 +1,9 @@
-import { GeneratedFile, Generator, GeneratorOptions } from "@uimix/codegen";
+import {
+  GeneratedFile,
+  Generator,
+  GeneratorOptions,
+  ProjectGenerator,
+} from "@uimix/codegen";
 import { FunctionComponent } from "preact";
 import { useState } from "preact/hooks";
 import { Button } from "../components/Button";
@@ -36,8 +41,8 @@ export const ExportPanel: FunctionComponent = () => {
     console.info("Generating...");
     console.info(JSON.stringify(components));
 
-    const generator = new Generator({ components, style });
-    const codes = generator.generateProject();
+    const generator = new ProjectGenerator({ components, style });
+    const codes = generator.generate();
 
     setCodes(codes);
 

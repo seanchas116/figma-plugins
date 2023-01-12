@@ -1,5 +1,5 @@
 import { signal } from "@preact/signals";
-import { Generator } from "@uimix/codegen";
+import { generateElement, Generator } from "@uimix/codegen";
 import { CodeAssets, CodeInstanceInfo, Target } from "../../types/data";
 import { rpc } from "../rpc";
 import { formatHTML, formatJS } from "../util/format";
@@ -26,7 +26,7 @@ class State {
   get code():
     | {
         content: string;
-        type: "json" | "html";
+        type: "json" | "html" | "jsx";
       }
     | undefined {
     if (!this.target) {
@@ -39,23 +39,21 @@ class State {
         type: "json",
       };
     }
-    if (this.$codeFormat.value === "htmlInlineStyle") {
-      const elements = this.target?.elementIR ?? [];
-      const html = elements
-        .flatMap((elem) => {
-          // remove positions from root elements
-          elem.style.position = "relative";
-          elem.style.x = { left: 0 };
-          elem.style.y = { top: 0 };
-          return new Generator({
-            components: [],
-            style: "inline",
-          }).generateElement(elem);
-        })
-        .join("");
 
-      return { content: formatHTML(html), type: "html" };
-    }
+    // TODO: other formats
+
+    const elements = this.target?.elementIR ?? [];
+    const code = elements
+      .flatMap((elem) => {
+        // remove positions from root elements
+        elem.style.position = "relative";
+        elem.style.x = { left: 0 };
+        elem.style.y = { top: 0 };
+        return generateElement(elem, "tailwind");
+      })
+      .join("");
+
+    return { content: code, type: "jsx" };
   }
 
   get componentDocs() {
