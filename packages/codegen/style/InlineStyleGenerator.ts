@@ -14,8 +14,8 @@ import {
   TextStyleMixin,
 } from "@uimix/element-ir";
 import * as CSS from "csstype";
+import { IStyleGenerator } from "../types";
 import { colorToCSS } from "./common";
-import { IStyleGenerator } from "./IStyleGenerator";
 
 function dimensionCSSPartial(
   mixin: Partial<DimensionStyleMixin>

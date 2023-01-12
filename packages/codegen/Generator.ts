@@ -1,12 +1,16 @@
-import { Component, Element, PropertyDefinition } from "@uimix/element-ir";
+import { Component, Element } from "@uimix/element-ir";
 import { camelCase, capitalize } from "lodash-es";
 import * as svgParser from "svg-parser";
-import { ExtendedComponent, ExtendedPropertyDefinition } from "./component";
-import { formatCSS, formatJS } from "./util/format";
+import {
+  ExtendedComponent,
+  ExtendedPropertyDefinition,
+  GeneratedFile,
+} from "./types";
+import { formatJS } from "./util/format";
 import { CSSModulesStyleGenerator } from "./style/CSSModulesStyleGenerator";
 import { CSSStyleGenerator } from "./style/CSSStyleGenerator";
 import { InlineStyleGenerator } from "./style/InlineStyleGenerator";
-import { IStyleGenerator } from "./style/IStyleGenerator";
+import { IStyleGenerator } from "./types";
 import { TailwindStyleGenerator } from "./style/TailwindStyleGenerator";
 
 export interface GeneratorOptions {
@@ -99,21 +103,17 @@ export class Generator {
       styleGenerator = new InlineStyleGenerator(),
       component,
       usedComponents,
-      cssContents,
       isRoot = true,
     }: {
       styleGenerator?: IStyleGenerator;
       component?: ExtendedComponent;
       usedComponents?: Set<string>;
-      cssContents?: string[];
       isRoot?: boolean;
     } = {}
   ): string[] {
     let result: string[];
 
     const tagExtra = styleGenerator.generate(element, {
-      cssContents: cssContents ?? [],
-      component,
       isRoot,
     });
 
@@ -150,7 +150,6 @@ export class Generator {
               component,
               isRoot: false,
               usedComponents,
-              cssContents,
               styleGenerator,
             })
           ),
@@ -222,10 +221,7 @@ export class Generator {
 
   generateComponent(component: ExtendedComponent): GeneratedFile[] {
     const styleGenerator = this.createStyleGenerator(component);
-
     const usedComponents = new Set<string>();
-
-    const cssContents: string[] = [];
 
     const element = {
       ...component.element,
@@ -242,7 +238,6 @@ export class Generator {
       ...this.generateElement(element as Element, {
         component,
         usedComponents,
-        cssContents,
         styleGenerator,
       }),
       `}`,
@@ -270,9 +265,4 @@ export class Generator {
   generateProject(): GeneratedFile[] {
     return this.components.flatMap((c) => this.generateComponent(c));
   }
-}
-
-export interface GeneratedFile {
-  filePath: string;
-  content: string;
 }

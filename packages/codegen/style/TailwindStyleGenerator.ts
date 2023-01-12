@@ -12,7 +12,7 @@ import {
   TextStyle,
   TextStyleMixin,
 } from "@uimix/element-ir";
-import { IStyleGenerator } from "./IStyleGenerator";
+import { IStyleGenerator } from "../types";
 import { TailwindKeywordResolver } from "./TailwindKeywordResolver";
 
 const kw = new TailwindKeywordResolver();

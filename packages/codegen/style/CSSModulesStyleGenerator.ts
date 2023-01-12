@@ -1,18 +1,9 @@
 import { Element } from "@uimix/element-ir";
-import * as CSS from "csstype";
-import { kebabCase } from "lodash-es";
-import { ExtendedComponent } from "../component";
+import { ExtendedComponent, GeneratedFile, IStyleGenerator } from "../types";
 import { formatCSS } from "../util/format";
-import { GeneratedFile } from "../Generator";
 import { generateJSIdentifier, getIncrementalUniqueName } from "../util/name";
+import { stringifyStyle } from "./common";
 import { elementCSS } from "./InlineStyleGenerator";
-import { IStyleGenerator } from "./IStyleGenerator";
-
-export function stringifyStyle(css: CSS.Properties): string {
-  return Object.entries(css)
-    .map(([key, value]) => `${kebabCase(key)}: ${value}`)
-    .join("; ");
-}
 
 export class CSSModulesStyleGenerator implements IStyleGenerator {
   constructor(component: ExtendedComponent) {
@@ -23,14 +14,7 @@ export class CSSModulesStyleGenerator implements IStyleGenerator {
   cssContents: string[] = [];
   classNames = new Set<string>();
 
-  generate(
-    element: Element,
-    {
-      isRoot,
-    }: {
-      isRoot: boolean;
-    }
-  ): string[] {
+  generate(element: Element, { isRoot }: { isRoot: boolean }): string[] {
     const css = elementCSS(element);
 
     const className = getIncrementalUniqueName(
