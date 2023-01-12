@@ -22,7 +22,7 @@ export class CSSModulesStyleGenerator implements IStyleGenerator {
     this.cssContents.push(`.${className} { ${stringifyStyle(css)} }`);
 
     if (isRoot) {
-      return [`className={styles.${className} + props.className}`];
+      return [`className={styles.${className} + " " + props.className}`];
     } else {
       return [`className={styles.${className}}`];
     }
