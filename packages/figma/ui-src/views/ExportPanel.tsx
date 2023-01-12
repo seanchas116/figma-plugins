@@ -11,6 +11,20 @@ import { SyntaxHighlight } from "../components/SyntaxHighlight";
 import { rpc } from "../rpc";
 import JSZip from "jszip";
 
+const codesandboxIndexJS = `import React from 'react';
+import ReactDOM from 'react-dom';
+
+const element = (
+  <h1>
+    Hello, CodeSandBox!
+  </h1>
+);
+
+ReactDOM.render(
+  element,
+  document.getElementById('root')
+);`;
+
 function downloadZipFile(zip: string, fileName: string) {
   const link = document.createElement("a");
   link.href = `data:application/zip;base64,${zip}`;
@@ -53,7 +67,41 @@ export const ExportPanel: FunctionComponent = () => {
   };
 
   const onCodeSandbox = async () => {
-    //TODO
+    const req = await fetch(
+      "https://codesandbox.io/api/v1/sandboxes/define?json=1",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          files: {
+            "package.json": {
+              content: {
+                dependencies: {
+                  react: "latest",
+                  "react-dom": "latest",
+                },
+              },
+            },
+            "index.html": {
+              content: '<div id="root"></div>',
+            },
+            "index.js": {
+              content: codesandboxIndexJS,
+            },
+            ...Object.fromEntries(
+              codes.map((code) => [code.filePath, { content: code.content }])
+            ),
+          },
+        }),
+      }
+    );
+    const json = await req.json();
+    const sandboxID = json.sandbox_id;
+
+    window.open(`https://codesandbox.io/s/${sandboxID}`, "_blank");
   };
 
   return (
