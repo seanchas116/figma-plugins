@@ -1,5 +1,6 @@
 import * as IR from "@uimix/element-ir";
 import { FrameStyle, InstanceStyle } from "@uimix/element-ir";
+import { getInstanceInfo } from "../pluginData";
 import {
   getDimensionStyleMixin,
   getRectangleStyleMixin,
@@ -72,6 +73,24 @@ export async function getElementIR(
       console.error(`error exporting ${node.name} to SVG`);
       console.error(String(error));
       return [];
+    }
+  }
+
+  if (node.type === "INSTANCE") {
+    const codeInstanceInfo = getInstanceInfo(node);
+    if (codeInstanceInfo) {
+      const { props, component } = codeInstanceInfo;
+      return [
+        {
+          type: "codeInstance",
+          ...commonProps,
+          component,
+          properties: props,
+          style: {
+            ...getDimensionStyleMixin(node, positionOffset),
+          },
+        },
+      ];
     }
   }
 

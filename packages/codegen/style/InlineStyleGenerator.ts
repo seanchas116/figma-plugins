@@ -1,5 +1,5 @@
 import {
-  Color,
+  CodeInstanceStyle,
   DimensionStyleMixin,
   Element,
   FrameStyle,
@@ -286,6 +286,12 @@ function instanceCSS(style: Partial<InstanceStyle>): CSS.Properties {
   };
 }
 
+function codeInstanceCSS(style: Partial<CodeInstanceStyle>): CSS.Properties {
+  return {
+    ...dimensionCSSPartial(style),
+  };
+}
+
 export function elementCSS(element: Element): CSS.Properties {
   switch (element.type) {
     case "frame":
@@ -298,6 +304,8 @@ export function elementCSS(element: Element): CSS.Properties {
       return svgCSS(element.style);
     case "instance":
       return instanceCSS(element.style);
+    case "codeInstance":
+      return codeInstanceCSS(element.style);
   }
 }
 

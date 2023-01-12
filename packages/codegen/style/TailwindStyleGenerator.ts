@@ -1,4 +1,5 @@
 import {
+  CodeInstanceStyle,
   DimensionStyleMixin,
   Element,
   FrameStyle,
@@ -346,6 +347,12 @@ export function instanceClassNames(style: Partial<InstanceStyle>): string[] {
   ];
 }
 
+export function codeInstanceClassNames(
+  style: Partial<CodeInstanceStyle>
+): string[] {
+  return [...dimensionClassNamesPartial(style)];
+}
+
 function elementClassNames(element: Element): string[] {
   switch (element.type) {
     case "frame":
@@ -358,6 +365,8 @@ function elementClassNames(element: Element): string[] {
       return textClassNames(element.style);
     case "instance":
       return instanceClassNames(element.style);
+    case "codeInstance":
+      return codeInstanceClassNames(element.style);
   }
 }
 

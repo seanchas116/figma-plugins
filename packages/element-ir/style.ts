@@ -106,3 +106,5 @@ export interface ImageStyle
     ImageStyleMixin {}
 
 export type InstanceStyle = Partial<FrameStyle>;
+
+export type CodeInstanceStyle = DimensionStyleMixin;

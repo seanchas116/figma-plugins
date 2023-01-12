@@ -171,6 +171,15 @@ export class ComponentGenerator {
         });
         break;
       }
+      case "codeInstance": {
+        // TODO: add imports
+        result = this.generateTag(element.component.name, {
+          isRoot,
+          props: element.properties,
+          tagExtra,
+        });
+        break;
+      }
     }
 
     if (element.propertyRef.visible) {

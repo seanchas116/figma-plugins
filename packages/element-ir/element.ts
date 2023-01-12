@@ -48,9 +48,21 @@ export interface InstanceElement extends CommonProps {
   style: InstanceStyle;
 }
 
+export interface CodeInstanceElement extends CommonProps {
+  type: "codeInstance";
+  component: {
+    externalPath: string;
+    internalPath: string;
+    name: string;
+  };
+  properties: Record<string, any>;
+  style: InstanceStyle;
+}
+
 export type Element =
   | FrameElement
   | TextElement
   | ImageElement
   | SVGElement
-  | InstanceElement;
+  | InstanceElement
+  | CodeInstanceElement;
