@@ -1,4 +1,5 @@
 import {
+  formatJS,
   GeneratedFile,
   ProjectGenerator,
   ProjectGeneratorOptions,
@@ -11,7 +12,7 @@ import { SyntaxHighlight } from "../components/SyntaxHighlight";
 import { rpc } from "../rpc";
 import JSZip from "jszip";
 
-const codesandboxIndexJS = `import React from 'react';
+const codesandboxIndexJS = formatJS(`import React from 'react';
 import ReactDOM from 'react-dom';
 
 const element = (
@@ -23,7 +24,7 @@ const element = (
 ReactDOM.render(
   element,
   document.getElementById('root')
-);`;
+);`);
 
 function downloadZipFile(zip: string, fileName: string) {
   const link = document.createElement("a");
