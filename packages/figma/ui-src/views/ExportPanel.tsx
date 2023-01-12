@@ -45,16 +45,31 @@ export const ExportPanel: FunctionComponent = () => {
     const codes = generator.generate();
 
     setCodes(codes);
+  };
 
-    makeZip(codes).then((zip) => {
-      downloadZipFile(zip, "export.zip");
-    });
+  const onDownloadZip = async () => {
+    const zip = await makeZip(codes);
+    downloadZipFile(zip, "export.zip");
+  };
+
+  const onCodeSandbox = async () => {
+    //TODO
   };
 
   return (
     <div className="px-4 py-3 flex flex-col gap-3">
       <div className="flex justify-between items-center">
-        <Button onClick={onExport}>Export whole document</Button>
+        <div className="flex items-center">
+          <Button onClick={onExport} className="mr-2">
+            Export whole document
+          </Button>
+          <button className="px-2 hover:text-gray-500" onClick={onDownloadZip}>
+            Download Zip
+          </button>
+          <button className="px-2 hover:text-gray-500" onClick={onCodeSandbox}>
+            CodeSandbox
+          </button>
+        </div>
         <Select
           value={style}
           onChange={(e) => {
