@@ -1,8 +1,8 @@
 import { signal } from "@preact/signals";
-import { generateElement, Generator } from "@uimix/codegen";
+import { generateElements } from "@uimix/codegen";
 import { CodeAssets, CodeInstanceInfo, Target } from "../../types/data";
 import { rpc } from "../rpc";
-import { formatHTML, formatJS } from "../util/format";
+import { formatJS } from "../util/format";
 
 export const tabs = [
   { id: "insert", label: "Insert" },
@@ -43,15 +43,7 @@ class State {
     // TODO: other formats
 
     const elements = this.target?.elementIR ?? [];
-    const code = elements
-      .flatMap((elem) => {
-        // remove positions from root elements
-        elem.style.position = "relative";
-        elem.style.x = { left: 0 };
-        elem.style.y = { top: 0 };
-        return generateElement(elem, "tailwind");
-      })
-      .join("");
+    const code = generateElements(elements, "tailwind");
 
     return { content: code, type: "jsx" };
   }

@@ -222,19 +222,25 @@ export class ComponentGenerator {
   }
 }
 
-export function generateElement(
-  element: Element,
+export function generateElements(
+  elements: Element[],
   style: ComponentGeneratorOptions["style"]
 ): string {
+  if (elements.length === 0) {
+    return "";
+  }
+
   const generator = new ComponentGenerator(
     {
-      element: element,
+      element: elements[0],
       propertyDefinitions: [],
       propertyForName: new Map(),
       inCodeName: "Component",
     },
     { style, otherComponents: new Map() }
   );
-  const text = generator.generateElement(element, { isRoot: false }).join("");
+  const text = elements
+    .flatMap((elem) => generator.generateElement(elem, { isRoot: false }))
+    .join("");
   return formatJS(text);
 }
