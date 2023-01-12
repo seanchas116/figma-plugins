@@ -17,6 +17,24 @@ import * as CSS from "csstype";
 import { IStyleGenerator } from "../types";
 import { colorToCSS } from "./common";
 
+const initialStyles: CSS.Properties = {
+  width: "auto",
+  height: "auto",
+  flexGrow: "0",
+  alignSelf: "auto",
+  background: "none",
+  borderStyle: "none",
+  borderWidth: "0px 0px 0px 0px",
+  borderRadius: "0px 0px 0px 0px",
+  overflow: "visible",
+  flexDirection: "row",
+  gap: "0px",
+  padding: "0px 0px 0px 0px",
+  fontStyle: "normal",
+  lineHeight: "normal",
+  letterSpacing: "0em",
+};
+
 function dimensionCSSPartial(
   mixin: Partial<DimensionStyleMixin>
 ): CSS.Properties {
@@ -217,34 +235,46 @@ function imageCSSPartial(mixin: Partial<ImageStyleMixin>): CSS.Properties {
   return props;
 }
 
+function removeInitialStyles(prop: CSS.Properties): CSS.Properties {
+  const ret: CSS.Properties = {};
+  for (const _key in prop) {
+    const key = _key as keyof CSS.Properties;
+    if (prop[key] && String(prop[key]) !== initialStyles[key]) {
+      // @ts-ignore
+      ret[key] = prop[key];
+    }
+  }
+  return ret;
+}
+
 function frameCSS(style: Partial<FrameStyle>): CSS.Properties {
-  return {
+  return removeInitialStyles({
     ...dimensionCSSPartial(style),
     ...rectangleCSSPartial(style),
     ...frameCSSPartial(style),
-  };
+  });
 }
 
 function imageCSS(style: Partial<ImageStyle>): CSS.Properties {
-  return {
+  return removeInitialStyles({
     ...dimensionCSSPartial(style),
     ...rectangleCSSPartial(style),
     ...imageCSSPartial(style),
-  };
+  });
 }
 
 function svgCSS(style: Partial<SVGStyle>): CSS.Properties {
-  return {
+  return removeInitialStyles({
     ...dimensionCSSPartial(style),
-  };
+  });
 }
 
 function textCSS(style: Partial<TextStyle>): CSS.Properties {
-  return {
+  return removeInitialStyles({
     ...dimensionCSSPartial(style),
     ...textSpanCSSPartial(style),
     ...textCSSPartial(style),
-  };
+  });
 }
 
 function instanceCSS(style: Partial<InstanceStyle>): CSS.Properties {
