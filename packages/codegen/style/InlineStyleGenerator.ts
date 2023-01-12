@@ -181,7 +181,7 @@ function textSpanCSSPartial(
 ): CSS.Properties {
   const props: CSS.Properties = {};
   if (mixin.fontFamily !== undefined) {
-    props.fontFamily = mixin.fontFamily;
+    props.fontFamily = mixin.fontFamily + ", sans-serif";
   }
   if (mixin.fontSize !== undefined) {
     props.fontSize = `${mixin.fontSize}px`;
