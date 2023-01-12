@@ -6,6 +6,7 @@ import {
   GeneratedFile,
 } from "./types";
 import { ComponentGenerator } from "./ComponentGenerator";
+import { IDGenerator } from "./util/IDGenerator";
 
 export interface ProjectGeneratorOptions {
   style: "tailwind" | "inline" | "css" | "cssModules";
@@ -14,11 +15,16 @@ export interface ProjectGeneratorOptions {
 
 export class ProjectGenerator {
   constructor(options: ProjectGeneratorOptions) {
+    const componentIDGenerator = new IDGenerator();
+
     for (const component of options.components) {
+      const propertyNameGenerator = new IDGenerator();
       const propertyForName = new Map<string, ExtendedPropertyDefinition>();
 
       for (const prop of component.propertyDefinitions) {
-        const inCodeName = camelCase(prop.name.split("#")[0]);
+        const inCodeName = propertyNameGenerator.generate(
+          camelCase(prop.name.split("#")[0])
+        );
         propertyForName.set(prop.name, {
           ...prop,
           inCodeName,
@@ -27,7 +33,9 @@ export class ProjectGenerator {
 
       const extendedComponent: ExtendedComponent = {
         ...component,
-        inCodeName: capitalize(camelCase(component.element.name ?? "")),
+        inCodeName: componentIDGenerator.generate(
+          capitalize(camelCase(component.element.name ?? ""))
+        ),
         propertyForName,
       };
 
