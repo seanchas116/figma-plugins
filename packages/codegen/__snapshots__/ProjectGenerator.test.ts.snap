@@ -511,7 +511,7 @@ export function Form2(props) {
         props.className
       )}
     >
-      <div className=\\"flex relative w-fit h-fit font-['Inter',sans-serif] text-xs font-normal text-black text-left flex-col\\">
+      <div className=\\"flex relative w-fit h-fit font-['Inter',sans-serif] text-xs text-black text-left flex-col\\">
         Some Form (stretch)
       </div>
       <Button
@@ -538,7 +538,7 @@ export function Form(props) {
         props.className
       )}
     >
-      <div className=\\"flex relative w-fit h-fit font-['Inter',sans-serif] text-xs font-normal text-black text-left flex-col\\">
+      <div className=\\"flex relative w-fit h-fit font-['Inter',sans-serif] text-xs text-black text-left flex-col\\">
         Some Form
       </div>
       <Button showChevron={true} text={\\"OK\\"} className=\\"\\"></Button>

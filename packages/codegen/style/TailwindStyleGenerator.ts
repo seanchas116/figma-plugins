@@ -39,6 +39,8 @@ const initialClassNames = new Set([
   "pb-0",
   "pl-0",
   "justify-start",
+  "font-normal",
+  "text-base",
   "not-italic",
   "leading-normal",
   "tracking-normal",
