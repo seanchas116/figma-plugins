@@ -1,8 +1,7 @@
 import {
   GeneratedFile,
-  Generator,
-  GeneratorOptions,
   ProjectGenerator,
+  ProjectGeneratorOptions,
 } from "@uimix/codegen";
 import { FunctionComponent } from "preact";
 import { useState } from "preact/hooks";
@@ -32,7 +31,8 @@ async function makeZip(codes: GeneratedFile[]): Promise<string> {
 }
 
 export const ExportPanel: FunctionComponent = () => {
-  const [style, setStyle] = useState<GeneratorOptions["style"]>("inline");
+  const [style, setStyle] =
+    useState<ProjectGeneratorOptions["style"]>("inline");
   const [codes, setCodes] = useState<GeneratedFile[]>([]);
 
   const onExport = async () => {
@@ -58,7 +58,7 @@ export const ExportPanel: FunctionComponent = () => {
         <Select
           value={style}
           onChange={(e) => {
-            setStyle(e.currentTarget.value as GeneratorOptions["style"]);
+            setStyle(e.currentTarget.value as ProjectGeneratorOptions["style"]);
           }}
         >
           <option value="tailwind">Tailwind</option>

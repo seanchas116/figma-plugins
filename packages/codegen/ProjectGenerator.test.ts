@@ -1,5 +1,4 @@
 import { describe, expect, it } from "vitest";
-import { Generator } from "./Generator";
 import { Component } from "@uimix/element-ir";
 
 import _components from "./__fixtures__/components.json";
