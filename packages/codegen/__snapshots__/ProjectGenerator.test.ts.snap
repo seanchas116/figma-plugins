@@ -3,7 +3,7 @@
 exports[`Generator > should emit css 1`] = `
 [
   {
-    "content": ".Button-1-7 {
+    "content": ".Button {
   display: flex;
   position: relative;
   flex-grow: 0;
@@ -21,7 +21,7 @@ exports[`Generator > should emit css 1`] = `
   align-items: center;
   justify-content: center;
 }
-.Button-1-4 {
+.Button__Button {
   display: flex;
   position: relative;
   flex-grow: 0;
@@ -39,7 +39,7 @@ exports[`Generator > should emit css 1`] = `
   flex-direction: column;
   justify-content: flex-start;
 }
-.Button-26-10 {
+.Button__chevron {
   display: flex;
   position: relative;
   flex-grow: 0;
@@ -56,7 +56,7 @@ exports[`Generator > should emit css 1`] = `
   align-items: flex-start;
   justify-content: flex-start;
 }
-.Button-26-12 {
+.Button__arrow_forward_ios {
   display: flex;
   position: absolute;
   left: 2.0833332538604736px;
@@ -74,16 +74,16 @@ exports[`Generator > should emit css 1`] = `
 
 export function Button(props) {
   return (
-    <div {...props} className={\\"Button-1-7 \\" + props.className}>
-      <div className=\\"Button-1-4\\">{props.text}</div>
+    <div {...props} className={\\"Button \\" + props.className}>
+      <div className=\\"Button__Button\\">{props.text}</div>
       {props.showChevron && (
-        <div className=\\"Button-26-10\\">
+        <div className=\\"Button__chevron\\">
           <svg
             width={5}
             height={7}
             viewBox={\\"0 0 5 7\\"}
             fill={\\"none\\"}
-            className=\\"Button-26-12\\"
+            className=\\"Button__arrow_forward_ios\\"
           >
             <path
               d=\\"M0.674995 6.83334L0.0833282 6.24167L2.825 3.5L0.0833282 0.758338L0.674995 0.166672L4.00833 3.5L0.674995 6.83334Z\\"
@@ -99,7 +99,7 @@ export function Button(props) {
     "filePath": "Button.js",
   },
   {
-    "content": ".Form2-8-12 {
+    "content": ".Form2 {
   display: flex;
   position: relative;
   flex-grow: 0;
@@ -117,7 +117,7 @@ export function Button(props) {
   align-items: flex-start;
   justify-content: flex-start;
 }
-.Form2-8-13 {
+.Form2__h1_____ {
   display: flex;
   position: relative;
   flex-grow: 0;
@@ -135,7 +135,7 @@ export function Button(props) {
   flex-direction: column;
   justify-content: flex-start;
 }
-.Form2-8-14 {
+.Form2__Button {
   align-self: stretch;
   width: auto;
 }
@@ -148,9 +148,13 @@ import \\"./Form2.css\\";
 
 export function Form2(props) {
   return (
-    <div {...props} className={\\"Form2-8-12 \\" + props.className}>
-      <div className=\\"Form2-8-13\\">Some Form (stretch)</div>
-      <Button showChevron={false} text={\\"OK\\"} className=\\"Form2-8-14\\"></Button>
+    <div {...props} className={\\"Form2 \\" + props.className}>
+      <div className=\\"Form2__h1_____\\">Some Form (stretch)</div>
+      <Button
+        showChevron={false}
+        text={\\"OK\\"}
+        className=\\"Form2__Button\\"
+      ></Button>
     </div>
   );
 }
@@ -158,7 +162,7 @@ export function Form2(props) {
     "filePath": "Form2.js",
   },
   {
-    "content": ".Form-1-10 {
+    "content": ".Form {
   display: flex;
   position: relative;
   flex-grow: 0;
@@ -176,7 +180,7 @@ export function Form2(props) {
   align-items: flex-start;
   justify-content: flex-start;
 }
-.Form-1-11 {
+.Form__h1_____ {
   display: flex;
   position: relative;
   flex-grow: 0;
@@ -194,7 +198,7 @@ export function Form2(props) {
   flex-direction: column;
   justify-content: flex-start;
 }
-.Form-1-8 {
+.Form__Button {
 }
 ",
     "filePath": "Form.css",
@@ -205,9 +209,9 @@ import \\"./Form.css\\";
 
 export function Form(props) {
   return (
-    <div {...props} className={\\"Form-1-10 \\" + props.className}>
-      <div className=\\"Form-1-11\\">Some Form</div>
-      <Button showChevron={true} text={\\"OK\\"} className=\\"Form-1-8\\"></Button>
+    <div {...props} className={\\"Form \\" + props.className}>
+      <div className=\\"Form__h1_____\\">Some Form</div>
+      <Button showChevron={true} text={\\"OK\\"} className=\\"Form__Button\\"></Button>
     </div>
   );
 }
@@ -215,7 +219,7 @@ export function Form(props) {
     "filePath": "Form.js",
   },
   {
-    "content": ".Frame1-9-16 {
+    "content": ".Frame1 {
   display: flex;
   position: relative;
   flex-grow: 0;
@@ -233,7 +237,7 @@ export function Form(props) {
   align-items: flex-start;
   justify-content: flex-start;
 }
-.Frame1-9-18 {
+.Frame1__Rectangle_1 {
   display: flex;
   position: absolute;
   left: 8px;
@@ -243,7 +247,7 @@ export function Form(props) {
   width: 128px;
   height: 64px;
 }
-.Frame1-9-19 {
+.Frame1__Rectangle_2 {
   display: flex;
   position: absolute;
   left: 153px;
@@ -261,13 +265,13 @@ export function Form(props) {
 
 export function Frame1(props) {
   return (
-    <div {...props} className={\\"Frame1-9-16 \\" + props.className}>
+    <div {...props} className={\\"Frame1 \\" + props.className}>
       <svg
         width={128}
         height={64}
         viewBox={\\"0 0 128 64\\"}
         fill={\\"none\\"}
-        className=\\"Frame1-9-18\\"
+        className=\\"Frame1__Rectangle_1\\"
       >
         <rect width=\\"128\\" height=\\"64\\" fill=\\"#D9D9D9\\" />
       </svg>
@@ -276,7 +280,7 @@ export function Frame1(props) {
         height={64}
         viewBox={\\"0 0 128 64\\"}
         fill={\\"none\\"}
-        className=\\"Frame1-9-19\\"
+        className=\\"Frame1__Rectangle_2\\"
       >
         <rect width=\\"128\\" height=\\"64\\" fill=\\"#FF0000\\" />
       </svg>
