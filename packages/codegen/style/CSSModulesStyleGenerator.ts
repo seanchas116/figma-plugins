@@ -2,6 +2,8 @@ import { Element } from "@uimix/element-ir";
 import * as CSS from "csstype";
 import { kebabCase } from "lodash-es";
 import { ExtendedComponent } from "../component";
+import { formatCSS } from "../format";
+import { GeneratedFile } from "../Generator";
 import { elementCSS } from "./InlineStyleGenerator";
 import { IStyleGenerator } from "./IStyleGenerator";
 
@@ -12,25 +14,28 @@ export function stringifyStyle(css: CSS.Properties): string {
 }
 
 export class CSSModulesStyleGenerator implements IStyleGenerator {
+  constructor(component: ExtendedComponent) {
+    this.component = component;
+  }
+
+  component: ExtendedComponent;
+  cssContents: string[] = [];
+
   generate(
     element: Element,
     {
       isRoot,
-      cssContents,
-      component,
     }: {
       isRoot: boolean;
-      cssContents?: string[];
-      component?: ExtendedComponent;
     }
   ): string[] {
     const css = elementCSS(element);
 
     const className = `${
-      component?.inCodeName ?? "element"
+      this.component.inCodeName ?? "element"
     }-${element.id.replace(":", "-")}`; // TODO: better ID
 
-    cssContents?.push(`.${className} { ${stringifyStyle(css)} }`);
+    this.cssContents.push(`.${className} { ${stringifyStyle(css)} }`);
 
     if (isRoot) {
       return [`className={styles["${className}"] + props.className}`];
@@ -39,11 +44,16 @@ export class CSSModulesStyleGenerator implements IStyleGenerator {
     }
   }
 
-  additionalImports?(component: ExtendedComponent): string[] {
-    return [`import styles from "./${component.inCodeName}.module.css";`];
+  additionalImports?(): string[] {
+    return [`import styles from "./${this.component.inCodeName}.module.css";`];
   }
 
-  get styleSuffix(): string {
-    return ".module.css";
+  additionalFiles(): GeneratedFile[] {
+    return [
+      {
+        filePath: `${this.component.inCodeName}.module.css`,
+        content: formatCSS(this.cssContents.join("")),
+      },
+    ];
   }
 }

@@ -1,5 +1,6 @@
 import { Element } from "@uimix/element-ir";
 import { ExtendedComponent } from "../component";
+import { GeneratedFile } from "../Generator";
 
 export type Props = Record<string, any>;
 
@@ -13,7 +14,6 @@ export interface IStyleGenerator {
     }
   ): string[];
 
-  additionalImports?(component: ExtendedComponent): string[];
-
-  styleSuffix?: string;
+  additionalImports?(): string[];
+  additionalFiles?(): GeneratedFile[];
 }

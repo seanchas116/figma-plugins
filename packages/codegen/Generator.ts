@@ -42,25 +42,27 @@ export class Generator {
       }
     }
 
-    this.styleGenerator = (() => {
-      switch (options.style) {
-        case "tailwind":
-          return new TailwindStyleGenerator();
-        case "inline":
-          return new InlineStyleGenerator();
-        case "css":
-          return new CSSStyleGenerator();
-        case "cssModules":
-          return new CSSModulesStyleGenerator();
-        default:
-          throw new Error("Unknown style: " + options.style);
-      }
-    })();
+    this.style = options.style;
   }
 
   readonly components: ExtendedComponent[] = [];
   readonly componentMap = new Map<string, ExtendedComponent>();
-  readonly styleGenerator: IStyleGenerator;
+  readonly style: GeneratorOptions["style"];
+
+  private createStyleGenerator(component: ExtendedComponent): IStyleGenerator {
+    switch (this.style) {
+      case "tailwind":
+        return new TailwindStyleGenerator();
+      case "inline":
+        return new InlineStyleGenerator();
+      case "css":
+        return new CSSStyleGenerator(component);
+      case "cssModules":
+        return new CSSModulesStyleGenerator(component);
+      default:
+        throw new Error("Unknown style: " + this.style);
+    }
+  }
 
   private generateTag(
     tagName: string,
@@ -94,11 +96,13 @@ export class Generator {
   generateElement(
     element: Element,
     {
+      styleGenerator = new InlineStyleGenerator(),
       component,
       usedComponents,
       cssContents,
       isRoot = true,
     }: {
+      styleGenerator?: IStyleGenerator;
       component?: ExtendedComponent;
       usedComponents?: Set<string>;
       cssContents?: string[];
@@ -107,7 +111,7 @@ export class Generator {
   ): string[] {
     let result: string[];
 
-    const tagExtra = this.styleGenerator.generate(element, {
+    const tagExtra = styleGenerator.generate(element, {
       cssContents: cssContents ?? [],
       component,
       isRoot,
@@ -147,6 +151,7 @@ export class Generator {
               isRoot: false,
               usedComponents,
               cssContents,
+              styleGenerator,
             })
           ),
         });
@@ -216,6 +221,8 @@ export class Generator {
   }
 
   generateComponent(component: ExtendedComponent): GeneratedFile[] {
+    const styleGenerator = this.createStyleGenerator(component);
+
     const usedComponents = new Set<string>();
 
     const cssContents: string[] = [];
@@ -236,25 +243,16 @@ export class Generator {
         component,
         usedComponents,
         cssContents,
+        styleGenerator,
       }),
       `}`,
     ];
-
-    const cssFile: GeneratedFile | undefined = cssContents.length
-      ? {
-          filePath: `${component.inCodeName}${
-            this.styleGenerator.styleSuffix ?? ".css"
-          }`,
-          content: formatCSS(cssContents.join("")),
-        }
-      : undefined;
 
     const imports = Array.from(usedComponents).map(
       (c) => `import { ${c} } from "./${c}.js";`
     );
 
-    const additionalImports =
-      this.styleGenerator.additionalImports?.(component);
+    const additionalImports = styleGenerator.additionalImports?.();
     if (additionalImports) {
       imports.push(...additionalImports);
     }
@@ -266,7 +264,7 @@ export class Generator {
       content: formatJS(source.join("")),
     };
 
-    return cssFile ? [cssFile, jsFile] : [jsFile];
+    return [...(styleGenerator.additionalFiles?.() ?? []), jsFile];
   }
 
   generateProject(): GeneratedFile[] {
