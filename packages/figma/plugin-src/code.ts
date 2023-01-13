@@ -78,42 +78,28 @@ async function handleResponsiveContentChange(change: DocumentChange) {
     return;
   }
 
-  if (change.type !== "CREATE" && change.type !== "PROPERTY_CHANGE") {
-    return;
-  }
+  if (change.type === "CREATE" || change.type === "PROPERTY_CHANGE") {
+    const node = change.node;
+    if (node.removed) {
+      return;
+    }
 
-  const node = change.node;
-  if (node.removed) {
-    return;
-  }
+    const parent = node.parent;
 
-  const parent = node.parent;
+    if (parent?.type !== "FRAME") {
+      return;
+    }
+    const parentData = getResponsiveFrameData(parent);
+    if (!parentData || parentData.maxWidth) {
+      return;
+    }
 
-  if (parent?.type !== "FRAME") {
-    return;
-  }
-  const parentData = getResponsiveFrameData(parent);
-  if (!parentData || parentData.maxWidth) {
-    return;
-  }
-
-  const otherParents = (parent.parent?.children.filter(
-    (child) =>
-      child.type === "FRAME" &&
-      getResponsiveFrameData(child) &&
-      child !== parent
-  ) ?? []) as FrameNode[];
-
-  // if (change.type === "CREATE") {
-  //   console.log("create");
-  //   for (const otherParent of otherParents) {
-  //     const clone = node.clone();
-  //     otherParent.appendChild(clone);
-  //   }
-  // }
-
-  if (change.type === "PROPERTY_CHANGE") {
-    console.log("change");
+    const otherParents = (parent.parent?.children.filter(
+      (child) =>
+        child.type === "FRAME" &&
+        getResponsiveFrameData(child) &&
+        child !== parent
+    ) ?? []) as FrameNode[];
 
     for (const otherParent of otherParents) {
       console.log("original", node.id);
@@ -127,19 +113,21 @@ async function handleResponsiveContentChange(change: DocumentChange) {
         otherParent.appendChild(clone);
       }
 
-      for (const property of change.properties) {
-        if (node.type === "TEXT" && clone.type === "TEXT") {
-          await figma.loadFontAsync(node.fontName as FontName);
-          clone.characters = node.characters;
-          clone.x = node.x;
-          clone.y = node.y;
-          clone.fontSize = node.fontSize;
-          clone.resizeWithoutConstraints(node.width, node.height);
-        }
-        if (node.type === "RECTANGLE" && clone.type === "RECTANGLE") {
-          clone.x = node.x;
-          clone.y = node.y;
-          clone.resizeWithoutConstraints(node.width, node.height);
+      if (change.type === "PROPERTY_CHANGE") {
+        for (const property of change.properties) {
+          if (node.type === "TEXT" && clone.type === "TEXT") {
+            await figma.loadFontAsync(node.fontName as FontName);
+            clone.characters = node.characters;
+            clone.x = node.x;
+            clone.y = node.y;
+            clone.fontSize = node.fontSize;
+            clone.resizeWithoutConstraints(node.width, node.height);
+          }
+          if (node.type === "RECTANGLE" && clone.type === "RECTANGLE") {
+            clone.x = node.x;
+            clone.y = node.y;
+            clone.resizeWithoutConstraints(node.width, node.height);
+          }
         }
       }
     }
