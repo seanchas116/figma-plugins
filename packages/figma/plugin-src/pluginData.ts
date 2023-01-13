@@ -115,3 +115,23 @@ export function getTextStyleMetadata(
     return JSON.parse(data) as TextStyleMetadata;
   }
 }
+
+export interface ResponsiveFrameData {
+  maxWidth?: number;
+}
+
+export function setResponsiveFrameData(
+  node: FrameNode,
+  data: ResponsiveFrameData
+) {
+  node.setPluginData("responsive", JSON.stringify(data));
+}
+
+export function getResponsiveFrameData(
+  node: FrameNode
+): ResponsiveFrameData | undefined {
+  const data = node.getPluginData("responsive");
+  if (data) {
+    return JSON.parse(data) as ResponsiveFrameData;
+  }
+}

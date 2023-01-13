@@ -3,6 +3,7 @@ import {
   setInstanceParams,
   getRenderedSize,
   getInstanceInfo,
+  setResponsiveFrameData,
 } from "./pluginData";
 import { debounce } from "./common";
 import { renderInstance } from "./render";
@@ -144,6 +145,7 @@ class RPCHandler implements IUIToPluginRPC {
     desktop.x = gap;
     desktop.y = gap;
     desktop.resize(1440, 1080);
+    setResponsiveFrameData(desktop, {});
 
     section.appendChild(desktop);
 
@@ -152,6 +154,9 @@ class RPCHandler implements IUIToPluginRPC {
     mobile.x = gap + desktop.width + gap;
     mobile.y = gap;
     mobile.resize(375, 812);
+    setResponsiveFrameData(mobile, {
+      maxWidth: 375,
+    });
 
     section.appendChild(mobile);
 
