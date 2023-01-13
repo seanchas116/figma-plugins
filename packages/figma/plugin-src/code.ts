@@ -102,7 +102,6 @@ async function handleResponsiveContentChange(change: DocumentChange) {
     ) ?? []) as FrameNode[];
 
     for (const otherParent of otherParents) {
-      console.log("original", node.id);
       let clone = otherParent.children.find((child) => {
         return getResponsiveID(child) === node.id;
       }) as SceneNode | undefined;
