@@ -4,6 +4,8 @@ import {
   getRenderedSize,
   getInstanceInfo,
   setResponsiveFrameData,
+  getResponsiveFrameData,
+  getResponsiveID,
 } from "./pluginData";
 import { debounce } from "./common";
 import { renderInstance } from "./render";
@@ -20,48 +22,124 @@ figma.clientStorage.getAsync("size").then((size) => {
 
 figma.showUI(__html__, { width: 240, height: 240 });
 
-const onDocumentChange = debounce((event: DocumentChangeEvent) => {
-  for (const change of event.documentChanges) {
-    console.info(change);
-    if (
-      change.type === "PROPERTY_CHANGE" &&
-      change.node.type === "INSTANCE" &&
-      !change.node.removed &&
-      (change.properties.includes("width") ||
-        change.properties.includes("height"))
-    ) {
-      const node = change.node;
-      const instance = getInstanceInfo(node);
-      if (!instance) {
-        continue;
-      }
-
-      const renderedSize = getRenderedSize(node);
-      if (
-        renderedSize &&
-        renderedSize.width === node.width &&
-        renderedSize.height === node.height
-      ) {
-        continue;
-      }
-
-      if (instance.autoResize !== "none") {
-        const newAutoResize = change.properties.includes("height")
-          ? "none"
-          : "height";
-
-        const newInstanceInfo: CodeInstanceInfo = {
-          ...instance,
-          autoResize: newAutoResize,
-        };
-
-        setInstanceParams(node, newInstanceInfo);
-
-        onSelectionChange();
-      }
-
-      renderInstance(node);
+function handleCodeInstanceResize(change: DocumentChange) {
+  if (
+    change.type === "PROPERTY_CHANGE" &&
+    change.node.type === "INSTANCE" &&
+    !change.node.removed &&
+    (change.properties.includes("width") ||
+      change.properties.includes("height"))
+  ) {
+    const node = change.node;
+    const instance = getInstanceInfo(node);
+    if (!instance) {
+      return;
     }
+
+    const renderedSize = getRenderedSize(node);
+    if (
+      renderedSize &&
+      renderedSize.width === node.width &&
+      renderedSize.height === node.height
+    ) {
+      return;
+    }
+
+    if (instance.autoResize !== "none") {
+      const newAutoResize = change.properties.includes("height")
+        ? "none"
+        : "height";
+
+      const newInstanceInfo: CodeInstanceInfo = {
+        ...instance,
+        autoResize: newAutoResize,
+      };
+
+      setInstanceParams(node, newInstanceInfo);
+
+      onSelectionChange();
+    }
+
+    renderInstance(node);
+  }
+}
+
+async function handleResponsiveContentChange(change: DocumentChange) {
+  console.log(change);
+
+  if (change.type !== "CREATE" && change.type !== "PROPERTY_CHANGE") {
+    return;
+  }
+
+  const node = change.node;
+  if (node.removed) {
+    return;
+  }
+
+  const parent = node.parent;
+
+  if (parent?.type !== "FRAME") {
+    return;
+  }
+  const parentData = getResponsiveFrameData(parent);
+  if (!parentData || parentData.maxWidth) {
+    return;
+  }
+
+  const otherParents = (parent.parent?.children.filter(
+    (child) =>
+      child.type === "FRAME" &&
+      getResponsiveFrameData(child) &&
+      child !== parent
+  ) ?? []) as FrameNode[];
+
+  // if (change.type === "CREATE") {
+  //   console.log("create");
+  //   for (const otherParent of otherParents) {
+  //     const clone = node.clone();
+  //     otherParent.appendChild(clone);
+  //   }
+  // }
+
+  if (change.type === "PROPERTY_CHANGE") {
+    console.log("change");
+
+    const id = getResponsiveID(node);
+
+    for (const otherParent of otherParents) {
+      console.log("original", node.id);
+      let clone = otherParent.children.find((node) => {
+        return getResponsiveID(node) === id;
+      }) as SceneNode | undefined;
+
+      if (!clone) {
+        clone = node.clone();
+        otherParent.appendChild(clone);
+      }
+
+      for (const property of change.properties) {
+        if (node.type === "TEXT" && clone.type === "TEXT") {
+          await figma.loadFontAsync(node.fontName as FontName);
+          clone.characters = node.characters;
+          clone.x = node.x;
+          clone.y = node.y;
+          clone.fontSize = node.fontSize;
+          clone.resizeWithoutConstraints(node.width, node.height);
+        }
+        if (node.type === "RECTANGLE" && clone.type === "RECTANGLE") {
+          clone.x = node.x;
+          clone.y = node.y;
+          clone.resizeWithoutConstraints(node.width, node.height);
+        }
+      }
+    }
+  }
+}
+
+const onDocumentChange = debounce(async (event: DocumentChangeEvent) => {
+  for (const change of event.documentChanges) {
+    handleCodeInstanceResize(change);
+    await handleResponsiveContentChange(change);
   }
 }, 200);
 

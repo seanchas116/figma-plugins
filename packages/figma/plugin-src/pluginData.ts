@@ -128,10 +128,23 @@ export function setResponsiveFrameData(
 }
 
 export function getResponsiveFrameData(
-  node: FrameNode
+  node: SceneNode
 ): ResponsiveFrameData | undefined {
   const data = node.getPluginData("responsive");
   if (data) {
     return JSON.parse(data) as ResponsiveFrameData;
   }
+}
+
+export function getResponsiveID(node: SceneNode): string {
+  let id = node.getPluginData("responsiveID");
+  if (!id) {
+    id = createRandomID();
+    node.setPluginData("responsiveID", id);
+  }
+  return id;
+}
+
+function createRandomID() {
+  return Math.random().toString(36).substring(2, 15);
 }
