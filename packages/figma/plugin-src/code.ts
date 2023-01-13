@@ -132,17 +132,33 @@ class RPCHandler implements IUIToPluginRPC {
       y: figma.viewport.bounds.y + 100,
     };
 
+    const gap = 32;
+
+    const section = figma.createSection();
+    section.name = "Page";
+    section.x = topLeft.x;
+    section.y = topLeft.y;
+
     const desktop = figma.createFrame();
     desktop.name = "Desktop";
-    desktop.x = topLeft.x;
-    desktop.y = topLeft.y;
+    desktop.x = gap;
+    desktop.y = gap;
     desktop.resize(1440, 1080);
+
+    section.appendChild(desktop);
 
     const mobile = figma.createFrame();
     mobile.name = "Mobile";
-    mobile.x = topLeft.x + desktop.width + 100;
-    mobile.y = topLeft.y;
+    mobile.x = gap + desktop.width + gap;
+    mobile.y = gap;
     mobile.resize(375, 812);
+
+    section.appendChild(mobile);
+
+    section.resizeWithoutConstraints(
+      desktop.width + mobile.width + gap * 3,
+      Math.max(desktop.height, mobile.height) + gap * 2
+    );
   }
 }
 
