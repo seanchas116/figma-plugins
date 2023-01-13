@@ -5,8 +5,8 @@ import { rpc } from "../rpc";
 import { formatJS } from "../util/format";
 
 export const tabs = [
-  { id: "insert", label: "Insert" },
   { id: "layer", label: "Layer" },
+  { id: "responsive", label: "Responsive" },
   { id: "code", label: "Code" },
   { id: "export", label: "Export" },
 ] as const;
@@ -19,7 +19,7 @@ class State {
     textStyles: {},
   });
   readonly $target = signal<Target | undefined>(undefined);
-  readonly $selectedTab = signal<typeof tabs[number]["id"]>("layer");
+  readonly $selectedTab = signal<(typeof tabs)[number]["id"]>("layer");
 
   readonly $codeFormat = signal<"json" | "htmlInlineStyle">("json");
 

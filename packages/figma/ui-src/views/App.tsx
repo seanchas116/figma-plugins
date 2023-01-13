@@ -10,6 +10,7 @@ import { CodePanel } from "./CodePanel";
 import { SettingsDialog } from "./SettingsDialog";
 import { isTextInput } from "../util/isTextInput";
 import { ExportPanel } from "./ExportPanel";
+import { ResponsivePanel } from "./ResponsivePanel";
 
 const AppTabs: FunctionComponent = () => {
   return (
@@ -55,6 +56,7 @@ export const App: FunctionComponent = () => {
   return (
     <div className="text-[11px] leading-4 text-gray-900 accent-blue-500">
       <AppTabs />
+      {state.$selectedTab.value === "responsive" && <ResponsivePanel />}
       {state.$selectedTab.value === "layer" && <LayerPanel />}
       {state.$selectedTab.value === "code" && <CodePanel />}
       {state.$selectedTab.value === "export" && <ExportPanel />}
