@@ -86,6 +86,25 @@ async function handleChange(change: CreateChange | PropertyChange) {
           clone.resizeWithoutConstraints(node.width, node.height);
         }
       }
+
+      // looks like the layer is moved inside the tree
+      // FIXME: time complexity is O(n^2) here, needs better Figma plugin API
+      if (change.properties.includes("parent")) {
+        const index = parent.children.findIndex(
+          (child) => child.id === node.id
+        );
+        const index2 = otherParent.children.findIndex(
+          (child) => child.id === clone!.id
+        );
+
+        if (index >= 0) {
+          if (index2 >= 0 && index > index2) {
+            otherParent.insertChild(index + 1, clone);
+          } else {
+            otherParent.insertChild(index, clone);
+          }
+        }
+      }
     }
   }
 }
