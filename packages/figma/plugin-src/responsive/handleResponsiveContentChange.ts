@@ -3,15 +3,31 @@ import {
   getResponsiveID,
   setResponsiveID,
 } from "../pluginData";
+import { MultiMap } from "../util/MultiMap";
+
+// original node ID => responsive node IDs
+const responsiveNodes = new MultiMap<string, string>();
+
+function addResponsiveNodes(node: SceneNode) {
+  const id = getResponsiveID(node);
+  if (id) {
+    responsiveNodes.add(id, node.id);
+  }
+
+  if ("children" in node) {
+    for (const child of node.children) {
+      addResponsiveNodes(child);
+    }
+  }
+}
+figma.root.children.forEach((page) =>
+  page.children.forEach(addResponsiveNodes)
+);
 
 function handleDelete(change: DeleteChange) {
-  const nodes = figma.root.findAll(
-    (node) => node.type !== "PAGE" && getResponsiveID(node) === change.node.id
-  );
-  for (const node of nodes) {
-    node.remove();
+  for (const node of responsiveNodes.get(change.node.id)) {
+    figma.getNodeById(node)?.remove();
   }
-  return;
 }
 
 async function handleChange(change: CreateChange | PropertyChange) {
@@ -45,6 +61,7 @@ async function handleChange(change: CreateChange | PropertyChange) {
     if (!clone) {
       clone = node.clone();
       setResponsiveID(clone, node.id);
+      responsiveNodes.add(node.id, clone.id);
       otherParent.appendChild(clone);
     }
 
