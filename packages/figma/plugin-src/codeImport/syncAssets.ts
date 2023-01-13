@@ -1,6 +1,6 @@
 import parseCSSColor from "parse-css-color";
-import { CodeAssets, CodeComponentInfo } from "../types/data";
-import { findFontForWeight } from "./common";
+import { CodeAssets, CodeComponentInfo } from "../../types/data";
+import { findFontForWeight } from "../common";
 import {
   getPaintStyleMetadata,
   setPaintStyleMetadata,
@@ -8,7 +8,7 @@ import {
   setTextStyleMetadata,
   getComponentInfo,
   setComponentInfo,
-} from "./pluginData";
+} from "../pluginData";
 import { renderInstanceImage } from "./render";
 
 const productName = "UIMix";
