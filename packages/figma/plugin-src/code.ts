@@ -1,5 +1,4 @@
 import { CodeAssets, CodeInstanceInfo } from "../types/data";
-import { setResponsiveFrameData } from "./pluginData";
 import { debounce } from "./util/common";
 import { IPluginToUIRPC, IUIToPluginRPC } from "../types/rpc";
 import { RPC } from "@uimix/typed-rpc";
@@ -12,10 +11,6 @@ import { updateInstance } from "./codeImport/updateInstance";
 import { handleResponsiveContentChange } from "./responsive/handleResponsiveContentChange";
 import { createResponsivePage } from "./responsive/createResponsivePage";
 import { resizeWindow } from "./resizeWindow";
-
-figma.clientStorage.getAsync("size").then((size) => {
-  if (size) figma.ui.resize(size.width, size.height);
-});
 
 figma.showUI(__html__, { width: 240, height: 240 });
 
