@@ -11,7 +11,7 @@ export interface IUIToPluginRPC {
   ready(): Promise<void>;
   updateInstance(instance?: CodeInstanceParams): Promise<void>;
   syncCodeAssets(assets: CodeAssets): Promise<void>;
-  resize(width: number, height: number): Promise<void>;
+  resizeWindow(width: number, height: number): Promise<void>;
   exportWholeDocument(): Promise<IR.Component[]>;
   createResponsivePage(): Promise<void>;
 }

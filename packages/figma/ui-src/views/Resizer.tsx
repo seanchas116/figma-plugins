@@ -12,7 +12,7 @@ export const Resizer: FunctionComponent = () => {
       width: Math.max(50, Math.floor(e.clientX + 5)),
       height: Math.max(50, Math.floor(e.clientY + 5)),
     };
-    rpc.remote.resize(size.width, size.height);
+    rpc.remote.resizeWindow(size.width, size.height);
   };
 
   return (

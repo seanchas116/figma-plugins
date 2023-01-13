@@ -11,6 +11,7 @@ import { handleCodeInstanceResize } from "./codeImport/handleCodeInstanceResize"
 import { updateInstance } from "./codeImport/updateInstance";
 import { handleResponsiveContentChange } from "./responsive/handleResponsiveContentChange";
 import { createResponsivePage } from "./responsive/createResponsivePage";
+import { resizeWindow } from "./resizeWindow";
 
 figma.clientStorage.getAsync("size").then((size) => {
   if (size) figma.ui.resize(size.width, size.height);
@@ -39,9 +40,8 @@ class RPCHandler implements IUIToPluginRPC {
     await syncAssets(assets);
     figma.notify("Components & tokens synced to your Figma file!");
   }
-  async resize(width: number, height: number): Promise<void> {
-    figma.ui.resize(width, height);
-    figma.clientStorage.setAsync("size", { width, height });
+  async resizeWindow(width: number, height: number): Promise<void> {
+    await resizeWindow(width, height);
   }
 
   async exportWholeDocument(): Promise<Component[]> {
