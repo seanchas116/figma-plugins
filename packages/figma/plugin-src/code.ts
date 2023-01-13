@@ -242,6 +242,12 @@ class RPCHandler implements IUIToPluginRPC {
     desktop.name = "Desktop";
     desktop.x = gap;
     desktop.y = gap;
+    desktop.layoutMode = "VERTICAL";
+    desktop.paddingTop =
+      desktop.paddingBottom =
+      desktop.paddingLeft =
+      desktop.paddingRight =
+        32;
     desktop.resize(1440, 1080);
     setResponsiveFrameData(desktop, {});
 
@@ -251,6 +257,12 @@ class RPCHandler implements IUIToPluginRPC {
     mobile.name = "Mobile";
     mobile.x = gap + desktop.width + gap;
     mobile.y = gap;
+    mobile.layoutMode = "VERTICAL";
+    mobile.paddingTop =
+      mobile.paddingBottom =
+      mobile.paddingLeft =
+      mobile.paddingRight =
+        32;
     mobile.resize(375, 812);
     setResponsiveFrameData(mobile, {
       maxWidth: 375,
