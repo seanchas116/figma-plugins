@@ -136,15 +136,10 @@ export function getResponsiveFrameData(
   }
 }
 
-export function getResponsiveID(node: SceneNode): string {
-  let id = node.getPluginData("responsiveID");
-  if (!id) {
-    id = createRandomID();
-    node.setPluginData("responsiveID", id);
-  }
-  return id;
+export function setResponsiveID(node: SceneNode, id: string) {
+  node.setPluginData("responsiveID", id);
 }
 
-function createRandomID() {
-  return Math.random().toString(36).substring(2, 15);
+export function getResponsiveID(node: SceneNode): string | undefined {
+  return node.getPluginData("responsiveID") || undefined;
 }

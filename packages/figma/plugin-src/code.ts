@@ -6,6 +6,7 @@ import {
   setResponsiveFrameData,
   getResponsiveFrameData,
   getResponsiveID,
+  setResponsiveID,
 } from "./pluginData";
 import { debounce } from "./common";
 import { renderInstance } from "./render";
@@ -67,6 +68,16 @@ function handleCodeInstanceResize(change: DocumentChange) {
 async function handleResponsiveContentChange(change: DocumentChange) {
   console.log(change);
 
+  if (change.type === "DELETE") {
+    const nodes = figma.root.findAll(
+      (node) => node.type !== "PAGE" && getResponsiveID(node) === change.node.id
+    );
+    for (const node of nodes) {
+      node.remove();
+    }
+    return;
+  }
+
   if (change.type !== "CREATE" && change.type !== "PROPERTY_CHANGE") {
     return;
   }
@@ -104,16 +115,15 @@ async function handleResponsiveContentChange(change: DocumentChange) {
   if (change.type === "PROPERTY_CHANGE") {
     console.log("change");
 
-    const id = getResponsiveID(node);
-
     for (const otherParent of otherParents) {
       console.log("original", node.id);
-      let clone = otherParent.children.find((node) => {
-        return getResponsiveID(node) === id;
+      let clone = otherParent.children.find((child) => {
+        return getResponsiveID(child) === node.id;
       }) as SceneNode | undefined;
 
       if (!clone) {
         clone = node.clone();
+        setResponsiveID(clone, node.id);
         otherParent.appendChild(clone);
       }
 
