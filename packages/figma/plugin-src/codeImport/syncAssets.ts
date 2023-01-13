@@ -1,6 +1,6 @@
 import parseCSSColor from "parse-css-color";
 import { CodeAssets, CodeComponentInfo } from "../../types/data";
-import { findFontForWeight } from "../common";
+import { findFontForWeight } from "../util/common";
 import {
   getPaintStyleMetadata,
   setPaintStyleMetadata,

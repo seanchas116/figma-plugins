@@ -1,6 +1,6 @@
 import { CodeAssets, CodeInstanceInfo } from "../types/data";
 import { setResponsiveFrameData } from "./pluginData";
-import { debounce } from "./common";
+import { debounce } from "./util/common";
 import { IPluginToUIRPC, IUIToPluginRPC } from "../types/rpc";
 import { RPC } from "@uimix/typed-rpc";
 import { syncAssets } from "./codeImport/syncAssets";

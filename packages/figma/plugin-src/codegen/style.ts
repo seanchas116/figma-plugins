@@ -1,5 +1,5 @@
 import * as IR from "@uimix/element-ir";
-import { parseFontName } from "../common";
+import { parseFontName } from "../util/common";
 
 export function convertScaleMode(
   scaleMode: ImagePaint["scaleMode"]
