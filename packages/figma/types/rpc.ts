@@ -13,6 +13,7 @@ export interface IUIToPluginRPC {
   syncCodeAssets(assets: CodeAssets): Promise<void>;
   resize(width: number, height: number): Promise<void>;
   exportWholeDocument(): Promise<IR.Component[]>;
+  createResponsivePage(): Promise<void>;
 }
 
 export interface IPluginToUIRPC {

@@ -125,6 +125,25 @@ class RPCHandler implements IUIToPluginRPC {
   async exportWholeDocument(): Promise<Component[]> {
     return await getComponentIRs(figma.currentPage);
   }
+
+  async createResponsivePage(): Promise<void> {
+    const topLeft = {
+      x: figma.viewport.bounds.x + 100,
+      y: figma.viewport.bounds.y + 100,
+    };
+
+    const desktop = figma.createFrame();
+    desktop.name = "Desktop";
+    desktop.x = topLeft.x;
+    desktop.y = topLeft.y;
+    desktop.resize(1440, 1080);
+
+    const mobile = figma.createFrame();
+    mobile.name = "Mobile";
+    mobile.x = topLeft.x + desktop.width + 100;
+    mobile.y = topLeft.y;
+    mobile.resize(375, 812);
+  }
 }
 
 export const rpc = new RPC<IUIToPluginRPC, IPluginToUIRPC>({
