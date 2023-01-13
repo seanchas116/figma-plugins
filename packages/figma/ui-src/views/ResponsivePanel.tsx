@@ -1,5 +1,4 @@
 import { FunctionComponent } from "preact";
-import { state } from "../state/State";
 import { Button } from "../components/Button";
 import { rpc } from "../rpc";
 
