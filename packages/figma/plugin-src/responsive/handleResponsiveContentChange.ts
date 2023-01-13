@@ -1,3 +1,4 @@
+import { Node } from "hast-util-to-html/lib";
 import {
   getResponsiveFrameData,
   getResponsiveID,
@@ -30,6 +31,41 @@ function handleDelete(change: DeleteChange) {
   }
 }
 
+function reconcileStructure(
+  original: SceneNode & ChildrenMixin,
+  responsive: SceneNode & ChildrenMixin
+) {
+  const responsiveChildMap = new Map<string, SceneNode>();
+
+  for (const responsiveChild of responsive.children) {
+    const id = getResponsiveID(responsiveChild);
+    if (id) {
+      responsiveChildMap.set(id, responsiveChild);
+    }
+  }
+
+  for (const originalChild of original.children) {
+    const id = originalChild.id;
+
+    let responsiveChild = responsiveChildMap.get(id);
+    responsiveChildMap.delete(id);
+    if (!responsiveChild) {
+      responsiveChild = originalChild.clone();
+      setResponsiveID(responsiveChild, id);
+      responsiveNodes.add(id, responsiveChild.id);
+    }
+    responsive.appendChild(responsiveChild);
+
+    if ("children" in originalChild && "children" in responsiveChild) {
+      reconcileStructure(originalChild, responsiveChild);
+    }
+  }
+
+  for (const responsiveChild of responsiveChildMap.values()) {
+    responsiveChild.remove();
+  }
+}
+
 async function handleChange(change: CreateChange | PropertyChange) {
   const node = change.node;
   if (node.removed) {
@@ -54,15 +90,13 @@ async function handleChange(change: CreateChange | PropertyChange) {
   ) ?? []) as FrameNode[];
 
   for (const otherParent of otherParents) {
+    reconcileStructure(parent, otherParent);
+
     let clone = otherParent.children.find((child) => {
       return getResponsiveID(child) === node.id;
     }) as SceneNode | undefined;
-
     if (!clone) {
-      clone = node.clone();
-      setResponsiveID(clone, node.id);
-      responsiveNodes.add(node.id, clone.id);
-      otherParent.appendChild(clone);
+      throw new Error("Responsive node not found");
     }
 
     if (change.type === "PROPERTY_CHANGE") {
