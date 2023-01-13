@@ -114,18 +114,40 @@ async function handleResponsiveContentChange(change: DocumentChange) {
       }
 
       if (change.type === "PROPERTY_CHANGE") {
-        for (const property of change.properties) {
-          if (node.type === "TEXT" && clone.type === "TEXT") {
-            await figma.loadFontAsync(node.fontName as FontName);
+        if (node.type === "TEXT" && clone.type === "TEXT") {
+          await figma.loadFontAsync(node.fontName as FontName);
+
+          if (change.properties.includes("characters")) {
             clone.characters = node.characters;
-            clone.x = node.x;
-            clone.y = node.y;
+          }
+          if (change.properties.includes("fontSize")) {
             clone.fontSize = node.fontSize;
+          }
+
+          if (change.properties.includes("x")) {
+            clone.x = node.x;
+          }
+          if (change.properties.includes("y")) {
+            clone.y = node.y;
+          }
+          if (
+            change.properties.includes("width") ||
+            change.properties.includes("height")
+          ) {
             clone.resizeWithoutConstraints(node.width, node.height);
           }
-          if (node.type === "RECTANGLE" && clone.type === "RECTANGLE") {
+        }
+        if (node.type === "RECTANGLE" && clone.type === "RECTANGLE") {
+          if (change.properties.includes("x")) {
             clone.x = node.x;
+          }
+          if (change.properties.includes("y")) {
             clone.y = node.y;
+          }
+          if (
+            change.properties.includes("width") ||
+            change.properties.includes("height")
+          ) {
             clone.resizeWithoutConstraints(node.width, node.height);
           }
         }
