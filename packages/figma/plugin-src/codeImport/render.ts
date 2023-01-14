@@ -1,6 +1,6 @@
 import { RenderResult, CodeInstanceInfo } from "../../types/data";
 import { getInstanceInfo, setRenderedSize } from "../pluginData";
-import { rpc } from "../code";
+import { rpc } from "../rpc";
 
 export async function renderInstanceImage(
   instance: CodeInstanceInfo,

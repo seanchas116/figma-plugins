@@ -1,5 +1,5 @@
 import { Target, CodeInstanceInfo } from "../types/data";
-import { rpc } from "./code";
+import { rpc } from "./rpc";
 import { getElementIR } from "./codegen/element";
 import { getInstanceInfo } from "./pluginData";
 
