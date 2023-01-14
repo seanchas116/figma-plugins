@@ -184,8 +184,9 @@ async function handleResponsiveContentChanges(
   }
 }
 
-const onDocumentChange = debounce((event: DocumentChangeEvent) => {
+const onDocumentChange = debounce(async (event: DocumentChangeEvent) => {
   // handle deletes
+
   for (const change of event.documentChanges) {
     if (change.type === "DELETE") {
       const responsiveIDs = responsiveNodes.get(change.node.id) ?? [];
@@ -199,33 +200,53 @@ const onDocumentChange = debounce((event: DocumentChangeEvent) => {
     }
   }
 
-  const changesForBreakpoint = new Map<
-    string,
-    Breakpoint & {
-      changes: DocumentChange[];
-    }
-  >();
+  // handle structure changes
+
+  const structureChangedBreakpoints = new Map<string, Breakpoint>();
 
   for (const change of event.documentChanges) {
-    if ("node" in change && !change.node.removed) {
-      const breakpoint = getBreakpointForNode(change.node);
-      if (breakpoint) {
-        if (changesForBreakpoint.has(breakpoint.node.id)) {
-          changesForBreakpoint.get(breakpoint.node.id)!.changes.push(change);
-        } else {
-          changesForBreakpoint.set(breakpoint.node.id, {
-            ...breakpoint,
-            changes: [change],
-          });
+    if (
+      (change.type === "CREATE" ||
+        (change.type === "PROPERTY_CHANGE" &&
+          change.properties.includes("parent"))) &&
+      !change.node.removed
+    ) {
+      if (!change.node.removed) {
+        const breakpoint = getBreakpointForNode(change.node);
+        if (breakpoint) {
+          structureChangedBreakpoints.set(breakpoint.node.id, breakpoint);
         }
       }
     }
   }
 
-  console.log(changesForBreakpoint);
+  for (const breakpoint of structureChangedBreakpoints.values()) {
+    if (breakpoint.data.maxWidth) {
+      continue;
+    }
 
-  for (const breakpoint of changesForBreakpoint.values()) {
-    handleResponsiveContentChanges(breakpoint, breakpoint.changes);
+    const breakpoints: Breakpoint[] = [];
+    for (const node of breakpoint.node.parent?.children ?? []) {
+      if (node.type === "FRAME") {
+        const data = getResponsiveFrameData(node);
+        if (data) {
+          breakpoints.push({ node, data });
+        }
+      }
+    }
+    const otherBreakpoints = breakpoints.filter((b) => b.data.maxWidth);
+    for (const other of otherBreakpoints) {
+      reconcileStructure(breakpoint.node, other.node);
+    }
+  }
+
+  // handle property changes
+
+  for (const change of event.documentChanges) {
+    if (change.type === "PROPERTY_CHANGE") {
+      await handleChange(change);
+      return;
+    }
   }
 }, 200);
 
