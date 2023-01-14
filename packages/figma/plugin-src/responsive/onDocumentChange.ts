@@ -132,18 +132,20 @@ async function handleChange(change: PropertyChange) {
   }
 }
 
-function getBreakpointForNode(node: SceneNode): Breakpoint | undefined {
+function getBreakpointForNode(node: BaseNode): Breakpoint | undefined {
   const parent = node.parent;
-
-  if (parent?.type !== "COMPONENT") {
+  if (!parent) {
     return;
   }
-  const parentData = getResponsiveFrameData(parent);
-  if (!parentData) {
-    return getBreakpointForNode(parent);
+
+  if (parent.type === "COMPONENT") {
+    const parentData = getResponsiveFrameData(parent);
+    if (parentData) {
+      return { node: parent, data: parentData };
+    }
   }
 
-  return { node: parent, data: parentData };
+  return getBreakpointForNode(parent);
 }
 
 const onDocumentChange = async (event: DocumentChangeEvent) => {
@@ -168,6 +170,7 @@ const onDocumentChange = async (event: DocumentChangeEvent) => {
     ) {
       if (!change.node.removed) {
         const breakpoint = getBreakpointForNode(change.node);
+        console.log(breakpoint);
         if (breakpoint) {
           structureChangedBreakpoints.set(breakpoint.node.id, breakpoint);
         }
