@@ -136,54 +136,6 @@ function getBreakpointForNode(node: SceneNode): Breakpoint | undefined {
   return { node: parent, data: parentData };
 }
 
-async function handleResponsiveContentChanges(
-  breakpoint: Breakpoint,
-  changes: DocumentChange[]
-) {
-  console.log(changes);
-  // Ignore non-main breakpoints
-  if (breakpoint.data.maxWidth) {
-    return;
-  }
-
-  let structureChanged = false;
-  for (const change of changes) {
-    if (change.type === "DELETE" || change.type === "CREATE") {
-      structureChanged = true;
-      break;
-    }
-    if (change.type === "PROPERTY_CHANGE") {
-      if (change.properties.includes("parent")) {
-        structureChanged = true;
-        break;
-      }
-    }
-  }
-
-  if (structureChanged) {
-    const breakpoints: Breakpoint[] = [];
-    for (const node of breakpoint.node.parent?.children ?? []) {
-      if (node.type === "FRAME") {
-        const data = getResponsiveFrameData(node);
-        if (data) {
-          breakpoints.push({ node, data });
-        }
-      }
-    }
-    const otherBreakpoints = breakpoints.filter((b) => b.data.maxWidth);
-    for (const other of otherBreakpoints) {
-      reconcileStructure(breakpoint.node, other.node);
-    }
-  }
-
-  for (const change of changes) {
-    if (change.type === "PROPERTY_CHANGE") {
-      await handleChange(change);
-      return;
-    }
-  }
-}
-
 const onDocumentChange = debounce(async (event: DocumentChangeEvent) => {
   // handle deletes
 
