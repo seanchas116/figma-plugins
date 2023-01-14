@@ -8,12 +8,7 @@ export function createResponsivePage(): void {
 
   const gap = 32;
 
-  const section = figma.createSection();
-  section.name = "Page";
-  section.x = topLeft.x;
-  section.y = topLeft.y;
-
-  const desktop = figma.createFrame();
+  const desktop = figma.createComponent();
   desktop.name = "Desktop";
   desktop.x = gap;
   desktop.y = gap;
@@ -24,11 +19,19 @@ export function createResponsivePage(): void {
     desktop.paddingRight =
       32;
   desktop.resize(1440, 1080);
+  desktop.backgrounds = [
+    {
+      type: "SOLID",
+      color: {
+        r: 1,
+        g: 1,
+        b: 1,
+      },
+    },
+  ];
   setResponsiveFrameData(desktop, {});
 
-  section.appendChild(desktop);
-
-  const mobile = figma.createFrame();
+  const mobile = figma.createComponent();
   mobile.name = "Mobile";
   mobile.x = gap + desktop.width + gap;
   mobile.y = gap;
@@ -39,14 +42,26 @@ export function createResponsivePage(): void {
     mobile.paddingRight =
       32;
   mobile.resize(375, 812);
+  mobile.backgrounds = [
+    {
+      type: "SOLID",
+      color: {
+        r: 1,
+        g: 1,
+        b: 1,
+      },
+    },
+  ];
   setResponsiveFrameData(mobile, {
     maxWidth: 375,
   });
 
-  section.appendChild(mobile);
-
-  section.resizeWithoutConstraints(
-    desktop.width + mobile.width + gap * 3,
-    Math.max(desktop.height, mobile.height) + gap * 2
+  const componentSet = figma.combineAsVariants(
+    [desktop, mobile],
+    figma.currentPage
   );
+  componentSet.name = "Page";
+
+  componentSet.x = topLeft.x;
+  componentSet.y = topLeft.y;
 }

@@ -121,14 +121,14 @@ export interface ResponsiveFrameData {
 }
 
 export function setResponsiveFrameData(
-  node: FrameNode,
+  node: ComponentNode,
   data: ResponsiveFrameData
 ) {
   node.setPluginData("responsive", JSON.stringify(data));
 }
 
 export function getResponsiveFrameData(
-  node: SceneNode
+  node: ComponentNode
 ): ResponsiveFrameData | undefined {
   const data = node.getPluginData("responsive");
   if (data) {

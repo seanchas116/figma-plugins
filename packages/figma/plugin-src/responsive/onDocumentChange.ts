@@ -7,7 +7,7 @@ import {
 import { MultiMap } from "../util/MultiMap";
 
 interface Breakpoint {
-  node: FrameNode;
+  node: ComponentNode;
   data: ResponsiveFrameData;
 }
 
@@ -135,7 +135,7 @@ async function handleChange(change: PropertyChange) {
 function getBreakpointForNode(node: SceneNode): Breakpoint | undefined {
   const parent = node.parent;
 
-  if (parent?.type !== "FRAME") {
+  if (parent?.type !== "COMPONENT") {
     return;
   }
   const parentData = getResponsiveFrameData(parent);
@@ -182,7 +182,7 @@ const onDocumentChange = async (event: DocumentChangeEvent) => {
 
     const otherBreakpoints: Breakpoint[] = [];
     for (const node of breakpoint.node.parent?.children ?? []) {
-      if (node.type === "FRAME") {
+      if (node.type === "COMPONENT") {
         const data = getResponsiveFrameData(node);
         if (data && data.maxWidth) {
           otherBreakpoints.push({ node, data });
