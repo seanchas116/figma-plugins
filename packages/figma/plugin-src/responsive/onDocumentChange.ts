@@ -4,7 +4,6 @@ import {
   ResponsiveFrameData,
   setResponsiveID,
 } from "../pluginData";
-import { debounce } from "../util/common";
 import { MultiMap } from "../util/MultiMap";
 
 interface Breakpoint {
@@ -147,7 +146,7 @@ function getBreakpointForNode(node: SceneNode): Breakpoint | undefined {
   return { node: parent, data: parentData };
 }
 
-const onDocumentChange = debounce(async (event: DocumentChangeEvent) => {
+const onDocumentChange = async (event: DocumentChangeEvent) => {
   // handle deletes
 
   for (const change of event.documentChanges) {
@@ -203,6 +202,7 @@ const onDocumentChange = debounce(async (event: DocumentChangeEvent) => {
       return;
     }
   }
-}, 200);
+};
 
+// TODO: debounce
 figma.on("documentchange", onDocumentChange);
