@@ -15,9 +15,6 @@ interface Breakpoint {
 // original node ID => responsive node IDs
 const responsiveNodes = new MultiMap<string, string>();
 
-// TODO: set breakpointForNode on document change
-const breakpointForNode = new Map<string, string>();
-
 function addResponsiveNodes(node: SceneNode) {
   const id = getResponsiveID(node);
   if (id) {
@@ -125,25 +122,7 @@ async function handleChange(change: PropertyChange) {
   }
 }
 
-function getBreakpointForNode(
-  node: SceneNode | RemovedNode
-): Breakpoint | undefined {
-  if (node.removed) {
-    const breakpointID = breakpointForNode.get(node.id);
-    if (!breakpointID) {
-      return;
-    }
-    const breakpointNode = figma.getNodeById(breakpointID);
-    if (!breakpointForNode) {
-      return;
-    }
-    const data = getResponsiveFrameData(breakpointNode as FrameNode);
-    if (!data) {
-      return;
-    }
-    return { node: breakpointNode as FrameNode, data };
-  }
-
+function getBreakpointForNode(node: SceneNode): Breakpoint | undefined {
   const parent = node.parent;
 
   if (parent?.type !== "FRAME") {
@@ -206,6 +185,20 @@ async function handleResponsiveContentChanges(
 }
 
 const onDocumentChange = debounce((event: DocumentChangeEvent) => {
+  // handle deletes
+  for (const change of event.documentChanges) {
+    if (change.type === "DELETE") {
+      const responsiveIDs = responsiveNodes.get(change.node.id) ?? [];
+      for (const responsiveID of responsiveIDs) {
+        const responsiveNode = figma.getNodeById(responsiveID);
+        if (responsiveNode) {
+          responsiveNode.remove();
+        }
+      }
+      responsiveNodes.delete(change.node.id);
+    }
+  }
+
   const changesForBreakpoint = new Map<
     string,
     Breakpoint & {
@@ -214,7 +207,7 @@ const onDocumentChange = debounce((event: DocumentChangeEvent) => {
   >();
 
   for (const change of event.documentChanges) {
-    if ("node" in change) {
+    if ("node" in change && !change.node.removed) {
       const breakpoint = getBreakpointForNode(change.node);
       if (breakpoint) {
         if (changesForBreakpoint.has(breakpoint.node.id)) {
