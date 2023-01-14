@@ -12,6 +12,10 @@ export const ResponsivePanel: FunctionComponent = () => {
       >
         Create Responsive Page
       </Button>
+      <label className="flex gap-1 items-center">
+        <input type="checkbox" checked />
+        Auto-sync breakpoint contents
+      </label>
     </div>
   );
 };
