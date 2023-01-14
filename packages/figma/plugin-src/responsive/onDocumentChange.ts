@@ -97,40 +97,63 @@ async function handleChange(change: PropertyChange) {
     if (node.type === "TEXT" && clone.type === "TEXT") {
       await figma.loadFontAsync(node.fontName as FontName);
 
-      if (change.properties.includes("characters")) {
-        clone.characters = node.characters;
-      }
-      if (change.properties.includes("fontSize")) {
-        clone.fontSize = node.fontSize;
+      // if (change.properties.includes("characters")) {
+      //   clone.characters = node.characters;
+      // }
+      // if (change.properties.includes("fontSize")) {
+      //   clone.fontSize = node.fontSize;
+      // }
+
+      // if (change.properties.includes("x")) {
+      //   clone.x = node.x;
+      // }
+      // if (change.properties.includes("y")) {
+      //   clone.y = node.y;
+      // }
+      // if (
+      //   change.properties.includes("width") ||
+      //   change.properties.includes("height")
+      // ) {
+      //   clone.resizeWithoutConstraints(node.width, node.height);
+      // }
+    }
+
+    for (const property of change.properties) {
+      console.log(node.name, property);
+
+      // TODO: resize
+
+      if (
+        change.properties.includes("width") ||
+        change.properties.includes("height")
+      ) {
+        // (clone as LayoutMixin).resize(node.width, node.height);
+        // continue;
       }
 
-      if (change.properties.includes("x")) {
-        clone.x = node.x;
-      }
-      if (change.properties.includes("y")) {
-        clone.y = node.y;
-      }
-      if (
-        change.properties.includes("width") ||
-        change.properties.includes("height")
-      ) {
-        clone.resizeWithoutConstraints(node.width, node.height);
+      try {
+        // @ts-ignore
+        clone[property] = node[property];
+      } catch (e) {
+        console.error("error setting property", property);
+        console.error(e);
       }
     }
-    if (node.type === "RECTANGLE" && clone.type === "RECTANGLE") {
-      if (change.properties.includes("x")) {
-        clone.x = node.x;
-      }
-      if (change.properties.includes("y")) {
-        clone.y = node.y;
-      }
-      if (
-        change.properties.includes("width") ||
-        change.properties.includes("height")
-      ) {
-        clone.resizeWithoutConstraints(node.width, node.height);
-      }
-    }
+
+    // if (node.type === "RECTANGLE" && clone.type === "RECTANGLE") {
+    //   if (change.properties.includes("x")) {
+    //     clone.x = node.x;
+    //   }
+    //   if (change.properties.includes("y")) {
+    //     clone.y = node.y;
+    //   }
+    //   if (
+    //     change.properties.includes("width") ||
+    //     change.properties.includes("height")
+    //   ) {
+    //     clone.resizeWithoutConstraints(node.width, node.height);
+    //   }
+    // }
   }
 }
 
