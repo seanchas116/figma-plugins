@@ -1,9 +1,9 @@
-import { Node } from "hast-util-to-html/lib";
 import {
   getResponsiveFrameData,
   getResponsiveID,
   setResponsiveID,
 } from "../pluginData";
+import { debounce } from "../util/common";
 import { MultiMap } from "../util/MultiMap";
 
 // original node ID => responsive node IDs
@@ -160,7 +160,7 @@ async function handleChange(change: CreateChange | PropertyChange) {
   }
 }
 
-export async function handleResponsiveContentChange(change: DocumentChange) {
+async function handleResponsiveContentChange(change: DocumentChange) {
   console.log(change);
 
   if (change.type === "DELETE") {
@@ -173,3 +173,11 @@ export async function handleResponsiveContentChange(change: DocumentChange) {
     return;
   }
 }
+
+const onDocumentChange = debounce(async (event: DocumentChangeEvent) => {
+  for (const change of event.documentChanges) {
+    await handleResponsiveContentChange(change);
+  }
+}, 200);
+
+figma.on("documentchange", onDocumentChange);

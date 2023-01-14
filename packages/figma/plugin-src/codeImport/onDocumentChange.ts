@@ -5,9 +5,10 @@ import {
   getRenderedSize,
   setInstanceParams,
 } from "../pluginData";
+import { debounce } from "../util/common";
 import { renderInstance } from "./render";
 
-export function handleCodeInstanceResize(change: DocumentChange) {
+function handleCodeInstanceResize(change: DocumentChange) {
   if (
     change.type === "PROPERTY_CHANGE" &&
     change.node.type === "INSTANCE" &&
@@ -48,3 +49,11 @@ export function handleCodeInstanceResize(change: DocumentChange) {
     renderInstance(node);
   }
 }
+
+const onDocumentChange = debounce(async (event: DocumentChangeEvent) => {
+  for (const change of event.documentChanges) {
+    handleCodeInstanceResize(change);
+  }
+}, 200);
+
+figma.on("documentchange", onDocumentChange);
