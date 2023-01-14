@@ -70,6 +70,17 @@ function reconcileStructure(
   }
 }
 
+function handleDelete(change: DeleteChange) {
+  const responsiveIDs = responsiveNodes.get(change.node.id) ?? [];
+  for (const responsiveID of responsiveIDs) {
+    const responsiveNode = figma.getNodeById(responsiveID);
+    if (responsiveNode) {
+      responsiveNode.remove();
+    }
+  }
+  responsiveNodes.delete(change.node.id);
+}
+
 async function handleChange(change: PropertyChange) {
   const node = change.node;
   if (node.removed) {
@@ -141,14 +152,7 @@ const onDocumentChange = debounce(async (event: DocumentChangeEvent) => {
 
   for (const change of event.documentChanges) {
     if (change.type === "DELETE") {
-      const responsiveIDs = responsiveNodes.get(change.node.id) ?? [];
-      for (const responsiveID of responsiveIDs) {
-        const responsiveNode = figma.getNodeById(responsiveID);
-        if (responsiveNode) {
-          responsiveNode.remove();
-        }
-      }
-      responsiveNodes.delete(change.node.id);
+      handleDelete(change);
     }
   }
 
