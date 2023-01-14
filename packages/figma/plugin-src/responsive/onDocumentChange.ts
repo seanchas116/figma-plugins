@@ -1,13 +1,22 @@
 import {
   getResponsiveFrameData,
   getResponsiveID,
+  ResponsiveFrameData,
   setResponsiveID,
 } from "../pluginData";
 import { debounce } from "../util/common";
 import { MultiMap } from "../util/MultiMap";
 
+interface Breakpoint {
+  node: FrameNode;
+  data: ResponsiveFrameData;
+}
+
 // original node ID => responsive node IDs
 const responsiveNodes = new MultiMap<string, string>();
+
+// TODO: set breakpointForNode on document change
+const breakpointForNode = new Map<string, string>();
 
 function addResponsiveNodes(node: SceneNode) {
   const id = getResponsiveID(node);
@@ -24,12 +33,6 @@ function addResponsiveNodes(node: SceneNode) {
 figma.root.children.forEach((page) =>
   page.children.forEach(addResponsiveNodes)
 );
-
-function handleDelete(change: DeleteChange) {
-  for (const node of responsiveNodes.get(change.node.id)) {
-    figma.getNodeById(node)?.remove();
-  }
-}
 
 function reconcileStructure(
   original: SceneNode & ChildrenMixin,
@@ -70,10 +73,75 @@ function reconcileStructure(
   }
 }
 
-async function handleChange(change: CreateChange | PropertyChange) {
+async function handleChange(change: PropertyChange) {
   const node = change.node;
   if (node.removed) {
     return;
+  }
+
+  for (const responsiveID of responsiveNodes.get(node.id) || []) {
+    const clone = figma.getNodeById(responsiveID) as SceneNode;
+    if (!clone) {
+      continue;
+    }
+
+    if (node.type === "TEXT" && clone.type === "TEXT") {
+      await figma.loadFontAsync(node.fontName as FontName);
+
+      if (change.properties.includes("characters")) {
+        clone.characters = node.characters;
+      }
+      if (change.properties.includes("fontSize")) {
+        clone.fontSize = node.fontSize;
+      }
+
+      if (change.properties.includes("x")) {
+        clone.x = node.x;
+      }
+      if (change.properties.includes("y")) {
+        clone.y = node.y;
+      }
+      if (
+        change.properties.includes("width") ||
+        change.properties.includes("height")
+      ) {
+        clone.resizeWithoutConstraints(node.width, node.height);
+      }
+    }
+    if (node.type === "RECTANGLE" && clone.type === "RECTANGLE") {
+      if (change.properties.includes("x")) {
+        clone.x = node.x;
+      }
+      if (change.properties.includes("y")) {
+        clone.y = node.y;
+      }
+      if (
+        change.properties.includes("width") ||
+        change.properties.includes("height")
+      ) {
+        clone.resizeWithoutConstraints(node.width, node.height);
+      }
+    }
+  }
+}
+
+function getBreakpointForNode(
+  node: SceneNode | RemovedNode
+): Breakpoint | undefined {
+  if (node.removed) {
+    const breakpointID = breakpointForNode.get(node.id);
+    if (!breakpointID) {
+      return;
+    }
+    const breakpointNode = figma.getNodeById(breakpointID);
+    if (!breakpointForNode) {
+      return;
+    }
+    const data = getResponsiveFrameData(breakpointNode as FrameNode);
+    if (!data) {
+      return;
+    }
+    return { node: breakpointNode as FrameNode, data };
   }
 
   const parent = node.parent;
@@ -82,105 +150,89 @@ async function handleChange(change: CreateChange | PropertyChange) {
     return;
   }
   const parentData = getResponsiveFrameData(parent);
-  if (!parentData || parentData.maxWidth) {
+  if (!parentData) {
+    return getBreakpointForNode(parent);
+  }
+
+  return { node: parent, data: parentData };
+}
+
+async function handleResponsiveContentChanges(
+  breakpoint: Breakpoint,
+  changes: DocumentChange[]
+) {
+  console.log(changes);
+  // Ignore non-main breakpoints
+  if (breakpoint.data.maxWidth) {
     return;
   }
 
-  const otherParents = (parent.parent?.children.filter(
-    (child) =>
-      child.type === "FRAME" &&
-      getResponsiveFrameData(child) &&
-      child !== parent
-  ) ?? []) as FrameNode[];
-
-  for (const otherParent of otherParents) {
-    reconcileStructure(parent, otherParent);
-
-    let clone = otherParent.children.find((child) => {
-      return getResponsiveID(child) === node.id;
-    }) as SceneNode | undefined;
-    if (!clone) {
-      throw new Error("Responsive node not found");
+  let structureChanged = false;
+  for (const change of changes) {
+    if (change.type === "DELETE" || change.type === "CREATE") {
+      structureChanged = true;
+      break;
     }
-
     if (change.type === "PROPERTY_CHANGE") {
-      if (node.type === "TEXT" && clone.type === "TEXT") {
-        await figma.loadFontAsync(node.fontName as FontName);
-
-        if (change.properties.includes("characters")) {
-          clone.characters = node.characters;
-        }
-        if (change.properties.includes("fontSize")) {
-          clone.fontSize = node.fontSize;
-        }
-
-        if (change.properties.includes("x")) {
-          clone.x = node.x;
-        }
-        if (change.properties.includes("y")) {
-          clone.y = node.y;
-        }
-        if (
-          change.properties.includes("width") ||
-          change.properties.includes("height")
-        ) {
-          clone.resizeWithoutConstraints(node.width, node.height);
-        }
-      }
-      if (node.type === "RECTANGLE" && clone.type === "RECTANGLE") {
-        if (change.properties.includes("x")) {
-          clone.x = node.x;
-        }
-        if (change.properties.includes("y")) {
-          clone.y = node.y;
-        }
-        if (
-          change.properties.includes("width") ||
-          change.properties.includes("height")
-        ) {
-          clone.resizeWithoutConstraints(node.width, node.height);
-        }
-      }
-
-      // looks like the layer is moved inside the tree
-      // FIXME: time complexity is O(n^2) here, needs better Figma plugin API
       if (change.properties.includes("parent")) {
-        const index = parent.children.findIndex(
-          (child) => child.id === node.id
-        );
-        const index2 = otherParent.children.findIndex(
-          (child) => child.id === clone!.id
-        );
+        structureChanged = true;
+        break;
+      }
+    }
+  }
 
-        if (index >= 0) {
-          if (index2 >= 0 && index > index2) {
-            otherParent.insertChild(index + 1, clone);
-          } else {
-            otherParent.insertChild(index, clone);
-          }
+  if (structureChanged) {
+    const breakpoints: Breakpoint[] = [];
+    for (const node of breakpoint.node.parent?.children ?? []) {
+      if (node.type === "FRAME") {
+        const data = getResponsiveFrameData(node);
+        if (data) {
+          breakpoints.push({ node, data });
         }
       }
+    }
+    const otherBreakpoints = breakpoints.filter((b) => b.data.maxWidth);
+    for (const other of otherBreakpoints) {
+      reconcileStructure(breakpoint.node, other.node);
+    }
+  }
+
+  for (const change of changes) {
+    if (change.type === "PROPERTY_CHANGE") {
+      await handleChange(change);
+      return;
     }
   }
 }
 
-async function handleResponsiveContentChange(change: DocumentChange) {
-  console.log(change);
+const onDocumentChange = debounce((event: DocumentChangeEvent) => {
+  const changesForBreakpoint = new Map<
+    string,
+    Breakpoint & {
+      changes: DocumentChange[];
+    }
+  >();
 
-  if (change.type === "DELETE") {
-    handleDelete(change);
-    return;
-  }
-
-  if (change.type === "CREATE" || change.type === "PROPERTY_CHANGE") {
-    await handleChange(change);
-    return;
-  }
-}
-
-const onDocumentChange = debounce(async (event: DocumentChangeEvent) => {
   for (const change of event.documentChanges) {
-    await handleResponsiveContentChange(change);
+    if ("node" in change) {
+      const breakpoint = getBreakpointForNode(change.node);
+      if (breakpoint) {
+        if (changesForBreakpoint.has(breakpoint.node.id)) {
+          changesForBreakpoint.get(breakpoint.node.id)!.changes.push(change);
+        } else {
+          changesForBreakpoint.set(breakpoint.node.id, {
+            ...breakpoint,
+            changes: [change],
+          });
+        }
+      }
+    }
+  }
+
+  console.log(changesForBreakpoint);
+
+  for (const breakpoint of changesForBreakpoint.values()) {
+    handleResponsiveContentChanges(breakpoint, breakpoint.changes);
   }
 }, 200);
 
