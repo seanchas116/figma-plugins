@@ -56,7 +56,11 @@ function reconcileStructure(
     }
     responsive.appendChild(responsiveChild);
 
-    if ("children" in originalChild && "children" in responsiveChild) {
+    if (
+      "children" in originalChild &&
+      "children" in responsiveChild &&
+      originalChild.type !== "INSTANCE"
+    ) {
       reconcileStructure(originalChild, responsiveChild);
     }
   }
