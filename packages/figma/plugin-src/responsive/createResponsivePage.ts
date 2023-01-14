@@ -65,6 +65,16 @@ export function createResponsivePage(): void {
     Object.keys(componentSet.componentPropertyDefinitions)[0],
     { name: "breakpoint" }
   );
+  componentSet.strokes = [
+    {
+      type: "SOLID",
+      color: {
+        r: 0x97 / 0xff,
+        g: 0x47 / 0xff,
+        b: 0xff / 0xff,
+      },
+    },
+  ];
 
   componentSet.x = topLeft.x;
   componentSet.y = topLeft.y;
