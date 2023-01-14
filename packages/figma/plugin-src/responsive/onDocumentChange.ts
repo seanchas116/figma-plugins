@@ -225,16 +225,15 @@ const onDocumentChange = debounce(async (event: DocumentChangeEvent) => {
       continue;
     }
 
-    const breakpoints: Breakpoint[] = [];
+    const otherBreakpoints: Breakpoint[] = [];
     for (const node of breakpoint.node.parent?.children ?? []) {
       if (node.type === "FRAME") {
         const data = getResponsiveFrameData(node);
-        if (data) {
-          breakpoints.push({ node, data });
+        if (data && data.maxWidth) {
+          otherBreakpoints.push({ node, data });
         }
       }
     }
-    const otherBreakpoints = breakpoints.filter((b) => b.data.maxWidth);
     for (const other of otherBreakpoints) {
       reconcileStructure(breakpoint.node, other.node);
     }
