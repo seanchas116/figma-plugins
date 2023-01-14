@@ -35,6 +35,7 @@ function reconcileStructure(
   responsive: SceneNode & ChildrenMixin
 ) {
   const responsiveChildMap = new Map<string, SceneNode>();
+  const responsiveChildrenToRemove = new Set<SceneNode>(responsive.children);
 
   for (const responsiveChild of responsive.children) {
     const id = getResponsiveID(responsiveChild);
@@ -47,8 +48,9 @@ function reconcileStructure(
     const id = originalChild.id;
 
     let responsiveChild = responsiveChildMap.get(id);
-    responsiveChildMap.delete(id);
-    if (!responsiveChild) {
+    if (responsiveChild) {
+      responsiveChildrenToRemove.delete(responsiveChild);
+    } else {
       responsiveChild = originalChild.clone();
       setResponsiveID(responsiveChild, id);
       responsiveNodes.add(id, responsiveChild.id);
@@ -64,7 +66,7 @@ function reconcileStructure(
     }
   }
 
-  for (const responsiveChild of responsiveChildMap.values()) {
+  for (const responsiveChild of responsiveChildrenToRemove) {
     responsiveChild.remove();
   }
 }
