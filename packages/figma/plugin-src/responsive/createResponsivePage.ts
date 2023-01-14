@@ -61,6 +61,10 @@ export function createResponsivePage(): void {
     figma.currentPage
   );
   componentSet.name = "Page";
+  componentSet.editComponentProperty(
+    Object.keys(componentSet.componentPropertyDefinitions)[0],
+    { name: "breakpoint" }
+  );
 
   componentSet.x = topLeft.x;
   componentSet.y = topLeft.y;
