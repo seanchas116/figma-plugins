@@ -1,8 +1,47 @@
 import {
   getResponsiveFrameData,
   getResponsiveID,
+  ResponsiveFrameData,
   setResponsiveID,
 } from "../pluginData";
+
+interface Breakpoint {
+  node: ComponentNode;
+  data: ResponsiveFrameData;
+}
+
+function getBreakpointForNode(node: BaseNode): Breakpoint | undefined {
+  const parent = node.parent;
+  if (!parent) {
+    return;
+  }
+
+  if (parent.type === "COMPONENT") {
+    const parentData = getResponsiveFrameData(parent);
+    if (parentData) {
+      return { node: parent, data: parentData };
+    }
+  }
+
+  return getBreakpointForNode(parent);
+}
+
+function getOtherBreakpoints(breakpoint: Breakpoint): Breakpoint[] {
+  const otherBreakpoints: Breakpoint[] = [];
+  for (const node of breakpoint.node.parent?.children ?? []) {
+    if (node === breakpoint.node) {
+      continue;
+    }
+
+    if (node.type === "COMPONENT") {
+      const data = getResponsiveFrameData(node);
+      if (data) {
+        otherBreakpoints.push({ node, data });
+      }
+    }
+  }
+  return otherBreakpoints;
+}
 
 async function copyContentProperties(
   original: SceneNode,
@@ -71,24 +110,11 @@ export function syncResponsiveContents() {
   if (!selected) {
     return;
   }
-  if (selected.type !== "COMPONENT") {
-    return;
-  }
 
-  const breakpoint = getResponsiveFrameData(selected as ComponentNode);
-  if (breakpoint && !breakpoint.maxWidth) {
-    // this is a main breakpoint
-
-    const otherBreakpointFrames = selected.parent?.children ?? [];
-
-    for (const otherBreakpointFrame of otherBreakpointFrames) {
-      if (otherBreakpointFrame.type !== "COMPONENT") {
-        continue;
-      }
-      if (otherBreakpointFrame === selected) {
-        continue;
-      }
-      syncResponsiveNode(selected, otherBreakpointFrame);
+  const breakpoint = getBreakpointForNode(selected);
+  if (breakpoint && !breakpoint.data.maxWidth) {
+    for (const otherBreakpoint of getOtherBreakpoints(breakpoint)) {
+      syncResponsiveNode(breakpoint.node, otherBreakpoint.node);
     }
   }
 }
