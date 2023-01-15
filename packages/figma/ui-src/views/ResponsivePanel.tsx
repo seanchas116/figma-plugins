@@ -14,7 +14,7 @@ export const ResponsivePanel: FunctionComponent = () => {
       </Button>
       <Button
         onClick={() => {
-          // TODO
+          rpc.remote.syncResponsiveContents();
         }}
       >
         Sync Contents to Other Breakpoints

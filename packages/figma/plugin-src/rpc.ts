@@ -8,6 +8,7 @@ import { onSelectionChange } from "./onSelectionChange";
 import { updateInstance } from "./codeImport/updateInstance";
 import { createResponsivePage } from "./responsive/createResponsivePage";
 import { resizeWindow } from "./resizeWindow";
+import { syncResponsiveContents } from "./responsive/syncContents";
 
 class RPCHandler implements IUIToPluginRPC {
   async ready(): Promise<void> {
@@ -30,6 +31,10 @@ class RPCHandler implements IUIToPluginRPC {
 
   async createResponsivePage(): Promise<void> {
     createResponsivePage();
+  }
+
+  async syncResponsiveContents(): Promise<void> {
+    syncResponsiveContents();
   }
 }
 

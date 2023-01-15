@@ -1,5 +1,5 @@
 import "./codeImport/onDocumentChange";
-import "./responsive/onDocumentChange";
+//import "./responsive/onDocumentChange";
 import "./onSelectionChange";
 import "./rpc";
 
