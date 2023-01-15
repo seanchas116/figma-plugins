@@ -4,7 +4,23 @@ import {
   setResponsiveID,
 } from "../pluginData";
 
-function reconcileStructure(
+async function copyContentProperties(
+  original: SceneNode,
+  responsive: SceneNode
+) {
+  if (original.type !== responsive.type) {
+    throw new Error("Cannot copy properties between different node types");
+  }
+
+  if (original.type === "TEXT" && responsive.type === "TEXT") {
+    if (original.fontName !== figma.mixed) {
+      await figma.loadFontAsync(original.fontName);
+    }
+    responsive.characters = original.characters;
+  }
+}
+
+async function syncResponsiveNode(
   original: SceneNode & ChildrenMixin,
   responsive: SceneNode & ChildrenMixin
 ) {
@@ -21,9 +37,15 @@ function reconcileStructure(
   for (const originalChild of original.children) {
     const id = originalChild.id;
 
+    // find reusable child
     let responsiveChild = responsiveChildMap.get(id);
+    if (responsiveChild?.type !== originalChild.type) {
+      responsiveChild = undefined;
+    }
+
     if (responsiveChild) {
       responsiveChildrenToRemove.delete(responsiveChild);
+      copyContentProperties(originalChild, responsiveChild);
     } else {
       responsiveChild = originalChild.clone();
       setResponsiveID(responsiveChild, id);
@@ -35,7 +57,7 @@ function reconcileStructure(
       "children" in responsiveChild &&
       originalChild.type !== "INSTANCE"
     ) {
-      reconcileStructure(originalChild, responsiveChild);
+      await syncResponsiveNode(originalChild, responsiveChild);
     }
   }
 
@@ -63,7 +85,10 @@ export function syncResponsiveContents() {
       if (otherBreakpointFrame.type !== "COMPONENT") {
         continue;
       }
-      reconcileStructure(selected, otherBreakpointFrame);
+      if (otherBreakpointFrame === selected) {
+        continue;
+      }
+      syncResponsiveNode(selected, otherBreakpointFrame);
     }
   }
 }
