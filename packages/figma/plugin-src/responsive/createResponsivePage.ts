@@ -9,7 +9,7 @@ export function createResponsivePage(): void {
   const gap = 32;
 
   const desktop = figma.createComponent();
-  desktop.name = "Desktop";
+  desktop.name = "breakpoint=desktop";
   desktop.x = gap;
   desktop.y = gap;
   desktop.layoutMode = "VERTICAL";
@@ -32,7 +32,7 @@ export function createResponsivePage(): void {
   setResponsiveFrameData(desktop, {});
 
   const mobile = figma.createComponent();
-  mobile.name = "Mobile";
+  mobile.name = "breakpoint=mobile";
   mobile.x = gap + desktop.width + gap;
   mobile.y = gap;
   mobile.layoutMode = "VERTICAL";
@@ -61,10 +61,10 @@ export function createResponsivePage(): void {
     figma.currentPage
   );
   componentSet.name = "Page";
-  componentSet.editComponentProperty(
-    Object.keys(componentSet.componentPropertyDefinitions)[0],
-    { name: "breakpoint" }
-  );
+  // componentSet.editComponentProperty(
+  //   Object.keys(componentSet.componentPropertyDefinitions)[0],
+  //   { name: "breakpoint" }
+  // );
   componentSet.strokes = [
     {
       type: "SOLID",
@@ -78,4 +78,12 @@ export function createResponsivePage(): void {
 
   componentSet.x = topLeft.x;
   componentSet.y = topLeft.y;
+  componentSet.layoutMode = "HORIZONTAL";
+  componentSet.counterAxisSizingMode = "AUTO";
+  componentSet.itemSpacing = gap;
+  componentSet.paddingTop =
+    componentSet.paddingRight =
+    componentSet.paddingBottom =
+    componentSet.paddingLeft =
+      gap;
 }
