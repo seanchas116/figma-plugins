@@ -143,3 +143,14 @@ export function setResponsiveID(node: SceneNode, id: string) {
 export function getResponsiveID(node: SceneNode): string | undefined {
   return node.getPluginData("responsiveID") || undefined;
 }
+
+export function getOrGenerateResponsiveID(node: SceneNode): string {
+  const id = getResponsiveID(node);
+  if (id) {
+    return id;
+  }
+
+  const newId = node.id;
+  setResponsiveID(node, newId);
+  return newId;
+}

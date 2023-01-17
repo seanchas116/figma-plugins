@@ -1,4 +1,5 @@
 import {
+  getOrGenerateResponsiveID,
   getResponsiveFrameData,
   getResponsiveID,
   ResponsiveFrameData,
@@ -72,7 +73,7 @@ async function syncResponsiveNode(
   }
 
   for (const originalChild of original.children) {
-    const id = originalChild.id;
+    const id = getOrGenerateResponsiveID(originalChild);
 
     // find reusable child
     let responsiveChild = responsiveChildMap.get(id);
@@ -110,7 +111,7 @@ export function syncResponsiveContents() {
   }
 
   const breakpoint = getBreakpointForNode(selected);
-  if (breakpoint && !breakpoint.data.maxWidth) {
+  if (breakpoint) {
     for (const otherBreakpoint of getOtherBreakpoints(breakpoint)) {
       syncResponsiveNode(breakpoint.node, otherBreakpoint.node);
     }
