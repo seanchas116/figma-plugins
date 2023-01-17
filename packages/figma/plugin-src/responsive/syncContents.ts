@@ -11,19 +11,17 @@ interface Breakpoint {
 }
 
 function getBreakpointForNode(node: BaseNode): Breakpoint | undefined {
-  const parent = node.parent;
-  if (!parent) {
-    return;
-  }
-
-  if (parent.type === "COMPONENT") {
-    const parentData = getResponsiveFrameData(parent);
+  if (node.type === "COMPONENT") {
+    const parentData = getResponsiveFrameData(node);
     if (parentData) {
-      return { node: parent, data: parentData };
+      return { node, data: parentData };
     }
   }
 
-  return getBreakpointForNode(parent);
+  const parent = node.parent;
+  if (parent) {
+    return getBreakpointForNode(parent);
+  }
 }
 
 function getOtherBreakpoints(breakpoint: Breakpoint): Breakpoint[] {
