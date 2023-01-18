@@ -22,6 +22,13 @@ export async function copyProperties(
     if (key === "parent") {
       continue;
     }
+    if (key === "horizontalPadding") {
+      continue;
+    }
+    if (key === "verticalPadding") {
+      continue;
+    }
+
     if (excludedKeys.includes(key)) {
       continue;
     }

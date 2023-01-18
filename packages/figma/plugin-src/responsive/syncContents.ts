@@ -58,7 +58,17 @@ async function copyContentProperties(
   responsive: SceneNode
 ) {
   copyProperties(original, responsive, [
-    // TODO: ignore responsive-related properties (such as font size, padding, layout direction etc.)
+    // Ignore responsive-related properties (such as font size, padding, layout direction etc.)
+    "fontSize",
+    "paddingTop",
+    "paddingRight",
+    "paddingBottom",
+    "paddingLeft",
+    "layoutMode",
+    "primaryAxisSizingMode",
+    "counterAxisSizingMode",
+    "primaryAxisAlignItems",
+    "counterAxisAlignItems",
   ]);
 }
 
