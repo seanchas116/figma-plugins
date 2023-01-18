@@ -3,21 +3,18 @@ import {
   getResponsiveID,
   setResponsiveID,
 } from "../pluginData";
-import { getPropertyDescriptor } from "../util/common";
 import { copyProperties } from "../util/copyProperties";
 
 interface Breakpoint {
   node: ComponentNode;
-  minWidth: number | "none";
+  minWidth: number;
 }
 
-function getMinWidthForVariant(
-  variant: ComponentNode
-): number | "none" | undefined {
+function getMinWidthForVariant(variant: ComponentNode): number | undefined {
   const name = variant.name;
-  const match = name.match(/minWidth=(\d+|none)/);
+  const match = name.match(/minWidth=(\d+)/);
   if (match) {
-    return match[1] === "none" ? "none" : parseInt(match[1], 10);
+    return parseInt(match[1], 10);
   }
 }
 
@@ -55,34 +52,42 @@ function getOtherBreakpoints(breakpoint: Breakpoint): Breakpoint[] {
 
 async function copyContentProperties(
   original: SceneNode,
-  responsive: SceneNode
+  responsive: SceneNode,
+  mode: "contents" | "style"
 ) {
-  copyProperties(original, responsive, [
-    // Ignore responsive-related properties (such as font size, padding, layout direction etc.)
-    "x",
-    "y",
-    "fontSize",
-    "lineHeight",
-    "paddingTop",
-    "paddingRight",
-    "paddingBottom",
-    "paddingLeft",
-    "layoutGrow",
-    "layoutAlign",
-    "layoutPositioning",
-    "layoutMode",
-    "primaryAxisSizingMode",
-    "counterAxisSizingMode",
-    "primaryAxisAlignItems",
-    "counterAxisAlignItems",
-    "width",
-    "height",
-  ]);
+  copyProperties(
+    original,
+    responsive,
+    mode === "style"
+      ? []
+      : [
+          // Ignore responsive-related properties (such as font size, padding, layout direction etc.)
+          "x",
+          "y",
+          "fontSize",
+          "lineHeight",
+          "paddingTop",
+          "paddingRight",
+          "paddingBottom",
+          "paddingLeft",
+          "layoutGrow",
+          "layoutAlign",
+          "layoutPositioning",
+          "layoutMode",
+          "primaryAxisSizingMode",
+          "counterAxisSizingMode",
+          "primaryAxisAlignItems",
+          "counterAxisAlignItems",
+          "width",
+          "height",
+        ]
+  );
 }
 
 async function syncResponsiveNode(
   original: SceneNode & ChildrenMixin,
-  responsive: SceneNode & ChildrenMixin
+  responsive: SceneNode & ChildrenMixin,
+  mode: "contents" | "style"
 ) {
   const responsiveChildMap = new Map<string, SceneNode>();
   const responsiveChildrenToRemove = new Set<SceneNode>(responsive.children);
@@ -105,7 +110,7 @@ async function syncResponsiveNode(
 
     if (responsiveChild) {
       responsiveChildrenToRemove.delete(responsiveChild);
-      copyContentProperties(originalChild, responsiveChild);
+      copyContentProperties(originalChild, responsiveChild, mode);
     } else {
       responsiveChild = originalChild.clone();
       setResponsiveID(responsiveChild, id);
@@ -117,7 +122,7 @@ async function syncResponsiveNode(
       "children" in responsiveChild &&
       originalChild.type !== "INSTANCE"
     ) {
-      await syncResponsiveNode(originalChild, responsiveChild);
+      await syncResponsiveNode(originalChild, responsiveChild, mode);
     }
   }
 
@@ -135,15 +140,41 @@ export function syncResponsiveContents() {
   const breakpoint = getBreakpointForNode(selected);
   if (breakpoint) {
     for (const otherBreakpoint of getOtherBreakpoints(breakpoint)) {
-      syncResponsiveNode(breakpoint.node, otherBreakpoint.node);
+      syncResponsiveNode(breakpoint.node, otherBreakpoint.node, "contents");
     }
   }
 }
 
 export function copyStylesToLargerScreens() {
-  throw new Error("Not implemented");
+  const selected = figma.currentPage.selection[0];
+  if (!selected) {
+    return;
+  }
+
+  const breakpoint = getBreakpointForNode(selected);
+  if (breakpoint) {
+    for (const otherBreakpoint of getOtherBreakpoints(breakpoint)) {
+      console.log(otherBreakpoint.minWidth, breakpoint.minWidth);
+      if (otherBreakpoint.minWidth > breakpoint.minWidth) {
+        syncResponsiveNode(breakpoint.node, otherBreakpoint.node, "style");
+      }
+    }
+  }
 }
 
 export function copyStylesToSmallerScreens() {
-  throw new Error("Not implemented");
+  const selected = figma.currentPage.selection[0];
+  if (!selected) {
+    return;
+  }
+
+  const breakpoint = getBreakpointForNode(selected);
+  if (breakpoint) {
+    for (const otherBreakpoint of getOtherBreakpoints(breakpoint)) {
+      console.log(otherBreakpoint.minWidth, breakpoint.minWidth);
+      if (otherBreakpoint.minWidth < breakpoint.minWidth) {
+        syncResponsiveNode(breakpoint.node, otherBreakpoint.node, "style");
+      }
+    }
+  }
 }

@@ -29,7 +29,7 @@ export function createResponsivePage(): void {
   tablet.backgrounds = [{ type: "SOLID", color: { r: 1, g: 1, b: 1 } }];
 
   const mobile = figma.createComponent();
-  mobile.name = "minWidth=none";
+  mobile.name = "minWidth=0";
   mobile.layoutMode = "VERTICAL";
   mobile.paddingTop =
     mobile.paddingBottom =
