@@ -11,6 +11,20 @@ export const debounce = (fn: (...args: any[]) => void, delay: number) => {
   };
 };
 
+export function getPropertyDescriptor(
+  obj: any,
+  key: string
+): PropertyDescriptor | undefined {
+  const descriptor = Object.getOwnPropertyDescriptor(obj, key);
+  if (descriptor) {
+    return descriptor;
+  }
+  const proto = Object.getPrototypeOf(obj);
+  if (proto) {
+    return getPropertyDescriptor(proto, key);
+  }
+}
+
 const fontWeightForName: Record<string, number> = {
   thin: 100,
   extralight: 200,

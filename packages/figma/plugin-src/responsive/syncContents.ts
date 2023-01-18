@@ -3,6 +3,7 @@ import {
   getResponsiveID,
   setResponsiveID,
 } from "../pluginData";
+import { getPropertyDescriptor } from "../util/common";
 
 interface Breakpoint {
   node: ComponentNode;
@@ -83,17 +84,13 @@ async function copyContentProperties(
       continue;
     }
 
-    const descriptor = Object.getOwnPropertyDescriptor(
-      Object.getPrototypeOf(responsive),
-      key
-    );
-    if (!descriptor) {
+    const descriptor = getPropertyDescriptor(responsive, key);
+    if (!descriptor || !descriptor.set) {
       continue;
     }
-    if (descriptor.set) {
-      // @ts-ignore
-      responsive[key] = original[key];
-    }
+
+    // @ts-ignore
+    responsive[key] = original[key];
   }
 }
 
