@@ -1,21 +1,29 @@
 import {
   getOrGenerateResponsiveID,
-  getResponsiveFrameData,
   getResponsiveID,
-  ResponsiveFrameData,
   setResponsiveID,
 } from "../pluginData";
 
 interface Breakpoint {
   node: ComponentNode;
-  data: ResponsiveFrameData;
+  minWidth: number | "none";
+}
+
+function getMinWidthForVariant(
+  variant: ComponentNode
+): number | "none" | undefined {
+  const name = variant.name;
+  const match = name.match(/minWidth=(\d+|none)/);
+  if (match) {
+    return match[1] === "none" ? "none" : parseInt(match[1], 10);
+  }
 }
 
 function getBreakpointForNode(node: BaseNode): Breakpoint | undefined {
   if (node.type === "COMPONENT") {
-    const parentData = getResponsiveFrameData(node);
-    if (parentData) {
-      return { node, data: parentData };
+    const minWidth = getMinWidthForVariant(node);
+    if (minWidth !== undefined) {
+      return { node, minWidth };
     }
   }
 
@@ -33,9 +41,9 @@ function getOtherBreakpoints(breakpoint: Breakpoint): Breakpoint[] {
     }
 
     if (node.type === "COMPONENT") {
-      const data = getResponsiveFrameData(node);
-      if (data) {
-        otherBreakpoints.push({ node, data });
+      const minWidth = getMinWidthForVariant(node);
+      if (minWidth !== undefined) {
+        otherBreakpoints.push({ node, minWidth });
       }
     }
   }

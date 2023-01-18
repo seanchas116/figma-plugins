@@ -116,26 +116,6 @@ export function getTextStyleMetadata(
   }
 }
 
-export interface ResponsiveFrameData {
-  maxWidth?: number;
-}
-
-export function setResponsiveFrameData(
-  node: ComponentNode,
-  data: ResponsiveFrameData
-) {
-  node.setPluginData("responsive", JSON.stringify(data));
-}
-
-export function getResponsiveFrameData(
-  node: ComponentNode
-): ResponsiveFrameData | undefined {
-  const data = node.getPluginData("responsive");
-  if (data) {
-    return JSON.parse(data) as ResponsiveFrameData;
-  }
-}
-
 export function setResponsiveID(node: SceneNode, id: string) {
   node.setPluginData("responsiveID", id);
 }

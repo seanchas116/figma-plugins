@@ -1,3 +1,4 @@
+/*
 import {
   getResponsiveFrameData,
   getResponsiveID,
@@ -234,3 +235,4 @@ const onDocumentChange = async (event: DocumentChangeEvent) => {
 
 // TODO: debounce
 figma.on("documentchange", onDocumentChange);
+*/

@@ -1,5 +1,3 @@
-import { setResponsiveFrameData } from "../pluginData";
-
 export function createResponsivePage(): void {
   const topLeft = {
     x: figma.viewport.bounds.x + 100,
@@ -9,7 +7,7 @@ export function createResponsivePage(): void {
   const gap = 32;
 
   const desktop = figma.createComponent();
-  desktop.name = "breakpoint=desktop";
+  desktop.name = "minWidth=1024";
   desktop.layoutMode = "VERTICAL";
   desktop.paddingTop =
     desktop.paddingBottom =
@@ -18,10 +16,9 @@ export function createResponsivePage(): void {
       32;
   desktop.resize(1440, 1080);
   desktop.backgrounds = [{ type: "SOLID", color: { r: 1, g: 1, b: 1 } }];
-  setResponsiveFrameData(desktop, {});
 
   const tablet = figma.createComponent();
-  tablet.name = "breakpoint=tablet";
+  tablet.name = "minWidth=768";
   tablet.layoutMode = "VERTICAL";
   tablet.paddingTop =
     tablet.paddingBottom =
@@ -30,12 +27,9 @@ export function createResponsivePage(): void {
       32;
   tablet.resize(1024, 768);
   tablet.backgrounds = [{ type: "SOLID", color: { r: 1, g: 1, b: 1 } }];
-  setResponsiveFrameData(tablet, {
-    maxWidth: 1279,
-  });
 
   const mobile = figma.createComponent();
-  mobile.name = "breakpoint=mobile";
+  mobile.name = "minWidth=none";
   mobile.layoutMode = "VERTICAL";
   mobile.paddingTop =
     mobile.paddingBottom =
@@ -44,9 +38,6 @@ export function createResponsivePage(): void {
       32;
   mobile.resize(375, 812);
   mobile.backgrounds = [{ type: "SOLID", color: { r: 1, g: 1, b: 1 } }];
-  setResponsiveFrameData(mobile, {
-    maxWidth: 767,
-  });
 
   const componentSet = figma.combineAsVariants(
     [desktop, tablet, mobile],
