@@ -23,19 +23,27 @@ export const ResponsivePanel: FunctionComponent = () => {
         ></iconify-icon>
         Sync Contents
       </Button>
-      <Button>
+      <Button
+        onClick={() => {
+          rpc.remote.copyStylesToLargerScreens();
+        }}
+      >
         <iconify-icon
           className="text-base"
           icon="material-symbols:desktop-windows-outline"
         ></iconify-icon>
-        Copy Styles to Larger Breakpoints
+        Copy Styles to Larger Screens
       </Button>
-      <Button>
+      <Button
+        onClick={() => {
+          rpc.remote.copyStylesToSmallerScreens();
+        }}
+      >
         <iconify-icon
           className="text-base"
           icon="material-symbols:phone-android-outline"
         ></iconify-icon>
-        Copy Styles to Smaller Breakpoints
+        Copy Styles to Smaller Screens
       </Button>
       {/* <label className="flex gap-1 items-center">
         <input type="checkbox" checked />

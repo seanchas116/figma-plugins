@@ -139,3 +139,11 @@ export function syncResponsiveContents() {
     }
   }
 }
+
+export function copyStylesToLargerScreens() {
+  throw new Error("Not implemented");
+}
+
+export function copyStylesToSmallerScreens() {
+  throw new Error("Not implemented");
+}

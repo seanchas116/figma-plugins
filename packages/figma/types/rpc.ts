@@ -15,6 +15,8 @@ export interface IUIToPluginRPC {
   exportWholeDocument(): Promise<IR.Component[]>;
   createResponsivePage(): Promise<void>;
   syncResponsiveContents(): Promise<void>;
+  copyStylesToLargerScreens(): Promise<void>;
+  copyStylesToSmallerScreens(): Promise<void>;
 }
 
 export interface IPluginToUIRPC {
