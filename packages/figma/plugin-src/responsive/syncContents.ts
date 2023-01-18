@@ -59,16 +59,24 @@ async function copyContentProperties(
 ) {
   copyProperties(original, responsive, [
     // Ignore responsive-related properties (such as font size, padding, layout direction etc.)
+    "x",
+    "y",
     "fontSize",
+    "lineHeight",
     "paddingTop",
     "paddingRight",
     "paddingBottom",
     "paddingLeft",
+    "layoutGrow",
+    "layoutAlign",
+    "layoutPositioning",
     "layoutMode",
     "primaryAxisSizingMode",
     "counterAxisSizingMode",
     "primaryAxisAlignItems",
     "counterAxisAlignItems",
+    "width",
+    "height",
   ]);
 }
 

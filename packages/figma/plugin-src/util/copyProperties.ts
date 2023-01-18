@@ -15,6 +15,15 @@ export async function copyProperties(
     }
   }
 
+  if (
+    "resizeWithoutConstraints" in dst &&
+    !excludedKeys.includes("width") &&
+    !excludedKeys.includes("height")
+  ) {
+    dst.resizeWithoutConstraints(src.width, src.height);
+    // await Promise.resolve();
+  }
+
   for (const key in src) {
     if (key === "id") {
       continue;
@@ -41,6 +50,4 @@ export async function copyProperties(
     // @ts-ignore
     dst[key] = src[key];
   }
-
-  // TODO: resize
 }
