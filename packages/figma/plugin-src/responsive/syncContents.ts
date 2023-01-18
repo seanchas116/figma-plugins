@@ -4,6 +4,7 @@ import {
   setResponsiveID,
 } from "../pluginData";
 import { getPropertyDescriptor } from "../util/common";
+import { copyProperties } from "../util/copyProperties";
 
 interface Breakpoint {
   node: ComponentNode;
@@ -56,42 +57,9 @@ async function copyContentProperties(
   original: SceneNode,
   responsive: SceneNode
 ) {
-  const keys: string[] = [];
-  for (const key in original) {
-    // @ts-ignore
-    console.log(key, Object.getOwnPropertyDescriptor(original.__proto__, key));
-    keys.push(key);
-  }
-  console.log(keys);
-
-  if (original.type !== responsive.type) {
-    throw new Error("Cannot copy properties between different node types");
-  }
-
-  if (original.type === "TEXT" && responsive.type === "TEXT") {
-    if (original.fontName !== figma.mixed) {
-      await figma.loadFontAsync(original.fontName);
-    }
-  }
-
-  // TODO: ignore responsive-related properties (such as font size, padding, layout direction etc.)
-
-  for (const key in original) {
-    if (key === "id") {
-      continue;
-    }
-    if (key === "parent") {
-      continue;
-    }
-
-    const descriptor = getPropertyDescriptor(responsive, key);
-    if (!descriptor || !descriptor.set) {
-      continue;
-    }
-
-    // @ts-ignore
-    responsive[key] = original[key];
-  }
+  copyProperties(original, responsive, [
+    // TODO: ignore responsive-related properties (such as font size, padding, layout direction etc.)
+  ]);
 }
 
 async function syncResponsiveNode(
