@@ -49,6 +49,14 @@ export const ResponsivePanel: FunctionComponent = () => {
         <input type="checkbox" checked />
         Auto-sync breakpoint contents
       </label> */}
+      <div>
+        <div className="font-bold">Known issue:</div>
+        <div>
+          When you turn groups into frames or vice versa while opening the
+          plugin, auto-sync will not work for them. (Cut-paste the group/frame
+          to fix this.)
+        </div>
+      </div>
     </div>
   );
 };
