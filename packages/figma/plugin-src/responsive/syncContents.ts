@@ -22,6 +22,7 @@ function getMinWidthForVariant(
 function getBreakpointForNode(node: BaseNode): Breakpoint | undefined {
   if (node.type === "COMPONENT") {
     const minWidth = getMinWidthForVariant(node);
+    console.log(node.name, minWidth);
     if (minWidth !== undefined) {
       return { node, minWidth };
     }
@@ -54,6 +55,14 @@ async function copyContentProperties(
   original: SceneNode,
   responsive: SceneNode
 ) {
+  const keys: string[] = [];
+  for (const key in original) {
+    // @ts-ignore
+    console.log(key, Object.getOwnPropertyDescriptor(original.__proto__, key));
+    keys.push(key);
+  }
+  console.log(keys);
+
   if (original.type !== responsive.type) {
     throw new Error("Cannot copy properties between different node types");
   }
@@ -62,7 +71,29 @@ async function copyContentProperties(
     if (original.fontName !== figma.mixed) {
       await figma.loadFontAsync(original.fontName);
     }
-    responsive.characters = original.characters;
+  }
+
+  // TODO: ignore responsive-related properties (such as font size, padding, layout direction etc.)
+
+  for (const key in original) {
+    if (key === "id") {
+      continue;
+    }
+    if (key === "parent") {
+      continue;
+    }
+
+    const descriptor = Object.getOwnPropertyDescriptor(
+      Object.getPrototypeOf(responsive),
+      key
+    );
+    if (!descriptor) {
+      continue;
+    }
+    if (descriptor.set) {
+      // @ts-ignore
+      responsive[key] = original[key];
+    }
   }
 }
 
