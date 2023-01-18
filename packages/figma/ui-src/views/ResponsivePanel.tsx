@@ -17,7 +17,25 @@ export const ResponsivePanel: FunctionComponent = () => {
           rpc.remote.syncResponsiveContents();
         }}
       >
-        Sync Contents to Other Breakpoints
+        <iconify-icon
+          className="text-base"
+          icon="material-symbols:sync-outline"
+        ></iconify-icon>
+        Sync Contents
+      </Button>
+      <Button>
+        <iconify-icon
+          className="text-base"
+          icon="material-symbols:desktop-windows-outline"
+        ></iconify-icon>
+        Copy Styles to Larger Breakpoints
+      </Button>
+      <Button>
+        <iconify-icon
+          className="text-base"
+          icon="material-symbols:phone-android-outline"
+        ></iconify-icon>
+        Copy Styles to Smaller Breakpoints
       </Button>
       {/* <label className="flex gap-1 items-center">
         <input type="checkbox" checked />
