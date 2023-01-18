@@ -34,4 +34,6 @@ export async function copyProperties(
     // @ts-ignore
     dst[key] = src[key];
   }
+
+  // TODO: resize
 }
