@@ -1,6 +1,5 @@
 import { rpcToIFrame } from "@uimix/typed-rpc/browser";
-import { createRef, FunctionComponent } from "preact";
-import { useEffect } from "preact/hooks";
+import { createRef, useEffect } from "react";
 import { twMerge } from "tailwind-merge";
 import { CodeAssets } from "../../types/data";
 import {
@@ -10,7 +9,7 @@ import {
 import { rpc, rpcHandler } from "../rpc";
 import { state } from "../state/State";
 
-export const CodeComponentIFrame: FunctionComponent<{
+export const CodeComponentIFrame: React.FC<{
   visible?: boolean;
 }> = ({ visible }) => {
   const ref = createRef<HTMLIFrameElement>();
@@ -20,7 +19,7 @@ export const CodeComponentIFrame: FunctionComponent<{
 
     const iframeRPCHandler: CodeComponentIFrameToUIRPC = {
       assets: async (assets: CodeAssets) => {
-        state.$assets.value = assets;
+        state.assets = assets;
       },
     };
     const iframeRPC = rpcToIFrame<

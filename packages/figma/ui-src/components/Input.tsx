@@ -1,6 +1,5 @@
 import { ChevronDownIcon } from "./Icon";
 import { styled } from "./styled";
-import { JSX, ComponentChildren } from "preact";
 import { twMerge } from "tailwind-merge";
 
 export const Input = styled(
@@ -16,9 +15,9 @@ export function Select({
 }: {
   className?: string;
   value: string;
-  onChange: (event: JSX.TargetedEvent<HTMLSelectElement>) => void;
-  children: ComponentChildren;
-}) {
+  onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+  children?: React.ReactNode;
+}): JSX.Element {
   return (
     <div className={twMerge("relative w-fit", className)}>
       <select

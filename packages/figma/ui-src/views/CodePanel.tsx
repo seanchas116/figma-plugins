@@ -1,9 +1,10 @@
-import { FunctionComponent } from "preact";
 import { Select } from "../components/Input";
 import { state } from "../state/State";
 import { SyntaxHighlight } from "../components/SyntaxHighlight";
+import { action } from "mobx";
+import { observer } from "mobx-react-lite";
 
-export const CodePanel: FunctionComponent = () => {
+export const CodePanel: React.FC = observer(() => {
   const code = state.code;
   if (!code) {
     return null;
@@ -12,10 +13,10 @@ export const CodePanel: FunctionComponent = () => {
   return (
     <div className="px-4 py-3 flex flex-col gap-3">
       <Select
-        value={state.$codeFormat.value}
-        onChange={(e) => {
-          state.$codeFormat.value = e.currentTarget.value as any;
-        }}
+        value={state.codeFormat}
+        onChange={action((e) => {
+          state.codeFormat = e.currentTarget.value as any;
+        })}
       >
         <option value="json">JSON</option>
         <optgroup label="HTML">
@@ -40,4 +41,4 @@ export const CodePanel: FunctionComponent = () => {
       </pre>
     </div>
   );
-};
+});

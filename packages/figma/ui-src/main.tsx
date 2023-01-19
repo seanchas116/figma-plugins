@@ -1,7 +1,7 @@
 import { App } from "./views/App";
 import "./main.css";
-import { render } from "preact";
 import "iconify-icon";
+import ReactDOM from "react-dom/client";
 
-const root = document.getElementById("root")!;
-render(<App />, root);
+const root = ReactDOM.createRoot(document.getElementById("root")!);
+root.render(<App />);

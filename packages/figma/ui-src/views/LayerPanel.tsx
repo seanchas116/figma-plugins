@@ -1,4 +1,3 @@
-import { FunctionComponent } from "preact";
 import { state } from "../state/State";
 import {
   AutoHeightIcon,
@@ -14,7 +13,7 @@ const SizingButton = styled(
   "p-1 rounded text-gray-900 hover:bg-gray-100 aria-selected:bg-gray-200"
 );
 
-export const InstanceEdit: FunctionComponent = () => {
+export const InstanceEdit: React.FC = () => {
   const instance = state.target?.instance;
   if (!instance) {
     return null;
@@ -141,7 +140,7 @@ export const InstanceEdit: FunctionComponent = () => {
   );
 };
 
-export const LayerPanel: FunctionComponent = () => {
+export const LayerPanel: React.FC = () => {
   return (
     <div className="px-4 py-3 flex flex-col gap-3 border-b border-gray-200">
       <InstanceEdit />

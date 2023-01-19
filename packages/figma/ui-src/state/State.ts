@@ -1,5 +1,5 @@
-import { signal } from "@preact/signals";
 import { generateElements } from "@uimix/codegen";
+import { computed, makeObservable, observable } from "mobx";
 import { CodeAssets, CodeInstanceInfo, Target } from "../../types/data";
 import { rpc } from "../rpc";
 import { formatJS } from "../util/format";
@@ -12,18 +12,24 @@ export const tabs = [
 ] as const;
 
 class State {
-  readonly $showsSettings = signal(false);
-  readonly $assets = signal<CodeAssets>({
+  @observable showsSettings = false;
+
+  @observable.ref assets: CodeAssets = {
     components: [],
     colorStyles: {},
     textStyles: {},
-  });
-  readonly $target = signal<Target | undefined>(undefined);
-  readonly $selectedTab = signal<(typeof tabs)[number]["id"]>("layer");
+  };
 
-  readonly $codeFormat = signal<"json" | "htmlInlineStyle">("json");
+  @observable.ref target: Target | undefined = undefined;
+  @observable selectedTab: (typeof tabs)[number]["id"] = "layer";
 
-  get code():
+  @observable codeFormat: "json" | "html" = "json";
+
+  constructor() {
+    makeObservable(this);
+  }
+
+  @computed get code():
     | {
         content: string;
         type: "json" | "html" | "jsx";
@@ -33,7 +39,7 @@ class State {
       return;
     }
 
-    if (this.$codeFormat.value === "json") {
+    if (this.codeFormat === "json") {
       return {
         content: formatJS(JSON.stringify(this.target?.elementIR)),
         type: "json",
@@ -49,21 +55,15 @@ class State {
   }
 
   get componentDocs() {
-    return this.$assets.value.components;
+    return this.assets.components;
   }
-
-  get target() {
-    return this.$target.value;
-  }
-
-  constructor() {}
 
   updateInstance(instance: CodeInstanceInfo) {
     if (!this.target) {
       return;
     }
 
-    this.$target.value = {
+    this.target = {
       ...this.target,
       instance,
     };

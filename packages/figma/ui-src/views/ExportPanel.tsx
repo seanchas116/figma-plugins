@@ -4,13 +4,12 @@ import {
   ProjectGenerator,
   ProjectGeneratorOptions,
 } from "@uimix/codegen";
-import { FunctionComponent } from "preact";
-import { useState } from "preact/hooks";
 import { Button } from "../components/Button";
 import { Select } from "../components/Input";
 import { SyntaxHighlight } from "../components/SyntaxHighlight";
 import { rpc } from "../rpc";
 import JSZip from "jszip";
+import { useState } from "react";
 
 const codesandboxIndexJS = formatJS(`import React from 'react';
 import ReactDOM from 'react-dom';
@@ -40,7 +39,7 @@ async function makeZip(codes: GeneratedFile[]): Promise<string> {
   return zip.generateAsync({ type: "base64" });
 }
 
-export const ExportPanel: FunctionComponent = () => {
+export const ExportPanel: React.FC = () => {
   const [style, setStyle] =
     useState<ProjectGeneratorOptions["style"]>("inline");
   const [codes, setCodes] = useState<GeneratedFile[]>([]);

@@ -1,4 +1,5 @@
 import { RPC } from "@uimix/typed-rpc";
+import { action } from "mobx";
 import { CodeComponentInfo, Target } from "../types/data";
 import { IPluginToUIRPC, IUIToPluginRPC } from "../types/rpc";
 import { state } from "./state/State";
@@ -12,9 +13,9 @@ export const rpcHandler: IPluginToUIRPC = {
   ): Promise<{ png: ArrayBuffer; width: number; height: number }> => {
     throw new Error("Function not implemented.");
   },
-  onTargetsChange: async (targets: Target[]) => {
-    state.$target.value = targets[0];
-  },
+  onTargetsChange: action(async (targets: Target[]) => {
+    state.target = targets[0];
+  }),
 };
 
 export const rpc = new RPC<IPluginToUIRPC, IUIToPluginRPC>({

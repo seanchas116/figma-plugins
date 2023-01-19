@@ -1,10 +1,9 @@
-import { FunctionComponent } from "preact";
 import Prism from "prismjs";
 import "prismjs/components/prism-json";
 import "prismjs/components/prism-jsx";
 import "prism-themes/themes/prism-material-dark.css";
 
-export const SyntaxHighlight: FunctionComponent<{
+export const SyntaxHighlight: React.FC<{
   content: string;
   type: string;
 }> = ({ content, type }) => {
