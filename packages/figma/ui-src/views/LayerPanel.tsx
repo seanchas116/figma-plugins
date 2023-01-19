@@ -7,13 +7,15 @@ import {
 import { styled } from "../components/styled";
 import { CodeComponentInfo } from "../../types/data";
 import { Input, Select } from "../components/Input";
+import { Tooltip } from "../components/Tooltip";
+import { observer } from "mobx-react-lite";
 
 const SizingButton = styled(
   "button",
   "p-1 rounded text-gray-900 hover:bg-gray-100 aria-selected:bg-gray-200"
 );
 
-export const InstanceEdit: React.FC = () => {
+export const InstanceEdit: React.FC = observer(() => {
   const instance = state.target?.instance;
   if (!instance) {
     return null;
@@ -31,42 +33,45 @@ export const InstanceEdit: React.FC = () => {
           {componentDoc?.name ?? "Component Not Found"}
         </h1>
         <div className="flex -m-1">
-          <SizingButton
-            title="Auto Width"
-            aria-selected={instance.autoResize === "widthHeight"}
-            onClick={() => {
-              state.updateInstance({
-                ...instance,
-                autoResize: "widthHeight",
-              });
-            }}
-          >
-            <AutoWidthIcon />
-          </SizingButton>
-          <SizingButton
-            title="Auto Height"
-            aria-selected={instance.autoResize === "height"}
-            onClick={() => {
-              state.updateInstance({
-                ...instance,
-                autoResize: "height",
-              });
-            }}
-          >
-            <AutoHeightIcon />
-          </SizingButton>
-          <SizingButton
-            title="Fixed Size"
-            aria-selected={instance.autoResize === "none"}
-            onClick={() => {
-              state.updateInstance({
-                ...instance,
-                autoResize: "none",
-              });
-            }}
-          >
-            <FixedSizeIcon />
-          </SizingButton>
+          <Tooltip text="Auto Width">
+            <SizingButton
+              aria-selected={instance.autoResize === "widthHeight"}
+              onClick={() => {
+                state.updateInstance({
+                  ...instance,
+                  autoResize: "widthHeight",
+                });
+              }}
+            >
+              <AutoWidthIcon />
+            </SizingButton>
+          </Tooltip>
+          <Tooltip text="Auto Height">
+            <SizingButton
+              aria-selected={instance.autoResize === "height"}
+              onClick={() => {
+                state.updateInstance({
+                  ...instance,
+                  autoResize: "height",
+                });
+              }}
+            >
+              <AutoHeightIcon />
+            </SizingButton>
+          </Tooltip>
+          <Tooltip text="Fixed Size">
+            <SizingButton
+              aria-selected={instance.autoResize === "none"}
+              onClick={() => {
+                state.updateInstance({
+                  ...instance,
+                  autoResize: "none",
+                });
+              }}
+            >
+              <FixedSizeIcon />
+            </SizingButton>
+          </Tooltip>
         </div>
       </div>
       <dl className="grid grid-cols-[1fr_2fr] gap-3 items-center">
@@ -138,7 +143,7 @@ export const InstanceEdit: React.FC = () => {
       </dl>
     </div>
   );
-};
+});
 
 export const LayerPanel: React.FC = () => {
   return (

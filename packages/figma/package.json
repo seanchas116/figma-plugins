@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.0.2",
+    "@radix-ui/react-tooltip": "^1.0.3",
     "@uimix/codegen": "*",
     "@uimix/element-ir": "*",
     "@uimix/typed-rpc": "*",
