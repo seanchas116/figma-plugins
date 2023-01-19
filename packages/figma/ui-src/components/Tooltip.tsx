@@ -19,7 +19,7 @@ export function Tooltip({
       <RadixTooltip.Portal>
         <RadixTooltip.Content
           sideOffset={5}
-          className="pointer-events-none bg-gray-700 text-white rounded shadow text-xs px-2 py-1"
+          className="pointer-events-none bg-gray-700 text-white rounded shadow text-[11px] px-2 py-1"
         >
           {text}
           <RadixTooltip.Arrow className="fill-gray-700" />
