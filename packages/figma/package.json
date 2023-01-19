@@ -17,6 +17,7 @@
     "tsc:watch": "concurrently -n widget,iframe \"npm run tsc:main -- --watch --preserveWatchOutput\" \"npm run tsc:ui -- --watch --preserveWatchOutput\""
   },
   "dependencies": {
+    "@radix-ui/react-dialog": "^1.0.2",
     "@uimix/codegen": "*",
     "@uimix/element-ir": "*",
     "@uimix/typed-rpc": "*",

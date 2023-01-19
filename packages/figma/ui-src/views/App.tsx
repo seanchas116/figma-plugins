@@ -11,6 +11,7 @@ import { ExportPanel } from "./ExportPanel";
 import { ResponsivePanel } from "./ResponsivePanel";
 import { observer } from "mobx-react-lite";
 import { useEffect } from "react";
+import * as Dialog from "@radix-ui/react-dialog";
 
 const AppTabs: React.FC = observer(() => {
   return (
@@ -26,15 +27,17 @@ const AppTabs: React.FC = observer(() => {
         </TabItem>
       ))}
       <div className="flex-1" />
-      <button
-        className="p-2 rounded hover:bg-gray-100 aria-pressed:bg-blue-500 aria-pressed:text-white"
-        aria-pressed={state.showsSettings}
-        onClick={() => {
-          state.showsSettings = !state.showsSettings;
-        }}
-      >
-        <MenuIcon />
-      </button>
+      <Dialog.Root>
+        <Dialog.Trigger asChild>
+          <button className="p-2 rounded hover:bg-gray-100 aria-pressed:bg-blue-500 aria-pressed:text-white">
+            <MenuIcon />
+          </button>
+        </Dialog.Trigger>
+        <Dialog.Portal>
+          <Dialog.Overlay className="fixed inset-0 bg-black/50" />
+          <SettingsDialog />
+        </Dialog.Portal>
+      </Dialog.Root>
     </Tabs>
   );
 });
@@ -61,7 +64,6 @@ export const App: React.FC = observer(() => {
       {state.selectedTab === "code" && <CodePanel />}
       {state.selectedTab === "export" && <ExportPanel />}
       <CodeComponentIFrame />
-      <SettingsDialog />
       <Resizer />
     </div>
   );
