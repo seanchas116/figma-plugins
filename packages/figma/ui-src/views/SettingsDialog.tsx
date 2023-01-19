@@ -1,10 +1,11 @@
 import { action } from "mobx";
+import { observer } from "mobx-react-lite";
 import { Button } from "../components/Button";
 import { CloseIcon } from "../components/Icon";
 import { rpc } from "../rpc";
 import { state } from "../state/State";
 
-export const SettingsDialog: React.FC = () => {
+export const SettingsDialog: React.FC = observer(() => {
   const syncAssets = () => {
     rpc.remote.syncCodeAssets(state.assets);
   };
@@ -30,4 +31,4 @@ export const SettingsDialog: React.FC = () => {
       </div>
     </div>
   );
-};
+});
