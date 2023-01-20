@@ -9,6 +9,9 @@ import { CodeComponentInfo } from "../../types/data";
 import { Input, Select } from "../components/Input";
 import { Tooltip } from "../components/Tooltip";
 import { observer } from "mobx-react-lite";
+import { Button } from "../components/Button";
+import { rpc } from "../rpc";
+import { Icon } from "@iconify/react";
 
 const SizingButton = styled(
   "button",
@@ -27,7 +30,7 @@ export const InstanceEdit: React.FC = observer(() => {
   );
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="px-4 py-3 flex flex-col gap-3 border-b border-gray-200">
       <div className="flex justify-between">
         <h1 className="font-semibold text-xs">
           {componentDoc?.name ?? "Component Not Found"}
@@ -147,7 +150,18 @@ export const InstanceEdit: React.FC = observer(() => {
 
 export const LayerPanel: React.FC = () => {
   return (
-    <div className="px-4 py-3 flex flex-col gap-3 border-b border-gray-200">
+    <div>
+      <div className="px-4 py-3 flex flex-col gap-3 border-b border-gray-200">
+        <h2 className="font-semibold">Responsive</h2>
+        <Button
+          onClick={() => {
+            rpc.remote.syncResponsiveContents();
+          }}
+        >
+          <Icon className="text-xs" icon="material-symbols:sync-outline" />
+          Sync Contents
+        </Button>
+      </div>
       <InstanceEdit />
     </div>
   );
