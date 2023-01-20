@@ -197,6 +197,7 @@ export const LayerPanel: React.FC = observer(() => {
               rpc.remote.createResponsivePage();
             }}
           >
+            <Icon icon="material-symbols:add" className="text-xs" />
             Create Responsive Page
           </Button>
         )}
