@@ -148,7 +148,7 @@ export const InstanceEdit: React.FC = observer(() => {
   );
 });
 
-export const LayerPanel: React.FC = () => {
+export const LayerPanel: React.FC = observer(() => {
   return (
     <div>
       <div className="px-4 py-3 flex flex-col gap-3 border-b border-gray-200">
@@ -182,16 +182,26 @@ export const LayerPanel: React.FC = () => {
       </div>
       <div className="px-4 py-3 flex flex-col gap-3 border-b border-gray-200">
         <h2 className="font-semibold">Responsive</h2>
-        <Button
-          onClick={() => {
-            rpc.remote.syncResponsiveContents();
-          }}
-        >
-          <Icon className="text-xs" icon="material-symbols:sync-outline" />
-          Sync Contents
-        </Button>
+        {state.target ? (
+          <Button
+            onClick={() => {
+              rpc.remote.syncResponsiveContents();
+            }}
+          >
+            <Icon className="text-xs" icon="material-symbols:sync-outline" />
+            Sync Contents
+          </Button>
+        ) : (
+          <Button
+            onClick={() => {
+              rpc.remote.createResponsivePage();
+            }}
+          >
+            Create Responsive Page
+          </Button>
+        )}
       </div>
       <InstanceEdit />
     </div>
   );
-};
+});
