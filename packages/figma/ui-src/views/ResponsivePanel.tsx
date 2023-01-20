@@ -1,13 +1,6 @@
 import { Button } from "../components/Button";
 import { rpc } from "../rpc";
-
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      "iconify-icon": any;
-    }
-  }
-}
+import { Icon } from "@iconify/react";
 
 export const ResponsivePanel: React.FC = () => {
   return (
@@ -29,10 +22,7 @@ export const ResponsivePanel: React.FC = () => {
           rpc.remote.syncResponsiveContents();
         }}
       >
-        <iconify-icon
-          className="text-base"
-          icon="material-symbols:sync-outline"
-        ></iconify-icon>
+        <Icon className="text-base" icon="material-symbols:sync-outline" />
         Sync Contents
       </Button>
       <h1 className="font-bold">Sync All Properties</h1>
@@ -43,10 +33,7 @@ export const ResponsivePanel: React.FC = () => {
             rpc.remote.copyStylesToLargerScreens();
           }}
         >
-          <iconify-icon
-            className="text-base"
-            icon="material-symbols:desktop-windows-outline"
-          ></iconify-icon>
+          <Icon icon="material-symbols:desktop-windows-outline" />
           Sync All to Larger Screens
         </Button>
         <Button
@@ -54,10 +41,7 @@ export const ResponsivePanel: React.FC = () => {
             rpc.remote.copyStylesToSmallerScreens();
           }}
         >
-          <iconify-icon
-            className="text-base"
-            icon="material-symbols:phone-android-outline"
-          ></iconify-icon>
+          <Icon icon="material-symbols:phone-android-outline" />
           Sync All to Smaller Screens
         </Button>
       </div>

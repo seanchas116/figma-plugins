@@ -17,6 +17,7 @@
     "tsc:watch": "concurrently -n widget,iframe \"npm run tsc:main -- --watch --preserveWatchOutput\" \"npm run tsc:ui -- --watch --preserveWatchOutput\""
   },
   "dependencies": {
+    "@iconify/react": "^4.0.1",
     "@radix-ui/react-dialog": "^1.0.2",
     "@radix-ui/react-tooltip": "^1.0.3",
     "@uimix/codegen": "*",
@@ -25,7 +26,6 @@
     "buffer": "^6.0.3",
     "clsx": "^1.2.1",
     "hast-util-to-html": "^8.0.4",
-    "iconify-icon": "^1.0.2",
     "jszip": "^3.10.1",
     "lodash-es": "^4.17.21",
     "mobx": "^6.7.0",
