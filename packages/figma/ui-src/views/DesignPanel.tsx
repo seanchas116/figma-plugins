@@ -148,7 +148,7 @@ export const InstanceEdit: React.FC = observer(() => {
   );
 });
 
-export const LayerPanel: React.FC = observer(() => {
+export const DesignPanel: React.FC = observer(() => {
   return (
     <div>
       <div className="px-4 py-3 flex flex-col gap-3 border-b border-gray-200">

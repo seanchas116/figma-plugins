@@ -5,8 +5,8 @@ import { rpc } from "../rpc";
 import { formatJS } from "../util/format";
 
 export const tabs = [
-  { id: "insert", label: "Icons" },
-  { id: "layer", label: "Design" },
+  { id: "icons", label: "Icons" },
+  { id: "design", label: "Design" },
   { id: "code", label: "Code" },
 ] as const;
 
@@ -20,7 +20,7 @@ class State {
   };
 
   @observable.ref target: Target | undefined = undefined;
-  @observable selectedTab: (typeof tabs)[number]["id"] = "layer";
+  @observable selectedTab: (typeof tabs)[number]["id"] = "design";
 
   @observable codeFormat: "json" | "html" = "json";
 

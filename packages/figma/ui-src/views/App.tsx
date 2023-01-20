@@ -1,4 +1,4 @@
-import { LayerPanel } from "./LayerPanel";
+import { DesignPanel } from "./DesignPanel";
 import { CodeComponentIFrame } from "./CodeComponentIFrame";
 import { Resizer } from "./Resizer";
 import { state, tabs } from "../state/State";
@@ -62,8 +62,8 @@ export const App: React.FC = observer(() => {
     <TooltipProvider>
       <div className="text-[11px] leading-4 text-gray-900 accent-blue-500">
         <AppTabs />
-        {state.selectedTab === "insert" && <IconPanel />}
-        {state.selectedTab === "layer" && <LayerPanel />}
+        {state.selectedTab === "icons" && <IconPanel />}
+        {state.selectedTab === "design" && <DesignPanel />}
         {state.selectedTab === "code" && <CodePanel />}
         <CodeComponentIFrame />
         <Resizer />
