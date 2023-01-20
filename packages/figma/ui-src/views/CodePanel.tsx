@@ -3,11 +3,12 @@ import { state } from "../state/State";
 import { SyntaxHighlight } from "../components/SyntaxHighlight";
 import { action } from "mobx";
 import { observer } from "mobx-react-lite";
+import { ExportPanel } from "./ExportPanel";
 
 export const CodePanel: React.FC = observer(() => {
   const code = state.code;
   if (!code) {
-    return null;
+    return <ExportPanel />;
   }
 
   return (

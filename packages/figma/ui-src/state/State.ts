@@ -8,7 +8,6 @@ export const tabs = [
   { id: "insert", label: "Insert" },
   { id: "layer", label: "Layer" },
   { id: "code", label: "Code" },
-  { id: "export", label: "Export" },
 ] as const;
 
 class State {
