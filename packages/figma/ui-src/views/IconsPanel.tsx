@@ -236,14 +236,13 @@ export const IconCollectionView: React.FC<{
   onBack: () => void;
 }> = observer(({ prefix, onBack }) => {
   useEffect(() => {
-    iconData.fetchCollection(prefix);
+    iconData.fetchIconNames(prefix);
   });
   const info = iconData.infos.get(prefix);
   if (!info) {
     return null;
   }
-  const collection = iconData.collections.get(prefix);
-  const icons = Object.entries(collection?.icons ?? {});
+  const names = iconData.iconNames.get(prefix) ?? [];
 
   return (
     <div className="flex-1 flex flex-col min-h-0">
@@ -254,11 +253,7 @@ export const IconCollectionView: React.FC<{
         <h1 className="font-semibold">{info.name}</h1>
       </div>
       <SearchInput />
-      <IconCollectionGrid
-        icons={icons}
-        iconWidth={collection?.width ?? 24}
-        iconHeight={collection?.height ?? 24}
-      />
+      <IconCollectionGrid prefix={prefix} names={names} />
     </div>
   );
 });
@@ -271,14 +266,12 @@ type IconCollectionGridElement = {
   x: number;
   y: number;
   name: string;
-  icon: ExtendedIconifyIcon;
 };
 
 const IconCollectionGrid: React.FC<{
-  icons: [string, ExtendedIconifyIcon][];
-  iconWidth: number;
-  iconHeight: number;
-}> = ({ icons, iconWidth, iconHeight }) => {
+  prefix: string;
+  names: string[];
+}> = observer(({ prefix, names }) => {
   const ref = createRef<HTMLDivElement>();
 
   const [height, setHeight] = useState(0);
@@ -293,7 +286,7 @@ const IconCollectionGrid: React.FC<{
     const onResizeOrScroll = () => {
       const width = elem.clientWidth - gridPadding * 2;
       const cols = Math.floor(width / gridSize);
-      const rows = Math.ceil(icons.length / cols);
+      const rows = Math.ceil(names.length / cols);
       const height = rows * gridSize;
 
       const scrollTop = elem.scrollTop - gridPadding;
@@ -307,17 +300,21 @@ const IconCollectionGrid: React.FC<{
           const x = col * gridSize;
           const y = row * gridSize;
           const i = row * cols + col;
-          const icon = icons[i];
-          if (icon) {
+          const name = names[i];
+          if (name) {
             elements.push({
               x: x + gridPadding + (gridSize - gridIconSize) / 2,
               y: y + gridPadding + (gridSize - gridIconSize) / 2,
-              name: icon[0],
-              icon: icon[1],
+              name,
             });
           }
         }
       }
+
+      iconData.fetchIcons(
+        prefix,
+        elements.map((e) => e.name)
+      );
 
       setHeight(height);
       setElements(elements);
@@ -330,7 +327,7 @@ const IconCollectionGrid: React.FC<{
       elem.removeEventListener("scroll", onResizeOrScroll);
       window.removeEventListener("resize", onResizeOrScroll);
     };
-  }, [icons]);
+  }, [prefix, names]);
 
   return (
     <div
@@ -343,23 +340,28 @@ const IconCollectionGrid: React.FC<{
           height: height + "px",
         }}
       >
-        {elements.map(({ x, y, name, icon }) => (
-          <svg
-            key={name}
-            style={{
-              position: "absolute",
-              left: x + "px",
-              top: y + "px",
-            }}
-            width={gridIconSize}
-            height={gridIconSize}
-            viewBox={`0 0 ${iconWidth} ${iconHeight}`}
-            dangerouslySetInnerHTML={{
-              __html: icon.body,
-            }}
-          />
-        ))}
+        {elements.map(({ x, y, name }) => {
+          const icon = iconData.icons.get(prefix + ":" + name);
+          if (icon) {
+            return (
+              <svg
+                key={name}
+                style={{
+                  position: "absolute",
+                  left: x + "px",
+                  top: y + "px",
+                }}
+                width={gridIconSize}
+                height={gridIconSize}
+                viewBox={`0 0 ${icon.width ?? 24} ${icon.width ?? 24}`}
+                dangerouslySetInnerHTML={{
+                  __html: icon.body,
+                }}
+              />
+            );
+          }
+        })}
       </div>
     </div>
   );
-};
+});
