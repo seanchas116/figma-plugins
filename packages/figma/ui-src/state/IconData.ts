@@ -12,7 +12,7 @@ export class IconData {
     }
 
     const collections = await fetch(
-      "https://api.iconify.design/collections"
+      "https://unpkg.com/@iconify/json/collections.json"
     ).then((res) => res.json());
 
     runInAction(() => {
