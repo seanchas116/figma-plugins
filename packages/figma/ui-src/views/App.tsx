@@ -60,7 +60,7 @@ export const App: React.FC = observer(() => {
 
   return (
     <TooltipProvider>
-      <div className="text-[11px] leading-4 text-gray-900 accent-blue-500">
+      <div className="text-[11px] leading-4 text-gray-900 accent-blue-500 fixed inset-0 flex flex-col">
         <AppTabs />
         {state.selectedTab === "icons" && <IconsPanel />}
         {state.selectedTab === "design" && <DesignPanel />}

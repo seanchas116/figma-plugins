@@ -2,15 +2,16 @@ import { Icon } from "@iconify/react";
 
 const SearchInput: React.FC = () => {
   return (
-    <div className="relative h-4">
+    <div className="relative h-10 border-b border-gray-200">
       <input
         type="text"
         placeholder="Search Collection"
-        className="absolute -inset-1 pl-7 placeholder:text-gray-300 outline-none ring-1 ring-transparent hover:ring-gray-300 focus:ring-blue-500 rounded font-medium text-gray-900"
+        className="absolute inset-0 px-4 py-3 pl-10 placeholder:text-gray-300 outline-none font-medium text-gray-900"
+        autoFocus
       />
       <Icon
         icon="material-symbols:search"
-        className="text-base absolute left-0 top-0 text-gray-300"
+        className="text-base absolute left-4 top-3 text-gray-300"
       />
     </div>
   );
@@ -182,10 +183,35 @@ const IconCollectionCard: React.FC<{
 
 export const IconsPanel: React.FC = () => {
   return (
-    <div className="flex flex-col">
-      <div className="px-4 py-3 flex flex-col gap-3">
-        <SearchInput />
+    <div className="flex flex-col min-h-0">
+      <SearchInput />
+      <div className="flex-1 min-h-0 overflow-scroll px-4 py-3 flex flex-col gap-3">
         <AllIconCard iconCount={10000} />
+        <IconCollectionCard
+          name="Material Symbols"
+          author="Google"
+          iconCount={8872}
+        />
+        <IconCollectionCard
+          name="Material Symbols"
+          author="Google"
+          iconCount={8872}
+        />
+        <IconCollectionCard
+          name="Material Symbols"
+          author="Google"
+          iconCount={8872}
+        />
+        <IconCollectionCard
+          name="Material Symbols"
+          author="Google"
+          iconCount={8872}
+        />
+        <IconCollectionCard
+          name="Material Symbols"
+          author="Google"
+          iconCount={8872}
+        />
         <IconCollectionCard
           name="Material Symbols"
           author="Google"
