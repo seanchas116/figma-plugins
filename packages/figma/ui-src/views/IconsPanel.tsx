@@ -1,7 +1,7 @@
 import { Icon } from "@iconify/react";
-import { useEffect, useState } from "react";
+import { createRef, useEffect, useState } from "react";
 import { iconData } from "../state/IconData";
-import type { IconifyInfo } from "@iconify/types";
+import type { IconifyInfo, ExtendedIconifyIcon } from "@iconify/types";
 import { observer } from "mobx-react-lite";
 
 const SearchInput: React.FC = () => {
@@ -242,18 +242,104 @@ export const IconCollectionView: React.FC<{
   const icons = Object.entries(collection?.icons ?? {});
 
   return (
-    <div className="flex flex-col min-h-0">
+    <div className="flex-1 flex flex-col min-h-0">
       <div className="flex">
         <button onClick={onBack}>
           <Icon icon="material-symbols:chevron-left" className="text-base" />
         </button>
         {info.name}
       </div>
-      <div className="flex-1 min-h-0 overflow-y-scroll flex flex-wrap text-base gap-1">
-        {icons.map(([name, icon]) => (
-          <Icon icon={icon} />
+      <IconCollectionGrid icons={icons} />
+    </div>
+  );
+});
+
+const iconSize = 24;
+
+type IconCollectionGridElement = {
+  x: number;
+  y: number;
+  name: string;
+  icon: ExtendedIconifyIcon;
+};
+
+const IconCollectionGrid: React.FC<{
+  icons: [string, ExtendedIconifyIcon][];
+}> = ({ icons }) => {
+  const ref = createRef<HTMLDivElement>();
+
+  const [height, setHeight] = useState(0);
+  const [elements, setElements] = useState<IconCollectionGridElement[]>([]);
+
+  useEffect(() => {
+    const elem = ref.current;
+    if (!elem) {
+      return;
+    }
+
+    const width = elem.clientWidth;
+    const cols = Math.floor(width / iconSize);
+    const rows = Math.ceil(icons.length / cols);
+    const height = rows * iconSize;
+
+    setHeight(height);
+
+    const onScroll = () => {
+      const scrollTop = elem.scrollTop;
+      const topRow = Math.floor(scrollTop / iconSize);
+      const bottomRow = Math.ceil((scrollTop + elem.clientHeight) / iconSize);
+
+      const elements: IconCollectionGridElement[] = [];
+
+      for (let row = topRow; row < bottomRow; row++) {
+        const i = row * cols;
+        for (let col = 0; col < cols; col++) {
+          const x = col * iconSize;
+          const y = row * iconSize;
+          const icon = icons[i + col];
+          if (icon) {
+            elements.push({
+              x,
+              y,
+              name: icon[0],
+              icon: icon[1],
+            });
+          }
+        }
+      }
+
+      setElements(elements);
+    };
+
+    onScroll();
+    elem.addEventListener("scroll", onScroll);
+    return () => {
+      elem.removeEventListener("scroll", onScroll);
+    };
+  }, [icons]);
+
+  return (
+    <div
+      ref={ref}
+      className="flex-1 relative min-h-0 overflow-y-scroll text-base"
+    >
+      <div
+        style={{
+          width: "100%",
+          height: height + "px",
+        }}
+      >
+        {elements.map(({ x, y, name, icon }) => (
+          <Icon
+            icon={icon}
+            style={{
+              position: "absolute",
+              left: x + "px",
+              top: y + "px",
+            }}
+          />
         ))}
       </div>
     </div>
   );
-});
+};
