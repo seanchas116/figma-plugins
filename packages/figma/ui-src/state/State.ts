@@ -22,7 +22,7 @@ class State {
   @observable.ref target: Target | undefined = undefined;
   @observable selectedTab: (typeof tabs)[number]["id"] = "design";
 
-  @observable codeFormat: "json" | "html" = "json";
+  @observable codeFormat: "json" | "html" = "html";
 
   constructor() {
     makeObservable(this);
