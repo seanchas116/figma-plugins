@@ -192,7 +192,7 @@ const IconCollectionCard: React.FC<{
 
 export const IconsPanel: React.FC = observer(() => {
   useEffect(() => {
-    iconData.fetchCollections();
+    iconData.fetchInfos();
   }, []);
 
   return (
@@ -200,7 +200,7 @@ export const IconsPanel: React.FC = observer(() => {
       <SearchInput />
       <div className="flex-1 min-h-0 overflow-scroll px-2 py-2 flex flex-col gap-2">
         <AllIconCard iconCount={10000} />
-        {[...iconData.collections.values()].map((info) => (
+        {[...iconData.infos.values()].map((info) => (
           <IconCollectionCard info={info} />
         ))}
       </div>

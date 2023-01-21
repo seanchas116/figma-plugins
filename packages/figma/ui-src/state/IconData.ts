@@ -1,13 +1,13 @@
 import { makeObservable, observable, runInAction } from "mobx";
-import type { IconifyInfo } from "@iconify/types";
+import type { IconifyInfo, IconifyJSON } from "@iconify/types";
 
 export class IconData {
   constructor() {
-    makeObservable(this);
+    //makeObservable(this);
   }
 
-  async fetchCollections() {
-    if (this.collections.size) {
+  async fetchInfos() {
+    if (this.infos.size) {
       return;
     }
 
@@ -17,12 +17,13 @@ export class IconData {
 
     runInAction(() => {
       for (const key in collections) {
-        this.collections.set(key, collections[key]);
+        this.infos.set(key, collections[key]);
       }
     });
   }
 
-  readonly collections = observable.map<string, IconifyInfo>();
+  readonly infos = observable.map<string, IconifyInfo>();
+  readonly collections = observable.map<string, IconifyJSON>();
 }
 
 export const iconData = new IconData();
