@@ -277,14 +277,14 @@ const IconCollectionGrid: React.FC<{
       return;
     }
 
-    const width = elem.clientWidth;
-    const cols = Math.floor(width / iconSize);
-    const rows = Math.ceil(icons.length / cols);
-    const height = rows * iconSize;
+    const onResizeOrScroll = () => {
+      const width = elem.clientWidth;
+      const cols = Math.floor(width / iconSize);
+      const rows = Math.ceil(icons.length / cols);
+      const height = rows * iconSize;
 
-    setHeight(height);
+      setHeight(height);
 
-    const onScroll = () => {
       const scrollTop = elem.scrollTop;
       const topRow = Math.floor(scrollTop / iconSize);
       const bottomRow = Math.ceil((scrollTop + elem.clientHeight) / iconSize);
@@ -311,10 +311,12 @@ const IconCollectionGrid: React.FC<{
       setElements(elements);
     };
 
-    onScroll();
-    elem.addEventListener("scroll", onScroll);
+    onResizeOrScroll();
+    elem.addEventListener("scroll", onResizeOrScroll);
+    window.addEventListener("resize", onResizeOrScroll);
     return () => {
-      elem.removeEventListener("scroll", onScroll);
+      elem.removeEventListener("scroll", onResizeOrScroll);
+      window.removeEventListener("resize", onResizeOrScroll);
     };
   }, [icons]);
 
