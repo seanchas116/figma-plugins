@@ -259,7 +259,9 @@ export const IconCollectionView: React.FC<{
   );
 });
 
-const gridSize = 24;
+const gridSize = 32;
+const gridIconSize = 24;
+const gridPadding = 8;
 
 type IconCollectionGridElement = {
   x: number;
@@ -285,12 +287,12 @@ const IconCollectionGrid: React.FC<{
     }
 
     const onResizeOrScroll = () => {
-      const width = elem.clientWidth;
+      const width = elem.clientWidth - gridPadding * 2;
       const cols = Math.floor(width / gridSize);
       const rows = Math.ceil(icons.length / cols);
       const height = rows * gridSize;
 
-      const scrollTop = elem.scrollTop;
+      const scrollTop = elem.scrollTop - gridPadding;
       const topRow = Math.floor(scrollTop / gridSize);
       const bottomRow = Math.ceil((scrollTop + elem.clientHeight) / gridSize);
 
@@ -304,8 +306,8 @@ const IconCollectionGrid: React.FC<{
           const icon = icons[i];
           if (icon) {
             elements.push({
-              x,
-              y,
+              x: x + gridPadding + (gridSize - gridIconSize) / 2,
+              y: y + gridPadding + (gridSize - gridIconSize) / 2,
               name: icon[0],
               icon: icon[1],
             });
@@ -344,8 +346,8 @@ const IconCollectionGrid: React.FC<{
               left: x + "px",
               top: y + "px",
             }}
-            width={gridSize}
-            height={gridSize}
+            width={gridIconSize}
+            height={gridIconSize}
             viewBox={`0 0 ${iconWidth} ${iconHeight}`}
             dangerouslySetInnerHTML={{
               __html: icon.body,
