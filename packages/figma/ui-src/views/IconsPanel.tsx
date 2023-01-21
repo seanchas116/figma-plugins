@@ -341,6 +341,7 @@ const IconCollectionGrid: React.FC<{
       >
         {elements.map(({ x, y, name, icon }) => (
           <svg
+            key={name}
             style={{
               position: "absolute",
               left: x + "px",
