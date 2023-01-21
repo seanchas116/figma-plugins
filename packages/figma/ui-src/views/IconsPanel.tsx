@@ -249,7 +249,11 @@ export const IconCollectionView: React.FC<{
         </button>
         {info.name}
       </div>
-      <IconCollectionGrid icons={icons} />
+      <IconCollectionGrid
+        icons={icons}
+        iconWidth={collection?.width ?? 24}
+        iconHeight={collection?.height ?? 24}
+      />
     </div>
   );
 });
@@ -265,7 +269,9 @@ type IconCollectionGridElement = {
 
 const IconCollectionGrid: React.FC<{
   icons: [string, ExtendedIconifyIcon][];
-}> = ({ icons }) => {
+  iconWidth: number;
+  iconHeight: number;
+}> = ({ icons, iconWidth, iconHeight }) => {
   const ref = createRef<HTMLDivElement>();
 
   const [height, setHeight] = useState(0);
@@ -331,12 +337,17 @@ const IconCollectionGrid: React.FC<{
         }}
       >
         {elements.map(({ x, y, name, icon }) => (
-          <Icon
-            icon={icon}
+          <svg
             style={{
               position: "absolute",
               left: x + "px",
               top: y + "px",
+            }}
+            width={iconSize}
+            height={iconSize}
+            viewBox={`0 0 ${iconWidth} ${iconHeight}`}
+            dangerouslySetInnerHTML={{
+              __html: icon.body,
             }}
           />
         ))}
