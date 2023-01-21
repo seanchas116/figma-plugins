@@ -316,7 +316,7 @@ const IconCollectionGrid: React.FC<{
         elements.map((e) => e.name)
       );
 
-      setHeight(height);
+      setHeight(height + 2 * gridPadding);
       setElements(elements);
     };
 
