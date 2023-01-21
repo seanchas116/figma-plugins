@@ -185,7 +185,7 @@ export const IconsPanel: React.FC = () => {
   return (
     <div className="flex flex-col min-h-0">
       <SearchInput />
-      <div className="flex-1 min-h-0 overflow-scroll px-4 py-3 flex flex-col gap-3">
+      <div className="flex-1 min-h-0 overflow-scroll px-2 py-2 flex flex-col gap-2">
         <AllIconCard iconCount={10000} />
         <IconCollectionCard
           name="Material Symbols"
