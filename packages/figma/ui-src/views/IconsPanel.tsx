@@ -290,11 +290,11 @@ const IconCollectionGrid: React.FC<{
       const elements: IconCollectionGridElement[] = [];
 
       for (let row = topRow; row < bottomRow; row++) {
-        const i = row * cols;
         for (let col = 0; col < cols; col++) {
           const x = col * iconSize;
           const y = row * iconSize;
-          const icon = icons[i + col];
+          const i = row * cols + col;
+          const icon = icons[i];
           if (icon) {
             elements.push({
               x,
