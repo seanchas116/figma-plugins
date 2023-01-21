@@ -168,6 +168,7 @@ importers:
     specifiers:
       '@figma/plugin-typings': ^1.57.1
       '@iconify/react': ^4.0.1
+      '@iconify/types': ^2.0.0
       '@radix-ui/react-dialog': ^1.0.2
       '@radix-ui/react-tooltip': ^1.0.3
       '@thoughtbot/tailwindcss-aria-attributes': ^0.2.0
@@ -226,6 +227,7 @@ importers:
       tailwind-merge: 1.8.1
     devDependencies:
       '@figma/plugin-typings': 1.57.1
+      '@iconify/types': 2.0.0
       '@thoughtbot/tailwindcss-aria-attributes': 0.2.0
       '@types/lodash-es': 4.17.6
       '@types/node': 18.11.18
@@ -2307,7 +2309,6 @@ packages:
 
   /@iconify/types/2.0.0:
     resolution: {integrity: sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==}
-    dev: false
 
   /@istanbuljs/load-nyc-config/1.1.0:
     resolution: {integrity: sha512-VjeHSlIzpv/NyD3N0YuHfXOPDIixcA1q2ZV98wsMqcYlPmv2n3Yb2lYP9XMElnaFVXg5A7YLTeLu6V84uQDjmQ==}

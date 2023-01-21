@@ -1,4 +1,8 @@
 import { Icon } from "@iconify/react";
+import { useEffect } from "react";
+import { iconData } from "../state/IconData";
+import type { IconifyInfo } from "@iconify/types";
+import { observer } from "mobx-react-lite";
 
 const SearchInput: React.FC = () => {
   return (
@@ -30,17 +34,22 @@ const AllIconCard: React.FC<{
 
 // WIP
 const IconCollectionCard: React.FC<{
-  name: string;
-  author: string;
-  iconCount: number;
-}> = ({ name, author, iconCount }) => {
+  info: IconifyInfo;
+}> = ({ info }) => {
   return (
-    <button className="flex p-2 justify-between border-gray-200 rounded border hover:bg-gray-50">
+    <button
+      className="flex p-2 justify-between border-gray-200 rounded border hover:bg-gray-50"
+      style={{
+        contentVisibility: "auto",
+        // @ts-ignore
+        containIntrinsicSize: "72px",
+      }}
+    >
       <div className="flex flex-col self-stretch text-start">
-        <div className="font-semibold text-black">{name}</div>
-        <div className="font-medium text-gray-500">{author}</div>
+        <div className="font-semibold text-black">{info.name}</div>
+        <div className="font-medium text-gray-500">{info.author.name}</div>
         <div className="font-medium text-gray-500 mt-auto">
-          {iconCount} Icons
+          {info.total} Icons
         </div>
       </div>
       <div className="flex fit flex-col gap-1 items-start">
@@ -181,43 +190,20 @@ const IconCollectionCard: React.FC<{
   );
 };
 
-export const IconsPanel: React.FC = () => {
+export const IconsPanel: React.FC = observer(() => {
+  useEffect(() => {
+    iconData.fetchCollections();
+  }, []);
+
   return (
     <div className="flex flex-col min-h-0">
       <SearchInput />
       <div className="flex-1 min-h-0 overflow-scroll px-2 py-2 flex flex-col gap-2">
         <AllIconCard iconCount={10000} />
-        <IconCollectionCard
-          name="Material Symbols"
-          author="Google"
-          iconCount={8872}
-        />
-        <IconCollectionCard
-          name="Material Symbols"
-          author="Google"
-          iconCount={8872}
-        />
-        <IconCollectionCard
-          name="Material Symbols"
-          author="Google"
-          iconCount={8872}
-        />
-        <IconCollectionCard
-          name="Material Symbols"
-          author="Google"
-          iconCount={8872}
-        />
-        <IconCollectionCard
-          name="Material Symbols"
-          author="Google"
-          iconCount={8872}
-        />
-        <IconCollectionCard
-          name="Material Symbols"
-          author="Google"
-          iconCount={8872}
-        />
+        {[...iconData.collections.values()].map((info) => (
+          <IconCollectionCard info={info} />
+        ))}
       </div>
     </div>
   );
-};
+});

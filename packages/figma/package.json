@@ -39,6 +39,7 @@
   },
   "devDependencies": {
     "@figma/plugin-typings": "^1.57.1",
+    "@iconify/types": "^2.0.0",
     "@thoughtbot/tailwindcss-aria-attributes": "^0.2.0",
     "@types/lodash-es": "^4.17.6",
     "@types/node": "^18.11.18",
