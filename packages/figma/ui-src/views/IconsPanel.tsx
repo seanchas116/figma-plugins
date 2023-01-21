@@ -21,10 +21,10 @@ const AllIconCard: React.FC<{
   iconCount: number;
 }> = ({ iconCount }) => {
   return (
-    <div className="flex flex-col p-2 justify-between h-12 border-gray-200 rounded border">
+    <button className="flex flex-col p-2 justify-between h-12 border-gray-200 rounded border text-start hover:bg-gray-50">
       <div className="font-semibold text-black">All</div>
       <div className="font-medium text-gray-500">{iconCount} Icons</div>
-    </div>
+    </button>
   );
 };
 
@@ -35,8 +35,8 @@ const IconCollectionCard: React.FC<{
   iconCount: number;
 }> = ({ name, author, iconCount }) => {
   return (
-    <div className="flex p-2 justify-between border-gray-200 rounded border">
-      <div className="flex flex-col">
+    <button className="flex p-2 justify-between border-gray-200 rounded border hover:bg-gray-50">
+      <div className="flex flex-col self-stretch text-start">
         <div className="font-semibold text-black">{name}</div>
         <div className="font-medium text-gray-500">{author}</div>
         <div className="font-medium text-gray-500 mt-auto">
@@ -177,7 +177,7 @@ const IconCollectionCard: React.FC<{
           </div>
         </div>
       </div>
-    </div>
+    </button>
   );
 };
 
