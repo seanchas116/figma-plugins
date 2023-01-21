@@ -10,7 +10,7 @@ const SearchInput: React.FC = () => {
       <input
         type="text"
         placeholder="Search Collection"
-        className="absolute inset-0 px-4 py-3 pl-10 placeholder:text-gray-300 outline-none font-medium text-gray-900"
+        className="absolute inset-0 px-4 py-3 pl-9 placeholder:text-gray-300 outline-none font-medium text-gray-900"
         autoFocus
       />
       <Icon
@@ -243,12 +243,13 @@ export const IconCollectionView: React.FC<{
 
   return (
     <div className="flex-1 flex flex-col min-h-0">
-      <div className="flex">
+      <div className="flex mx-4 my-3 mb-1 gap-1">
         <button onClick={onBack}>
           <Icon icon="material-symbols:chevron-left" className="text-base" />
         </button>
-        {info.name}
+        <h1 className="font-semibold">{info.name}</h1>
       </div>
+      <SearchInput />
       <IconCollectionGrid
         icons={icons}
         iconWidth={collection?.width ?? 24}
