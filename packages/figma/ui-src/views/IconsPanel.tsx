@@ -263,7 +263,7 @@ export const IconCollectionView: React.FC<{
   );
 });
 
-const gridSize = 32;
+const gridSize = 40;
 const gridIconSize = 24;
 const gridPadding = 8;
 
