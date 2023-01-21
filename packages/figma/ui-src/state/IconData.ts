@@ -22,6 +22,20 @@ export class IconData {
     });
   }
 
+  async fetchCollection(prefix: string) {
+    if (this.collections.has(prefix)) {
+      return;
+    }
+
+    const collection = await fetch(
+      `https://unpkg.com/@iconify/json/json/${prefix}.json`
+    ).then((res) => res.json());
+
+    runInAction(() => {
+      this.collections.set(prefix, collection);
+    });
+  }
+
   readonly infos = observable.map<string, IconifyInfo>();
   readonly collections = observable.map<string, IconifyJSON>();
 }

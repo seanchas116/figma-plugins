@@ -1,5 +1,5 @@
 import { Icon } from "@iconify/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { iconData } from "../state/IconData";
 import type { IconifyInfo } from "@iconify/types";
 import { observer } from "mobx-react-lite";
@@ -23,9 +23,13 @@ const SearchInput: React.FC = () => {
 
 const AllIconCard: React.FC<{
   iconCount: number;
-}> = ({ iconCount }) => {
+  onClick: () => void;
+}> = ({ iconCount, onClick }) => {
   return (
-    <button className="flex flex-col p-2 justify-between h-12 border-gray-200 rounded border text-start hover:bg-gray-50">
+    <button
+      onClick={onClick}
+      className="flex flex-col p-2 justify-between h-12 border-gray-200 rounded border text-start hover:bg-gray-50"
+    >
       <div className="font-semibold text-black">All</div>
       <div className="font-medium text-gray-500">{iconCount} Icons</div>
     </button>
@@ -35,9 +39,11 @@ const AllIconCard: React.FC<{
 // WIP
 const IconCollectionCard: React.FC<{
   info: IconifyInfo;
-}> = ({ info }) => {
+  onClick: () => void;
+}> = ({ info, onClick }) => {
   return (
     <button
+      onClick={onClick}
       className="flex p-2 justify-between border-gray-200 rounded border hover:bg-gray-50"
       style={{
         contentVisibility: "auto",
@@ -195,13 +201,57 @@ export const IconsPanel: React.FC = observer(() => {
     iconData.fetchInfos();
   }, []);
 
+  const [prefix, setPrefix] = useState<string | undefined>(undefined);
+
+  if (prefix) {
+    return (
+      <IconCollectionView prefix={prefix} onBack={() => setPrefix(undefined)} />
+    );
+  }
+
   return (
     <div className="flex flex-col min-h-0">
       <SearchInput />
       <div className="flex-1 min-h-0 overflow-scroll px-2 py-2 flex flex-col gap-2">
-        <AllIconCard iconCount={10000} />
-        {[...iconData.infos.values()].map((info) => (
-          <IconCollectionCard info={info} />
+        <AllIconCard
+          iconCount={10000}
+          onClick={() => {
+            // TODO
+          }}
+        />
+        {[...iconData.infos].map(([prefix, info]) => (
+          <IconCollectionCard info={info} onClick={() => setPrefix(prefix)} />
+        ))}
+      </div>
+    </div>
+  );
+});
+
+export const IconCollectionView: React.FC<{
+  prefix: string;
+  onBack: () => void;
+}> = observer(({ prefix, onBack }) => {
+  useEffect(() => {
+    iconData.fetchCollection(prefix);
+  });
+  const info = iconData.infos.get(prefix);
+  if (!info) {
+    return null;
+  }
+  const collection = iconData.collections.get(prefix);
+  const icons = Object.entries(collection?.icons ?? {});
+
+  return (
+    <div className="flex flex-col min-h-0">
+      <div className="flex">
+        <button onClick={onBack}>
+          <Icon icon="material-symbols:chevron-left" className="text-base" />
+        </button>
+        {info.name}
+      </div>
+      <div className="flex-1 min-h-0 overflow-y-scroll flex flex-wrap text-base gap-1">
+        {icons.map(([name, icon]) => (
+          <Icon icon={icon} />
         ))}
       </div>
     </div>
