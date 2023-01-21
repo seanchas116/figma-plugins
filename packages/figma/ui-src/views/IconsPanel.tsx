@@ -16,36 +16,33 @@ const SearchInput: React.FC = () => {
   );
 };
 
-const AllIconCard: React.FC = () => {
+const AllIconCard: React.FC<{
+  iconCount: number;
+}> = ({ iconCount }) => {
   return (
-    <div className="flex relative self-stretch h-12 border-gray-200 rounded-tl rounded-tr rounded-br rounded-bl border-t border-r border-b border-l flex-col items-start">
-      <div className="flex absolute left-2 top-2 w-fit font-['Inter',sans-serif] text-[0.6875rem] font-semibold leading-[1.4545454545454546] text-black text-left flex-col justify-center">
-        All
-      </div>
-      <div className="flex absolute left-2 top-[1.6875rem] w-fit font-['Inter',sans-serif] text-[0.6875rem] font-medium leading-[1.4545454545454546] text-gray-500 text-left flex-col justify-center">
-        10k Icons
-      </div>
+    <div className="flex flex-col p-2 justify-between h-12 border-gray-200 rounded border">
+      <div className="font-semibold text-black">All</div>
+      <div className="font-medium text-gray-500">{iconCount} Icons</div>
     </div>
   );
 };
 
 // WIP
-const IconCollectionCard: React.FC = () => {
+const IconCollectionCard: React.FC<{
+  name: string;
+  author: string;
+  iconCount: number;
+}> = ({ name, author, iconCount }) => {
   return (
-    <div className="flex relative self-stretch h-[4.5rem] border-gray-200 rounded-tl rounded-tr rounded-br rounded-bl border-t border-r border-b border-l flex-col items-start">
-      <div className="flex absolute left-2 top-2 w-fit font-['Inter',sans-serif] text-[0.6875rem] font-semibold leading-[1.4545454545454546] text-black text-left flex-col justify-center">
-        Material Symbols
+    <div className="flex p-2 justify-between border-gray-200 rounded border">
+      <div className="flex flex-col">
+        <div className="font-semibold text-black">{name}</div>
+        <div className="font-medium text-gray-500">{author}</div>
+        <div className="font-medium text-gray-500 mt-auto">
+          {iconCount} Icons
+        </div>
       </div>
-      <div className="flex absolute left-2 top-[1.625rem] w-fit font-['Inter',sans-serif] text-[0.6875rem] font-medium leading-[1.4545454545454546] text-gray-500 text-left flex-col justify-center">
-        Google
-      </div>
-      <div className="flex absolute left-[5.25rem] top-12 w-fit font-['Inter',sans-serif] text-[0.6875rem] font-medium leading-[1.4545454545454546] text-gray-400 text-left flex-col justify-center">
-        MIT License
-      </div>
-      <div className="flex absolute left-2 top-12 w-fit font-['Inter',sans-serif] text-[0.6875rem] font-medium leading-[1.4545454545454546] text-gray-500 text-left flex-col justify-center">
-        8830 Icons
-      </div>
-      <div className="flex absolute left-56 top-2 w-fit flex-col gap-1 items-start">
+      <div className="flex fit flex-col gap-1 items-start">
         <div className="flex relative w-fit gap-1 items-start">
           <div className="flex relative w-4 h-4 items-start">
             <svg
@@ -183,14 +180,17 @@ const IconCollectionCard: React.FC = () => {
   );
 };
 
-export const IconPanel: React.FC = () => {
+export const IconsPanel: React.FC = () => {
   return (
     <div className="flex flex-col">
       <div className="px-4 py-3 flex flex-col gap-3">
         <SearchInput />
-        <AllIconCard />
-        <IconCollectionCard />
-        <IconCollectionCard />
+        <AllIconCard iconCount={10000} />
+        <IconCollectionCard
+          name="Material Symbols"
+          author="Google"
+          iconCount={8872}
+        />
       </div>
     </div>
   );

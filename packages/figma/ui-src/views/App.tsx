@@ -13,7 +13,7 @@ import { observer } from "mobx-react-lite";
 import { useEffect } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { TooltipProvider } from "../components/Tooltip";
-import { IconPanel } from "./IconPanel";
+import { IconsPanel } from "./IconsPanel";
 
 const AppTabs: React.FC = observer(() => {
   return (
@@ -62,7 +62,7 @@ export const App: React.FC = observer(() => {
     <TooltipProvider>
       <div className="text-[11px] leading-4 text-gray-900 accent-blue-500">
         <AppTabs />
-        {state.selectedTab === "icons" && <IconPanel />}
+        {state.selectedTab === "icons" && <IconsPanel />}
         {state.selectedTab === "design" && <DesignPanel />}
         {state.selectedTab === "code" && <CodePanel />}
         <CodeComponentIFrame />
