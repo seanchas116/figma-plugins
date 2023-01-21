@@ -209,12 +209,16 @@ export const IconsPanel: React.FC = observer(() => {
     );
   }
 
+  const totalCount = [...iconData.infos.values()]
+    .map((info) => info.total ?? 0)
+    .reduce((a, b) => a + b, 0);
+
   return (
     <div className="flex flex-col min-h-0">
       <SearchInput />
       <div className="flex-1 min-h-0 overflow-scroll px-2 py-2 flex flex-col gap-2">
         <AllIconCard
-          iconCount={10000}
+          iconCount={totalCount}
           onClick={() => {
             // TODO
           }}
