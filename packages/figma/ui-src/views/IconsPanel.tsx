@@ -335,7 +335,7 @@ const IconCollectionGrid: React.FC<{
   return (
     <div
       ref={ref}
-      className="flex-1 relative min-h-0 overflow-y-scroll text-base"
+      className="flex-1 relative min-h-0 overflow-y-scroll text-base text-gray-700"
     >
       <div
         style={{
