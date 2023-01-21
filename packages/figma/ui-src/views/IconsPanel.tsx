@@ -258,7 +258,7 @@ export const IconCollectionView: React.FC<{
   );
 });
 
-const iconSize = 24;
+const gridSize = 24;
 
 type IconCollectionGridElement = {
   x: number;
@@ -285,20 +285,20 @@ const IconCollectionGrid: React.FC<{
 
     const onResizeOrScroll = () => {
       const width = elem.clientWidth;
-      const cols = Math.floor(width / iconSize);
+      const cols = Math.floor(width / gridSize);
       const rows = Math.ceil(icons.length / cols);
-      const height = rows * iconSize;
+      const height = rows * gridSize;
 
       const scrollTop = elem.scrollTop;
-      const topRow = Math.floor(scrollTop / iconSize);
-      const bottomRow = Math.ceil((scrollTop + elem.clientHeight) / iconSize);
+      const topRow = Math.floor(scrollTop / gridSize);
+      const bottomRow = Math.ceil((scrollTop + elem.clientHeight) / gridSize);
 
       const elements: IconCollectionGridElement[] = [];
 
       for (let row = topRow; row < bottomRow; row++) {
         for (let col = 0; col < cols; col++) {
-          const x = col * iconSize;
-          const y = row * iconSize;
+          const x = col * gridSize;
+          const y = row * gridSize;
           const i = row * cols + col;
           const icon = icons[i];
           if (icon) {
@@ -343,8 +343,8 @@ const IconCollectionGrid: React.FC<{
               left: x + "px",
               top: y + "px",
             }}
-            width={iconSize}
-            height={iconSize}
+            width={gridSize}
+            height={gridSize}
             viewBox={`0 0 ${iconWidth} ${iconHeight}`}
             dangerouslySetInnerHTML={{
               __html: icon.body,
