@@ -283,8 +283,6 @@ const IconCollectionGrid: React.FC<{
       const rows = Math.ceil(icons.length / cols);
       const height = rows * iconSize;
 
-      setHeight(height);
-
       const scrollTop = elem.scrollTop;
       const topRow = Math.floor(scrollTop / iconSize);
       const bottomRow = Math.ceil((scrollTop + elem.clientHeight) / iconSize);
@@ -308,6 +306,7 @@ const IconCollectionGrid: React.FC<{
         }
       }
 
+      setHeight(height);
       setElements(elements);
     };
 
