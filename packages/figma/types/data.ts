@@ -67,5 +67,6 @@ export interface DropMetadata {
 
 export interface IconInfo {
   name: string;
+  source: "iconify";
   props?: { hFlip?: boolean; vFlip?: boolean; rotate?: number };
 }

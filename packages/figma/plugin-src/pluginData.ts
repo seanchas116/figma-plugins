@@ -173,6 +173,7 @@ export function getIconInfo(node: SceneNode): IconInfo | undefined {
     if (iconifyIconData.version === 2) {
       return {
         name: iconifyIconData.name,
+        source: "iconify",
         props: iconifyIconData.props,
       };
     }
