@@ -100,7 +100,7 @@ export const ExportPanel: React.FC = () => {
   };
 
   return (
-    <div className="px-4 py-3 flex flex-col gap-3">
+    <div className="px-4 py-3 flex flex-col gap-3 min-h-0 flex-1 overflow-scroll">
       <div className="flex justify-between items-center">
         <div className="flex items-center">
           <Button onClick={onExport} className="mr-2">
