@@ -4,19 +4,7 @@ import type {
   IconifyJSON,
   ExtendedIconifyIcon,
 } from "@iconify/types";
-
-class QueryTester {
-  constructor(query: string) {
-    this.tokens = query.toLocaleLowerCase().trim().split(/\s+/);
-  }
-
-  readonly tokens: string[];
-
-  test(value: string): boolean {
-    const lowerName = value.toLocaleLowerCase();
-    return this.tokens.every((token) => lowerName.includes(token));
-  }
-}
+import { QueryTester } from "../util/QueryTester";
 
 interface APIv2CollectionResponse {
   // Icon set prefix
