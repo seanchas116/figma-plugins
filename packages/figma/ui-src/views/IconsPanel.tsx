@@ -193,7 +193,7 @@ export const IconCollectionView: React.FC<{
         <a href={info.author.url} target="_blank">
           <Icon
             icon="material-symbols:open-in-new"
-            className="text-xs text-gray-400"
+            className="text-xs text-gray-400 ml-1"
           />
         </a>
         {!!collection?.suffixes.length && (
