@@ -333,11 +333,22 @@ export function svgClassNames(style: Partial<SVGStyle>): string[] {
 }
 
 export function textClassNames(style: Partial<TextStyle>): string[] {
-  return removeInitialClassNames([
-    ...dimensionClassNamesPartial(style),
-    ...textSpanClassNamesPartial(style),
-    ...textClassNamesPartial(style),
-  ]);
+  const classNames = new Set(
+    removeInitialClassNames([
+      ...dimensionClassNamesPartial(style),
+      ...textSpanClassNamesPartial(style),
+      ...textClassNamesPartial(style),
+    ])
+  );
+
+  // optimize classnames
+  classNames.delete("relative");
+  if (style.justifyContent === "flex-start") {
+    classNames.delete("flex");
+    classNames.delete("flex-col");
+    classNames.delete("flex-start");
+  }
+  return [...classNames];
 }
 
 export function instanceClassNames(style: Partial<InstanceStyle>): string[] {
