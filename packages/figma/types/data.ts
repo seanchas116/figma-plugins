@@ -56,10 +56,15 @@ export interface RenderResult {
 
 export interface Target {
   instance?: CodeInstanceInfo;
+  icon?: IconInfo;
   elementIR: Element[];
 }
 
 export interface DropMetadata {
   type: "icon";
+  name: string;
+}
+
+export interface IconInfo {
   name: string;
 }

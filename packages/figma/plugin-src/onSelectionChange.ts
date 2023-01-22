@@ -1,7 +1,7 @@
 import { Target, CodeInstanceInfo } from "../types/data";
 import { rpc } from "./rpc";
 import { getElementIR } from "./codegen/element";
-import { getInstanceInfo } from "./pluginData";
+import { getIconPluginData, getInstanceInfo } from "./pluginData";
 
 export async function onSelectionChange() {
   const selection = figma.currentPage.selection;
@@ -15,6 +15,7 @@ export async function onSelectionChange() {
 
       return {
         instance,
+        icon: getIconPluginData(node),
         elementIR: await getElementIR(node),
       };
     })
