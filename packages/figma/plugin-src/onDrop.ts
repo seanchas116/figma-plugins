@@ -16,6 +16,10 @@ figma.on("drop", (event: DropEvent) => {
         node.appendChild(newNode);
       }
 
+      for (const child of newNode.children) {
+        child.locked = true;
+      }
+
       setIconPluginData(newNode, {
         name: iconDropMetadata.name,
       });
