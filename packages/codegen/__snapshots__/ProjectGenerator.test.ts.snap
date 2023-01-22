@@ -115,11 +115,7 @@ export function Form2(props) {
   return (
     <div {...props} className={\\"Form2 \\" + props.className}>
       <div className=\\"Form2__h1_____\\">Some Form (stretch)</div>
-      <Button
-        showChevron={false}
-        text={\\"OK\\"}
-        className=\\"Form2__Button\\"
-      ></Button>
+      <Button showChevron={false} text={\\"OK\\"} className=\\"Form2__Button\\" />
     </div>
   );
 }
@@ -164,7 +160,7 @@ export function Form(props) {
   return (
     <div {...props} className={\\"Form \\" + props.className}>
       <div className=\\"Form__h1_____\\">Some Form</div>
-      <Button showChevron={true} text={\\"OK\\"} className=\\"Form__Button\\"></Button>
+      <Button showChevron={true} text={\\"OK\\"} className=\\"Form__Button\\" />
     </div>
   );
 }
@@ -229,7 +225,7 @@ export function Main(props) {
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
         tempor incididunt ut labore et dolore magna aliqua.
       </div>
-      <Button showChevron={false} text={\\"OK\\"} className=\\"Main__Button\\"></Button>
+      <Button showChevron={false} text={\\"OK\\"} className=\\"Main__Button\\" />
     </div>
   );
 }
@@ -308,7 +304,7 @@ export function Main(props) {
 export function Frame2(props) {
   return (
     <div {...props} className={\\"Frame2 \\" + props.className}>
-      <Header productName={\\"Hello, world!\\"} className=\\"Frame2__Header\\"></Header>
+      <Header productName={\\"Hello, world!\\"} className=\\"Frame2__Header\\" />
       <div className=\\"Frame2__Frame_1\\">
         <div className=\\"Frame2__Hello__UIMix_\\">Hello, UIMix!</div>
         <div className=\\"Frame2__Lorem_ipsum_dolor_sit_amet__consectetur_adipiscing_elit__sed_do_eiusmod_tempor_incididunt_ut_labore_et_dolore_magna_aliqua_\\">
@@ -321,7 +317,7 @@ export function Frame2(props) {
           label={\\"Press Me\\"}
           backgroundColor={\\"\\"}
           className=\\"Frame2__Button\\"
-        ></Button>
+        />
       </div>
     </div>
   );
@@ -448,7 +444,7 @@ export function Form2(props) {
         showChevron={false}
         text={\\"OK\\"}
         style={{ alignSelf: \\"stretch\\", width: \\"auto\\" }}
-      ></Button>
+      />
     </div>
   );
 }
@@ -492,7 +488,7 @@ export function Form(props) {
       >
         Some Form
       </div>
-      <Button showChevron={true} text={\\"OK\\"} style={{}}></Button>
+      <Button showChevron={true} text={\\"OK\\"} style={{}} />
     </div>
   );
 }
@@ -559,7 +555,7 @@ export function Main(props) {
         showChevron={false}
         text={\\"OK\\"}
         style={{ alignSelf: \\"stretch\\", width: \\"auto\\" }}
-      ></Button>
+      />
     </div>
   );
 }
@@ -593,7 +589,7 @@ export function Main(props) {
           width: \\"auto\\",
           height: \\"fit-content\\",
         }}
-      ></Header>
+      />
       <div
         style={{
           display: \\"flex\\",
@@ -654,7 +650,7 @@ export function Main(props) {
             width: \\"fit-content\\",
             height: \\"fit-content\\",
           }}
-        ></Button>
+        />
       </div>
     </div>
   );
@@ -720,11 +716,7 @@ export function Form2(props) {
       <div className=\\"flex relative w-fit font-['Inter',sans-serif] text-xs text-black text-left flex-col\\">
         Some Form (stretch)
       </div>
-      <Button
-        showChevron={false}
-        text={\\"OK\\"}
-        className=\\"self-stretch w-auto\\"
-      ></Button>
+      <Button showChevron={false} text={\\"OK\\"} className=\\"self-stretch w-auto\\" />
     </div>
   );
 }
@@ -747,7 +739,7 @@ export function Form(props) {
       <div className=\\"flex relative w-fit font-['Inter',sans-serif] text-xs text-black text-left flex-col\\">
         Some Form
       </div>
-      <Button showChevron={true} text={\\"OK\\"} className=\\"\\"></Button>
+      <Button showChevron={true} text={\\"OK\\"} className=\\"\\" />
     </div>
   );
 }
@@ -774,11 +766,7 @@ export function Main(props) {
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
         tempor incididunt ut labore et dolore magna aliqua.
       </div>
-      <Button
-        showChevron={false}
-        text={\\"OK\\"}
-        className=\\"self-stretch w-auto\\"
-      ></Button>
+      <Button showChevron={false} text={\\"OK\\"} className=\\"self-stretch w-auto\\" />
     </div>
   );
 }
@@ -800,7 +788,7 @@ export function Frame2(props) {
       <Header
         productName={\\"Hello, world!\\"}
         className=\\"flex relative flex-none self-stretch w-auto h-fit\\"
-      ></Header>
+      />
       <div className=\\"flex relative self-stretch flex-col gap-6 pt-6 pr-6 pb-6 pl-6 items-start\\">
         <div className=\\"flex relative self-stretch font-['Inter',sans-serif] font-bold text-black text-left flex-col\\">
           Hello, UIMix!
@@ -815,7 +803,7 @@ export function Frame2(props) {
           label={\\"Press Me\\"}
           backgroundColor={\\"\\"}
           className=\\"flex relative flex-none self-auto w-fit h-fit\\"
-        ></Button>
+        />
       </div>
     </div>
   );

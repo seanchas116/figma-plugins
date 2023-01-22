@@ -63,15 +63,18 @@ export class ComponentGenerator {
       ([key, value]) => `${key}={${JSON.stringify(value)}}`
     );
 
-    const openTag =
-      `<${tagName} ` +
-      (isRoot ? "{...props} " : "") +
-      propsStr.join("") +
-      tagExtra.join("") +
-      `>`;
-    const closeTag = `</${tagName}>`;
+    const openTag = [
+      tagName,
+      isRoot ? "{...props} " : "",
+      ...propsStr,
+      ...tagExtra,
+    ].join(" ");
 
-    return [openTag, ...children, closeTag];
+    if (children.length) {
+      return [`<${openTag}>`, ...children, `</${tagName}>`];
+    } else {
+      return [`<${openTag} />`];
+    }
   }
 
   generateElement(
