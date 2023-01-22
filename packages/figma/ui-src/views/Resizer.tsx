@@ -11,7 +11,7 @@ export const Resizer: React.FC = () => {
       width: Math.max(50, Math.floor(e.clientX + 5)),
       height: Math.max(50, Math.floor(e.clientY + 5)),
     };
-    rpc.remote.resizeWindow(size.width, size.height);
+    void rpc.remote.resizeWindow(size.width, size.height);
   };
 
   return (

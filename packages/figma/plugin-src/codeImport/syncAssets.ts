@@ -139,7 +139,7 @@ export async function syncAssets(assets: CodeAssets) {
       autoResize: "none",
     });
 
-    const img = await figma.createImage(new Uint8Array(result.png));
+    const img = figma.createImage(new Uint8Array(result.png));
     component.fills = [
       { type: "IMAGE", imageHash: img.hash, scaleMode: "CROP" },
     ];

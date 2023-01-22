@@ -7,7 +7,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 
 export const SettingsDialog: React.FC = observer(() => {
   const syncAssets = () => {
-    rpc.remote.syncCodeAssets(state.assets);
+    void rpc.remote.syncCodeAssets(state.assets);
   };
 
   return (

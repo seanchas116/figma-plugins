@@ -1,18 +1,19 @@
 import { RPC } from "@uimix/typed-rpc";
 import { action } from "mobx";
-import { CodeComponentInfo, Target } from "../types/data";
+import { Target } from "../types/data";
 import { IPluginToUIRPC, IUIToPluginRPC } from "../types/rpc";
 import { state } from "./state/State";
 
 export const rpcHandler: IPluginToUIRPC = {
-  renderCodeComponent: async (
-    component: CodeComponentInfo,
-    props: Record<string, any>,
-    width?: number | undefined,
-    height?: number | undefined
-  ): Promise<{ png: ArrayBuffer; width: number; height: number }> => {
+  renderCodeComponent: async (): Promise<{
+    png: ArrayBuffer;
+    width: number;
+    height: number;
+    // eslint-disable-next-line @typescript-eslint/require-await
+  }> => {
     throw new Error("Function not implemented.");
   },
+  // eslint-disable-next-line @typescript-eslint/require-await
   onTargetsChange: action(async (targets: Target[]) => {
     state.targets = targets;
   }),

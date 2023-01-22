@@ -8,7 +8,6 @@ import { CodePanel } from "./CodePanel";
 import { SettingsDialog } from "./SettingsDialog";
 import { isTextInput } from "../util/isTextInput";
 import { ExportPanel } from "./ExportPanel";
-import { ResponsivePanel } from "./ResponsivePanel";
 import { observer } from "mobx-react-lite";
 import { useEffect } from "react";
 import * as Dialog from "@radix-ui/react-dialog";

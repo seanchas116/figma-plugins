@@ -96,14 +96,17 @@ export const InstanceEdit: React.FC = observer(() => {
                     });
                   }}
                 >
-                  {prop.type.value.map((value: { value: string }) => {
-                    try {
-                      const rawValue = JSON.parse(value.value);
-                      return <option value={rawValue}>{rawValue}</option>;
-                    } catch {
-                      return null;
-                    }
-                  })}
+                  {
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+                    prop.type.value.map((value: { value: string }) => {
+                      try {
+                        const rawValue = JSON.parse(value.value);
+                        return <option value={rawValue}>{rawValue}</option>;
+                      } catch {
+                        return null;
+                      }
+                    })
+                  }
                 </Select>
               );
             } else if (prop.type.name === "string") {
@@ -186,7 +189,7 @@ export const DesignPanel: React.FC = observer(() => {
         {state.targets.length ? (
           <Button
             onClick={() => {
-              rpc.remote.syncResponsiveContents();
+              void rpc.remote.syncResponsiveContents();
             }}
           >
             <Icon className="text-xs" icon="material-symbols:sync-outline" />
@@ -195,7 +198,7 @@ export const DesignPanel: React.FC = observer(() => {
         ) : (
           <Button
             onClick={() => {
-              rpc.remote.createResponsivePage();
+              void rpc.remote.createResponsivePage();
             }}
           >
             <Icon icon="material-symbols:add" className="text-xs" />

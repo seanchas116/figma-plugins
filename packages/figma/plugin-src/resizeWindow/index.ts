@@ -1,4 +1,4 @@
-figma.clientStorage.getAsync("size").then((size) => {
+void figma.clientStorage.getAsync("size").then((size) => {
   if (size) figma.ui.resize(size.width, size.height);
 });
 

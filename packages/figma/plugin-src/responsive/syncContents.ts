@@ -55,7 +55,7 @@ async function copyContentProperties(
   responsive: SceneNode,
   mode: "contents" | "style"
 ) {
-  copyProperties(
+  await copyProperties(
     original,
     responsive,
     mode === "style"
@@ -110,7 +110,7 @@ async function syncResponsiveNode(
 
     if (responsiveChild) {
       responsiveChildrenToRemove.delete(responsiveChild);
-      copyContentProperties(originalChild, responsiveChild, mode);
+      await copyContentProperties(originalChild, responsiveChild, mode);
     } else {
       responsiveChild = originalChild.clone();
       setResponsiveID(responsiveChild, id);
@@ -131,7 +131,7 @@ async function syncResponsiveNode(
   }
 }
 
-export function syncResponsiveContents() {
+export async function syncResponsiveContents() {
   const selected = figma.currentPage.selection[0];
   if (!selected) {
     return;
@@ -140,12 +140,16 @@ export function syncResponsiveContents() {
   const breakpoint = getBreakpointForNode(selected);
   if (breakpoint) {
     for (const otherBreakpoint of getOtherBreakpoints(breakpoint)) {
-      syncResponsiveNode(breakpoint.node, otherBreakpoint.node, "contents");
+      await syncResponsiveNode(
+        breakpoint.node,
+        otherBreakpoint.node,
+        "contents"
+      );
     }
   }
 }
 
-export function copyStylesToLargerScreens() {
+export async function copyStylesToLargerScreens() {
   const selected = figma.currentPage.selection[0];
   if (!selected) {
     return;
@@ -156,13 +160,17 @@ export function copyStylesToLargerScreens() {
     for (const otherBreakpoint of getOtherBreakpoints(breakpoint)) {
       console.log(otherBreakpoint.minWidth, breakpoint.minWidth);
       if (otherBreakpoint.minWidth > breakpoint.minWidth) {
-        syncResponsiveNode(breakpoint.node, otherBreakpoint.node, "style");
+        await syncResponsiveNode(
+          breakpoint.node,
+          otherBreakpoint.node,
+          "style"
+        );
       }
     }
   }
 }
 
-export function copyStylesToSmallerScreens() {
+export async function copyStylesToSmallerScreens() {
   const selected = figma.currentPage.selection[0];
   if (!selected) {
     return;
@@ -173,7 +181,11 @@ export function copyStylesToSmallerScreens() {
     for (const otherBreakpoint of getOtherBreakpoints(breakpoint)) {
       console.log(otherBreakpoint.minWidth, breakpoint.minWidth);
       if (otherBreakpoint.minWidth < breakpoint.minWidth) {
-        syncResponsiveNode(breakpoint.node, otherBreakpoint.node, "style");
+        await syncResponsiveNode(
+          breakpoint.node,
+          otherBreakpoint.node,
+          "style"
+        );
       }
     }
   }

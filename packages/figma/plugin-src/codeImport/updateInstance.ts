@@ -2,7 +2,9 @@ import { CodeInstanceInfo } from "../../types/data";
 import { setInstanceParams } from "../pluginData";
 import { renderInstance } from "./render";
 
-export function updateInstance(instance?: CodeInstanceInfo | undefined): void {
+export async function updateInstance(
+  instance?: CodeInstanceInfo | undefined
+): Promise<void> {
   const selection = figma.currentPage.selection;
   if (!selection.length) {
     return;
@@ -19,7 +21,7 @@ export function updateInstance(instance?: CodeInstanceInfo | undefined): void {
     node.setRelaunchData({
       edit: "",
     });
-    renderInstance(node);
+    await renderInstance(node);
   } else {
     node.setRelaunchData({});
   }

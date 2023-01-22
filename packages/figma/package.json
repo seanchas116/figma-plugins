@@ -11,6 +11,7 @@
     "build:watch": "concurrently -n widget,iframe \"npm run build:main -- --watch\" \"npm run build:ui -- --watch\"",
     "dev": "concurrently -n tsc,build,vite 'npm:tsc:watch' 'npm:build:watch' 'vite'",
     "format": "prettier --write .",
+    "lint": "eslint plugin-src ui-src",
     "tsc": "npm run tsc:main && npm run tsc:ui",
     "tsc:main": "tsc --noEmit -p plugin-src",
     "tsc:ui": "tsc --noEmit -p ui-src",

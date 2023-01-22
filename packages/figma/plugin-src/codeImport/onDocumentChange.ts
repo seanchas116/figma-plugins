@@ -8,7 +8,10 @@ import {
 import { debounce } from "../util/common";
 import { renderInstance } from "./render";
 
-function handleCodeInstanceResize(node: InstanceNode, change: PropertyChange) {
+async function handleCodeInstanceResize(
+  node: InstanceNode,
+  change: PropertyChange
+) {
   const instance = getInstanceInfo(node);
   if (!instance) {
     return;
@@ -35,13 +38,13 @@ function handleCodeInstanceResize(node: InstanceNode, change: PropertyChange) {
 
     setInstanceParams(node, newInstanceInfo);
 
-    onSelectionChange();
+    void onSelectionChange();
   }
 
-  renderInstance(node);
+  await renderInstance(node);
 }
 
-const onDocumentChange = debounce(async (event: DocumentChangeEvent) => {
+const onDocumentChange = debounce((event: DocumentChangeEvent) => {
   for (const change of event.documentChanges) {
     if (
       change.type === "PROPERTY_CHANGE" &&
@@ -50,7 +53,7 @@ const onDocumentChange = debounce(async (event: DocumentChangeEvent) => {
       (change.properties.includes("width") ||
         change.properties.includes("height"))
     ) {
-      handleCodeInstanceResize(change.node, change);
+      void handleCodeInstanceResize(change.node, change);
     }
   }
 }, 200);

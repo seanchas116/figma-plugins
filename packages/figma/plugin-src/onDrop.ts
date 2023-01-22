@@ -9,7 +9,7 @@ figma.on("drop", (event: DropEvent) => {
   const iconDropMetadata = dropMetadata as DropMetadata;
 
   if (files.length > 0 && files[0].type === "image/svg+xml") {
-    files[0].getTextAsync().then((text) => {
+    void files[0].getTextAsync().then((text) => {
       const newNode = figma.createNodeFromSvg(text);
 
       if (node.type !== "DOCUMENT" && "appendChild" in node) {

@@ -7,7 +7,7 @@ export const ResponsivePanel: React.FC = () => {
     <div className="px-4 py-3 flex flex-col gap-3">
       <Button
         onClick={() => {
-          rpc.remote.createResponsivePage();
+          void rpc.remote.createResponsivePage();
         }}
       >
         Create Responsive Page
@@ -19,7 +19,7 @@ export const ResponsivePanel: React.FC = () => {
       </p>
       <Button
         onClick={() => {
-          rpc.remote.syncResponsiveContents();
+          void rpc.remote.syncResponsiveContents();
         }}
       >
         <Icon className="text-base" icon="material-symbols:sync-outline" />
@@ -30,7 +30,7 @@ export const ResponsivePanel: React.FC = () => {
       <div className="flex gap-2">
         <Button
           onClick={() => {
-            rpc.remote.copyStylesToLargerScreens();
+            void rpc.remote.copyStylesToLargerScreens();
           }}
         >
           <Icon icon="material-symbols:desktop-windows-outline" />
@@ -38,7 +38,7 @@ export const ResponsivePanel: React.FC = () => {
         </Button>
         <Button
           onClick={() => {
-            rpc.remote.copyStylesToSmallerScreens();
+            void rpc.remote.copyStylesToSmallerScreens();
           }}
         >
           <Icon icon="material-symbols:phone-android-outline" />

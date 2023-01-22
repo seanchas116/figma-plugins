@@ -2,7 +2,6 @@ import {
   formatJS,
   GeneratedFile,
   ProjectGenerator,
-  ProjectGeneratorOptions,
   Config,
 } from "@uimix/codegen";
 import { Button } from "../components/Button";
@@ -102,7 +101,7 @@ export const ExportPanel: React.FC = () => {
     const json = await req.json();
     const sandboxID = json.sandbox_id;
 
-    window.open(`https://codesandbox.io/s/${sandboxID}`, "_blank");
+    window.open(`https://codesandbox.io/s/${sandboxID as string}`, "_blank");
   };
 
   return (

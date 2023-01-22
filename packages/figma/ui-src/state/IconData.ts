@@ -1,4 +1,4 @@
-import { makeObservable, observable, runInAction } from "mobx";
+import { observable, runInAction } from "mobx";
 import type {
   IconifyInfo,
   IconifyJSON,

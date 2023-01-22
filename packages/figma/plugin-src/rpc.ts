@@ -16,10 +16,11 @@ import {
 
 class RPCHandler implements IUIToPluginRPC {
   async ready(): Promise<void> {
-    onSelectionChange();
+    await onSelectionChange();
   }
+  // eslint-disable-next-line @typescript-eslint/require-await
   async updateInstance(instance?: CodeInstanceInfo | undefined): Promise<void> {
-    updateInstance(instance);
+    await updateInstance(instance);
   }
   async syncCodeAssets(assets: CodeAssets): Promise<void> {
     await syncAssets(assets);
@@ -33,20 +34,21 @@ class RPCHandler implements IUIToPluginRPC {
     return await getComponentIRs(figma.currentPage);
   }
 
+  // eslint-disable-next-line @typescript-eslint/require-await
   async createResponsivePage(): Promise<void> {
     createResponsivePage();
   }
 
   async syncResponsiveContents(): Promise<void> {
-    syncResponsiveContents();
+    await syncResponsiveContents();
   }
 
   async copyStylesToLargerScreens(): Promise<void> {
-    copyStylesToLargerScreens();
+    await copyStylesToLargerScreens();
   }
 
   async copyStylesToSmallerScreens(): Promise<void> {
-    copyStylesToSmallerScreens();
+    await copyStylesToSmallerScreens();
   }
 
   async getClientStorage(key: string): Promise<any> {

@@ -21,7 +21,7 @@ export async function onSelectionChange() {
     })
   );
 
-  rpc.remote.onTargetsChange(targets);
+  void rpc.remote.onTargetsChange(targets);
 }
 
 figma.on("selectionchange", onSelectionChange);

@@ -43,7 +43,7 @@ class State {
 
   constructor() {
     makeObservable(this);
-    this.saveRestoreState();
+    void this.saveRestoreState();
   }
 
   private async saveRestoreState() {
@@ -56,7 +56,7 @@ class State {
     reaction(
       () => this.toStateData(),
       (data) => {
-        rpc.remote.setClientStorage("state", data);
+        void rpc.remote.setClientStorage("state", data);
       }
     );
   }
@@ -121,7 +121,7 @@ class State {
       },
     ];
 
-    rpc.remote.updateInstance(instance);
+    void rpc.remote.updateInstance(instance);
   }
 
   updateInstanceProps(values: Record<string, any>) {

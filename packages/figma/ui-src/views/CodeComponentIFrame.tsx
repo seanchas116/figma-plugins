@@ -18,6 +18,7 @@ export const CodeComponentIFrame: React.FC<{
     const iframe = ref.current!;
 
     const iframeRPCHandler: CodeComponentIFrameToUIRPC = {
+      // eslint-disable-next-line @typescript-eslint/require-await
       assets: async (assets: CodeAssets) => {
         state.assets = assets;
       },
@@ -36,7 +37,7 @@ export const CodeComponentIFrame: React.FC<{
       return iframeRPC.remote.render(component, props, width, height);
     };
 
-    rpc.remote.ready();
+    void rpc.remote.ready();
   }, []);
 
   return (

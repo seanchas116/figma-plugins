@@ -59,7 +59,7 @@ const IconCollectionCard: React.FC<{
 
   useEffect(() => {
     if (inView) {
-      iconData.fetchIcons(prefix, samples);
+      void iconData.fetchIcons(prefix, samples);
     }
   }, [inView]);
 
@@ -104,7 +104,7 @@ const IconCollectionCard: React.FC<{
 
 export const IconsPanel: React.FC = observer(() => {
   useEffect(() => {
-    iconData.fetchCollectionInfos();
+    void iconData.fetchCollectionInfos();
   }, []);
 
   const prefix = state.iconCollectionPrefix;
@@ -166,7 +166,7 @@ export const IconCollectionView: React.FC<{
   const [collection, setCollection] = useState<IconCollection | undefined>();
 
   useEffect(() => {
-    iconData.fetchCollection(prefix).then((collection) => {
+    void iconData.fetchCollection(prefix).then((collection) => {
       setCollection(collection);
       const suffix = collection.suffixes[0]?.suffix ?? "";
       if (!state.iconSubset || state.iconSubset.prefix !== prefix) {
@@ -277,7 +277,7 @@ const IconCollectionGrid: React.FC<{
         }
       }
 
-      iconData.fetchIcons(
+      void iconData.fetchIcons(
         prefix,
         elements.map((e) => e.name)
       );
