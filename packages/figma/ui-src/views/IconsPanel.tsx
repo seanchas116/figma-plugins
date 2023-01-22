@@ -124,13 +124,15 @@ export const IconsPanel: React.FC = observer(() => {
         onChangeValue={setQuery}
       />
       <div className="flex-1 min-h-0 overflow-scroll px-2 py-2 flex flex-col gap-2">
-        <AllIconCard
-          iconCount={totalCount}
-          onClick={() => {
-            // TODO
-          }}
-        />
-        {[...iconData.collectionInfos].map(([prefix, info]) => (
+        {!query && (
+          <AllIconCard
+            iconCount={totalCount}
+            onClick={() => {
+              // TODO
+            }}
+          />
+        )}
+        {iconData.searchCollectionInfos(query).map(([prefix, info]) => (
           <IconCollectionCard
             key={prefix}
             prefix={prefix}

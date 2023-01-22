@@ -136,6 +136,30 @@ export class IconData {
   readonly collectionInfos = observable.map<string, IconifyInfo>();
   readonly icons = observable.map<string, ExtendedIconifyIcon>();
   readonly collections = observable.map<string, IconCollection>();
+
+  searchCollectionInfos(query: string): [string, IconifyInfo][] {
+    if (query.match(/^\s*$/)) {
+      return Array.from(this.collectionInfos);
+    }
+
+    const tokens = query.toLocaleLowerCase().trim().split(" ");
+    const result: [string, IconifyInfo][] = [];
+
+    for (const token of tokens) {
+      for (const [prefix, info] of this.collectionInfos) {
+        if (info.name?.toLowerCase().includes(token)) {
+          result.push([prefix, info]);
+          continue;
+        }
+        if (prefix.toLowerCase().includes(token)) {
+          result.push([prefix, info]);
+          continue;
+        }
+      }
+    }
+
+    return result;
+  }
 }
 
 export const iconData = new IconData();
