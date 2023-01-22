@@ -1,15 +1,23 @@
 import { generateElements } from "@uimix/codegen";
 import { computed, makeObservable, observable } from "mobx";
-import { CodeAssets, CodeInstanceInfo, Target } from "../../types/data";
+import {
+  CodeAssets,
+  CodeInstanceInfo,
+  StateData,
+  Target,
+} from "../../types/data";
 import { rpc } from "../rpc";
 import { formatJS } from "../util/format";
 
-export const tabs = [
+export const tabs: {
+  id: StateData["selectedTab"];
+  label: string;
+}[] = [
   { id: "icons", label: "Icons" },
   { id: "design", label: "Design" },
   { id: "code", label: "Code" },
   { id: "export", label: "Export" },
-] as const;
+];
 
 class State {
   @observable showsSettings = false;
@@ -21,17 +29,13 @@ class State {
   };
 
   @observable.ref target: Target | undefined = undefined;
-  @observable selectedTab: (typeof tabs)[number]["id"] = "design";
+  @observable selectedTab: StateData["selectedTab"] = "design";
 
-  @observable codeFormat: "json" | "html" = "html";
+  @observable codeFormat: StateData["codeFormat"] = "html";
 
-  @observable iconCollectionPrefix: string | undefined = undefined;
-  @observable.ref iconSubset:
-    | {
-        prefix: string;
-        suffix: string;
-      }
-    | undefined = undefined;
+  @observable iconCollectionPrefix: StateData["iconCollectionPrefix"] =
+    undefined;
+  @observable.ref iconSubset: StateData["iconSubset"] = undefined;
 
   constructor() {
     makeObservable(this);
