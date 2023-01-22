@@ -16,5 +16,5 @@ export function styled<T extends keyof JSX.IntrinsicElements>(
     };
     // @ts-ignore
     return <TagName {...newProps} />;
-  });
+  }) as any;
 }
