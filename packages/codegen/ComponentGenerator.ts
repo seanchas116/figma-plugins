@@ -248,8 +248,10 @@ export function generateElements(
     },
     { style, otherComponents: new Map() }
   );
-  const text = elements
-    .flatMap((elem) => generator.generateElement(elem, { isRoot: false }))
-    .join("");
-  return formatJS(text);
+  return elements
+    .map((elem) => {
+      const code = generator.generateElement(elem, { isRoot: false }).join("");
+      return formatJS(code).replace(/;\s*$/, "");
+    })
+    .join("\n");
 }

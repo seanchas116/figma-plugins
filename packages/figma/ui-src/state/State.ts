@@ -83,10 +83,10 @@ class State {
         type: "json" | "html" | "jsx";
       }
     | undefined {
-    if (!this.targets) {
+    const elementIR = this.targets.flatMap((t) => t.elementIR);
+    if (elementIR.length === 0) {
       return;
     }
-    const elementIR = this.targets.flatMap((t) => t.elementIR);
 
     if (this.codeFormat === "json") {
       return {
