@@ -169,7 +169,7 @@ export const IconCollectionView: React.FC<{
   return (
     <div className="flex-1 flex flex-col min-h-0">
       <div className="flex mx-4 my-3 mb-1 gap-1">
-        <button onClick={onBack}>
+        <button onClick={onBack} className="-m-1 p-1">
           <Icon icon="material-symbols:chevron-left" className="text-base" />
         </button>
         <h1 className="font-semibold">{info.name}</h1>
