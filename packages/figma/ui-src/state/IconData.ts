@@ -39,13 +39,30 @@ interface APIv2CollectionResponse {
   suffixes?: IconifyJSON["suffixes"];
 }
 
+export class IconCollection {
+  constructor(prefix: string, data: APIv2CollectionResponse) {
+    this.prefix = prefix;
+    this.data = data;
+  }
+
+  readonly prefix: string;
+  readonly data: APIv2CollectionResponse;
+
+  get iconNames(): string[] {
+    return [
+      ...(this.data.uncategorized ?? []),
+      ...Object.values(this.data.categories ?? {}).flat(),
+    ];
+  }
+}
+
 export class IconData {
   constructor() {
     //makeObservable(this);
   }
 
-  async fetchInfos() {
-    if (this.infos.size) {
+  async fetchCollectionInfos() {
+    if (this.collectionInfos.size) {
       return;
     }
 
@@ -55,13 +72,13 @@ export class IconData {
 
     runInAction(() => {
       for (const key in collections) {
-        this.infos.set(key, collections[key]);
+        this.collectionInfos.set(key, collections[key]);
       }
     });
   }
 
-  async fetchIconNames(prefix: string) {
-    if (this.iconNames.has(prefix)) {
+  async fetchCollection(prefix: string) {
+    if (this.collections.has(prefix)) {
       return;
     }
 
@@ -70,11 +87,7 @@ export class IconData {
     ).then((res) => res.json());
 
     runInAction(() => {
-      const names = [
-        ...(json.uncategorized ?? []),
-        ...Object.values(json.categories ?? {}).flat(),
-      ];
-      this.iconNames.set(prefix, names);
+      this.collections.set(prefix, new IconCollection(prefix, json));
     });
   }
 
@@ -101,9 +114,9 @@ export class IconData {
     });
   }
 
-  readonly infos = observable.map<string, IconifyInfo>();
+  readonly collectionInfos = observable.map<string, IconifyInfo>();
   readonly icons = observable.map<string, ExtendedIconifyIcon>();
-  readonly iconNames = observable.map<string, string[]>();
+  readonly collections = observable.map<string, IconCollection>();
 }
 
 export const iconData = new IconData();

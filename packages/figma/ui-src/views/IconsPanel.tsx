@@ -1,7 +1,7 @@
 import { Icon } from "@iconify/react";
 import { createRef, useEffect, useState } from "react";
 import { iconData } from "../state/IconData";
-import type { IconifyInfo, ExtendedIconifyIcon } from "@iconify/types";
+import type { IconifyInfo } from "@iconify/types";
 import { observer } from "mobx-react-lite";
 import { useInView } from "react-intersection-observer";
 
@@ -94,7 +94,7 @@ const IconCollectionCard: React.FC<{
 
 export const IconsPanel: React.FC = observer(() => {
   useEffect(() => {
-    iconData.fetchInfos();
+    iconData.fetchCollectionInfos();
   }, []);
 
   const [prefix, setPrefix] = useState<string | undefined>(undefined);
@@ -105,7 +105,7 @@ export const IconsPanel: React.FC = observer(() => {
     );
   }
 
-  const totalCount = [...iconData.infos.values()]
+  const totalCount = [...iconData.collectionInfos.values()]
     .map((info) => info.total ?? 0)
     .reduce((a, b) => a + b, 0);
 
@@ -119,7 +119,7 @@ export const IconsPanel: React.FC = observer(() => {
             // TODO
           }}
         />
-        {[...iconData.infos].map(([prefix, info]) => (
+        {[...iconData.collectionInfos].map(([prefix, info]) => (
           <IconCollectionCard
             key={prefix}
             prefix={prefix}
@@ -137,13 +137,13 @@ export const IconCollectionView: React.FC<{
   onBack: () => void;
 }> = observer(({ prefix, onBack }) => {
   useEffect(() => {
-    iconData.fetchIconNames(prefix);
+    iconData.fetchCollection(prefix);
   });
-  const info = iconData.infos.get(prefix);
+  const info = iconData.collectionInfos.get(prefix);
   if (!info) {
     return null;
   }
-  const names = iconData.iconNames.get(prefix) ?? [];
+  const collection = iconData.collections.get(prefix);
 
   return (
     <div className="flex-1 flex flex-col min-h-0">
@@ -154,7 +154,7 @@ export const IconCollectionView: React.FC<{
         <h1 className="font-semibold">{info.name}</h1>
       </div>
       <SearchInput />
-      <IconCollectionGrid prefix={prefix} names={names} />
+      <IconCollectionGrid prefix={prefix} names={collection?.iconNames ?? []} />
     </div>
   );
 });
