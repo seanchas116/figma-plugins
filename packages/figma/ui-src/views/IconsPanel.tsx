@@ -1,6 +1,6 @@
 import { Icon } from "@iconify/react";
 import { createRef, useEffect, useState } from "react";
-import { iconData } from "../state/IconData";
+import { IconCollection, iconData } from "../state/IconData";
 import type { IconifyInfo } from "@iconify/types";
 import { observer } from "mobx-react-lite";
 import { useInView } from "react-intersection-observer";
@@ -152,15 +152,19 @@ export const IconCollectionView: React.FC<{
 }> = observer(({ prefix, onBack }) => {
   const [query, setQuery] = useState("");
   const [suffix, setSuffix] = useState("");
+  const [collection, setCollection] = useState<IconCollection | undefined>();
 
   useEffect(() => {
-    iconData.fetchCollection(prefix);
-  });
+    iconData.fetchCollection(prefix).then((collection) => {
+      setCollection(collection);
+      setSuffix(collection.suffixes[0]?.suffix ?? "");
+    });
+  }, []);
+
   const info = iconData.collectionInfos.get(prefix);
   if (!info) {
     return null;
   }
-  const collection = iconData.collections.get(prefix);
 
   return (
     <div className="flex-1 flex flex-col min-h-0">

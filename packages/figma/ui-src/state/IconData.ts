@@ -133,18 +133,21 @@ export class IconData {
     });
   }
 
-  async fetchCollection(prefix: string) {
-    if (this.collections.has(prefix)) {
-      return;
+  async fetchCollection(prefix: string): Promise<IconCollection> {
+    const existing = this.collections.get(prefix);
+    if (existing) {
+      return existing;
     }
 
     const json: APIv2CollectionResponse = await fetch(
       `https://api.iconify.design/collection?prefix=${prefix}`
     ).then((res) => res.json());
 
+    const collection = new IconCollection(prefix, json);
     runInAction(() => {
-      this.collections.set(prefix, new IconCollection(prefix, json));
+      this.collections.set(prefix, collection);
     });
+    return collection;
   }
 
   async fetchIcons(prefix: string, names: string[]) {
