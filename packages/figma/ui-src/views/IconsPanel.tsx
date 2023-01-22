@@ -203,11 +203,7 @@ const IconCollectionGrid: React.FC<{
           const i = row * cols + col;
           const name = names[i];
           if (name) {
-            elements.push({
-              x: x + gridPadding + (gridSize - gridIconSize) / 2,
-              y: y + gridPadding + (gridSize - gridIconSize) / 2,
-              name,
-            });
+            elements.push({ x: x + gridPadding, y: y + gridPadding, name });
           }
         }
       }
@@ -245,20 +241,26 @@ const IconCollectionGrid: React.FC<{
           const icon = iconData.icons.get(prefix + ":" + name);
           if (icon) {
             return (
-              <svg
-                key={name}
+              <div
+                className="absolute hover:bg-gray-100 rounded"
                 style={{
-                  position: "absolute",
                   left: x + "px",
                   top: y + "px",
+                  width: gridSize + "px",
+                  height: gridSize + "px",
                 }}
-                width={gridIconSize}
-                height={gridIconSize}
-                viewBox={`0 0 ${icon.width ?? 24} ${icon.width ?? 24}`}
-                dangerouslySetInnerHTML={{
-                  __html: icon.body,
-                }}
-              />
+              >
+                <svg
+                  className="absolute inset-0 m-auto"
+                  key={name}
+                  width={gridIconSize}
+                  height={gridIconSize}
+                  viewBox={`0 0 ${icon.width ?? 24} ${icon.width ?? 24}`}
+                  dangerouslySetInnerHTML={{
+                    __html: icon.body,
+                  }}
+                />
+              </div>
             );
           }
         })}
