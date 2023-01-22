@@ -5,6 +5,19 @@ import type {
   ExtendedIconifyIcon,
 } from "@iconify/types";
 
+class QueryTester {
+  constructor(query: string) {
+    this.tokens = query.toLocaleLowerCase().trim().split(/\s+/);
+  }
+
+  readonly tokens: string[];
+
+  test(value: string): boolean {
+    const lowerName = value.toLocaleLowerCase();
+    return this.tokens.every((token) => lowerName.includes(token));
+  }
+}
+
 interface APIv2CollectionResponse {
   // Icon set prefix
   prefix: string;
@@ -60,21 +73,16 @@ export class IconCollection {
       return this.iconNames;
     }
 
-    const tokens = query.toLocaleLowerCase().trim().split(/\s+/);
-    const matches = (name: string) => {
-      const lowerName = name.toLocaleLowerCase();
-      return tokens.every((token) => lowerName.includes(token));
-    };
-
+    const tester = new QueryTester(query);
     const result = new Set<string>();
 
     for (const name of this.iconNames) {
-      if (matches(name)) {
+      if (tester.test(name)) {
         result.add(name);
       }
     }
     for (const [alias, name] of Object.entries(this.data.aliases ?? {})) {
-      if (matches(alias)) {
+      if (tester.test(alias)) {
         result.add(name);
       }
     }
@@ -150,19 +158,15 @@ export class IconData {
       return Array.from(this.collectionInfos);
     }
 
-    const tokens = query.toLocaleLowerCase().trim().split(/\s+/);
-    const matches = (name: string) => {
-      const lowerName = name.toLocaleLowerCase();
-      return tokens.every((token) => lowerName.includes(token));
-    };
+    const tester = new QueryTester(query);
     const result: [string, IconifyInfo][] = [];
 
     for (const [prefix, info] of this.collectionInfos) {
-      if (info.name && matches(info.name)) {
+      if (info.name && tester.test(info.name)) {
         result.push([prefix, info]);
         continue;
       }
-      if (matches(prefix)) {
+      if (tester.test(prefix)) {
         result.push([prefix, info]);
         continue;
       }
