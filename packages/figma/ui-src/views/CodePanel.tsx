@@ -14,7 +14,7 @@ export const CodePanel: React.FC = observer(() => {
   }
 
   return (
-    <div className="px-4 py-3 flex flex-col gap-3">
+    <div className="px-4 py-3 flex flex-col gap-3 min-h-0 flex-1">
       <div className="flex justify-between items-center">
         <Select
           value={state.codeFormat}
@@ -48,7 +48,7 @@ export const CodePanel: React.FC = observer(() => {
           Copy
         </Button>
       </div>
-      <pre className="bg-gray-900 text-white p-2 rounded text-[10px] leading-tight whitespace-pre-wrap">
+      <pre className="bg-gray-900 text-white p-2 rounded text-[10px] leading-tight whitespace-pre-wrap flex-1 min-h-0 overflow-scroll">
         <SyntaxHighlight content={code.content} type={code.type} />
       </pre>
     </div>
