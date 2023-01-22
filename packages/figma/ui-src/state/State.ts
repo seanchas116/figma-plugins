@@ -1,16 +1,21 @@
 import { generateElements } from "@uimix/codegen";
-import { computed, makeObservable, observable } from "mobx";
-import {
-  CodeAssets,
-  CodeInstanceInfo,
-  StateData,
-  Target,
-} from "../../types/data";
+import { computed, makeObservable, observable, reaction } from "mobx";
+import { CodeAssets, CodeInstanceInfo, Target } from "../../types/data";
 import { rpc } from "../rpc";
 import { formatJS } from "../util/format";
 
+type SelectedTab = "icons" | "design" | "code" | "export";
+type CodeFormat = "json" | "html";
+
+interface StateData {
+  selectedTab?: SelectedTab;
+  codeFormat?: "json" | "html";
+  iconCollectionPrefix?: string;
+  iconSubset?: { prefix: string; suffix: string };
+}
+
 export const tabs: {
-  id: StateData["selectedTab"];
+  id: SelectedTab;
   label: string;
 }[] = [
   { id: "icons", label: "Icons" },
@@ -29,16 +34,43 @@ class State {
   };
 
   @observable.ref target: Target | undefined = undefined;
-  @observable selectedTab: StateData["selectedTab"] = "design";
+  @observable selectedTab: SelectedTab = "design";
 
-  @observable codeFormat: StateData["codeFormat"] = "html";
+  @observable codeFormat: CodeFormat = "html";
 
-  @observable iconCollectionPrefix: StateData["iconCollectionPrefix"] =
-    undefined;
+  @observable iconCollectionPrefix: string | undefined = undefined;
   @observable.ref iconSubset: StateData["iconSubset"] = undefined;
 
   constructor() {
     makeObservable(this);
+    this.restoreState();
+
+    reaction(
+      () => this.toStateData(),
+      (data) => {
+        rpc.remote.setClientStorage("state", data);
+      }
+    );
+  }
+
+  private async restoreState() {
+    const data = await rpc.remote.getClientStorage("state");
+    // TODO: use zod?
+    if (data) {
+      this.selectedTab = data.selectedTab ?? "design";
+      this.codeFormat = data.codeFormat ?? "html";
+      this.iconCollectionPrefix = data.iconCollectionPrefix;
+      this.iconSubset = data.iconSubset;
+    }
+  }
+
+  private toStateData(): StateData {
+    return {
+      selectedTab: this.selectedTab,
+      codeFormat: this.codeFormat,
+      iconCollectionPrefix: this.iconCollectionPrefix,
+      iconSubset: this.iconSubset,
+    };
   }
 
   @computed get code():

@@ -4,7 +4,6 @@ import {
   RenderResult,
   CodeInstanceParams,
   Target,
-  StateData,
 } from "./data";
 import * as IR from "@uimix/element-ir";
 
