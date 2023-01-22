@@ -8,6 +8,7 @@ export const tabs = [
   { id: "icons", label: "Icons" },
   { id: "design", label: "Design" },
   { id: "code", label: "Code" },
+  { id: "export", label: "Export" },
 ] as const;
 
 class State {
