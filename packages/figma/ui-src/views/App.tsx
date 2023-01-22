@@ -65,6 +65,7 @@ export const App: React.FC = observer(() => {
         {state.selectedTab === "icons" && <IconsPanel />}
         {state.selectedTab === "design" && <DesignPanel />}
         {state.selectedTab === "code" && <CodePanel />}
+        {state.selectedTab === "export" && <ExportPanel />}
         <CodeComponentIFrame />
         <Resizer />
       </div>

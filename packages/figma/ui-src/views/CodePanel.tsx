@@ -3,14 +3,14 @@ import { state } from "../state/State";
 import { SyntaxHighlight } from "../components/SyntaxHighlight";
 import { action } from "mobx";
 import { observer } from "mobx-react-lite";
-import { ExportPanel } from "./ExportPanel";
 import { copyTextToClipboard } from "../util/copyTextToClipboard";
 import { Button } from "../components/Button";
 
 export const CodePanel: React.FC = observer(() => {
   const code = state.code;
   if (!code) {
-    return <ExportPanel />;
+    // TODO: show code for text/color styles
+    return null;
   }
 
   return (
