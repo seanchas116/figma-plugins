@@ -61,17 +61,22 @@ export class IconCollection {
     }
 
     const tokens = query.toLocaleLowerCase().trim().split(" ");
-    const result: string[] = [];
+    const result = new Set<string>();
 
     for (const token of tokens) {
       for (const name of this.iconNames) {
         if (name.toLowerCase().includes(token)) {
-          result.push(name);
+          result.add(name);
+        }
+      }
+      for (const [alias, name] of Object.entries(this.data.aliases ?? {})) {
+        if (alias.toLowerCase().includes(token)) {
+          result.add(name);
         }
       }
     }
 
-    return result;
+    return [...result];
   }
 }
 
