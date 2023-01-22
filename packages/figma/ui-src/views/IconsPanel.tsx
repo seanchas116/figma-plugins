@@ -185,11 +185,17 @@ export const IconCollectionView: React.FC<{
 
   return (
     <div className="flex-1 flex flex-col min-h-0">
-      <div className="flex mx-4 my-3 mb-1 gap-1">
+      <div className="flex mx-4 my-3 mb-1 gap-1 items-center">
         <button onClick={onBack} className="-m-1 p-1">
           <Icon icon="material-symbols:chevron-left" className="text-base" />
         </button>
         <h1 className="font-semibold">{info.name}</h1>
+        <a href={info.author.url} target="_blank">
+          <Icon
+            icon="material-symbols:open-in-new"
+            className="text-xs text-gray-400"
+          />
+        </a>
         {!!collection?.suffixes.length && (
           <Select
             className="ml-auto"
