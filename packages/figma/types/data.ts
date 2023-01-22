@@ -58,3 +58,8 @@ export interface Target {
   instance?: CodeInstanceInfo;
   elementIR: Element[];
 }
+
+export interface DropMetadata {
+  type: "icon";
+  name: string;
+}

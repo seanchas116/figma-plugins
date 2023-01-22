@@ -134,3 +134,19 @@ export function getOrGenerateResponsiveID(node: SceneNode): string {
   setResponsiveID(node, newId);
   return newId;
 }
+
+interface IconPluginData {
+  name: string; // Iconify name
+  // TODO: customization (rotation, flip, etc.)
+}
+
+export function setIconPluginData(node: SceneNode, data: IconPluginData) {
+  node.setPluginData("icon", JSON.stringify(data));
+}
+
+export function getIconPluginData(node: SceneNode): IconPluginData | undefined {
+  const data = node.getPluginData("icon");
+  if (data) {
+    return JSON.parse(data) as IconPluginData;
+  }
+}

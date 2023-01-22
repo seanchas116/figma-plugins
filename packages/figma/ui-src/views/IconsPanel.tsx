@@ -5,6 +5,7 @@ import type { IconifyInfo } from "@iconify/types";
 import { observer } from "mobx-react-lite";
 import { useInView } from "react-intersection-observer";
 import { Select } from "../components/Input";
+import { DropMetadata } from "../../types/data";
 
 const SearchInput: React.FC<{
   placeholder: string;
@@ -295,6 +296,11 @@ const IconCollectionGrid: React.FC<{
                 }
               );
 
+              const dropMetadata: DropMetadata = {
+                type: "icon",
+                name: prefix + ":" + name,
+              };
+
               // This will trigger a drop event in Figma that we can register a callback for
               window.parent.postMessage(
                 {
@@ -302,9 +308,7 @@ const IconCollectionGrid: React.FC<{
                     clientX: e.clientX,
                     clientY: e.clientY,
                     files: [file],
-                    dropMetadata: {
-                      iconify: prefix + ":" + name,
-                    },
+                    dropMetadata,
                   },
                 },
                 "*"
