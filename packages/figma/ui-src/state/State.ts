@@ -25,6 +25,14 @@ class State {
 
   @observable codeFormat: "json" | "html" = "html";
 
+  @observable iconCollectionPrefix: string | undefined = undefined;
+  @observable.ref iconSubset:
+    | {
+        prefix: string;
+        suffix: string;
+      }
+    | undefined = undefined;
+
   constructor() {
     makeObservable(this);
   }

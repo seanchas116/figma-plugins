@@ -6,6 +6,8 @@ import { observer } from "mobx-react-lite";
 import { useInView } from "react-intersection-observer";
 import { Select } from "../components/Input";
 import { DropMetadata } from "../../types/data";
+import { state } from "../state/State";
+import { action } from "mobx";
 
 const SearchInput: React.FC<{
   placeholder: string;
@@ -105,12 +107,17 @@ export const IconsPanel: React.FC = observer(() => {
     iconData.fetchCollectionInfos();
   }, []);
 
-  const [prefix, setPrefix] = useState<string | undefined>(undefined);
+  const prefix = state.iconCollectionPrefix;
   const [query, setQuery] = useState("");
 
   if (prefix) {
     return (
-      <IconCollectionView prefix={prefix} onBack={() => setPrefix(undefined)} />
+      <IconCollectionView
+        prefix={prefix}
+        onBack={action(() => {
+          state.iconCollectionPrefix = undefined;
+        })}
+      />
     );
   }
 
@@ -139,7 +146,9 @@ export const IconsPanel: React.FC = observer(() => {
             key={prefix}
             prefix={prefix}
             info={info}
-            onClick={() => setPrefix(prefix)}
+            onClick={action(() => {
+              state.iconCollectionPrefix = prefix;
+            })}
           />
         ))}
       </div>
@@ -151,14 +160,21 @@ export const IconCollectionView: React.FC<{
   prefix: string;
   onBack: () => void;
 }> = observer(({ prefix, onBack }) => {
+  const suffix =
+    state.iconSubset?.prefix === prefix ? state.iconSubset.suffix : "";
   const [query, setQuery] = useState("");
-  const [suffix, setSuffix] = useState("");
   const [collection, setCollection] = useState<IconCollection | undefined>();
 
   useEffect(() => {
     iconData.fetchCollection(prefix).then((collection) => {
       setCollection(collection);
-      setSuffix(collection.suffixes[0]?.suffix ?? "");
+      const suffix = collection.suffixes[0]?.suffix ?? "";
+      if (!state.iconSubset || state.iconSubset.prefix !== prefix) {
+        state.iconSubset = {
+          prefix,
+          suffix,
+        };
+      }
     });
   }, []);
 
@@ -178,7 +194,12 @@ export const IconCollectionView: React.FC<{
           <Select
             className="ml-auto"
             value={suffix}
-            onChange={(e) => setSuffix(e.currentTarget.value)}
+            onChange={action((e) => {
+              state.iconSubset = {
+                prefix,
+                suffix: e.currentTarget.value,
+              };
+            })}
           >
             {collection.suffixes.map(({ suffix, name }) => (
               <option key={suffix} value={suffix}>
