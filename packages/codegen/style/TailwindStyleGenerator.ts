@@ -42,7 +42,7 @@ const initialClassNames = new Set([
   "pl-0",
   "justify-start",
   "font-normal",
-  "text-base",
+  "text-left", // TODO: this will be text-center if the element is a button
   "not-italic",
   "leading-normal",
   "tracking-normal",
@@ -240,14 +240,14 @@ function textSpanClassNamesPartial(
       `font-['${mixin.fontFamily.replace(/\s+/g, "_")}',sans-serif]`
     );
   }
-  if (mixin.fontSize !== undefined) {
-    classNames.push(`text${kw.fontSize(mixin.fontSize)}`);
-  }
   if (mixin.fontWeight !== undefined) {
     classNames.push(`font${kw.fontWeight(mixin.fontWeight)}`);
   }
   if (mixin.fontStyle !== undefined) {
     classNames.push(mixin.fontStyle === "italic" ? "italic" : "not-italic");
+  }
+  if (mixin.fontSize !== undefined) {
+    classNames.push(`text${kw.fontSize(mixin.fontSize)}`);
   }
   if (mixin.lineHeight !== undefined) {
     if (mixin.lineHeight === "normal") {
