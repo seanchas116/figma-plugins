@@ -7,6 +7,7 @@
   "main": "index.js",
   "typings": "index.d.ts",
   "scripts": {
+    "lint": "eslint .",
     "test": "vitest",
     "coverage": "vitest run --coverage"
   },

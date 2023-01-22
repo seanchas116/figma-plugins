@@ -404,8 +404,7 @@ export class TailwindStyleGenerator implements IStyleGenerator {
 
   generate(element: Element, { isRoot }: { isRoot: boolean }): string[] {
     const classNames = this.classNameGenerator.elementClassNames(element);
-
-    let stringified = JSON.stringify(classNames.join(" "));
+    const stringified = JSON.stringify(classNames.join(" "));
 
     if (isRoot) {
       return ["className={twMerge(", stringified, ", props.className)}"];

@@ -2,7 +2,6 @@ import { Element } from "@uimix/element-ir";
 import { ExtendedComponent, GeneratedFile, IStyleGenerator } from "../types";
 import { formatCSS } from "../util/format";
 import { IDGenerator } from "../util/IDGenerator";
-import { generateJSIdentifier, getIncrementalUniqueName } from "../util/name";
 import { stringifyStyle } from "./common";
 import { elementCSS } from "./InlineStyleGenerator";
 

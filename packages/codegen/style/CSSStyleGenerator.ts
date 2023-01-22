@@ -1,6 +1,4 @@
 import { Element } from "@uimix/element-ir";
-import * as CSS from "csstype";
-import { kebabCase } from "lodash-es";
 import { ExtendedComponent, GeneratedFile, IStyleGenerator } from "../types";
 import { formatCSS } from "../util/format";
 import { IDGenerator } from "../util/IDGenerator";

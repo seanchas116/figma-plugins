@@ -13,6 +13,6 @@ export function colorToCSS(color: Color): string {
 
 export function stringifyStyle(css: CSS.Properties): string {
   return Object.entries(css)
-    .map(([key, value]) => `${kebabCase(key)}: ${value}`)
+    .map(([key, value]) => `${kebabCase(key)}: ${value as string}`)
     .join("; ");
 }

@@ -42,7 +42,7 @@ export class ComponentGenerator {
       case "cssModules":
         return new CSSModulesStyleGenerator(this.component);
       default:
-        throw new Error("Unknown style: " + style);
+        throw new Error(`Unknown style: ${style as string}`);
     }
   }
 
@@ -102,7 +102,7 @@ export class ComponentGenerator {
         for (const [name, value] of Object.entries(element.properties)) {
           const def = mainComponent.propertyForName.get(name);
           if (def) {
-            props[def.inCodeName] = value;
+            props[def.inCodeName] = value as string;
           }
         }
         result = this.generateTag(mainComponent.inCodeName, {
