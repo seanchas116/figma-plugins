@@ -48,6 +48,13 @@ class RPCHandler implements IUIToPluginRPC {
   async copyStylesToSmallerScreens(): Promise<void> {
     copyStylesToSmallerScreens();
   }
+
+  async getClientStorage(key: string): Promise<any> {
+    return await figma.clientStorage.getAsync(key);
+  }
+  async setClientStorage(key: string, value: any): Promise<void> {
+    await figma.clientStorage.setAsync(key, value);
+  }
 }
 
 export const rpc = new RPC<IUIToPluginRPC, IPluginToUIRPC>({

@@ -4,6 +4,7 @@ import {
   RenderResult,
   CodeInstanceParams,
   Target,
+  StateData,
 } from "./data";
 import * as IR from "@uimix/element-ir";
 
@@ -17,6 +18,8 @@ export interface IUIToPluginRPC {
   syncResponsiveContents(): Promise<void>;
   copyStylesToLargerScreens(): Promise<void>;
   copyStylesToSmallerScreens(): Promise<void>;
+  getClientStorage(key: string): Promise<any>;
+  setClientStorage(key: string, value: any): Promise<void>;
 }
 
 export interface IPluginToUIRPC {
