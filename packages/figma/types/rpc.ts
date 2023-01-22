@@ -19,6 +19,7 @@ export interface IUIToPluginRPC {
   copyStylesToSmallerScreens(): Promise<void>;
   getClientStorage(key: string): Promise<any>;
   setClientStorage(key: string, value: any): Promise<void>;
+  notify(message: string): Promise<void>;
 }
 
 export interface IPluginToUIRPC {

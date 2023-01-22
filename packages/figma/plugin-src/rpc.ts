@@ -57,6 +57,11 @@ class RPCHandler implements IUIToPluginRPC {
   async setClientStorage(key: string, value: any): Promise<void> {
     await figma.clientStorage.setAsync(key, value);
   }
+
+  // eslint-disable-next-line @typescript-eslint/require-await
+  async notify(message: string): Promise<void> {
+    figma.notify(message);
+  }
 }
 
 export const rpc = new RPC<IUIToPluginRPC, IPluginToUIRPC>({
