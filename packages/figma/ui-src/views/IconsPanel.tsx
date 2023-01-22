@@ -3,6 +3,7 @@ import { createRef, useEffect, useState } from "react";
 import { iconData } from "../state/IconData";
 import type { IconifyInfo, ExtendedIconifyIcon } from "@iconify/types";
 import { observer } from "mobx-react-lite";
+import { useInView } from "react-intersection-observer";
 
 const SearchInput: React.FC = () => {
   return (
@@ -42,15 +43,19 @@ const IconCollectionCard: React.FC<{
   info: IconifyInfo;
   onClick: () => void;
 }> = observer(({ prefix, info, onClick }) => {
+  const { ref, inView } = useInView();
+
   const samples = info.samples?.slice(0, 3) ?? [];
 
   useEffect(() => {
-    console.log("samples", samples);
-    iconData.fetchIcons(prefix, samples);
-  }, []);
+    if (inView) {
+      iconData.fetchIcons(prefix, samples);
+    }
+  }, [inView]);
 
   return (
     <button
+      ref={ref}
       onClick={onClick}
       className="flex p-2 items-center justify-between border-gray-200 rounded border hover:bg-gray-50"
       style={{
