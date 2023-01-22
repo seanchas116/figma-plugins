@@ -30,6 +30,8 @@ figma.on("drop", (event: DropEvent) => {
       newNode.y = event.y;
 
       figma.currentPage.selection = [newNode];
+
+      figma.notify(`Inserted ${iconDropMetadata.name}`);
     });
 
     return false;
