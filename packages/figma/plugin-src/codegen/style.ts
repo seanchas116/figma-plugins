@@ -212,9 +212,9 @@ export function getTextSpanStyleMixin(
   let lineHeight: IR.TextSpanStyleMixin["lineHeight"] = "normal";
   if (node.lineHeight !== figma.mixed) {
     if (node.lineHeight.unit === "PIXELS") {
-      lineHeight = node.lineHeight.value / fontSize;
+      lineHeight = [node.lineHeight.value, "px"];
     } else if (node.lineHeight.unit === "PERCENT") {
-      lineHeight = node.lineHeight.value / 100;
+      lineHeight = [node.lineHeight.value, "%"];
     }
   }
 

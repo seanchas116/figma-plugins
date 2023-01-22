@@ -95,8 +95,8 @@ export class TailwindKeywordResolver {
     ]);
   }
 
-  lineHeight(value: number): string {
-    return this.resolve(this.lineHeightKeywords, [`${value}`]);
+  lineHeightPercent(percent: number): string {
+    return this.resolve(this.lineHeightKeywords, [`${percent / 100}`]);
   }
 
   letterSpacing(value: number): string {

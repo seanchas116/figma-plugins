@@ -270,7 +270,7 @@
     "element": {
       "type": "frame",
       "id": "56:12",
-      "name": "Main",
+      "name": "OldMain",
       "propertyRef": {},
       "style": {
         "position": "absolute",
@@ -314,7 +314,7 @@
             "fontWeight": 700,
             "fontStyle": "normal",
             "fontSize": 16,
-            "lineHeight": 1.5,
+            "lineHeight": [24, "px"],
             "letterSpacing": 0,
             "color": [
               { "type": "solid", "color": { "r": 0, "g": 0, "b": 0, "a": 1 } }
@@ -342,7 +342,7 @@
             "fontWeight": 400,
             "fontStyle": "normal",
             "fontSize": 16,
-            "lineHeight": 1.5,
+            "lineHeight": [24, "px"],
             "letterSpacing": 0,
             "color": [
               { "type": "solid", "color": { "r": 0, "g": 0, "b": 0, "a": 1 } }
@@ -368,14 +368,14 @@
     "element": {
       "type": "frame",
       "id": "56:177",
-      "name": "Frame 2",
+      "name": "Main",
       "propertyRef": {},
       "style": {
         "position": "absolute",
         "display": "flex",
         "x": { "left": -308 },
         "y": { "top": 236 },
-        "width": 569,
+        "width": 480,
         "height": "fit-content",
         "flexGrow": 0,
         "alignSelf": "auto",
@@ -460,7 +460,7 @@
                 "fontWeight": 700,
                 "fontStyle": "normal",
                 "fontSize": 16,
-                "lineHeight": 1.5,
+                "lineHeight": [24, "px"],
                 "letterSpacing": 0,
                 "color": [
                   {
@@ -491,7 +491,7 @@
                 "fontWeight": 400,
                 "fontStyle": "normal",
                 "fontSize": 16,
-                "lineHeight": 1.5,
+                "lineHeight": [24, "px"],
                 "letterSpacing": 0,
                 "color": [
                   {
@@ -642,11 +642,20 @@
                 "display": "flex",
                 "x": { "left": 0 },
                 "y": { "top": 0 },
-                "width": 280,
+                "width": "fit-content",
                 "height": "fit-content",
                 "flexGrow": 0,
                 "alignSelf": "auto"
               }
+            },
+            {
+              "type": "instance",
+              "id": "208:52",
+              "name": "Button",
+              "propertyRef": {},
+              "componentKey": "f8cd1d2431abd0b3cb3c1ecbeb7864c984661906",
+              "properties": { "Show chevron#31:0": false, "Text#1:0": "OK" },
+              "style": { "width": "auto", "alignSelf": "stretch" }
             }
           ]
         }

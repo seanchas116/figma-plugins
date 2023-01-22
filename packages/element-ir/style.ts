@@ -74,7 +74,7 @@ export interface TextSpanStyleMixin {
   fontStyle: "normal" | "italic";
   fontWeight: number;
   fontSize: number;
-  lineHeight: number | "normal";
+  lineHeight: [number, "px"] | [number, "%"] | "normal";
   letterSpacing: number; // em;
   color: Paint[];
 }

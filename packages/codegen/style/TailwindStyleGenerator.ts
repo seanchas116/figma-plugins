@@ -253,8 +253,12 @@ class TailwindClassNameGenerator {
     if (mixin.lineHeight !== undefined) {
       if (mixin.lineHeight === "normal") {
         classNames.push(`leading-normal`);
+      } else if (mixin.lineHeight[1] === "px") {
+        classNames.push(`leading${this.kw.lineHeightPx(mixin.lineHeight[0])}`);
       } else {
-        classNames.push(`leading${this.kw.lineHeight(mixin.lineHeight)}`);
+        classNames.push(
+          `leading${this.kw.lineHeightPercent(mixin.lineHeight[0])}`
+        );
       }
     }
     if (mixin.letterSpacing !== undefined) {

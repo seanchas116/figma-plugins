@@ -194,7 +194,10 @@ function textSpanCSSPartial(
     props.fontStyle = mixin.fontStyle;
   }
   if (mixin.lineHeight !== undefined) {
-    props.lineHeight = mixin.lineHeight;
+    props.lineHeight =
+      typeof mixin.lineHeight === "string"
+        ? mixin.lineHeight
+        : mixin.lineHeight.join("");
   }
   if (mixin.letterSpacing !== undefined) {
     props.letterSpacing = `${mixin.letterSpacing}em`;
