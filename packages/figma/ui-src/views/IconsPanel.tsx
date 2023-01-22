@@ -5,7 +5,10 @@ import type { IconifyInfo } from "@iconify/types";
 import { observer } from "mobx-react-lite";
 import { useInView } from "react-intersection-observer";
 
-const SearchInput: React.FC = () => {
+const SearchInput: React.FC<{
+  value: string;
+  onChangeValue: (value: string) => void;
+}> = ({ value, onChangeValue }) => {
   return (
     <div className="relative h-10 border-b border-gray-200">
       <input
@@ -13,6 +16,8 @@ const SearchInput: React.FC = () => {
         placeholder="Search Collection"
         className="absolute inset-0 px-4 py-3 pl-9 placeholder:text-gray-300 outline-none font-medium text-gray-900"
         autoFocus
+        value={value}
+        onChange={(event) => onChangeValue(event.currentTarget.value)}
       />
       <Icon
         icon="material-symbols:search"
@@ -98,6 +103,7 @@ export const IconsPanel: React.FC = observer(() => {
   }, []);
 
   const [prefix, setPrefix] = useState<string | undefined>(undefined);
+  const [query, setQuery] = useState("");
 
   if (prefix) {
     return (
@@ -111,7 +117,7 @@ export const IconsPanel: React.FC = observer(() => {
 
   return (
     <div className="flex flex-col min-h-0">
-      <SearchInput />
+      <SearchInput value={query} onChangeValue={setQuery} />
       <div className="flex-1 min-h-0 overflow-scroll px-2 py-2 flex flex-col gap-2">
         <AllIconCard
           iconCount={totalCount}
@@ -136,6 +142,8 @@ export const IconCollectionView: React.FC<{
   prefix: string;
   onBack: () => void;
 }> = observer(({ prefix, onBack }) => {
+  const [query, setQuery] = useState("");
+
   useEffect(() => {
     iconData.fetchCollection(prefix);
   });
@@ -153,8 +161,11 @@ export const IconCollectionView: React.FC<{
         </button>
         <h1 className="font-semibold">{info.name}</h1>
       </div>
-      <SearchInput />
-      <IconCollectionGrid prefix={prefix} names={collection?.iconNames ?? []} />
+      <SearchInput value={query} onChangeValue={setQuery} />
+      <IconCollectionGrid
+        prefix={prefix}
+        names={collection?.searchIconNames(query) ?? []}
+      />
     </div>
   );
 });

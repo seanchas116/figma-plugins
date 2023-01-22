@@ -54,6 +54,25 @@ export class IconCollection {
       ...Object.values(this.data.categories ?? {}).flat(),
     ];
   }
+
+  searchIconNames(query: string): string[] {
+    if (query.match(/^\s*$/)) {
+      return this.iconNames;
+    }
+
+    const tokens = query.toLocaleLowerCase().trim().split(" ");
+    const result: string[] = [];
+
+    for (const token of tokens) {
+      for (const name of this.iconNames) {
+        if (name.toLowerCase().includes(token)) {
+          result.push(name);
+        }
+      }
+    }
+
+    return result;
+  }
 }
 
 export class IconData {
