@@ -43,7 +43,15 @@ class State {
 
   constructor() {
     makeObservable(this);
-    this.restoreState();
+    this.saveRestoreState();
+  }
+
+  private async saveRestoreState() {
+    const data = await rpc.remote.getClientStorage("state");
+    // TODO: use zod?
+    if (data) {
+      this.loadStateData(data);
+    }
 
     reaction(
       () => this.toStateData(),
@@ -53,15 +61,11 @@ class State {
     );
   }
 
-  private async restoreState() {
-    const data = await rpc.remote.getClientStorage("state");
-    // TODO: use zod?
-    if (data) {
-      this.selectedTab = data.selectedTab ?? "design";
-      this.codeFormat = data.codeFormat ?? "html";
-      this.iconCollectionPrefix = data.iconCollectionPrefix;
-      this.iconSubset = data.iconSubset;
-    }
+  private loadStateData(data: StateData) {
+    this.selectedTab = data.selectedTab ?? "design";
+    this.codeFormat = data.codeFormat ?? "html";
+    this.iconCollectionPrefix = data.iconCollectionPrefix;
+    this.iconSubset = data.iconSubset;
   }
 
   private toStateData(): StateData {
