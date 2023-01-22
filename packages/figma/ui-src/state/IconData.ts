@@ -60,19 +60,22 @@ export class IconCollection {
       return this.iconNames;
     }
 
-    const tokens = query.toLocaleLowerCase().trim().split(" ");
+    const tokens = query.toLocaleLowerCase().trim().split(/\s+/);
+    const matches = (name: string) => {
+      const lowerName = name.toLocaleLowerCase();
+      return tokens.every((token) => lowerName.includes(token));
+    };
+
     const result = new Set<string>();
 
-    for (const token of tokens) {
-      for (const name of this.iconNames) {
-        if (name.toLowerCase().includes(token)) {
-          result.add(name);
-        }
+    for (const name of this.iconNames) {
+      if (matches(name)) {
+        result.add(name);
       }
-      for (const [alias, name] of Object.entries(this.data.aliases ?? {})) {
-        if (alias.toLowerCase().includes(token)) {
-          result.add(name);
-        }
+    }
+    for (const [alias, name] of Object.entries(this.data.aliases ?? {})) {
+      if (matches(alias)) {
+        result.add(name);
       }
     }
 
@@ -147,19 +150,21 @@ export class IconData {
       return Array.from(this.collectionInfos);
     }
 
-    const tokens = query.toLocaleLowerCase().trim().split(" ");
+    const tokens = query.toLocaleLowerCase().trim().split(/\s+/);
+    const matches = (name: string) => {
+      const lowerName = name.toLocaleLowerCase();
+      return tokens.every((token) => lowerName.includes(token));
+    };
     const result: [string, IconifyInfo][] = [];
 
-    for (const token of tokens) {
-      for (const [prefix, info] of this.collectionInfos) {
-        if (info.name?.toLowerCase().includes(token)) {
-          result.push([prefix, info]);
-          continue;
-        }
-        if (prefix.toLowerCase().includes(token)) {
-          result.push([prefix, info]);
-          continue;
-        }
+    for (const [prefix, info] of this.collectionInfos) {
+      if (info.name && matches(info.name)) {
+        result.push([prefix, info]);
+        continue;
+      }
+      if (matches(prefix)) {
+        result.push([prefix, info]);
+        continue;
       }
     }
 
