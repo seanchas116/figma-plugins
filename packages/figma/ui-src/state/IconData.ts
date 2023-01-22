@@ -44,27 +44,50 @@ export class IconCollection {
   constructor(prefix: string, data: APIv2CollectionResponse) {
     this.prefix = prefix;
     this.data = data;
+
+    const suffixes = Object.keys(data.suffixes ?? { "": "" }).sort(
+      (a, b) => b.length - a.length
+    );
+
+    const allNames = new Set([
+      ...(data.uncategorized ?? []),
+      ...Object.values(data.categories ?? {}).flat(),
+    ]);
+
+    for (const suffix of suffixes) {
+      this.namesForSuffix.set(suffix, []);
+    }
+
+    for (const name of allNames) {
+      for (const suffix of suffixes) {
+        if (name.endsWith(suffix)) {
+          this.namesForSuffix.get(suffix)!.push(name);
+          break;
+        }
+      }
+    }
   }
 
   readonly prefix: string;
   readonly data: APIv2CollectionResponse;
+  readonly namesForSuffix = new Map<string, string[]>();
 
-  get iconNames(): string[] {
-    return [
-      ...(this.data.uncategorized ?? []),
-      ...Object.values(this.data.categories ?? {}).flat(),
-    ];
-  }
+  // get iconNames(): string[] {
+  //   return [
+  //     ...(this.data.uncategorized ?? []),
+  //     ...Object.values(this.data.categories ?? {}).flat(),
+  //   ];
+  // }
 
   searchIconNames(query: string, suffix: string): string[] {
     if (query.match(/^\s*$/)) {
-      return this.iconNames.filter((name) => name.endsWith(suffix));
+      return this.namesForSuffix.get(suffix) ?? [];
     }
 
     const tester = new QueryTester(query);
     const result = new Set<string>();
 
-    for (const name of this.iconNames) {
+    for (const name of this.namesForSuffix.get(suffix) ?? []) {
       if (tester.test(name)) {
         result.add(name);
       }
@@ -140,8 +163,8 @@ export class IconData {
       for (const [key, icon] of Object.entries(json.icons)) {
         this.icons.set(prefix + ":" + key, {
           ...icon,
-          width: json.width ?? 24,
-          height: json.height ?? 24,
+          width: icon.width ?? json.width ?? 24,
+          height: icon.height ?? json.height ?? 24,
         });
       }
     });
