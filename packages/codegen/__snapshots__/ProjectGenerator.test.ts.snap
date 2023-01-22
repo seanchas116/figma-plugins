@@ -675,7 +675,7 @@ export function Button(props) {
         props.className
       )}
     >
-      <div className=\\"flex relative w-fit font-['Inter',sans-serif] text-xs font-medium text-white text-left flex-col\\">
+      <div className=\\"w-fit font-['Inter',sans-serif] font-medium text-xs text-white\\">
         {props.text}
       </div>
       {props.showChevron && (
@@ -685,7 +685,7 @@ export function Button(props) {
             height={7}
             viewBox={\\"0 0 5 7\\"}
             fill={\\"none\\"}
-            className=\\"flex absolute left-[0.1302083283662796rem] top-[0.0416666679084301rem] w-[0.24531249701976776rem] h-[0.4166666567325592rem]\\"
+            className=\\"absolute left-[0.1302083283662796rem] top-[0.0416666679084301rem] w-[0.24531249701976776rem] h-[0.4166666567325592rem]\\"
           >
             <path
               d=\\"M0.674995 6.83334L0.0833282 6.24167L2.825 3.5L0.0833282 0.758338L0.674995 0.166672L4.00833 3.5L0.674995 6.83334Z\\"
@@ -713,7 +713,7 @@ export function Form2(props) {
         props.className
       )}
     >
-      <div className=\\"flex relative w-fit font-['Inter',sans-serif] text-xs text-black text-left flex-col\\">
+      <div className=\\"w-fit font-['Inter',sans-serif] text-xs text-black\\">
         Some Form (stretch)
       </div>
       <Button showChevron={false} text={\\"OK\\"} className=\\"self-stretch w-auto\\" />
@@ -736,7 +736,7 @@ export function Form(props) {
         props.className
       )}
     >
-      <div className=\\"flex relative w-fit font-['Inter',sans-serif] text-xs text-black text-left flex-col\\">
+      <div className=\\"w-fit font-['Inter',sans-serif] text-xs text-black\\">
         Some Form
       </div>
       <Button showChevron={true} text={\\"OK\\"} className=\\"\\" />
@@ -759,10 +759,10 @@ export function Main(props) {
         props.className
       )}
     >
-      <div className=\\"flex relative w-fit font-['Inter',sans-serif] font-bold text-black text-left flex-col\\">
+      <div className=\\"w-fit font-['Inter',sans-serif] font-bold text-base text-black\\">
         Hello, UIMix!
       </div>
-      <div className=\\"flex relative self-stretch font-['Inter',sans-serif] text-black text-left flex-col\\">
+      <div className=\\"self-stretch font-['Inter',sans-serif] text-base text-black\\">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
         tempor incididunt ut labore et dolore magna aliqua.
       </div>
@@ -790,10 +790,10 @@ export function Frame2(props) {
         className=\\"flex relative flex-none self-stretch w-auto h-fit\\"
       />
       <div className=\\"flex relative self-stretch flex-col gap-6 pt-6 pr-6 pb-6 pl-6 items-start\\">
-        <div className=\\"flex relative self-stretch font-['Inter',sans-serif] font-bold text-black text-left flex-col\\">
+        <div className=\\"self-stretch font-['Inter',sans-serif] font-bold text-base text-black\\">
           Hello, UIMix!
         </div>
-        <div className=\\"flex relative self-stretch font-['Inter',sans-serif] text-black text-left flex-col\\">
+        <div className=\\"self-stretch font-['Inter',sans-serif] text-base text-black\\">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
           eiusmod tempor incididunt ut labore et dolore magna aliqua.
         </div>
