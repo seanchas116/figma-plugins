@@ -12,6 +12,7 @@ import { observer } from "mobx-react-lite";
 import { Button } from "../components/Button";
 import { rpc } from "../rpc";
 import { Icon } from "@iconify/react";
+import { MIXED, sameOrMixed } from "../util/Mixed";
 
 const SizingButton = styled(
   "button",
@@ -19,8 +20,8 @@ const SizingButton = styled(
 );
 
 export const InstanceEdit: React.FC = observer(() => {
-  const instance = state.target?.instance;
-  if (!instance) {
+  const instance = sameOrMixed(state.targets.map((t) => t.instance));
+  if (!instance || instance === MIXED) {
     return null;
   }
 
@@ -182,7 +183,7 @@ export const DesignPanel: React.FC = observer(() => {
       </div>
       <div className="px-4 py-3 flex flex-col gap-3 border-b border-gray-200">
         <h2 className="font-semibold">Responsive</h2>
-        {state.target ? (
+        {state.targets.length ? (
           <Button
             onClick={() => {
               rpc.remote.syncResponsiveContents();

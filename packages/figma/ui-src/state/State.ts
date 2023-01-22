@@ -33,7 +33,7 @@ class State {
     textStyles: {},
   };
 
-  @observable.ref target: Target | undefined = undefined;
+  @observable.ref targets: readonly Target[] = [];
   @observable selectedTab: SelectedTab = "design";
 
   @observable codeFormat: CodeFormat = "html";
@@ -83,21 +83,21 @@ class State {
         type: "json" | "html" | "jsx";
       }
     | undefined {
-    if (!this.target) {
+    if (!this.targets) {
       return;
     }
+    const elementIR = this.targets.flatMap((t) => t.elementIR);
 
     if (this.codeFormat === "json") {
       return {
-        content: formatJS(JSON.stringify(this.target?.elementIR)),
+        content: formatJS(JSON.stringify(elementIR)),
         type: "json",
       };
     }
 
     // TODO: other formats
 
-    const elements = this.target?.elementIR ?? [];
-    const code = generateElements(elements, "tailwind");
+    const code = generateElements(elementIR, "tailwind");
 
     return { content: code, type: "jsx" };
   }
@@ -107,23 +107,30 @@ class State {
   }
 
   updateInstance(instance: CodeInstanceInfo) {
-    if (!this.target) {
+    if (this.targets?.length !== 1) {
       return;
     }
 
-    this.target = {
-      ...this.target,
-      instance,
-    };
+    this.targets = [
+      {
+        ...this.targets[0],
+        instance,
+      },
+    ];
 
     rpc.remote.updateInstance(instance);
   }
 
   updateInstanceProps(values: Record<string, any>) {
-    if (!this.target?.instance) {
+    if (this.targets?.length !== 1) {
       return;
     }
-    const instance = this.target.instance;
+    const target = this.targets[0];
+
+    if (!target.instance) {
+      return;
+    }
+    const instance = target.instance;
 
     state.updateInstance({
       ...instance,

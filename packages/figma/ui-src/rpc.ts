@@ -14,7 +14,7 @@ export const rpcHandler: IPluginToUIRPC = {
     throw new Error("Function not implemented.");
   },
   onTargetsChange: action(async (targets: Target[]) => {
-    state.target = targets[0];
+    state.targets = targets;
   }),
 };
 
