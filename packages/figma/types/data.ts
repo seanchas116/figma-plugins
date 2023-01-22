@@ -70,10 +70,3 @@ export interface IconInfo {
   source: "iconify";
   props?: { hFlip?: boolean; vFlip?: boolean; rotate?: number };
 }
-
-export interface StateData {
-  selectedTab?: "icons" | "design" | "code" | "export";
-  codeFormat?: "json" | "html";
-  iconCollectionPrefix?: string;
-  iconSubset?: { prefix: string; suffix: string };
-}
