@@ -38,21 +38,13 @@ export interface SVGElement extends CommonProps {
   type: "svg";
   style: SVGStyle;
   svg: string;
-}
-
-export interface IconElement extends CommonProps {
-  type: "icon";
-
-  // Iconify name + transformations
-  name: string;
-  rotate?: number;
-  hFlip?: boolean;
-  vFlip?: boolean;
-
-  style: SVGStyle;
-
-  // fallback SVG
-  svg: string;
+  icon?: {
+    // Iconify name + transformations
+    name: string;
+    rotate?: number;
+    hFlip?: boolean;
+    vFlip?: boolean;
+  };
 }
 
 export interface InstanceElement extends CommonProps {
@@ -79,6 +71,5 @@ export type Element =
   | TextElement
   | ImageElement
   | SVGElement
-  | IconElement
   | InstanceElement
   | CodeInstanceElement;
