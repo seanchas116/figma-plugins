@@ -14,6 +14,7 @@ module.exports = {
     "@typescript-eslint/no-unsafe-return": "off",
     "@typescript-eslint/restrict-plus-operands": "off",
     "@typescript-eslint/no-misused-promises": "off",
+    "@typescript-eslint/no-empty-interface": "off",
   },
   parser: "@typescript-eslint/parser",
   parserOptions: {
