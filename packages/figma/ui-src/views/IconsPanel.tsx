@@ -190,7 +190,7 @@ export const IconCollectionView: React.FC<{
       />
       <IconCollectionGrid
         prefix={prefix}
-        names={collection?.searchIconNames(query) ?? []}
+        names={collection?.searchIconNames(query, suffix) ?? []}
       />
     </div>
   );

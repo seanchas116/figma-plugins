@@ -56,9 +56,9 @@ export class IconCollection {
     ];
   }
 
-  searchIconNames(query: string): string[] {
+  searchIconNames(query: string, suffix: string): string[] {
     if (query.match(/^\s*$/)) {
-      return this.iconNames;
+      return this.iconNames.filter((name) => name.endsWith(suffix));
     }
 
     const tester = new QueryTester(query);
@@ -75,7 +75,7 @@ export class IconCollection {
       }
     }
 
-    return [...result];
+    return [...result].filter((name) => name.endsWith(suffix));
   }
 
   get suffixes(): {
