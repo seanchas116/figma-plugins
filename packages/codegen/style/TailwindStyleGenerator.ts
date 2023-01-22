@@ -321,15 +321,26 @@ export function frameClassNames(style: Partial<FrameStyle>): string[] {
 }
 
 export function imageClassNames(style: Partial<ImageStyle>): string[] {
-  return removeInitialClassNames([
-    ...dimensionClassNamesPartial(style),
-    ...rectangleClassNamesPartial(style),
-    ...imageClassNamesPartial(style),
-  ]);
+  const classNames = new Set(
+    removeInitialClassNames([
+      ...dimensionClassNamesPartial(style),
+      ...rectangleClassNamesPartial(style),
+      ...imageClassNamesPartial(style),
+    ])
+  );
+  classNames.delete("flex");
+  classNames.delete("relative");
+  return [...classNames];
 }
 
 export function svgClassNames(style: Partial<SVGStyle>): string[] {
-  return removeInitialClassNames([...dimensionClassNamesPartial(style)]);
+  const classNames = new Set(
+    removeInitialClassNames([...dimensionClassNamesPartial(style)])
+  );
+
+  classNames.delete("flex");
+  classNames.delete("relative");
+  return [...classNames];
 }
 
 export function textClassNames(style: Partial<TextStyle>): string[] {
