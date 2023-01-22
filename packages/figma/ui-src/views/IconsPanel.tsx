@@ -4,6 +4,7 @@ import { iconData } from "../state/IconData";
 import type { IconifyInfo } from "@iconify/types";
 import { observer } from "mobx-react-lite";
 import { useInView } from "react-intersection-observer";
+import { Select } from "../components/Input";
 
 const SearchInput: React.FC<{
   placeholder: string;
@@ -15,7 +16,7 @@ const SearchInput: React.FC<{
       <input
         type="text"
         placeholder={placeholder}
-        className="absolute inset-0 px-4 py-3 pl-9 placeholder:text-gray-300 outline-none font-medium text-gray-900"
+        className="absolute inset-0 px-4 py-3 pl-9 bg-transparent placeholder:text-gray-300 outline-none font-medium text-gray-900"
         autoFocus
         value={value}
         onChange={(event) => onChangeValue(event.currentTarget.value)}
@@ -150,6 +151,7 @@ export const IconCollectionView: React.FC<{
   onBack: () => void;
 }> = observer(({ prefix, onBack }) => {
   const [query, setQuery] = useState("");
+  const [suffix, setSuffix] = useState("");
 
   useEffect(() => {
     iconData.fetchCollection(prefix);
@@ -167,6 +169,19 @@ export const IconCollectionView: React.FC<{
           <Icon icon="material-symbols:chevron-left" className="text-base" />
         </button>
         <h1 className="font-semibold">{info.name}</h1>
+        {!!collection?.suffixes.length && (
+          <Select
+            className="ml-auto"
+            value={suffix}
+            onChange={(e) => setSuffix(e.currentTarget.value)}
+          >
+            {collection.suffixes.map(({ suffix, name }) => (
+              <option key={suffix} value={suffix}>
+                {name}
+              </option>
+            ))}
+          </Select>
+        )}
       </div>
       <SearchInput
         placeholder="Search Icons"

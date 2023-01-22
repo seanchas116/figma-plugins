@@ -77,6 +77,16 @@ export class IconCollection {
 
     return [...result];
   }
+
+  get suffixes(): {
+    suffix: string;
+    name: string;
+  }[] {
+    return Object.entries(this.data.suffixes ?? {}).map(([suffix, name]) => ({
+      suffix,
+      name,
+    }));
+  }
 }
 
 export class IconData {
