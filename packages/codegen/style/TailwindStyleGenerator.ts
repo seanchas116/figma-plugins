@@ -13,6 +13,7 @@ import {
   TextStyle,
   TextStyleMixin,
 } from "@uimix/element-ir";
+import { Config } from "../Config";
 import { IStyleGenerator } from "../types";
 import { TailwindKeywordResolver } from "./TailwindKeywordResolver";
 
@@ -231,11 +232,12 @@ function frameClassNamesPartial(mixin: Partial<FrameStyleMixin>): string[] {
 }
 
 function textSpanClassNamesPartial(
-  mixin: Partial<TextSpanStyleMixin>
+  mixin: Partial<TextSpanStyleMixin>,
+  includesFontFamily: boolean
 ): string[] {
   const classNames: string[] = [];
 
-  if (mixin.fontFamily !== undefined) {
+  if (mixin.fontFamily !== undefined && includesFontFamily) {
     classNames.push(
       `font-['${mixin.fontFamily.replace(/\s+/g, "_")}',sans-serif]`
     );
@@ -343,11 +345,14 @@ export function svgClassNames(style: Partial<SVGStyle>): string[] {
   return [...classNames];
 }
 
-export function textClassNames(style: Partial<TextStyle>): string[] {
+export function textClassNames(
+  style: Partial<TextStyle>,
+  includesFontFamily: boolean
+): string[] {
   const classNames = new Set(
     removeInitialClassNames([
       ...dimensionClassNamesPartial(style),
-      ...textSpanClassNamesPartial(style),
+      ...textSpanClassNamesPartial(style, includesFontFamily),
       ...textClassNamesPartial(style),
     ])
   );
@@ -376,7 +381,7 @@ export function codeInstanceClassNames(
   return [...dimensionClassNamesPartial(style)];
 }
 
-function elementClassNames(element: Element): string[] {
+function elementClassNames(element: Element, config: Config): string[] {
   switch (element.type) {
     case "frame":
       return frameClassNames(element.style);
@@ -385,7 +390,7 @@ function elementClassNames(element: Element): string[] {
     case "svg":
       return svgClassNames(element.style);
     case "text":
-      return textClassNames(element.style);
+      return textClassNames(element.style, config.includesFontFamily);
     case "instance":
       return instanceClassNames(element.style);
     case "codeInstance":
@@ -394,8 +399,14 @@ function elementClassNames(element: Element): string[] {
 }
 
 export class TailwindStyleGenerator implements IStyleGenerator {
+  constructor(config: Config) {
+    this.config = config;
+  }
+
+  config: Config;
+
   generate(element: Element, { isRoot }: { isRoot: boolean }): string[] {
-    const classNames = elementClassNames(element);
+    const classNames = elementClassNames(element, this.config);
 
     let stringified = JSON.stringify(classNames.join(" "));
 

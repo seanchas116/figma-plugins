@@ -7,13 +7,20 @@ const components: Component[] = _components as any;
 
 describe("Generator", () => {
   for (const style of ["tailwind", "inline", "css"] as const) {
-    it(`should emit ${style}`, () => {
-      const generator = new ProjectGenerator({
-        components,
-        style,
-      });
+    for (const includesFontFamily of [true, false] as const) {
+      it(`should emit ${style} ${
+        includesFontFamily ? "with" : "without"
+      } font family`, () => {
+        const generator = new ProjectGenerator({
+          components,
+          config: {
+            style: style,
+            includesFontFamily,
+          },
+        });
 
-      expect(generator.generate()).toMatchSnapshot();
-    });
+        expect(generator.generate()).toMatchSnapshot();
+      });
+    }
   }
 });

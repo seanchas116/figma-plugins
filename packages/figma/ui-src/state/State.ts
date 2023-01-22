@@ -97,7 +97,10 @@ class State {
 
     // TODO: other formats
 
-    const code = generateElements(elementIR, "tailwind");
+    const code = generateElements(elementIR, {
+      style: "tailwind",
+      includesFontFamily: false,
+    });
 
     return { content: code, type: "jsx" };
   }

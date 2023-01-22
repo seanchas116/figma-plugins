@@ -3,6 +3,7 @@ import {
   GeneratedFile,
   ProjectGenerator,
   ProjectGeneratorOptions,
+  Config,
 } from "@uimix/codegen";
 import { Button } from "../components/Button";
 import { Select } from "../components/Input";
@@ -40,8 +41,7 @@ async function makeZip(codes: GeneratedFile[]): Promise<string> {
 }
 
 export const ExportPanel: React.FC = () => {
-  const [style, setStyle] =
-    useState<ProjectGeneratorOptions["style"]>("inline");
+  const [style, setStyle] = useState<Config["style"]>("inline");
   const [codes, setCodes] = useState<GeneratedFile[]>([]);
 
   const onExport = async () => {
@@ -50,7 +50,13 @@ export const ExportPanel: React.FC = () => {
     console.info("Generating...");
     console.info(JSON.stringify(components));
 
-    const generator = new ProjectGenerator({ components, style });
+    const generator = new ProjectGenerator({
+      components,
+      config: {
+        style,
+        includesFontFamily: false,
+      },
+    });
     const codes = generator.generate();
 
     setCodes(codes);
@@ -116,7 +122,7 @@ export const ExportPanel: React.FC = () => {
         <Select
           value={style}
           onChange={(e) => {
-            setStyle(e.currentTarget.value as ProjectGeneratorOptions["style"]);
+            setStyle(e.currentTarget.value as Config["style"]);
           }}
         >
           <option value="tailwind">Tailwind</option>

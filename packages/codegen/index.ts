@@ -1,4 +1,5 @@
 export * from "./types";
+export * from "./Config";
 export * from "./style/InlineStyleGenerator";
 export * from "./style/CSSStyleGenerator";
 export * from "./style/CSSModulesStyleGenerator";

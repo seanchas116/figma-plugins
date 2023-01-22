@@ -7,9 +7,10 @@ import { CSSStyleGenerator } from "./style/CSSStyleGenerator";
 import { InlineStyleGenerator } from "./style/InlineStyleGenerator";
 import { IStyleGenerator } from "./types";
 import { TailwindStyleGenerator } from "./style/TailwindStyleGenerator";
+import { Config } from "./Config";
 
 export interface ComponentGeneratorOptions {
-  style: "tailwind" | "inline" | "css" | "cssModules";
+  config: Config;
   otherComponents: Map<string, ExtendedComponent>;
 }
 
@@ -18,22 +19,22 @@ export class ComponentGenerator {
     component: ExtendedComponent,
     options: ComponentGeneratorOptions
   ) {
+    this.config = options.config;
     this.component = component;
     this.otherComponents = options.otherComponents;
-    this.styleGenerator = this.createStyleGenerator(options.style);
+    this.styleGenerator = this.createStyleGenerator(options.config.style);
   }
 
+  readonly config: Config;
   readonly component: ExtendedComponent;
   readonly otherComponents: Map<string, ExtendedComponent>;
   readonly styleGenerator: IStyleGenerator;
   readonly importedComponents = new Set<string>();
 
-  private createStyleGenerator(
-    style: ComponentGeneratorOptions["style"]
-  ): IStyleGenerator {
+  private createStyleGenerator(style: Config["style"]): IStyleGenerator {
     switch (style) {
       case "tailwind":
-        return new TailwindStyleGenerator();
+        return new TailwindStyleGenerator(this.config);
       case "inline":
         return new InlineStyleGenerator();
       case "css":
@@ -234,10 +235,7 @@ export class ComponentGenerator {
   }
 }
 
-export function generateElements(
-  elements: Element[],
-  style: ComponentGeneratorOptions["style"]
-): string {
+export function generateElements(elements: Element[], config: Config): string {
   if (elements.length === 0) {
     return "";
   }
@@ -249,7 +247,7 @@ export function generateElements(
       propertyForName: new Map(),
       inCodeName: "Component",
     },
-    { style, otherComponents: new Map() }
+    { config, otherComponents: new Map() }
   );
   return elements
     .map((elem) => {

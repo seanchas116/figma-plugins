@@ -7,9 +7,10 @@ import {
 } from "./types";
 import { ComponentGenerator } from "./ComponentGenerator";
 import { IDGenerator } from "./util/IDGenerator";
+import { Config } from "./Config";
 
 export interface ProjectGeneratorOptions {
-  style: "tailwind" | "inline" | "css" | "cssModules";
+  config: Config;
   components: Component[];
 }
 
@@ -45,7 +46,7 @@ export class ProjectGenerator {
       }
 
       const componentGenerator = new ComponentGenerator(extendedComponent, {
-        style: options.style,
+        config: options.config,
         otherComponents: this.components,
       });
       this.componentGenerators.push(componentGenerator);
