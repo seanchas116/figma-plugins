@@ -21,6 +21,7 @@ figma.on("drop", (event: DropEvent) => {
       }
 
       setIconPluginData(newNode, {
+        version: 1,
         name: iconDropMetadata.name,
       });
       newNode.name = iconDropMetadata.name;

@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "@iconify/react": "^4.0.1",
+    "@iconify/search-core": "^1.2.0",
     "@radix-ui/react-dialog": "^1.0.2",
     "@radix-ui/react-tooltip": "^1.0.3",
     "@uimix/codegen": "*",

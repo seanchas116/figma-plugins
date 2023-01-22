@@ -1,6 +1,6 @@
 import * as IR from "@uimix/element-ir";
 import { FrameStyle, InstanceStyle } from "@uimix/element-ir";
-import { getInstanceInfo } from "../pluginData";
+import { getIconInfo, getInstanceInfo } from "../pluginData";
 import {
   getDimensionStyleMixin,
   getRectangleStyleMixin,
@@ -53,7 +53,8 @@ export async function getElementIR(
     }
   }
 
-  if (svgLikeNodeChecker.check(node)) {
+  const iconInfo = getIconInfo(node);
+  if (iconInfo || svgLikeNodeChecker.check(node)) {
     try {
       const svg = await node.exportAsync({ format: "SVG" });
       const svgText = String.fromCharCode(...svg);
@@ -67,6 +68,7 @@ export async function getElementIR(
             ...getDimensionStyleMixin(node as FrameNode, positionOffset),
             ...getRectangleStyleMixin(node as FrameNode),
           },
+          icon: iconInfo,
         },
       ];
     } catch (error) {

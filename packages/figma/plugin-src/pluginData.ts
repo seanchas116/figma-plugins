@@ -2,7 +2,10 @@ import {
   CodeComponentInfo,
   CodeInstanceInfo,
   CodeInstanceParams,
+  IconInfo,
 } from "../types/data";
+import type { IconCustomisations } from "@iconify/search-core/lib/misc/customisations";
+import { omit } from "./util/common";
 
 export function setComponentInfo(
   node: ComponentNode,
@@ -135,9 +138,8 @@ export function getOrGenerateResponsiveID(node: SceneNode): string {
   return newId;
 }
 
-interface IconPluginData {
-  name: string; // Iconify name
-  // TODO: customization (rotation, flip, etc.)
+interface IconPluginData extends IconInfo {
+  version: 1;
 }
 
 export function setIconPluginData(node: SceneNode, data: IconPluginData) {
@@ -148,5 +150,31 @@ export function getIconPluginData(node: SceneNode): IconPluginData | undefined {
   const data = node.getPluginData("icon");
   if (data) {
     return JSON.parse(data) as IconPluginData;
+  }
+}
+
+export interface IconifyImportedIconSharedData {
+  version: 2;
+  name: string;
+  props?: Partial<IconCustomisations>;
+}
+
+export function getIconInfo(node: SceneNode): IconInfo | undefined {
+  const iconData = getIconPluginData(node);
+  if (iconData) {
+    return omit(iconData, ["version"]);
+  }
+
+  const iconifyIconDataText = node.getSharedPluginData("iconify", "props");
+  if (iconifyIconDataText) {
+    const iconifyIconData = JSON.parse(
+      iconifyIconDataText
+    ) as IconifyImportedIconSharedData;
+    if (iconifyIconData.version === 2) {
+      return {
+        name: iconifyIconData.name,
+        props: iconifyIconData.props,
+      };
+    }
   }
 }
