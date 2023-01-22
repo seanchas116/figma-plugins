@@ -90,4 +90,4 @@ const rpc = rpcToParentWindow<
   CodeComponentIFrameToUIRPC
 >(new RPCHandler());
 
-rpc.remote.assets(assets);
+void rpc.remote.assets(assets);
