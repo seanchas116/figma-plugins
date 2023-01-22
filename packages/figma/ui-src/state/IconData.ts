@@ -61,7 +61,7 @@ export class IconCollection {
     for (const name of allNames) {
       for (const suffix of suffixes) {
         if (name.endsWith(suffix)) {
-          this.namesForSuffix.get(suffix)!.push(name);
+          this.namesForSuffix.get(suffix)?.push(name);
           break;
         }
       }

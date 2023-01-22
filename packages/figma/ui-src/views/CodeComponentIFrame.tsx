@@ -15,7 +15,10 @@ export const CodeComponentIFrame: React.FC<{
   const ref = createRef<HTMLIFrameElement>();
 
   useEffect(() => {
-    const iframe = ref.current!;
+    const iframe = ref.current;
+    if (!iframe) {
+      return;
+    }
 
     const iframeRPCHandler: CodeComponentIFrameToUIRPC = {
       // eslint-disable-next-line @typescript-eslint/require-await
