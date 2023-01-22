@@ -1,5 +1,5 @@
 import { Icon } from "@iconify/react";
-import { createRef, useEffect, useState } from "react";
+import React, { createRef, useEffect, useState } from "react";
 import { IconCollection, iconData } from "../state/IconData";
 import type { IconifyInfo } from "@iconify/types";
 import { observer } from "mobx-react-lite";
@@ -280,19 +280,50 @@ const IconCollectionGrid: React.FC<{
       >
         {elements.map(({ x, y, name }) => {
           const icon = iconData.icons.get(prefix + ":" + name);
+
           if (icon) {
+            const onDragEnd = (e: React.DragEvent) => {
+              // Don't proceed if the item was dropped inside the plugin window.
+              // @ts-ignore
+              if (e.view.length === 0) return;
+
+              const file = new File(
+                [e.currentTarget.innerHTML],
+                "content.svg",
+                {
+                  type: "image/svg+xml",
+                }
+              );
+
+              // This will trigger a drop event in Figma that we can register a callback for
+              window.parent.postMessage(
+                {
+                  pluginDrop: {
+                    clientX: e.clientX,
+                    clientY: e.clientY,
+                    files: [file],
+                    dropMetadata: {
+                      iconify: prefix + ":" + name,
+                    },
+                  },
+                },
+                "*"
+              );
+            };
+
             return (
               <div
-                className="absolute hover:bg-gray-100 rounded"
+                className="absolute hover:bg-gray-100 rounded flex items-center justify-center"
                 style={{
                   left: x + "px",
                   top: y + "px",
                   width: gridSize + "px",
                   height: gridSize + "px",
                 }}
+                draggable
+                onDragEnd={onDragEnd}
               >
                 <svg
-                  className="absolute inset-0 m-auto"
                   key={name}
                   width={gridIconSize}
                   height={gridIconSize}
