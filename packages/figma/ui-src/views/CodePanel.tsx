@@ -48,7 +48,7 @@ export const CodePanel: React.FC = observer(() => {
           Copy
         </Button>
       </div>
-      <pre className="bg-gray-900 text-white p-2 rounded text-[10px] leading-tight whitespace-pre-wrap flex-1 min-h-0 overflow-scroll">
+      <pre className="bg-gray-900 text-white p-2 rounded text-[10px] leading-tight flex-1 min-h-0 overflow-scroll">
         <SyntaxHighlight content={code.content} type={code.type} />
       </pre>
     </div>

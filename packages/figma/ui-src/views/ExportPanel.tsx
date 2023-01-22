@@ -128,7 +128,7 @@ export const ExportPanel: React.FC = () => {
       {codes.map((code) => (
         <div className="flex flex-col gap-2">
           <h3 className="font-bold">{code.filePath}</h3>
-          <pre className="bg-gray-900 p-3 text-white rounded text-[10px] leading-tight whitespace-pre-wrap">
+          <pre className="bg-gray-900 p-3 text-white rounded text-[10px] leading-tight overflow-scroll">
             <SyntaxHighlight
               content={code.content}
               type={code.filePath.endsWith(".js") ? "jsx" : "css"}
