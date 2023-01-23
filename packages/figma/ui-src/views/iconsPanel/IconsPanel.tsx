@@ -34,7 +34,7 @@ const IconCollectionCard: React.FC<{
 
   useEffect(() => {
     if (inView) {
-      void iconData.fetchIcons(prefix, samples);
+      void iconData.fetchIcons(samples.map((sample) => prefix + ":" + sample));
     }
   }, [inView]);
 

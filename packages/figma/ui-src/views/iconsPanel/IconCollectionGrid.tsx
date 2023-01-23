@@ -52,10 +52,7 @@ export const IconCollectionGrid: React.FC<{
         }
       }
 
-      void iconData.fetchIcons(
-        prefix,
-        elements.map((e) => e.name)
-      );
+      void iconData.fetchIcons(elements.map((e) => prefix + ":" + e.name));
 
       setHeight(height + 2 * gridPadding);
       setElements(elements);

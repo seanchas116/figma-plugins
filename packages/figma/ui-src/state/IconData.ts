@@ -150,25 +150,39 @@ export class IconData {
     return collection;
   }
 
-  async fetchIcons(prefix: string, names: string[]) {
-    const namesToLoad = names.filter(
-      (name) => !this.icons.has(prefix + ":" + name)
-    );
+  async fetchIcons(names: string[]) {
+    const namesToLoad = names.filter((name) => !this.icons.has(name));
     if (namesToLoad.length === 0) {
       return;
     }
 
-    const json: IconifyJSON = await fetch(
-      `https://api.iconify.design/${prefix}.json?icons=${namesToLoad.join(",")}`
-    ).then((res) => res.json());
+    const unprefixedNames = new Map<string, string[]>();
+
+    for (const name of namesToLoad) {
+      const [prefix, iconName] = name.split(":");
+      if (!unprefixedNames.has(prefix)) {
+        unprefixedNames.set(prefix, []);
+      }
+      unprefixedNames.get(prefix)?.push(iconName);
+    }
+
+    const jsons: IconifyJSON[] = await Promise.all(
+      Array.from(unprefixedNames.entries()).map(([prefix, names]) => {
+        return fetch(
+          `https://api.iconify.design/${prefix}.json?icons=${names.join(",")}`
+        ).then((res) => res.json());
+      })
+    );
 
     runInAction(() => {
-      for (const [key, icon] of Object.entries(json.icons)) {
-        this.icons.set(prefix + ":" + key, {
-          ...icon,
-          width: icon.width ?? json.width ?? 24,
-          height: icon.height ?? json.height ?? 24,
-        });
+      for (const json of jsons) {
+        for (const [key, icon] of Object.entries(json.icons)) {
+          this.icons.set(json.prefix + ":" + key, {
+            ...icon,
+            width: icon.width ?? json.width ?? 24,
+            height: icon.height ?? json.height ?? 24,
+          });
+        }
       }
     });
   }
