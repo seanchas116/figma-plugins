@@ -1,12 +1,13 @@
 import { Icon } from "@iconify/react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { IconCollection, iconData } from "../../state/IconData";
 import { observer } from "mobx-react-lite";
 import { Select } from "../../components/Input";
 import { state } from "../../state/State";
-import { action } from "mobx";
+import { action, makeObservable, observable } from "mobx";
 import { IconCollectionGrid } from "./IconCollectionGrid";
 import { SearchInput } from "./SearchInput";
+import { debounce } from "lodash-es";
 
 export const IconCollectionView: React.FC<{
   prefix: string;
@@ -83,18 +84,32 @@ export const IconCollectionView: React.FC<{
   );
 });
 
+class AllIconViewState {
+  constructor() {
+    makeObservable(this);
+  }
+
+  @observable _query = "";
+
+  get query() {
+    return this._query;
+  }
+  set query(value: string) {
+    this._query = value;
+    void this.search();
+  }
+
+  @observable.ref names: string[] = [];
+
+  search = debounce(async () => {
+    this.names = await iconData.searchAllIcon(this.query);
+  }, 200);
+}
+
 export const AllIconView: React.FC<{
   onBack: () => void;
 }> = observer(({ onBack }) => {
-  const [query, setQuery] = useState("");
-  const [names, setNames] = useState<string[]>([]);
-
-  useEffect(() => {
-    void iconData.searchAllIcon(query).then((names) => {
-      console.log(names);
-      setNames(names);
-    });
-  }, [query]);
+  const state = useMemo(() => new AllIconViewState(), []);
 
   return (
     <div className="flex-1 flex flex-col min-h-0">
@@ -106,10 +121,10 @@ export const AllIconView: React.FC<{
       </div>
       <SearchInput
         placeholder="Search Icons"
-        value={query}
-        onChangeValue={setQuery}
+        value={state.query}
+        onChangeValue={(value) => (state.query = value)}
       />
-      <IconCollectionGrid names={names} />
+      <IconCollectionGrid names={state.names} />
     </div>
   );
 });
