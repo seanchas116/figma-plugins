@@ -14,9 +14,8 @@ type IconCollectionGridElement = {
 };
 
 export const IconCollectionGrid: React.FC<{
-  prefix: string;
   names: string[];
-}> = observer(({ prefix, names }) => {
+}> = observer(({ names }) => {
   const ref = createRef<HTMLDivElement>();
 
   const [height, setHeight] = useState(0);
@@ -52,7 +51,7 @@ export const IconCollectionGrid: React.FC<{
         }
       }
 
-      void iconData.fetchIcons(elements.map((e) => prefix + ":" + e.name));
+      void iconData.fetchIcons(elements.map((e) => e.name));
 
       setHeight(height + 2 * gridPadding);
       setElements(elements);
@@ -65,7 +64,7 @@ export const IconCollectionGrid: React.FC<{
       elem.removeEventListener("scroll", onResizeOrScroll);
       window.removeEventListener("resize", onResizeOrScroll);
     };
-  }, [prefix, names]);
+  }, [names]);
 
   return (
     <div
@@ -79,7 +78,7 @@ export const IconCollectionGrid: React.FC<{
         }}
       >
         {elements.map(({ x, y, name }) => {
-          const icon = iconData.icons.get(prefix + ":" + name);
+          const icon = iconData.icons.get(name);
 
           if (icon) {
             const onDragEnd = (e: React.DragEvent) => {
@@ -97,7 +96,7 @@ export const IconCollectionGrid: React.FC<{
 
               const dropMetadata: DropMetadata = {
                 type: "icon",
-                name: prefix + ":" + name,
+                name,
               };
 
               // This will trigger a drop event in Figma that we can register a callback for

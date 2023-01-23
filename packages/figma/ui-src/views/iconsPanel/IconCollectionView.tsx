@@ -73,8 +73,11 @@ export const IconCollectionView: React.FC<{
         onChangeValue={setQuery}
       />
       <IconCollectionGrid
-        prefix={prefix}
-        names={collection?.searchIconNames(query, suffix) ?? []}
+        names={
+          collection
+            ?.searchIconNames(query, suffix)
+            .map((name) => `${prefix}:${name}`) ?? []
+        }
       />
     </div>
   );
