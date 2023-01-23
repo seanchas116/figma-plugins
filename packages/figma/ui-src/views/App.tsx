@@ -12,7 +12,7 @@ import { observer } from "mobx-react-lite";
 import { useEffect } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { TooltipProvider } from "../components/Tooltip";
-import { IconsPanel } from "./IconsPanel";
+import { IconsPanel } from "./iconsPanel/IconsPanel";
 
 const AppTabs: React.FC = observer(() => {
   return (
