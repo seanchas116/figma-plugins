@@ -79,3 +79,29 @@ export const IconCollectionView: React.FC<{
     </div>
   );
 });
+
+export const AllIconView: React.FC<{
+  onBack: () => void;
+}> = observer(({ onBack }) => {
+  const [query, setQuery] = useState("");
+
+  return (
+    <div className="flex-1 flex flex-col min-h-0">
+      <div className="flex mx-4 my-3 mb-1 gap-1 items-center">
+        <button onClick={onBack} className="-m-1 p-1">
+          <Icon icon="material-symbols:chevron-left" className="text-base" />
+        </button>
+        <h1 className="font-semibold">All</h1>
+      </div>
+      <SearchInput
+        placeholder="Search Icons"
+        value={query}
+        onChangeValue={setQuery}
+      />
+      {/* <IconCollectionGrid
+        prefix={prefix}
+        names={collection?.searchIconNames(query, suffix) ?? []}
+      /> */}
+    </div>
+  );
+});

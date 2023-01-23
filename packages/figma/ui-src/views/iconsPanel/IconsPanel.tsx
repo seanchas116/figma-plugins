@@ -6,7 +6,7 @@ import { useInView } from "react-intersection-observer";
 import { state } from "../../state/State";
 import { action } from "mobx";
 import { SearchInput } from "./SearchInput";
-import { IconCollectionView } from "./IconCollectionView";
+import { AllIconView, IconCollectionView } from "./IconCollectionView";
 
 const AllIconCard: React.FC<{
   iconCount: number;
@@ -87,6 +87,16 @@ export const IconsPanel: React.FC = observer(() => {
   const [query, setQuery] = useState("");
 
   if (prefix) {
+    if (prefix === "all") {
+      return (
+        <AllIconView
+          onBack={action(() => {
+            state.iconCollectionPrefix = undefined;
+          })}
+        />
+      );
+    }
+
     return (
       <IconCollectionView
         prefix={prefix}
@@ -113,6 +123,7 @@ export const IconsPanel: React.FC = observer(() => {
           <AllIconCard
             iconCount={totalCount}
             onClick={() => {
+              state.iconCollectionPrefix = "all";
               // TODO
             }}
           />
