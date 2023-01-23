@@ -42,7 +42,7 @@ const AllIconCard: React.FC<{
       className="flex flex-col p-2 justify-between h-12 border-gray-200 rounded border text-start hover:bg-gray-50"
     >
       <div className="font-semibold text-black">All</div>
-      <div className="font-medium text-gray-500">{iconCount} Icons</div>
+      <div className="text-gray-500">{iconCount} Icons</div>
     </button>
   );
 };
@@ -76,9 +76,10 @@ const IconCollectionCard: React.FC<{
     >
       <div className="flex flex-col self-stretch text-start h-[56px]">
         <div className="font-semibold text-black">{info.name}</div>
-        <div className="font-medium text-gray-500">{info.author.name}</div>
-        <div className="font-medium text-gray-500 mt-auto">
-          {info.total} Icons
+        <div className="text-gray-500">{info.author.name}</div>
+        <div className="flex mt-auto">
+          <div className="text-gray-500 w-20">{info.total} Icons</div>
+          <div className="text-gray-500">{info.license.title}</div>
         </div>
       </div>
       <div className="flex gap-1 text-gray-700">
