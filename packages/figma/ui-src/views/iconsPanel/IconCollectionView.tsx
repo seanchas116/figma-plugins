@@ -87,6 +87,14 @@ export const AllIconView: React.FC<{
   onBack: () => void;
 }> = observer(({ onBack }) => {
   const [query, setQuery] = useState("");
+  const [names, setNames] = useState<string[]>([]);
+
+  useEffect(() => {
+    void iconData.searchAllIcon(query).then((names) => {
+      console.log(names);
+      setNames(names);
+    });
+  }, [query]);
 
   return (
     <div className="flex-1 flex flex-col min-h-0">
@@ -101,10 +109,7 @@ export const AllIconView: React.FC<{
         value={query}
         onChangeValue={setQuery}
       />
-      {/* <IconCollectionGrid
-        prefix={prefix}
-        names={collection?.searchIconNames(query, suffix) ?? []}
-      /> */}
+      <IconCollectionGrid names={names} />
     </div>
   );
 });

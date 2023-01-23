@@ -212,6 +212,38 @@ export class IconData {
 
     return result;
   }
+
+  async searchAllIcon(query: string): Promise<string[]> {
+    if (query === "") {
+      return [];
+    }
+
+    const response: APIv2SearchResponse = await (
+      await fetch(`https://api.iconify.design/search?query=${query}&limit=999`)
+    ).json();
+
+    return response.icons;
+  }
 }
 
 export const iconData = new IconData();
+
+export interface APIv2SearchResponse {
+  // List of icons, including prefixes
+  icons: string[];
+
+  // Number of results. If same as `limit`, more results are available
+  total: number;
+
+  // Number of results shown
+  limit: number;
+
+  // Index of first result
+  start: number;
+
+  // Info about icon sets
+  collections: Record<string, IconifyInfo>;
+
+  // Copy of request, values are string
+  //request: Record<keyof APIv2SearchParams, string>;
+}
