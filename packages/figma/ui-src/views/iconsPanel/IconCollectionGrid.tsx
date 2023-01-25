@@ -2,6 +2,7 @@ import React, { createRef, useEffect, useState } from "react";
 import { iconData } from "../../state/IconData";
 import { observer } from "mobx-react-lite";
 import { DropMetadata } from "../../../types/data";
+import { Tooltip } from "../../components/Tooltip";
 
 const gridSize = 40;
 const gridIconSize = 24;
@@ -114,27 +115,29 @@ export const IconCollectionGrid: React.FC<{
             };
 
             return (
-              <div
-                className="absolute hover:bg-gray-100 rounded flex items-center justify-center"
-                style={{
-                  left: x + "px",
-                  top: y + "px",
-                  width: gridSize + "px",
-                  height: gridSize + "px",
-                }}
-                draggable
-                onDragEnd={onDragEnd}
-              >
-                <svg
-                  key={name}
-                  width={gridIconSize}
-                  height={gridIconSize}
-                  viewBox={`0 0 ${icon.width ?? 24} ${icon.width ?? 24}`}
-                  dangerouslySetInnerHTML={{
-                    __html: icon.body,
+              <Tooltip text={name}>
+                <div
+                  className="absolute hover:bg-gray-100 rounded flex items-center justify-center"
+                  style={{
+                    left: x + "px",
+                    top: y + "px",
+                    width: gridSize + "px",
+                    height: gridSize + "px",
                   }}
-                />
-              </div>
+                  draggable
+                  onDragEnd={onDragEnd}
+                >
+                  <svg
+                    key={name}
+                    width={gridIconSize}
+                    height={gridIconSize}
+                    viewBox={`0 0 ${icon.width ?? 24} ${icon.width ?? 24}`}
+                    dangerouslySetInnerHTML={{
+                      __html: icon.body,
+                    }}
+                  />
+                </div>
+              </Tooltip>
             );
           }
         })}
