@@ -20,6 +20,17 @@ export const SearchInput: React.FC<{
         icon="material-symbols:search"
         className="text-base absolute left-4 top-3 text-gray-300"
       />
+      {value !== "" && (
+        <button
+          className="absolute right-0 top-0 p-3"
+          onClick={() => onChangeValue("")}
+        >
+          <Icon
+            icon="material-symbols:close"
+            className="text-base text-gray-300"
+          />
+        </button>
+      )}
     </div>
   );
 };
