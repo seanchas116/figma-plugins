@@ -171,8 +171,6 @@ const breakpoints = [
 ] as const;
 
 export const DesignPanel: React.FC = observer(() => {
-  const targetWidth = sameOrMixed(state.targets.map((t) => t.width));
-
   return (
     <div>
       <div className="px-4 py-3 flex flex-col gap-3 border-b border-gray-200">
@@ -204,61 +202,69 @@ export const DesignPanel: React.FC = observer(() => {
           </div>
         </div>
       </div>
-      <div className="px-4 py-3 flex flex-col gap-3 border-b border-gray-200">
-        <h2 className="font-semibold">Responsive</h2>
-        <div className="flex">
-          {breakpoints.map((size, i) => {
-            if (typeof targetWidth !== "number") {
-              return null;
-            }
-
-            const matches = size.width <= targetWidth;
-
-            let exactIndex = 0;
-            for (const [i, breakpoint] of breakpoints.entries()) {
-              if (breakpoint.width > targetWidth) {
-                break;
-              }
-              exactIndex = i;
-            }
-
-            return (
-              <Tooltip text={`${size.label} - ${size.width}px`}>
-                <button
-                  className={clsx("p-1", {
-                    "bg-gray-100": matches,
-                    "text-gray-300": !matches,
-                    "font-bold text-gray-900": exactIndex === i,
-                    "text-gray-500": exactIndex !== i,
-                  })}
-                >
-                  {size.label}
-                </button>
-              </Tooltip>
-            );
-          })}
-        </div>
-        {/* {state.targets.length ? (
-          <Button
-            onClick={() => {
-              void rpc.remote.syncResponsiveContents();
-            }}
-          >
-            <Icon className="text-xs" icon="material-symbols:sync-outline" />
-            Sync Contents
-          </Button>
-        ) : (
-          <Button
-            onClick={() => {
-              void rpc.remote.createResponsivePage();
-            }}
-          >
-            <Icon icon="material-symbols:add" className="text-xs" />
-            Create Responsive Page
-          </Button>
-        )} */}
-      </div>
+      <ResponsiveSection />
       <InstanceEdit />
+    </div>
+  );
+});
+
+const ResponsiveSection: React.FC = observer(() => {
+  const targetWidth = sameOrMixed(state.targets.map((t) => t.frameWidth));
+
+  return (
+    <div className="px-4 py-3 flex flex-col gap-3 border-b border-gray-200">
+      <h2 className="font-semibold">Responsive</h2>
+      <div className="flex">
+        {breakpoints.map((size, i) => {
+          if (typeof targetWidth !== "number") {
+            return null;
+          }
+
+          const matches = size.width <= targetWidth;
+
+          let exactIndex = 0;
+          for (const [i, breakpoint] of breakpoints.entries()) {
+            if (breakpoint.width > targetWidth) {
+              break;
+            }
+            exactIndex = i;
+          }
+
+          return (
+            <Tooltip text={`${size.label} - ${size.width}px`}>
+              <button
+                className={clsx("p-1", {
+                  "bg-gray-100": matches,
+                  "text-gray-300": !matches,
+                  "font-bold text-gray-900": exactIndex === i,
+                  "text-gray-500": exactIndex !== i,
+                })}
+              >
+                {size.label}
+              </button>
+            </Tooltip>
+          );
+        })}
+      </div>
+      {/* {state.targets.length ? (
+    <Button
+      onClick={() => {
+        void rpc.remote.syncResponsiveContents();
+      }}
+    >
+      <Icon className="text-xs" icon="material-symbols:sync-outline" />
+      Sync Contents
+    </Button>
+  ) : (
+    <Button
+      onClick={() => {
+        void rpc.remote.createResponsivePage();
+      }}
+    >
+      <Icon icon="material-symbols:add" className="text-xs" />
+      Create Responsive Page
+    </Button>
+  )} */}
     </div>
   );
 });

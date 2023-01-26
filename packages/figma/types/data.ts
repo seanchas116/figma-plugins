@@ -57,7 +57,7 @@ export interface RenderResult {
 export interface Target {
   instance?: CodeInstanceInfo;
   icon?: IconInfo;
-  width: number;
+  frameWidth: number;
   elementIR: Element[];
 }
 

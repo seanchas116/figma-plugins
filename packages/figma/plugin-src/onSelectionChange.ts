@@ -3,6 +3,17 @@ import { rpc } from "./rpc";
 import { getElementIR } from "./codegen/element";
 import { getIconPluginData, getInstanceInfo } from "./pluginData";
 
+function getFrameWidth(node: SceneNode): number {
+  const parent = node.parent;
+  if (!parent || parent.type === "DOCUMENT") {
+    return 0;
+  }
+  if (parent.type === "PAGE") {
+    return node.width;
+  }
+  return getFrameWidth(parent);
+}
+
 export async function onSelectionChange() {
   const selection = figma.currentPage.selection;
 
@@ -16,7 +27,7 @@ export async function onSelectionChange() {
       return {
         instance,
         icon: getIconPluginData(node),
-        width: node.width,
+        frameWidth: getFrameWidth(node),
         elementIR: await getElementIR(node),
       };
     })
