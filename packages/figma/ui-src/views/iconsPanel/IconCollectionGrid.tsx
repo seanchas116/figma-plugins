@@ -3,6 +3,7 @@ import { iconData } from "../../state/IconData";
 import { observer } from "mobx-react-lite";
 import { DropMetadata } from "../../../types/data";
 import { Tooltip } from "../../components/Tooltip";
+import { rpc } from "../../rpc";
 
 const gridSize = 40;
 const gridIconSize = 24;
@@ -82,6 +83,13 @@ export const IconCollectionGrid: React.FC<{
           const icon = iconData.icons.get(name);
 
           if (icon) {
+            const onClick = (e: React.MouseEvent) => {
+              void rpc.remote.insertIcon(e.currentTarget.innerHTML, {
+                source: "iconify",
+                name,
+              });
+            };
+
             const onDragEnd = (e: React.DragEvent) => {
               // Don't proceed if the item was dropped inside the plugin window.
               // @ts-ignore
@@ -97,7 +105,10 @@ export const IconCollectionGrid: React.FC<{
 
               const dropMetadata: DropMetadata = {
                 type: "icon",
-                name,
+                icon: {
+                  source: "iconify",
+                  name,
+                },
               };
 
               // This will trigger a drop event in Figma that we can register a callback for
@@ -125,6 +136,7 @@ export const IconCollectionGrid: React.FC<{
                     height: gridSize + "px",
                   }}
                   draggable
+                  onClick={onClick}
                   onDragEnd={onDragEnd}
                 >
                   <svg

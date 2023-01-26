@@ -62,7 +62,7 @@ export interface Target {
 
 export interface DropMetadata {
   type: "icon";
-  name: string;
+  icon: IconInfo;
 }
 
 export interface IconInfo {

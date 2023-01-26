@@ -1,5 +1,5 @@
-import { DropMetadata } from "../types/data";
-import { setIconPluginData } from "./pluginData";
+import { DropMetadata } from "../../types/data";
+import { createNodeFromIcon } from "./insertIcon";
 
 // @ts-ignore
 figma.on("drop", (event: DropEvent) => {
@@ -10,28 +10,17 @@ figma.on("drop", (event: DropEvent) => {
 
   if (files.length > 0 && files[0].type === "image/svg+xml") {
     void files[0].getTextAsync().then((text) => {
-      const newNode = figma.createNodeFromSvg(text);
+      const newNode = createNodeFromIcon(text, iconDropMetadata.icon);
 
       if (node.type !== "DOCUMENT" && "appendChild" in node) {
         node.appendChild(newNode);
       }
-
-      for (const child of newNode.children) {
-        child.locked = true;
-      }
-
-      setIconPluginData(newNode, {
-        version: 1,
-        source: "iconify",
-        name: iconDropMetadata.name,
-      });
-      newNode.name = iconDropMetadata.name;
       newNode.x = event.x;
       newNode.y = event.y;
 
       figma.currentPage.selection = [newNode];
 
-      figma.notify(`Inserted ${iconDropMetadata.name}`);
+      figma.notify(`Inserted ${iconDropMetadata.icon.name}`);
     });
 
     return false;

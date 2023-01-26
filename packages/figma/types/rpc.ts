@@ -4,6 +4,7 @@ import {
   RenderResult,
   CodeInstanceParams,
   Target,
+  IconInfo,
 } from "./data";
 import * as IR from "@uimix/element-ir";
 
@@ -20,6 +21,7 @@ export interface IUIToPluginRPC {
   getClientStorage(key: string): Promise<any>;
   setClientStorage(key: string, value: any): Promise<void>;
   notify(message: string): Promise<void>;
+  insertIcon(svgText: string, icon: IconInfo): Promise<void>;
 }
 
 export interface IPluginToUIRPC {

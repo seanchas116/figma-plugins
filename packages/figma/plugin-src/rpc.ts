@@ -1,4 +1,4 @@
-import { CodeAssets, CodeInstanceInfo } from "../types/data";
+import { CodeAssets, CodeInstanceInfo, IconInfo } from "../types/data";
 import { IPluginToUIRPC, IUIToPluginRPC } from "../types/rpc";
 import { RPC } from "@uimix/typed-rpc";
 import { syncAssets } from "./codeImport/syncAssets";
@@ -13,6 +13,7 @@ import {
   copyStylesToSmallerScreens,
   syncResponsiveContents,
 } from "./responsive/syncContents";
+import { insertIcon } from "./icon/insertIcon";
 
 class RPCHandler implements IUIToPluginRPC {
   async ready(): Promise<void> {
@@ -61,6 +62,11 @@ class RPCHandler implements IUIToPluginRPC {
   // eslint-disable-next-line @typescript-eslint/require-await
   async notify(message: string): Promise<void> {
     figma.notify(message);
+  }
+
+  // eslint-disable-next-line @typescript-eslint/require-await
+  async insertIcon(svgText: string, icon: IconInfo): Promise<void> {
+    insertIcon(svgText, icon);
   }
 }
 
