@@ -179,3 +179,21 @@ export function getIconInfo(node: SceneNode): IconInfo | undefined {
     }
   }
 }
+
+export interface ResponsiveFrameData {}
+
+export function setResponsiveFrameData(
+  node: SceneNode,
+  data: ResponsiveFrameData
+) {
+  node.setPluginData("responsiveFrame", JSON.stringify(data));
+}
+
+export function getResponsiveFrameData(
+  node: SceneNode
+): ResponsiveFrameData | undefined {
+  const data = node.getPluginData("responsiveFrame");
+  if (data) {
+    return JSON.parse(data) as ResponsiveFrameData;
+  }
+}
