@@ -16,6 +16,7 @@ export async function onSelectionChange() {
       return {
         instance,
         icon: getIconPluginData(node),
+        width: node.width,
         elementIR: await getElementIR(node),
       };
     })
@@ -25,3 +26,4 @@ export async function onSelectionChange() {
 }
 
 figma.on("selectionchange", onSelectionChange);
+figma.on("documentchange", onSelectionChange);

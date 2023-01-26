@@ -9,10 +9,9 @@ import { CodeComponentInfo } from "../../types/data";
 import { Input, Select } from "../components/Input";
 import { Tooltip } from "../components/Tooltip";
 import { observer } from "mobx-react-lite";
-import { Button } from "../components/Button";
-import { rpc } from "../rpc";
 import { Icon } from "@iconify/react";
 import { MIXED, sameOrMixed } from "../util/Mixed";
+import clsx from "clsx";
 
 const SizingButton = styled(
   "button",
@@ -152,7 +151,28 @@ export const InstanceEdit: React.FC = observer(() => {
   );
 });
 
+const breakpoints = [
+  {
+    width: 0,
+    label: "SM",
+  },
+  {
+    width: 768,
+    label: "MD",
+  },
+  {
+    width: 1024,
+    label: "LG",
+  },
+  {
+    width: 1280,
+    label: "XL",
+  },
+] as const;
+
 export const DesignPanel: React.FC = observer(() => {
+  const targetWidth = sameOrMixed(state.targets.map((t) => t.width));
+
   return (
     <div>
       <div className="px-4 py-3 flex flex-col gap-3 border-b border-gray-200">
@@ -186,7 +206,37 @@ export const DesignPanel: React.FC = observer(() => {
       </div>
       <div className="px-4 py-3 flex flex-col gap-3 border-b border-gray-200">
         <h2 className="font-semibold">Responsive</h2>
-        {state.targets.length ? (
+        <div className="flex">
+          {breakpoints.map((size, i) => {
+            if (typeof targetWidth !== "number") {
+              return null;
+            }
+
+            const matches = size.width < targetWidth;
+
+            let exactIndex = 0;
+            for (const [i, breakpoint] of breakpoints.entries()) {
+              if (breakpoint.width > targetWidth) {
+                break;
+              }
+              exactIndex = i;
+            }
+
+            return (
+              <button
+                className={clsx("p-1", {
+                  "bg-gray-100": matches,
+                  "text-gray-300": !matches,
+                  "font-bold text-gray-900": exactIndex === i,
+                  "text-gray-500": exactIndex !== i,
+                })}
+              >
+                {size.label}
+              </button>
+            );
+          })}
+        </div>
+        {/* {state.targets.length ? (
           <Button
             onClick={() => {
               void rpc.remote.syncResponsiveContents();
@@ -204,7 +254,7 @@ export const DesignPanel: React.FC = observer(() => {
             <Icon icon="material-symbols:add" className="text-xs" />
             Create Responsive Page
           </Button>
-        )}
+        )} */}
       </div>
       <InstanceEdit />
     </div>
