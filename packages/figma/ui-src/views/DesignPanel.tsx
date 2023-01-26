@@ -212,7 +212,7 @@ export const DesignPanel: React.FC = observer(() => {
               return null;
             }
 
-            const matches = size.width < targetWidth;
+            const matches = size.width <= targetWidth;
 
             let exactIndex = 0;
             for (const [i, breakpoint] of breakpoints.entries()) {
