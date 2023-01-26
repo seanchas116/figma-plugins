@@ -2,6 +2,7 @@ import { getResponsiveArtboardData } from "../pluginData";
 import { getArtboard } from "./getArtboard";
 import {
   getBreakpointIndex,
+  restorePerBreakpointStyles,
   setPerBreakpointStyles,
 } from "./setPerBreakpointStyles";
 
@@ -25,6 +26,24 @@ const onDocumentChange = (event: DocumentChangeEvent) => {
       }
 
       setPerBreakpointStyles(artboard, getBreakpointIndex(artboard.width));
+    }
+
+    // artboard resized
+    if (
+      change.type === "PROPERTY_CHANGE" &&
+      change.properties.includes("width")
+    ) {
+      const node = change.node;
+      if (node.removed) {
+        continue;
+      }
+      const artboardData = getResponsiveArtboardData(node);
+      if (!artboardData) {
+        continue;
+      }
+
+      const breakpointIndex = getBreakpointIndex(node.width);
+      restorePerBreakpointStyles(node, breakpointIndex);
     }
   }
 };

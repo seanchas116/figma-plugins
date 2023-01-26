@@ -57,3 +57,22 @@ export function setPerBreakpointStyles(
     }
   }
 }
+
+export async function restorePerBreakpointStyles(
+  node: SceneNode,
+  breakpointIndex: number
+): Promise<void> {
+  if ("fontSize" in node) {
+    const styleData = getPerBreakpointStylesData(node);
+    if (styleData) {
+      await figma.loadFontAsync(node.fontName as FontName);
+      node.fontSize = styleData[breakpointIndex].fontSize;
+    }
+  }
+
+  if ("children" in node) {
+    for (const child of node.children) {
+      await restorePerBreakpointStyles(child, breakpointIndex);
+    }
+  }
+}
