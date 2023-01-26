@@ -2,7 +2,7 @@ import { Target, CodeInstanceInfo } from "../types/data";
 import { rpc } from "./rpc";
 import { getElementIR } from "./codegen/element";
 import { getIconPluginData, getInstanceInfo } from "./pluginData";
-import { getFrameWidth } from "./responsive2/resizeCurrentFrameWidth";
+import { getResponsiveViewportInfo } from "./responsive2/resizeCurrentFrameWidth";
 
 export async function onSelectionChange() {
   const selection = figma.currentPage.selection;
@@ -17,7 +17,7 @@ export async function onSelectionChange() {
       return {
         instance,
         icon: getIconPluginData(node),
-        frameWidth: getFrameWidth(node),
+        responsiveViewport: getResponsiveViewportInfo(node),
         elementIR: await getElementIR(node),
       };
     })

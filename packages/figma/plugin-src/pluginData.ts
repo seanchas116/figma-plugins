@@ -180,20 +180,20 @@ export function getIconInfo(node: SceneNode): IconInfo | undefined {
   }
 }
 
-export interface ResponsiveFrameData {}
+export interface ResponsiveViewportData {}
 
-export function setResponsiveFrameData(
+export function setResponsiveViewportData(
   node: SceneNode,
-  data: ResponsiveFrameData
+  data: ResponsiveViewportData
 ) {
   node.setPluginData("responsiveFrame", JSON.stringify(data));
 }
 
-export function getResponsiveFrameData(
+export function getResponsiveViewportData(
   node: SceneNode
-): ResponsiveFrameData | undefined {
+): ResponsiveViewportData | undefined {
   const data = node.getPluginData("responsiveFrame");
   if (data) {
-    return JSON.parse(data) as ResponsiveFrameData;
+    return JSON.parse(data) as ResponsiveViewportData;
   }
 }

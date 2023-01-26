@@ -14,7 +14,7 @@ import {
   syncResponsiveContents,
 } from "./responsive/syncContents";
 import { insertIcon } from "./icon/insertIcon";
-import { resizeCurrentFrameWidth } from "./responsive2/resizeCurrentFrameWidth";
+import { resizeCurrentResponsiveViewportWidth } from "./responsive2/resizeCurrentFrameWidth";
 
 class RPCHandler implements IUIToPluginRPC {
   async ready(): Promise<void> {
@@ -72,7 +72,7 @@ class RPCHandler implements IUIToPluginRPC {
 
   // eslint-disable-next-line @typescript-eslint/require-await
   async resizeCurrentFrameWidth(width: number): Promise<void> {
-    resizeCurrentFrameWidth(width);
+    resizeCurrentResponsiveViewportWidth(width);
   }
 }
 

@@ -214,7 +214,9 @@ export const DesignPanel: React.FC = observer(() => {
 });
 
 const ResponsiveSection: React.FC = observer(() => {
-  const targetWidth = sameOrMixed(state.targets.map((t) => t.frameWidth));
+  const targetWidth = sameOrMixed(
+    state.targets.map((t) => t.responsiveViewport?.width)
+  );
 
   return (
     <div className="px-4 py-3 flex flex-col gap-3 border-b border-gray-200">

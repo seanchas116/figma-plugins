@@ -1,17 +1,17 @@
-import { setResponsiveFrameData } from "../pluginData";
-import { getFrameForNode } from "./resizeCurrentFrameWidth";
+import { setResponsiveViewportData } from "../pluginData";
+import { getTopLevelNode } from "./resizeCurrentFrameWidth";
 
-export function makeFrameResponsive() {
+export function makeTopLevelNodeResponsive() {
   if (figma.currentPage.selection.length === 0) {
     return;
   }
 
-  const frameNode = getFrameForNode(figma.currentPage.selection[0]);
-  if (!frameNode) {
+  const topLevelNode = getTopLevelNode(figma.currentPage.selection[0]);
+  if (!topLevelNode) {
     return;
   }
 
-  setResponsiveFrameData(frameNode, {});
+  setResponsiveViewportData(topLevelNode, {});
 
   figma.commitUndo();
 }
