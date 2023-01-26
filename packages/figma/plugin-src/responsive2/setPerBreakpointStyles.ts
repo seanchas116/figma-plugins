@@ -39,7 +39,6 @@ export function setPerBreakpointStyles(
 ) {
   if ("fontSize" in node && node.fontSize !== figma.mixed) {
     const fontSize = node.fontSize;
-    void figma.loadFontAsync(node.fontName as FontName);
 
     const styleData = getPerBreakpointStylesData(node) ?? [
       { fontSize },
