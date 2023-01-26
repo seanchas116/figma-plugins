@@ -176,11 +176,16 @@ export class IconData {
 
     runInAction(() => {
       for (const json of jsons) {
+        let height = this.collectionInfos.get(json.prefix)?.height;
+        if (!(typeof height === "number")) {
+          height = 24;
+        }
+
         for (const [key, icon] of Object.entries(json.icons)) {
           this.icons.set(json.prefix + ":" + key, {
             ...icon,
-            width: icon.width ?? json.width ?? 24,
-            height: icon.height ?? json.height ?? 24,
+            width: icon.width ?? json.width ?? height,
+            height: icon.height ?? json.height ?? height,
           });
         }
       }
