@@ -10,8 +10,9 @@ type CodeFormat = "json" | "html";
 interface StateData {
   selectedTab?: SelectedTab;
   codeFormat?: "json" | "html";
-  iconCollectionPrefix?: string;
+  iconPrefix?: string;
   iconSubset?: { prefix: string; suffix: string };
+  starredIconPrefixes?: string[];
 }
 
 export const tabs: {
@@ -38,7 +39,7 @@ class State {
 
   @observable codeFormat: CodeFormat = "html";
 
-  @observable iconCollectionPrefix: string | undefined = undefined;
+  @observable iconPrefix: string | undefined = undefined;
   @observable.ref iconSubset: StateData["iconSubset"] = undefined;
   readonly starredIconPrefixes = observable.set<string>();
 
@@ -65,16 +66,18 @@ class State {
   private loadStateData(data: StateData) {
     this.selectedTab = data.selectedTab ?? "design";
     this.codeFormat = data.codeFormat ?? "html";
-    this.iconCollectionPrefix = data.iconCollectionPrefix;
+    this.iconPrefix = data.iconPrefix;
     this.iconSubset = data.iconSubset;
+    this.starredIconPrefixes.replace(data.starredIconPrefixes ?? []);
   }
 
   private toStateData(): StateData {
     return {
       selectedTab: this.selectedTab,
       codeFormat: this.codeFormat,
-      iconCollectionPrefix: this.iconCollectionPrefix,
+      iconPrefix: this.iconPrefix,
       iconSubset: this.iconSubset,
+      starredIconPrefixes: Array.from(this.starredIconPrefixes),
     };
   }
 

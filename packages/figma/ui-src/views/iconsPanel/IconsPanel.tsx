@@ -97,7 +97,7 @@ export const IconsPanel: React.FC = observer(() => {
     void iconData.fetchCollectionInfos();
   }, []);
 
-  const prefix = state.iconCollectionPrefix;
+  const prefix = state.iconPrefix;
   const [query, setQuery] = useState("");
 
   if (prefix) {
@@ -105,7 +105,7 @@ export const IconsPanel: React.FC = observer(() => {
       return (
         <AllIconView
           onBack={action(() => {
-            state.iconCollectionPrefix = undefined;
+            state.iconPrefix = undefined;
           })}
         />
       );
@@ -115,7 +115,7 @@ export const IconsPanel: React.FC = observer(() => {
       <IconCollectionView
         prefix={prefix}
         onBack={action(() => {
-          state.iconCollectionPrefix = undefined;
+          state.iconPrefix = undefined;
         })}
       />
     );
@@ -144,7 +144,7 @@ export const IconsPanel: React.FC = observer(() => {
           <AllIconCard
             iconCount={totalCount}
             onClick={() => {
-              state.iconCollectionPrefix = "all";
+              state.iconPrefix = "all";
               // TODO
             }}
           />
@@ -155,7 +155,7 @@ export const IconsPanel: React.FC = observer(() => {
             prefix={prefix}
             info={info}
             onClick={action(() => {
-              state.iconCollectionPrefix = prefix;
+              state.iconPrefix = prefix;
             })}
           />
         ))}
