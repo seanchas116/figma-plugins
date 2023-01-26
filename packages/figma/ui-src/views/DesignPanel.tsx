@@ -156,18 +156,22 @@ const breakpoints = [
   {
     width: 0,
     label: "SM",
+    icon: <Icon icon="material-symbols:phone-iphone-outline" />,
   },
   {
     width: 768,
     label: "MD",
+    icon: <Icon icon="material-symbols:tablet-mac-outline" />,
   },
   {
     width: 1024,
     label: "LG",
+    icon: <Icon icon="material-symbols:laptop-mac-outline" />,
   },
   {
     width: 1280,
     label: "XL",
+    icon: <Icon icon="material-symbols:desktop-mac-outline" />,
   },
 ] as const;
 
@@ -244,14 +248,14 @@ const ResponsiveSection: React.FC = observer(() => {
             <Tooltip text={`${size.label} - ${size.width}px`}>
               <button
                 onClick={onClick}
-                className={clsx("p-1", {
+                className={clsx("p-1 text-base", {
                   "bg-gray-100": matches,
                   "text-gray-300": !matches,
                   "font-bold text-gray-900": exactIndex === i,
                   "text-gray-500": exactIndex !== i,
                 })}
               >
-                {size.label}
+                {size.icon}
               </button>
             </Tooltip>
           );
