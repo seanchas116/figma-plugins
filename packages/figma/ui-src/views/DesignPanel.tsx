@@ -223,16 +223,18 @@ export const DesignPanel: React.FC = observer(() => {
             }
 
             return (
-              <button
-                className={clsx("p-1", {
-                  "bg-gray-100": matches,
-                  "text-gray-300": !matches,
-                  "font-bold text-gray-900": exactIndex === i,
-                  "text-gray-500": exactIndex !== i,
-                })}
-              >
-                {size.label}
-              </button>
+              <Tooltip text={`${size.label} - ${size.width}px`}>
+                <button
+                  className={clsx("p-1", {
+                    "bg-gray-100": matches,
+                    "text-gray-300": !matches,
+                    "font-bold text-gray-900": exactIndex === i,
+                    "text-gray-500": exactIndex !== i,
+                  })}
+                >
+                  {size.label}
+                </button>
+              </Tooltip>
             );
           })}
         </div>
