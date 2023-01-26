@@ -8,6 +8,7 @@ import { action, makeObservable, observable } from "mobx";
 import { IconCollectionGrid } from "./IconCollectionGrid";
 import { SearchInput } from "./SearchInput";
 import { debounce } from "lodash-es";
+import { StarIcon } from "./StarIcon";
 
 export const IconCollectionView: React.FC<{
   prefix: string;
@@ -36,19 +37,32 @@ export const IconCollectionView: React.FC<{
     return null;
   }
 
+  const starred = state.starredIconPrefixes.has(prefix);
+
   return (
     <div className="flex-1 flex flex-col min-h-0">
-      <div className="flex mx-4 my-3 mb-1 gap-1 items-center">
+      <div className="flex mx-4 my-3 mb-1 gap-1 items-center group">
         <button onClick={onBack} className="-m-1 p-1">
           <Icon icon="material-symbols:chevron-left" className="text-base" />
         </button>
         <h1 className="font-semibold">{info.name}</h1>
-        <a href={info.author.url} target="_blank">
-          <Icon
-            icon="material-symbols:open-in-new"
-            className="text-xs text-gray-400 ml-1"
-          />
+        <a
+          href={info.author.url}
+          target="_blank"
+          className="text-gray-400 hover:text-gray-500"
+        >
+          <Icon icon="material-symbols:open-in-new" className="text-xs ml-1" />
         </a>
+        <StarIcon
+          value={starred}
+          onChangeValue={action((value) => {
+            if (value) {
+              state.starredIconPrefixes.add(prefix);
+            } else {
+              state.starredIconPrefixes.delete(prefix);
+            }
+          })}
+        />
         {!!collection?.suffixes.length && (
           <Select
             className="ml-auto"

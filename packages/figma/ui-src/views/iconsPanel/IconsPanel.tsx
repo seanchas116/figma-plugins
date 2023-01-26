@@ -8,6 +8,7 @@ import { action } from "mobx";
 import { SearchInput } from "./SearchInput";
 import { AllIconView, IconCollectionView } from "./IconCollectionView";
 import { Icon } from "@iconify/react";
+import { StarIcon } from "./StarIcon";
 
 const AllIconCard: React.FC<{
   iconCount: number;
@@ -60,29 +61,16 @@ const IconCollectionCard: React.FC<{
         </div>
       </div>
       <div className="ml-auto mr-2">
-        <button
-          className="p-2"
-          onClick={(e) => {
-            if (starred) {
-              state.starredIconPrefixes.delete(prefix);
-            } else {
+        <StarIcon
+          value={starred}
+          onChangeValue={action((value) => {
+            if (value) {
               state.starredIconPrefixes.add(prefix);
+            } else {
+              state.starredIconPrefixes.delete(prefix);
             }
-            e.stopPropagation();
-          }}
-        >
-          {starred ? (
-            <Icon
-              icon="material-symbols:star"
-              className="w-4 h-4 text-yellow-500 hover:scale-125"
-            />
-          ) : (
-            <Icon
-              icon="material-symbols:star-outline"
-              className="w-4 h-4 opacity-0 group-hover:opacity-100 text-gray-300 hover:scale-125"
-            />
-          )}
-        </button>
+          })}
+        />
       </div>
       <div className="flex gap-1 text-gray-700">
         {samples.map((sample) => {
