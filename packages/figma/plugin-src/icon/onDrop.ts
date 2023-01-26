@@ -7,10 +7,11 @@ figma.on("drop", (event: DropEvent) => {
 
   const { files, node, dropMetadata } = event;
   const iconDropMetadata = dropMetadata as DropMetadata;
+  const icon = iconDropMetadata.icon;
 
   if (files.length > 0 && files[0].type === "image/svg+xml") {
     void files[0].getTextAsync().then((text) => {
-      const newNode = createNodeFromIcon(text, iconDropMetadata.icon);
+      const newNode = createNodeFromIcon(text, icon);
 
       if (node.type !== "DOCUMENT" && "appendChild" in node) {
         node.appendChild(newNode);
@@ -20,7 +21,7 @@ figma.on("drop", (event: DropEvent) => {
 
       figma.currentPage.selection = [newNode];
 
-      figma.notify(`Inserted ${iconDropMetadata.icon.name}`);
+      figma.notify(`Inserted ${icon.name}`);
     });
 
     return false;
