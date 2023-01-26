@@ -197,3 +197,23 @@ export function getResponsiveArtboardData(
     return JSON.parse(data) as ResponsiveArtboardData;
   }
 }
+
+export type PerBreakpointStylesData = {
+  fontSize?: number;
+}[];
+
+export function setPerBreakpointStylesData(
+  node: SceneNode,
+  data: PerBreakpointStylesData
+) {
+  node.setPluginData("perBreakpointStyles", JSON.stringify(data));
+}
+
+export function getPerBreakpointStylesData(
+  node: SceneNode
+): PerBreakpointStylesData | undefined {
+  const data = node.getPluginData("perBreakpointStyles");
+  if (data) {
+    return JSON.parse(data) as PerBreakpointStylesData;
+  }
+}
