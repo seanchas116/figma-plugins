@@ -7,6 +7,7 @@ import { state } from "../../state/State";
 import { action } from "mobx";
 import { SearchInput } from "./SearchInput";
 import { AllIconView, IconCollectionView } from "./IconCollectionView";
+import { Icon } from "@iconify/react";
 
 const AllIconCard: React.FC<{
   iconCount: number;
@@ -31,6 +32,7 @@ const IconCollectionCard: React.FC<{
   const { ref, inView } = useInView();
 
   const samples = info.samples?.slice(0, 3) ?? [];
+  const starred = state.starredIconPrefixes.has(prefix);
 
   useEffect(() => {
     if (inView) {
@@ -42,7 +44,7 @@ const IconCollectionCard: React.FC<{
     <button
       ref={ref}
       onClick={onClick}
-      className="flex p-2 items-center justify-between border-gray-200 rounded border hover:bg-gray-50"
+      className="flex p-2 items-center justify-between border-gray-200 rounded border hover:bg-gray-50 group"
       style={{
         contentVisibility: "auto",
         // @ts-ignore
@@ -56,6 +58,31 @@ const IconCollectionCard: React.FC<{
           <div className="text-gray-500 w-20">{info.total} Icons</div>
           <div className="text-gray-500">{info.license.title}</div>
         </div>
+      </div>
+      <div className="ml-auto mr-2">
+        <button
+          className="p-2"
+          onClick={(e) => {
+            if (starred) {
+              state.starredIconPrefixes.delete(prefix);
+            } else {
+              state.starredIconPrefixes.add(prefix);
+            }
+            e.stopPropagation();
+          }}
+        >
+          {starred ? (
+            <Icon
+              icon="material-symbols:star"
+              className="w-4 h-4 text-yellow-500 hover:scale-125"
+            />
+          ) : (
+            <Icon
+              icon="material-symbols:star-outline"
+              className="w-4 h-4 opacity-0 group-hover:opacity-100 text-gray-300 hover:scale-125"
+            />
+          )}
+        </button>
       </div>
       <div className="flex gap-1 text-gray-700">
         {samples.map((sample) => {
@@ -111,6 +138,13 @@ export const IconsPanel: React.FC = observer(() => {
     .map((info) => info.total ?? 0)
     .reduce((a, b) => a + b, 0);
 
+  const collections = iconData.searchCollectionInfos(query);
+  collections.sort((a, b) => {
+    const aStarred = state.starredIconPrefixes.has(a[0]);
+    const bStarred = state.starredIconPrefixes.has(b[0]);
+    return (bStarred ? 1 : 0) - (aStarred ? 1 : 0);
+  });
+
   return (
     <div className="flex flex-col min-h-0">
       <SearchInput
@@ -128,7 +162,7 @@ export const IconsPanel: React.FC = observer(() => {
             }}
           />
         )}
-        {iconData.searchCollectionInfos(query).map(([prefix, info]) => (
+        {collections.map(([prefix, info]) => (
           <IconCollectionCard
             key={prefix}
             prefix={prefix}

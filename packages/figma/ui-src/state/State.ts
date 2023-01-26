@@ -40,6 +40,7 @@ class State {
 
   @observable iconCollectionPrefix: string | undefined = undefined;
   @observable.ref iconSubset: StateData["iconSubset"] = undefined;
+  readonly starredIconPrefixes = observable.set<string>();
 
   constructor() {
     makeObservable(this);
