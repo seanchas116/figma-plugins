@@ -1,5 +1,5 @@
 import { setResponsiveArtboardData } from "../pluginData";
-import { getArtboard } from "./resizeCurrentArtboardWidth";
+import { getArtboard } from "./getArtboard";
 
 export function makeCurrentArtboardResponsive() {
   if (figma.currentPage.selection.length === 0) {
