@@ -54,14 +54,14 @@ export interface RenderResult {
   height: number;
 }
 
-export interface ResponsiveViewportInfo {
+export interface ResponsiveArtboardInfo {
   width: number;
 }
 
 export interface Target {
   instance?: CodeInstanceInfo;
   icon?: IconInfo;
-  responsiveViewport?: ResponsiveViewportInfo;
+  responsiveArtboard?: ResponsiveArtboardInfo;
   elementIR: Element[];
 }
 

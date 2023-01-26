@@ -14,7 +14,8 @@ import {
   syncResponsiveContents,
 } from "./responsive/syncContents";
 import { insertIcon } from "./icon/insertIcon";
-import { resizeCurrentResponsiveViewportWidth } from "./responsive2/resizeCurrentFrameWidth";
+import { resizeCurrentArtboardWidth } from "./responsive2/resizeCurrentArtboardWidth";
+import { makeCurrentArtboardResponsive } from "./responsive2/makeCurrentArtboardResponsive";
 
 class RPCHandler implements IUIToPluginRPC {
   async ready(): Promise<void> {
@@ -71,8 +72,13 @@ class RPCHandler implements IUIToPluginRPC {
   }
 
   // eslint-disable-next-line @typescript-eslint/require-await
-  async resizeCurrentFrameWidth(width: number): Promise<void> {
-    resizeCurrentResponsiveViewportWidth(width);
+  async resizeCurrentArtboardWidth(width: number): Promise<void> {
+    resizeCurrentArtboardWidth(width);
+  }
+
+  // eslint-disable-next-line @typescript-eslint/require-await
+  async makeCurrentArtboardResponsive(): Promise<void> {
+    makeCurrentArtboardResponsive();
   }
 }
 

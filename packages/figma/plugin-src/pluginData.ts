@@ -180,20 +180,20 @@ export function getIconInfo(node: SceneNode): IconInfo | undefined {
   }
 }
 
-export interface ResponsiveViewportData {}
+export interface ResponsiveArtboardData {}
 
-export function setResponsiveViewportData(
+export function setResponsiveArtboardData(
   node: SceneNode,
-  data: ResponsiveViewportData
+  data: ResponsiveArtboardData
 ) {
-  node.setPluginData("responsiveFrame", JSON.stringify(data));
+  node.setPluginData("responsiveArtboard", JSON.stringify(data));
 }
 
-export function getResponsiveViewportData(
+export function getResponsiveArtboardData(
   node: SceneNode
-): ResponsiveViewportData | undefined {
-  const data = node.getPluginData("responsiveFrame");
+): ResponsiveArtboardData | undefined {
+  const data = node.getPluginData("responsiveArtboard");
   if (data) {
-    return JSON.parse(data) as ResponsiveViewportData;
+    return JSON.parse(data) as ResponsiveArtboardData;
   }
 }

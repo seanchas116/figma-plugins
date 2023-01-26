@@ -13,6 +13,7 @@ import { Icon } from "@iconify/react";
 import { MIXED, sameOrMixed } from "../util/Mixed";
 import clsx from "clsx";
 import { rpc } from "../rpc";
+import { Button } from "../components/Button";
 
 const SizingButton = styled(
   "button",
@@ -214,55 +215,59 @@ export const DesignPanel: React.FC = observer(() => {
 });
 
 const ResponsiveSection: React.FC = observer(() => {
-  const targetWidth = sameOrMixed(
-    state.targets.map((t) => t.responsiveViewport?.width)
+  const artboardWidth = sameOrMixed(
+    state.targets.map((t) => t.responsiveArtboard?.width)
   );
 
   return (
     <div className="px-4 py-3 flex flex-col gap-3 border-b border-gray-200">
       <h2 className="font-semibold">Responsive</h2>
-      <div className="flex">
-        {breakpoints.map((size, i) => {
-          if (typeof targetWidth !== "number") {
-            return null;
-          }
-
-          const matches = size.width <= targetWidth;
-
-          let exactIndex = 0;
-          for (const [i, breakpoint] of breakpoints.entries()) {
-            if (breakpoint.width > targetWidth) {
-              break;
+      {artboardWidth === undefined ? (
+        <Button>Make Current Frame Responsive</Button>
+      ) : (
+        <div className="flex">
+          {breakpoints.map((size, i) => {
+            if (typeof artboardWidth !== "number") {
+              return null;
             }
-            exactIndex = i;
-          }
 
-          const onClick = () => {
-            if (size.width === 0) {
-              // mobile
-              void rpc.remote.resizeCurrentFrameWidth(375);
-            } else {
-              void rpc.remote.resizeCurrentFrameWidth(size.width);
+            const matches = size.width <= artboardWidth;
+
+            let exactIndex = 0;
+            for (const [i, breakpoint] of breakpoints.entries()) {
+              if (breakpoint.width > artboardWidth) {
+                break;
+              }
+              exactIndex = i;
             }
-          };
 
-          return (
-            <Tooltip text={`${size.label} - ${size.width}px`}>
-              <button
-                onClick={onClick}
-                className={clsx("p-1 text-base", {
-                  "bg-gray-100": matches,
-                  "text-gray-300": !matches,
-                  "font-bold text-gray-900": exactIndex === i,
-                  "text-gray-500": exactIndex !== i,
-                })}
-              >
-                {size.icon}
-              </button>
-            </Tooltip>
-          );
-        })}
-      </div>
+            const onClick = () => {
+              if (size.width === 0) {
+                // mobile
+                void rpc.remote.resizeCurrentArtboardWidth(375);
+              } else {
+                void rpc.remote.resizeCurrentArtboardWidth(size.width);
+              }
+            };
+
+            return (
+              <Tooltip text={`${size.label} - ${size.width}px`}>
+                <button
+                  onClick={onClick}
+                  className={clsx("p-1 text-base", {
+                    "bg-gray-100": matches,
+                    "text-gray-300": !matches,
+                    "font-bold text-gray-900": exactIndex === i,
+                    "text-gray-500": exactIndex !== i,
+                  })}
+                >
+                  {size.icon}
+                </button>
+              </Tooltip>
+            );
+          })}
+        </div>
+      )}
       {/* {state.targets.length ? (
     <Button
       onClick={() => {
