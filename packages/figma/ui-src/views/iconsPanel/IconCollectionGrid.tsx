@@ -15,9 +15,85 @@ type IconCollectionGridElement = {
   name: string;
 };
 
+const IconCollectionGridElement: React.FC<{
+  x: number;
+  y: number;
+  name: string;
+}> = observer(({ x, y, name }) => {
+  const icon = iconData.icons.get(name);
+  if (!icon) {
+    return null;
+  }
+
+  const onClick = (e: React.MouseEvent) => {
+    void rpc.remote.insertIcon(e.currentTarget.innerHTML, {
+      source: "iconify",
+      name,
+    });
+  };
+
+  const onDragEnd = (e: React.DragEvent) => {
+    // Don't proceed if the item was dropped inside the plugin window.
+    // @ts-ignore
+    if (e.view.length === 0) return;
+
+    const file = new File([e.currentTarget.innerHTML], "content.svg", {
+      type: "image/svg+xml",
+    });
+
+    const dropMetadata: DropMetadata = {
+      type: "icon",
+      icon: {
+        source: "iconify",
+        name,
+      },
+    };
+
+    // This will trigger a drop event in Figma that we can register a callback for
+    window.parent.postMessage(
+      {
+        pluginDrop: {
+          clientX: e.clientX,
+          clientY: e.clientY,
+          files: [file],
+          dropMetadata,
+        },
+      },
+      "*"
+    );
+  };
+
+  return (
+    <Tooltip text={name}>
+      <div
+        className="absolute hover:bg-gray-100 rounded flex items-center justify-center"
+        style={{
+          left: x + "px",
+          top: y + "px",
+          width: gridSize + "px",
+          height: gridSize + "px",
+        }}
+        draggable
+        onClick={onClick}
+        onDragEnd={onDragEnd}
+      >
+        <svg
+          key={name}
+          width={gridIconSize}
+          height={gridIconSize}
+          viewBox={`0 0 ${icon.width ?? 24} ${icon.width ?? 24}`}
+          dangerouslySetInnerHTML={{
+            __html: icon.body,
+          }}
+        />
+      </div>
+    </Tooltip>
+  );
+});
+
 export const IconCollectionGrid: React.FC<{
   names: string[];
-}> = observer(({ names }) => {
+}> = ({ names }) => {
   const ref = createRef<HTMLDivElement>();
 
   const [height, setHeight] = useState(0);
@@ -79,81 +155,10 @@ export const IconCollectionGrid: React.FC<{
           height: height + "px",
         }}
       >
-        {elements.map(({ x, y, name }) => {
-          const icon = iconData.icons.get(name);
-
-          if (icon) {
-            const onClick = (e: React.MouseEvent) => {
-              void rpc.remote.insertIcon(e.currentTarget.innerHTML, {
-                source: "iconify",
-                name,
-              });
-            };
-
-            const onDragEnd = (e: React.DragEvent) => {
-              // Don't proceed if the item was dropped inside the plugin window.
-              // @ts-ignore
-              if (e.view.length === 0) return;
-
-              const file = new File(
-                [e.currentTarget.innerHTML],
-                "content.svg",
-                {
-                  type: "image/svg+xml",
-                }
-              );
-
-              const dropMetadata: DropMetadata = {
-                type: "icon",
-                icon: {
-                  source: "iconify",
-                  name,
-                },
-              };
-
-              // This will trigger a drop event in Figma that we can register a callback for
-              window.parent.postMessage(
-                {
-                  pluginDrop: {
-                    clientX: e.clientX,
-                    clientY: e.clientY,
-                    files: [file],
-                    dropMetadata,
-                  },
-                },
-                "*"
-              );
-            };
-
-            return (
-              <Tooltip text={name}>
-                <div
-                  className="absolute hover:bg-gray-100 rounded flex items-center justify-center"
-                  style={{
-                    left: x + "px",
-                    top: y + "px",
-                    width: gridSize + "px",
-                    height: gridSize + "px",
-                  }}
-                  draggable
-                  onClick={onClick}
-                  onDragEnd={onDragEnd}
-                >
-                  <svg
-                    key={name}
-                    width={gridIconSize}
-                    height={gridIconSize}
-                    viewBox={`0 0 ${icon.width ?? 24} ${icon.width ?? 24}`}
-                    dangerouslySetInnerHTML={{
-                      __html: icon.body,
-                    }}
-                  />
-                </div>
-              </Tooltip>
-            );
-          }
-        })}
+        {elements.map(({ x, y, name }) => (
+          <IconCollectionGridElement x={x} y={y} name={name} />
+        ))}
       </div>
     </div>
   );
-});
+};
