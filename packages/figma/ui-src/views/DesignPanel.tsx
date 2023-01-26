@@ -12,6 +12,7 @@ import { observer } from "mobx-react-lite";
 import { Icon } from "@iconify/react";
 import { MIXED, sameOrMixed } from "../util/Mixed";
 import clsx from "clsx";
+import { rpc } from "../rpc";
 
 const SizingButton = styled(
   "button",
@@ -230,9 +231,19 @@ const ResponsiveSection: React.FC = observer(() => {
             exactIndex = i;
           }
 
+          const onClick = () => {
+            if (size.width === 0) {
+              // mobile
+              void rpc.remote.resizeCurrentFrameWidth(375);
+            } else {
+              void rpc.remote.resizeCurrentFrameWidth(size.width);
+            }
+          };
+
           return (
             <Tooltip text={`${size.label} - ${size.width}px`}>
               <button
+                onClick={onClick}
                 className={clsx("p-1", {
                   "bg-gray-100": matches,
                   "text-gray-300": !matches,

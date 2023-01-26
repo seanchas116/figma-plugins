@@ -22,6 +22,7 @@ export interface IUIToPluginRPC {
   setClientStorage(key: string, value: any): Promise<void>;
   notify(message: string): Promise<void>;
   insertIcon(svgText: string, icon: IconInfo): Promise<void>;
+  resizeCurrentFrameWidth(width: number): Promise<void>;
 }
 
 export interface IPluginToUIRPC {
