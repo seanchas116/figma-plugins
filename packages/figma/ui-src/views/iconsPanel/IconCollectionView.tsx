@@ -49,7 +49,7 @@ export const IconCollectionView: React.FC<{
         <a
           href={info.author.url}
           target="_blank"
-          className="text-gray-400 hover:text-gray-500"
+          className="text-gray-400 hover:text-gray-500 mr-1"
         >
           <Icon icon="material-symbols:open-in-new" className="text-xs ml-1" />
         </a>

@@ -6,7 +6,7 @@ export const StarIcon: React.FC<{
 }> = ({ value, onChangeValue }) => {
   return (
     <button
-      className="p-2"
+      className="p-1 -m-1"
       onClick={(e) => {
         e.stopPropagation();
         onChangeValue(!value);
