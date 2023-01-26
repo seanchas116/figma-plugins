@@ -223,7 +223,13 @@ const ResponsiveSection: React.FC = observer(() => {
     <div className="px-4 py-3 flex flex-col gap-3 border-b border-gray-200">
       <h2 className="font-semibold">Responsive</h2>
       {artboardWidth === undefined ? (
-        <Button>Make Current Frame Responsive</Button>
+        <Button
+          onClick={() => {
+            void rpc.remote.makeCurrentArtboardResponsive();
+          }}
+        >
+          Make Current Frame Responsive
+        </Button>
       ) : (
         <div className="flex">
           {breakpoints.map((size, i) => {
