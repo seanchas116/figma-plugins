@@ -4,6 +4,7 @@ import { observer } from "mobx-react-lite";
 import { DropMetadata } from "../../../types/data";
 import { Tooltip } from "../../components/Tooltip";
 import { rpc } from "../../rpc";
+import { state } from "../../state/State";
 
 const gridSize = 40;
 const gridIconSize = 24;
@@ -24,6 +25,10 @@ const IconCollectionGridElement: React.FC<{
   if (!icon) {
     return null;
   }
+
+  const selected = state.targets.some(
+    (target) => target.icon?.source === "iconify" && target.icon?.name === name
+  );
 
   const onClick = (e: React.MouseEvent) => {
     void rpc.remote.insertIcon(e.currentTarget.innerHTML, {
@@ -66,7 +71,8 @@ const IconCollectionGridElement: React.FC<{
   return (
     <Tooltip text={name}>
       <div
-        className="absolute hover:bg-gray-100 rounded flex items-center justify-center"
+        aria-selected={selected}
+        className="absolute hover:bg-gray-100 rounded flex items-center justify-center aria-selected:bg-blue-50"
         style={{
           left: x + "px",
           top: y + "px",
