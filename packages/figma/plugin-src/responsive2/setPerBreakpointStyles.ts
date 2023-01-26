@@ -39,6 +39,7 @@ export function setPerBreakpointStyles(
 ) {
   if ("fontSize" in node && node.fontSize !== figma.mixed) {
     const fontSize = node.fontSize;
+    void figma.loadFontAsync(node.fontName as FontName);
 
     const styleData = getPerBreakpointStylesData(node) ?? [
       { fontSize },
@@ -62,21 +63,22 @@ export function setPerBreakpointStyles(
   }
 }
 
-export async function restorePerBreakpointStyles(
+export function restorePerBreakpointStyles(
   node: SceneNode,
   breakpointIndex: number
-): Promise<void> {
+): void {
   if ("fontSize" in node) {
     const styleData = getPerBreakpointStylesData(node);
     if (styleData) {
-      await figma.loadFontAsync(node.fontName as FontName);
+      // TODO: load font in appropriate timings
+      //await figma.loadFontAsync(node.fontName as FontName);
       node.fontSize = styleData[breakpointIndex].fontSize;
     }
   }
 
   if ("children" in node) {
     for (const child of node.children) {
-      await restorePerBreakpointStyles(child, breakpointIndex);
+      restorePerBreakpointStyles(child, breakpointIndex);
     }
   }
 }
