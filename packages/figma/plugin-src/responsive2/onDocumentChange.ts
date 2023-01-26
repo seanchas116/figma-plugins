@@ -35,6 +35,28 @@ function getBreakpointIndex(width: number): number {
   return index;
 }
 
+function setPerBreakpointStyles(node: SceneNode, breakpointIndex: number) {
+  if ("fontSize" in node && node.fontSize !== figma.mixed) {
+    const fontSize = node.fontSize;
+
+    const styleData = getPerBreakpointStylesData(node) ?? [
+      { fontSize },
+      { fontSize },
+      { fontSize },
+      { fontSize },
+    ];
+    styleData[breakpointIndex].fontSize = fontSize;
+    setPerBreakpointStylesData(node, styleData);
+    console.log(node, styleData);
+  }
+
+  if ("children" in node) {
+    for (const child of node.children) {
+      setPerBreakpointStyles(child, breakpointIndex);
+    }
+  }
+}
+
 const onDocumentChange = (event: DocumentChangeEvent) => {
   for (const change of event.documentChanges) {
     if (
@@ -54,22 +76,7 @@ const onDocumentChange = (event: DocumentChangeEvent) => {
         continue;
       }
 
-      if (!("fontSize" in node)) {
-        continue;
-      }
-      if (node.fontSize === figma.mixed) {
-        continue;
-      }
-
-      const breakpointIndex = getBreakpointIndex(artboard.width);
-
-      const styleData = getPerBreakpointStylesData(node) ?? [{}, {}, {}, {}];
-      styleData[breakpointIndex].fontSize = node.fontSize;
-      setPerBreakpointStylesData(node, styleData);
-
-      console.log(styleData);
-
-      //console.log("fontSize changed", node, artboard);
+      setPerBreakpointStyles(artboard, getBreakpointIndex(artboard.width));
     }
   }
 };

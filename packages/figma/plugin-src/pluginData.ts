@@ -199,7 +199,7 @@ export function getResponsiveArtboardData(
 }
 
 export type PerBreakpointStylesData = {
-  fontSize?: number;
+  fontSize: number;
 }[];
 
 export function setPerBreakpointStylesData(
