@@ -43,7 +43,7 @@ const onDocumentChange = (event: DocumentChangeEvent) => {
       }
 
       const breakpointIndex = getBreakpointIndex(node.width);
-      restorePerBreakpointStyles(node, breakpointIndex);
+      void restorePerBreakpointStyles(node, breakpointIndex);
     }
   }
 };

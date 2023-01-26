@@ -46,7 +46,11 @@ export function setPerBreakpointStyles(
       { fontSize },
       { fontSize },
     ];
-    styleData[breakpointIndex].fontSize = fontSize;
+
+    // desktop first
+    for (let i = 0; i <= breakpointIndex; i++) {
+      styleData[i].fontSize = fontSize;
+    }
     setPerBreakpointStylesData(node, styleData);
     console.log(node, styleData);
   }
