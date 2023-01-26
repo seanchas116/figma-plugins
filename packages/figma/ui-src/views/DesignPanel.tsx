@@ -153,29 +153,6 @@ export const InstanceEdit: React.FC = observer(() => {
   );
 });
 
-const breakpoints = [
-  {
-    width: 0,
-    label: "SM",
-    icon: <Icon icon="material-symbols:phone-iphone-outline" />,
-  },
-  {
-    width: 768,
-    label: "MD",
-    icon: <Icon icon="material-symbols:tablet-mac-outline" />,
-  },
-  {
-    width: 1024,
-    label: "LG",
-    icon: <Icon icon="material-symbols:laptop-mac-outline" />,
-  },
-  {
-    width: 1280,
-    label: "XL",
-    icon: <Icon icon="material-symbols:desktop-mac-outline" />,
-  },
-] as const;
-
 export const DesignPanel: React.FC = observer(() => {
   return (
     <div>
@@ -231,48 +208,7 @@ const ResponsiveSection: React.FC = observer(() => {
           Make Current Frame Responsive
         </Button>
       ) : (
-        <div className="flex">
-          {breakpoints.map((size, i) => {
-            if (typeof artboardWidth !== "number") {
-              return null;
-            }
-
-            const matches = size.width <= artboardWidth;
-
-            let exactIndex = 0;
-            for (const [i, breakpoint] of breakpoints.entries()) {
-              if (breakpoint.width > artboardWidth) {
-                break;
-              }
-              exactIndex = i;
-            }
-
-            const onClick = () => {
-              if (size.width === 0) {
-                // mobile
-                void rpc.remote.resizeCurrentArtboardWidth(375);
-              } else {
-                void rpc.remote.resizeCurrentArtboardWidth(size.width);
-              }
-            };
-
-            return (
-              <Tooltip text={`${size.label} - ${size.width}px`}>
-                <button
-                  onClick={onClick}
-                  className={clsx("p-1 text-base", {
-                    "bg-gray-100": matches,
-                    "text-gray-300": !matches,
-                    "font-bold text-gray-900": exactIndex === i,
-                    "text-gray-500": exactIndex !== i,
-                  })}
-                >
-                  {size.icon}
-                </button>
-              </Tooltip>
-            );
-          })}
-        </div>
+        <BreakpointSelect />
       )}
       {/* {state.targets.length ? (
     <Button
@@ -296,3 +232,78 @@ const ResponsiveSection: React.FC = observer(() => {
     </div>
   );
 });
+
+const BreakpointSelect: React.FC = observer(() => {
+  const artboardWidth = sameOrMixed(
+    state.targets.map((t) => t.responsiveArtboard?.width)
+  );
+  if (typeof artboardWidth !== "number") {
+    return null;
+  }
+  const breakpointIndex = getBreakpointIndex(artboardWidth);
+
+  return (
+    <div className="flex">
+      {breakpoints.map((size, i) => {
+        const onClick = () => {
+          if (size.width === 0) {
+            // mobile
+            void rpc.remote.resizeCurrentArtboardWidth(375);
+          } else {
+            void rpc.remote.resizeCurrentArtboardWidth(size.width);
+          }
+        };
+
+        return (
+          <Tooltip text={`${size.label} - ${size.width}px`}>
+            <button
+              onClick={onClick}
+              className={clsx("p-1 text-base", {
+                "bg-gray-100": i <= breakpointIndex,
+                "text-gray-300": !(i <= breakpointIndex),
+                "font-bold text-gray-900": breakpointIndex === i,
+                "text-gray-500": breakpointIndex !== i,
+              })}
+            >
+              {size.icon}
+            </button>
+          </Tooltip>
+        );
+      })}
+    </div>
+  );
+});
+
+const breakpoints = [
+  {
+    width: 0,
+    label: "SM",
+    icon: <Icon icon="material-symbols:phone-iphone-outline" />,
+  },
+  {
+    width: 768,
+    label: "MD",
+    icon: <Icon icon="material-symbols:tablet-mac-outline" />,
+  },
+  {
+    width: 1024,
+    label: "LG",
+    icon: <Icon icon="material-symbols:laptop-mac-outline" />,
+  },
+  {
+    width: 1280,
+    label: "XL",
+    icon: <Icon icon="material-symbols:desktop-mac-outline" />,
+  },
+] as const;
+
+function getBreakpointIndex(width: number): number {
+  let index = 0;
+  for (const [i, breakpoint] of breakpoints.entries()) {
+    if (width < breakpoint.width) {
+      break;
+    }
+    index = i;
+  }
+  return index;
+}
