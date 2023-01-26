@@ -7,7 +7,6 @@ import { state } from "../../state/State";
 import { action } from "mobx";
 import { SearchInput } from "./SearchInput";
 import { AllIconView, IconCollectionView } from "./IconCollectionView";
-import { Icon } from "@iconify/react";
 import { StarIcon } from "./StarIcon";
 
 const AllIconCard: React.FC<{
