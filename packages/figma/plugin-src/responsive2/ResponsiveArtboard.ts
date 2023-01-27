@@ -13,6 +13,8 @@ function omitMixed<T>(value: T | typeof figma.mixed): T | undefined {
 }
 
 function getPerBreakpointStyle(node: SceneNode): PerBreakpointStyle {
+  // TODO: width/height constraint for text nodes
+
   let width: PerBreakpointStyle["width"] = { type: "fixed", value: node.width };
   let height: PerBreakpointStyle["height"] = {
     type: "fixed",
