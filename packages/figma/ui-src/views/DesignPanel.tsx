@@ -288,7 +288,8 @@ const BreakpointSelect: React.FC = observer(() => {
       <div className="flex">
         <Tooltip text="Copy styles to smaller breakpoints">
           <button
-            className="text-base hover:bg-gray-100 p-1 rounded text-gray-500"
+            disabled={breakpointIndex === 0}
+            className="text-base enabled:hover:bg-gray-100 p-1 rounded text-gray-500 disabled:text-gray-300"
             onMouseEnter={() => setCopyToSmallerButtonHover(true)}
             onMouseLeave={() => setCopyToSmallerButtonHover(false)}
             onClick={() => {
@@ -300,7 +301,8 @@ const BreakpointSelect: React.FC = observer(() => {
         </Tooltip>
         <Tooltip text="Copy styles to larger breakpoints">
           <button
-            className="text-base hover:bg-gray-100 p-1 rounded text-gray-500"
+            disabled={breakpointIndex === breakpoints.length - 1}
+            className="text-base enabled:hover:bg-gray-100 p-1 rounded text-gray-500 disabled:text-gray-300"
             onMouseEnter={() => setCopyToLargerButtonHover(true)}
             onMouseLeave={() => setCopyToLargerButtonHover(false)}
             onClick={() => {
