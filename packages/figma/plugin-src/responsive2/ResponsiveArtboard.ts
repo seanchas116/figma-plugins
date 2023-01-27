@@ -12,6 +12,8 @@ function omitMixed<T>(value: T | typeof figma.mixed): T | undefined {
   return value === figma.mixed ? undefined : value;
 }
 
+// TODO: swap primaryAxisAlignItems and counterAxisAlignItems if layoutMode is changed
+
 function getPerBreakpointStyle(node: SceneNode): PerBreakpointStyle {
   return {
     x: node.x,
