@@ -200,7 +200,27 @@ export function getResponsiveArtboardData(
 
 export interface PerBreakpointStyle {
   fontSize?: number;
-  layoutMode?: FrameNode["layoutMode"];
+
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  layoutAlign?: LayoutMixin["layoutAlign"];
+  layoutGrow?: LayoutMixin["layoutGrow"];
+  layoutPositioning?: LayoutMixin["layoutPositioning"];
+
+  layoutMode?: BaseFrameMixin["layoutMode"];
+  primaryAxisSizingMode?: BaseFrameMixin["primaryAxisSizingMode"];
+  counterAxisSizingMode?: BaseFrameMixin["counterAxisSizingMode"];
+  primaryAxisAlignItems?: BaseFrameMixin["primaryAxisAlignItems"];
+  counterAxisAlignItems?: BaseFrameMixin["counterAxisAlignItems"];
+  paddingLeft?: number;
+  paddingRight?: number;
+  paddingTop?: number;
+  paddingBottom?: number;
+  itemSpacing?: number;
+  itemReverseZIndex?: boolean;
+  strokesIncludedInLayout?: boolean;
 }
 
 export type PerBreakpointStylesData = {
