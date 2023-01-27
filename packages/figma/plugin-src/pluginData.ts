@@ -199,8 +199,6 @@ export function getResponsiveArtboardData(
 }
 
 export interface PerBreakpointStyle {
-  fontSize?: number;
-
   x: number;
   y: number;
   width: number;
@@ -221,6 +219,8 @@ export interface PerBreakpointStyle {
   itemSpacing?: number;
   itemReverseZIndex?: boolean;
   strokesIncludedInLayout?: boolean;
+
+  fontSize?: number;
 }
 
 export type PerBreakpointStylesData = {

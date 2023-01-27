@@ -8,15 +8,44 @@ import {
   setResponsiveArtboardData,
 } from "../pluginData";
 
+function omitMixed<T>(value: T | typeof figma.mixed): T | undefined {
+  return value === figma.mixed ? undefined : value;
+}
+
 function getPerBreakpointStyle(node: SceneNode): PerBreakpointStyle {
-  let fontSize = node.type === "TEXT" ? node.getRangeFontSize(0, 1) : undefined;
-  if (fontSize === figma.mixed) {
-    fontSize = undefined;
-  }
-  const layoutMode = "layoutMode" in node ? node.layoutMode : undefined;
   return {
-    fontSize,
-    layoutMode,
+    x: node.x,
+    y: node.y,
+    width: node.width,
+    height: node.height,
+    ...("layoutAlign" in node
+      ? {
+          layoutAlign: node.layoutAlign,
+          layoutGrow: node.layoutGrow,
+          layoutPositioning: node.layoutPositioning,
+        }
+      : undefined),
+    ...("layoutMode" in node
+      ? {
+          layoutMode: node.layoutMode,
+          primaryAxisSizingMode: node.primaryAxisSizingMode,
+          counterAxisSizingMode: node.counterAxisSizingMode,
+          primaryAxisAlignItems: node.primaryAxisAlignItems,
+          counterAxisAlignItems: node.counterAxisAlignItems,
+          paddingLeft: node.paddingLeft,
+          paddingRight: node.paddingRight,
+          paddingTop: node.paddingTop,
+          paddingBottom: node.paddingBottom,
+          itemSpacing: node.itemSpacing,
+          itemReverseZIndex: node.itemReverseZIndex,
+          strokesIncludedInLayout: node.strokesIncludedInLayout,
+        }
+      : undefined),
+    ...("fontSize" in node
+      ? {
+          fontSize: omitMixed(node.getRangeFontSize(0, 1)),
+        }
+      : undefined),
   };
 }
 
