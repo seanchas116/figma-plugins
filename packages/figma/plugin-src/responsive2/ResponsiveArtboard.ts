@@ -49,6 +49,70 @@ function getPerBreakpointStyle(node: SceneNode): PerBreakpointStyle {
   };
 }
 
+function setPerBreakpointStyle(node: SceneNode, style: PerBreakpointStyle) {
+  node.x = style.x;
+  node.y = style.y;
+
+  // TODO: resize
+
+  if ("layoutAlign" in node) {
+    if (style.layoutAlign !== undefined) {
+      node.layoutAlign = style.layoutAlign;
+    }
+    if (style.layoutGrow !== undefined) {
+      node.layoutGrow = style.layoutGrow;
+    }
+    if (style.layoutPositioning !== undefined) {
+      node.layoutPositioning = style.layoutPositioning;
+    }
+  }
+
+  if ("layoutMode" in node) {
+    if (style.layoutMode !== undefined) {
+      node.layoutMode = style.layoutMode;
+    }
+    if (style.primaryAxisSizingMode !== undefined) {
+      node.primaryAxisSizingMode = style.primaryAxisSizingMode;
+    }
+    if (style.counterAxisSizingMode !== undefined) {
+      node.counterAxisSizingMode = style.counterAxisSizingMode;
+    }
+    if (style.primaryAxisAlignItems !== undefined) {
+      node.primaryAxisAlignItems = style.primaryAxisAlignItems;
+    }
+    if (style.counterAxisAlignItems !== undefined) {
+      node.counterAxisAlignItems = style.counterAxisAlignItems;
+    }
+    if (style.paddingLeft !== undefined) {
+      node.paddingLeft = style.paddingLeft;
+    }
+    if (style.paddingRight !== undefined) {
+      node.paddingRight = style.paddingRight;
+    }
+    if (style.paddingTop !== undefined) {
+      node.paddingTop = style.paddingTop;
+    }
+    if (style.paddingBottom !== undefined) {
+      node.paddingBottom = style.paddingBottom;
+    }
+    if (style.itemSpacing !== undefined) {
+      node.itemSpacing = style.itemSpacing;
+    }
+    if (style.itemReverseZIndex !== undefined) {
+      node.itemReverseZIndex = style.itemReverseZIndex;
+    }
+    if (style.strokesIncludedInLayout !== undefined) {
+      node.strokesIncludedInLayout = style.strokesIncludedInLayout;
+    }
+  }
+
+  if ("fontSize" in node) {
+    if (style.fontSize !== undefined) {
+      node.fontSize = style.fontSize;
+    }
+  }
+}
+
 export function getTopLevelNode(
   node: SceneNode
 ): FrameNode | ComponentNode | undefined {
@@ -210,12 +274,7 @@ export class ResponsiveArtboard {
     const style = stylesData[breakpointIndex];
     console.log(style);
 
-    if ("fontSize" in node && style.fontSize) {
-      node.fontSize = style.fontSize;
-    }
-    if ("layoutMode" in node && style.layoutMode) {
-      node.layoutMode = style.layoutMode;
-    }
+    setPerBreakpointStyle(node, style);
 
     if ("children" in node) {
       for (const child of node.children) {
