@@ -19,7 +19,7 @@ export async function updateInstance(
   setInstanceParams(node, instanceInfo);
   if (instanceInfo) {
     node.setRelaunchData({
-      edit: "",
+      open: "",
     });
     await renderInstance(node);
   } else {

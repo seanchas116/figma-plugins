@@ -7,8 +7,8 @@
   "ui": "dist/index.html",
   "relaunchButtons": [
     {
-      "command": "edit",
-      "name": "Edit Component",
+      "command": "open",
+      "name": "Open UIMIx",
       "multipleSelection": true
     }
   ]

@@ -47,6 +47,9 @@ export class ResponsiveArtboard {
 
     const data: ResponsiveArtboardData = {};
     setResponsiveArtboardData(topLevelNode, data);
+    topLevelNode.setRelaunchData({
+      open: "",
+    });
 
     const artboard = new ResponsiveArtboard(topLevelNode, data);
     artboard.setPerBreakpointStyles(0);
@@ -113,6 +116,9 @@ export class ResponsiveArtboard {
 
       styleData[breakpointIndex].fontSize = fontSize;
       setPerBreakpointStylesData(node, styleData);
+      node.setRelaunchData({
+        open: "",
+      });
       console.log(node, styleData);
     }
 
