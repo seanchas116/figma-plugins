@@ -1,15 +1,15 @@
-import { getArtboard, ResponsiveArtboard } from "./ResponsiveArtboard";
+import { getTopLevelNode, ResponsiveArtboard } from "./ResponsiveArtboard";
 
 export function makeCurrentArtboardResponsive() {
   if (figma.currentPage.selection.length === 0) {
     return;
   }
 
-  const artboard = getArtboard(figma.currentPage.selection[0]);
-  if (!artboard) {
+  const topLevelNode = getTopLevelNode(figma.currentPage.selection[0]);
+  if (!topLevelNode) {
     return;
   }
 
-  ResponsiveArtboard.attach(artboard);
+  ResponsiveArtboard.attach(topLevelNode);
   figma.commitUndo();
 }

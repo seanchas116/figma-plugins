@@ -7,8 +7,7 @@ import {
   setResponsiveArtboardData,
 } from "../pluginData";
 
-// Get the top-level node (aka artboard)
-export function getArtboard(
+export function getTopLevelNode(
   node: SceneNode
 ): FrameNode | ComponentNode | undefined {
   const parent = node.parent;
@@ -23,33 +22,33 @@ export function getArtboard(
     return;
   }
 
-  return getArtboard(parent);
+  return getTopLevelNode(parent);
 }
 
 export class ResponsiveArtboard {
   static get(node: SceneNode): ResponsiveArtboard | undefined {
-    const artboardNode = getArtboard(node);
-    if (!artboardNode) {
+    const topLevelNode = getTopLevelNode(node);
+    if (!topLevelNode) {
       return;
     }
-    const data = getResponsiveArtboardData(artboardNode);
+    const data = getResponsiveArtboardData(topLevelNode);
     if (!data) {
       return;
     }
 
-    return new ResponsiveArtboard(artboardNode, data);
+    return new ResponsiveArtboard(topLevelNode, data);
   }
 
-  static attach(node: FrameNode | ComponentNode): ResponsiveArtboard {
-    const existing = ResponsiveArtboard.get(node);
+  static attach(topLevelNode: FrameNode | ComponentNode): ResponsiveArtboard {
+    const existing = ResponsiveArtboard.get(topLevelNode);
     if (existing) {
       return existing;
     }
 
     const data: ResponsiveArtboardData = {};
-    setResponsiveArtboardData(node, data);
+    setResponsiveArtboardData(topLevelNode, data);
 
-    const artboard = new ResponsiveArtboard(node, data);
+    const artboard = new ResponsiveArtboard(topLevelNode, data);
     artboard.setPerBreakpointStyles(0);
     return artboard;
   }
@@ -84,10 +83,10 @@ export class ResponsiveArtboard {
     this.node.resize(width, this.node.height);
   }
 
-  getBreakpointIndex(width: number): number {
+  getBreakpointIndex(): number {
     let index = 0;
     for (const [i, breakpoint] of this.breakpoints.entries()) {
-      if (width < breakpoint.width) {
+      if (this.node.width < breakpoint.width) {
         break;
       }
       index = i;
@@ -96,7 +95,7 @@ export class ResponsiveArtboard {
   }
 
   setPerBreakpointStyles(
-    breakpointIndex: number = this.getBreakpointIndex(this.node.width),
+    breakpointIndex: number = this.getBreakpointIndex(),
     node: SceneNode = this.node
   ) {
     if ("fontSize" in node && node.fontSize !== figma.mixed) {
@@ -125,7 +124,7 @@ export class ResponsiveArtboard {
   }
 
   restorePerBreakpointStyles(
-    breakpointIndex: number = this.getBreakpointIndex(this.node.width),
+    breakpointIndex: number = this.getBreakpointIndex(),
     node: SceneNode = this.node
   ): void {
     if ("fontSize" in node) {
