@@ -2,10 +2,22 @@ import { ResponsiveArtboardInfo } from "../../types/data";
 import {
   getPerBreakpointStylesData,
   getResponsiveArtboardData,
+  PerBreakpointStyle,
+  PerBreakpointStylesData,
   ResponsiveArtboardData,
   setPerBreakpointStylesData,
   setResponsiveArtboardData,
 } from "../pluginData";
+
+function getPerBreakpointStyle(node: SceneNode): PerBreakpointStyle {
+  let fontSize = node.type === "TEXT" ? node.getRangeFontSize(0, 1) : undefined;
+  if (fontSize === figma.mixed) {
+    fontSize = undefined;
+  }
+  return {
+    fontSize,
+  };
+}
 
 export function getTopLevelNode(
   node: SceneNode
@@ -104,23 +116,20 @@ export class ResponsiveArtboard {
     breakpointIndex: number = this.getBreakpointIndex(),
     node: SceneNode = this.node
   ) {
-    if ("fontSize" in node && node.fontSize !== figma.mixed) {
-      const fontSize = node.fontSize;
+    const currentStyle = getPerBreakpointStyle(node);
 
-      const styleData = getPerBreakpointStylesData(node) ?? [
-        { fontSize },
-        { fontSize },
-        { fontSize },
-        { fontSize },
-      ];
+    const styleData = getPerBreakpointStylesData(node) ?? [
+      currentStyle,
+      currentStyle,
+      currentStyle,
+      currentStyle,
+    ];
 
-      styleData[breakpointIndex].fontSize = fontSize;
-      setPerBreakpointStylesData(node, styleData);
-      node.setRelaunchData({
-        open: "",
-      });
-      console.log(node, styleData);
-    }
+    styleData[breakpointIndex] = currentStyle;
+    setPerBreakpointStylesData(node, styleData);
+    node.setRelaunchData({
+      open: "",
+    });
 
     if ("children" in node) {
       for (const child of node.children) {
@@ -133,12 +142,12 @@ export class ResponsiveArtboard {
     breakpointIndex: number = this.getBreakpointIndex(),
     node: SceneNode = this.node
   ): void {
-    if ("fontSize" in node) {
-      const styleData = getPerBreakpointStylesData(node);
-      if (styleData) {
-        // TODO: load font in appropriate timings
-        //await figma.loadFontAsync(node.fontName as FontName);
-        node.fontSize = styleData[breakpointIndex].fontSize;
+    const stylesData = getPerBreakpointStylesData(node);
+    if (stylesData) {
+      const style = stylesData[breakpointIndex];
+
+      if ("fontSize" in node && style.fontSize) {
+        node.fontSize = style.fontSize;
       }
     }
 
