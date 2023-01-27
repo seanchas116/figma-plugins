@@ -89,6 +89,7 @@ function getPerBreakpointStyle(node: SceneNode): PerBreakpointStyle {
     ...("fontSize" in node
       ? {
           fontSize: omitMixed(node.getRangeFontSize(0, 1)),
+          textAutoResize: node.textAutoResize,
         }
       : undefined),
   };
@@ -176,6 +177,9 @@ function setPerBreakpointStyle(node: SceneNode, style: PerBreakpointStyle) {
   if ("fontSize" in node) {
     if (style.fontSize !== undefined) {
       node.fontSize = style.fontSize;
+    }
+    if (style.textAutoResize !== undefined) {
+      node.textAutoResize = style.textAutoResize;
     }
   }
 }

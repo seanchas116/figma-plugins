@@ -217,6 +217,7 @@ export interface PerBreakpointStyle {
   strokesIncludedInLayout?: boolean;
 
   fontSize?: number;
+  textAutoResize?: TextNode["textAutoResize"];
 }
 
 export type PerBreakpointStylesData = {
