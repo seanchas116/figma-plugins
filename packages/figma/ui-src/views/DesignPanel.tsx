@@ -156,7 +156,7 @@ export const InstanceEdit: React.FC = observer(() => {
 export const DesignPanel: React.FC = observer(() => {
   return (
     <div>
-      <div className="px-4 py-3 flex flex-col gap-3 border-b border-gray-200">
+      {/* <div className="px-4 py-3 flex flex-col gap-3 border-b border-gray-200">
         <div className="flex gap-2 items-center">
           <div className="flex gap-1.5 items-center">
             <Icon
@@ -184,7 +184,7 @@ export const DesignPanel: React.FC = observer(() => {
             <span className="font-medium">HeroSection</span>
           </div>
         </div>
-      </div>
+      </div> */}
       <ResponsiveSection />
       <InstanceEdit />
     </div>
