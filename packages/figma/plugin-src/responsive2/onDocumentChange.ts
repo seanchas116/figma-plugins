@@ -1,6 +1,8 @@
 import { ResponsiveArtboard } from "./ResponsiveArtboard";
 
 const onDocumentChange = (event: DocumentChangeEvent) => {
+  const resizedArtboards = new Map<string, ResponsiveArtboard>();
+
   for (const change of event.documentChanges) {
     if (
       change.type === "PROPERTY_CHANGE" &&
@@ -32,8 +34,12 @@ const onDocumentChange = (event: DocumentChangeEvent) => {
       if (!artboard) {
         continue;
       }
-      artboard.restorePerBreakpointStyles();
+      resizedArtboards.set(artboard.node.id, artboard);
     }
+  }
+
+  for (const artboard of resizedArtboards.values()) {
+    artboard.restorePerBreakpointStyles();
   }
 };
 
