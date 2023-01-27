@@ -14,6 +14,7 @@ import { MIXED, sameOrMixed } from "../util/Mixed";
 import clsx from "clsx";
 import { rpc } from "../rpc";
 import { Button } from "../components/Button";
+import { useState } from "react";
 
 const SizingButton = styled(
   "button",
@@ -234,6 +235,10 @@ const ResponsiveSection: React.FC = observer(() => {
 });
 
 const BreakpointSelect: React.FC = observer(() => {
+  const [copyToSmallerButtonHover, setCopyToSmallerButtonHover] =
+    useState(false);
+  const [copyToLargerButtonHover, setCopyToLargerButtonHover] = useState(false);
+
   const artboardWidth = sameOrMixed(
     state.targets.map((t) => t.responsiveArtboard?.width)
   );
@@ -255,14 +260,21 @@ const BreakpointSelect: React.FC = observer(() => {
             }
           };
 
+          const isCopyTarget = copyToSmallerButtonHover
+            ? i < breakpointIndex
+            : copyToLargerButtonHover
+            ? i > breakpointIndex
+            : false;
+
           return (
             <Tooltip text={`${size.label} - ${size.width}px`}>
               <button
                 onClick={onClick}
-                className={clsx("p-1 text-base", {
-                  "bg-gray-100": i <= breakpointIndex,
-                  "text-gray-300": !(i <= breakpointIndex),
-                  "font-bold text-gray-900": breakpointIndex === i,
+                className={clsx("p-1 text-base rounded", {
+                  "bg-gray-100": isCopyTarget,
+                  // "bg-gray-100": i <= breakpointIndex,
+                  // "text-gray-300": !(i <= breakpointIndex),
+                  "font-bold bg-blue-500 text-white": breakpointIndex === i,
                   "text-gray-500": breakpointIndex !== i,
                 })}
               >
@@ -274,12 +286,20 @@ const BreakpointSelect: React.FC = observer(() => {
       </div>
       <div className="flex">
         <Tooltip text="Copy styles to smaller breakpoints">
-          <button className="text-base hover:bg-gray-100 p-1 rounded">
+          <button
+            className="text-base hover:bg-gray-100 p-1 rounded"
+            onMouseEnter={() => setCopyToSmallerButtonHover(true)}
+            onMouseLeave={() => setCopyToSmallerButtonHover(false)}
+          >
             <Icon icon="material-symbols:assignment-return-outline" />
           </button>
         </Tooltip>
         <Tooltip text="Copy styles to larger breakpoints">
-          <button className="text-base hover:bg-gray-100 p-1 rounded">
+          <button
+            className="text-base hover:bg-gray-100 p-1 rounded"
+            onMouseEnter={() => setCopyToLargerButtonHover(true)}
+            onMouseLeave={() => setCopyToLargerButtonHover(false)}
+          >
             <Icon icon="material-symbols:assignment-return-outline" hFlip />
           </button>
         </Tooltip>
