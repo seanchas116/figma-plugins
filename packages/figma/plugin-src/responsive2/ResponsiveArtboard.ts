@@ -12,26 +12,67 @@ function omitMixed<T>(value: T | typeof figma.mixed): T | undefined {
   return value === figma.mixed ? undefined : value;
 }
 
-// TODO: swap primaryAxisSizingMode and counterAxisSizingMode if layoutMode is changed
-
 function getPerBreakpointStyle(node: SceneNode): PerBreakpointStyle {
+  let width: PerBreakpointStyle["width"] = { type: "fixed", value: node.width };
+  let height: PerBreakpointStyle["height"] = {
+    type: "fixed",
+    value: node.height,
+  };
+
+  if ("layoutMode" in node) {
+    if (node.layoutMode === "VERTICAL") {
+      if (node.primaryAxisSizingMode === "AUTO") {
+        height = { type: "hug" };
+      }
+      if (node.counterAxisSizingMode === "AUTO") {
+        width = { type: "hug" };
+      }
+    }
+    if (node.layoutMode === "HORIZONTAL") {
+      if (node.primaryAxisSizingMode === "AUTO") {
+        width = { type: "hug" };
+      }
+      if (node.counterAxisSizingMode === "AUTO") {
+        height = { type: "hug" };
+      }
+    }
+  }
+
+  if ("layoutAlign" in node) {
+    const parent = node.parent;
+    if (parent && "layoutMode" in parent) {
+      if (parent.layoutMode === "VERTICAL") {
+        if (node.layoutAlign === "STRETCH") {
+          width = { type: "fill" };
+        }
+        if (node.layoutGrow === 1) {
+          height = { type: "fill" };
+        }
+      }
+      if (parent.layoutMode === "HORIZONTAL") {
+        if (node.layoutAlign === "STRETCH") {
+          height = { type: "fill" };
+        }
+        if (node.layoutGrow === 1) {
+          width = { type: "fill" };
+        }
+      }
+    }
+  }
+
   return {
     x: node.x,
     y: node.y,
-    width: node.width,
-    height: node.height,
+    width,
+    height,
     ...("layoutAlign" in node
       ? {
-          layoutAlign: node.layoutAlign,
-          layoutGrow: node.layoutGrow,
           layoutPositioning: node.layoutPositioning,
         }
       : undefined),
     ...("layoutMode" in node
       ? {
           layoutMode: node.layoutMode,
-          primaryAxisSizingMode: node.primaryAxisSizingMode,
-          counterAxisSizingMode: node.counterAxisSizingMode,
           primaryAxisAlignItems: node.primaryAxisAlignItems,
           counterAxisAlignItems: node.counterAxisAlignItems,
           paddingLeft: node.paddingLeft,
@@ -55,15 +96,29 @@ function setPerBreakpointStyle(node: SceneNode, style: PerBreakpointStyle) {
   node.x = style.x;
   node.y = style.y;
 
-  // TODO: resize
+  // TODO: resize fixed size nodes
 
   if ("layoutAlign" in node) {
-    if (style.layoutAlign !== undefined) {
-      node.layoutAlign = style.layoutAlign;
+    const parent = node.parent;
+    if (parent && "layoutMode" in parent) {
+      if (parent.layoutMode === "VERTICAL") {
+        if (style.width.type === "fill") {
+          node.layoutAlign = "STRETCH";
+        }
+        if (style.height.type === "fill") {
+          node.layoutGrow = 1;
+        }
+      }
+      if (parent.layoutMode === "HORIZONTAL") {
+        if (style.width.type === "fill") {
+          node.layoutGrow = 1;
+        }
+        if (style.height.type === "fill") {
+          node.layoutAlign = "STRETCH";
+        }
+      }
     }
-    if (style.layoutGrow !== undefined) {
-      node.layoutGrow = style.layoutGrow;
-    }
+
     if (style.layoutPositioning !== undefined) {
       node.layoutPositioning = style.layoutPositioning;
     }
@@ -73,12 +128,20 @@ function setPerBreakpointStyle(node: SceneNode, style: PerBreakpointStyle) {
     if (style.layoutMode !== undefined) {
       node.layoutMode = style.layoutMode;
     }
-    if (style.primaryAxisSizingMode !== undefined) {
-      node.primaryAxisSizingMode = style.primaryAxisSizingMode;
+
+    if (node.layoutMode === "VERTICAL") {
+      node.counterAxisSizingMode =
+        style.width.type === "hug" ? "AUTO" : "FIXED";
+      node.primaryAxisSizingMode =
+        style.height.type === "hug" ? "AUTO" : "FIXED";
     }
-    if (style.counterAxisSizingMode !== undefined) {
-      node.counterAxisSizingMode = style.counterAxisSizingMode;
+    if (node.layoutMode === "HORIZONTAL") {
+      node.primaryAxisSizingMode =
+        style.width.type === "hug" ? "AUTO" : "FIXED";
+      node.counterAxisSizingMode =
+        style.height.type === "hug" ? "AUTO" : "FIXED";
     }
+
     if (style.primaryAxisAlignItems !== undefined) {
       node.primaryAxisAlignItems = style.primaryAxisAlignItems;
     }

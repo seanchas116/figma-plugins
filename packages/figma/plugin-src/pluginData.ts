@@ -201,15 +201,11 @@ export function getResponsiveArtboardData(
 export interface PerBreakpointStyle {
   x: number;
   y: number;
-  width: number;
-  height: number;
-  layoutAlign?: LayoutMixin["layoutAlign"];
-  layoutGrow?: LayoutMixin["layoutGrow"];
+  width: { type: "fixed"; value: number } | { type: "hug" } | { type: "fill" };
+  height: { type: "fixed"; value: number } | { type: "hug" } | { type: "fill" };
   layoutPositioning?: LayoutMixin["layoutPositioning"];
 
   layoutMode?: BaseFrameMixin["layoutMode"];
-  primaryAxisSizingMode?: BaseFrameMixin["primaryAxisSizingMode"];
-  counterAxisSizingMode?: BaseFrameMixin["counterAxisSizingMode"];
   primaryAxisAlignItems?: BaseFrameMixin["primaryAxisAlignItems"];
   counterAxisAlignItems?: BaseFrameMixin["counterAxisAlignItems"];
   paddingLeft?: number;
