@@ -243,33 +243,47 @@ const BreakpointSelect: React.FC = observer(() => {
   const breakpointIndex = getBreakpointIndex(artboardWidth);
 
   return (
-    <div className="flex">
-      {breakpoints.map((size, i) => {
-        const onClick = () => {
-          if (size.width === 0) {
-            // mobile
-            void rpc.remote.resizeCurrentArtboardWidth(375);
-          } else {
-            void rpc.remote.resizeCurrentArtboardWidth(size.width);
-          }
-        };
+    <div className="flex gap-4">
+      <div className="flex">
+        {breakpoints.map((size, i) => {
+          const onClick = () => {
+            if (size.width === 0) {
+              // mobile
+              void rpc.remote.resizeCurrentArtboardWidth(375);
+            } else {
+              void rpc.remote.resizeCurrentArtboardWidth(size.width);
+            }
+          };
 
-        return (
-          <Tooltip text={`${size.label} - ${size.width}px`}>
-            <button
-              onClick={onClick}
-              className={clsx("p-1 text-base", {
-                "bg-gray-100": i <= breakpointIndex,
-                "text-gray-300": !(i <= breakpointIndex),
-                "font-bold text-gray-900": breakpointIndex === i,
-                "text-gray-500": breakpointIndex !== i,
-              })}
-            >
-              {size.icon}
-            </button>
-          </Tooltip>
-        );
-      })}
+          return (
+            <Tooltip text={`${size.label} - ${size.width}px`}>
+              <button
+                onClick={onClick}
+                className={clsx("p-1 text-base", {
+                  "bg-gray-100": i <= breakpointIndex,
+                  "text-gray-300": !(i <= breakpointIndex),
+                  "font-bold text-gray-900": breakpointIndex === i,
+                  "text-gray-500": breakpointIndex !== i,
+                })}
+              >
+                {size.icon}
+              </button>
+            </Tooltip>
+          );
+        })}
+      </div>
+      <div className="flex">
+        <Tooltip text="Copy styles to smaller breakpoints">
+          <button className="text-base hover:bg-gray-100 p-1 rounded">
+            <Icon icon="material-symbols:assignment-return-outline" />
+          </button>
+        </Tooltip>
+        <Tooltip text="Copy styles to larger breakpoints">
+          <button className="text-base hover:bg-gray-100 p-1 rounded">
+            <Icon icon="material-symbols:assignment-return-outline" hFlip />
+          </button>
+        </Tooltip>
+      </div>
     </div>
   );
 });
