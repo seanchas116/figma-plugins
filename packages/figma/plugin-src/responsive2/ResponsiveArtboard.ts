@@ -105,20 +105,12 @@ function setPerBreakpointStyle(node: SceneNode, style: PerBreakpointStyle) {
     const parent = node.parent;
     if (parent && "layoutMode" in parent) {
       if (parent.layoutMode === "VERTICAL") {
-        if (style.width.type === "fill") {
-          node.layoutAlign = "STRETCH";
-        }
-        if (style.height.type === "fill") {
-          node.layoutGrow = 1;
-        }
+        node.layoutAlign = style.width.type === "fill" ? "STRETCH" : "INHERIT";
+        node.layoutGrow = style.height.type === "fill" ? 1 : 0;
       }
       if (parent.layoutMode === "HORIZONTAL") {
-        if (style.width.type === "fill") {
-          node.layoutGrow = 1;
-        }
-        if (style.height.type === "fill") {
-          node.layoutAlign = "STRETCH";
-        }
+        node.layoutAlign = style.height.type === "fill" ? "STRETCH" : "INHERIT";
+        node.layoutGrow = style.width.type === "fill" ? 1 : 0;
       }
     }
 
