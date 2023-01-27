@@ -65,7 +65,7 @@ export class ResponsiveArtboard {
     });
 
     const artboard = new ResponsiveArtboard(topLevelNode, data);
-    artboard.setPerBreakpointStyles(0);
+    artboard.updatePerBreakpointStyles(0);
     return artboard;
   }
 
@@ -113,7 +113,7 @@ export class ResponsiveArtboard {
     return index;
   }
 
-  getPerBreakpointStylesData(
+  private getPerBreakpointStyles(
     node: SceneNode,
     defaultStyle: PerBreakpointStyle = getPerBreakpointStyle(node)
   ): PerBreakpointStyle[] {
@@ -136,7 +136,10 @@ export class ResponsiveArtboard {
     return styles;
   }
 
-  setPerBreakpointStylesData(node: SceneNode, styles: PerBreakpointStyle[]) {
+  private setPerBreakpointStyles(
+    node: SceneNode,
+    styles: PerBreakpointStyle[]
+  ) {
     const data: Record<number, PerBreakpointStyle> = {};
     for (let i = 0; i < styles.length; ++i) {
       data[this.breakpoints[i].width] = styles[i];
@@ -148,24 +151,24 @@ export class ResponsiveArtboard {
     });
   }
 
-  setPerBreakpointStyles(
+  updatePerBreakpointStyles(
     breakpointIndex: number = this.getBreakpointIndex(),
     node: SceneNode = this.node
   ) {
     const currentStyle = getPerBreakpointStyle(node);
 
-    const styleData = this.getPerBreakpointStylesData(node, currentStyle);
+    const styleData = this.getPerBreakpointStyles(node, currentStyle);
     console.log(styleData);
 
     styleData[breakpointIndex] = currentStyle;
-    this.setPerBreakpointStylesData(node, styleData);
+    this.setPerBreakpointStyles(node, styleData);
     node.setRelaunchData({
       open: "",
     });
 
     if ("children" in node) {
       for (const child of node.children) {
-        this.setPerBreakpointStyles(breakpointIndex, child);
+        this.updatePerBreakpointStyles(breakpointIndex, child);
       }
     }
   }
@@ -174,7 +177,7 @@ export class ResponsiveArtboard {
     breakpointIndex: number = this.getBreakpointIndex(),
     node: SceneNode = this.node
   ): void {
-    const stylesData = this.getPerBreakpointStylesData(node);
+    const stylesData = this.getPerBreakpointStyles(node);
     const style = stylesData[breakpointIndex];
     console.log(style);
 
@@ -199,12 +202,12 @@ export class ResponsiveArtboard {
   }
 
   copyStylesToSmallerBreakpoints(node: SceneNode) {
-    const styleData = this.getPerBreakpointStylesData(node);
+    const styleData = this.getPerBreakpointStyles(node);
     const breakpointIndex = this.getBreakpointIndex();
     for (let i = 0; i < breakpointIndex; i++) {
       styleData[i].fontSize = styleData[breakpointIndex].fontSize;
     }
-    this.setPerBreakpointStylesData(node, styleData);
+    this.setPerBreakpointStyles(node, styleData);
 
     if ("children" in node) {
       for (const child of node.children) {
@@ -214,12 +217,12 @@ export class ResponsiveArtboard {
   }
 
   copyStylesToLargerBreakpoints(node: SceneNode) {
-    const styleData = this.getPerBreakpointStylesData(node);
+    const styleData = this.getPerBreakpointStyles(node);
     const breakpointIndex = this.getBreakpointIndex();
     for (let i = breakpointIndex + 1; i < styleData.length; i++) {
       styleData[i].fontSize = styleData[breakpointIndex].fontSize;
     }
-    this.setPerBreakpointStylesData(node, styleData);
+    this.setPerBreakpointStyles(node, styleData);
 
     if ("children" in node) {
       for (const child of node.children) {
