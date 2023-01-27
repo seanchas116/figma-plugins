@@ -9,6 +9,7 @@ import { updateInstance } from "./codeImport/updateInstance";
 import { resizeWindow } from "./resizeWindow";
 import { insertIcon } from "./icon/insertIcon";
 import {
+  clearCurrentArtboardResponsive,
   copyStylesToLargerScreens,
   copyStylesToSmallerScreens,
   makeCurrentArtboardResponsive,
@@ -69,6 +70,11 @@ class RPCHandler implements IUIToPluginRPC {
   // eslint-disable-next-line @typescript-eslint/require-await
   async makeCurrentArtboardResponsive(): Promise<void> {
     makeCurrentArtboardResponsive();
+  }
+
+  // eslint-disable-next-line @typescript-eslint/require-await
+  async clearCurrentArtboardResponsive(): Promise<void> {
+    clearCurrentArtboardResponsive();
   }
 
   // eslint-disable-next-line @typescript-eslint/require-await

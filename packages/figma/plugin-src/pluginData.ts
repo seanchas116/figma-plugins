@@ -184,9 +184,9 @@ export interface ResponsiveArtboardData {}
 
 export function setResponsiveArtboardData(
   node: SceneNode,
-  data: ResponsiveArtboardData
+  data: ResponsiveArtboardData | undefined
 ) {
-  node.setPluginData("responsiveArtboard", JSON.stringify(data));
+  node.setPluginData("responsiveArtboard", data ? JSON.stringify(data) : "");
 }
 
 export function getResponsiveArtboardData(
@@ -207,9 +207,9 @@ export type PerBreakpointStylesData = PerBreakpointStyle[];
 
 export function setPerBreakpointStylesData(
   node: SceneNode,
-  data: PerBreakpointStylesData
+  data: PerBreakpointStylesData | undefined
 ) {
-  node.setPluginData("perBreakpointStyles", JSON.stringify(data));
+  node.setPluginData("perBreakpointStyles", data ? JSON.stringify(data) : "");
 }
 
 export function getPerBreakpointStylesData(

@@ -196,11 +196,25 @@ const ResponsiveSection: React.FC = observer(() => {
   const artboardWidth = sameOrMixed(
     state.targets.map((t) => t.responsiveArtboard?.width)
   );
+  const hasResponsiveArtboard = artboardWidth !== undefined;
 
   return (
     <div className="px-4 py-3 flex flex-col gap-3 border-b border-gray-200">
-      <h2 className="font-semibold">Responsive</h2>
-      {artboardWidth === undefined ? (
+      <h2 className="font-semibold flex items-center justify-between">
+        Responsive
+        {hasResponsiveArtboard && (
+          <button
+            className="text-base p-1 hover:bg-gray-100 rounded"
+            onClick={() => {
+              // TODO: confirm
+              void rpc.remote.clearCurrentArtboardResponsive();
+            }}
+          >
+            <Icon icon="material-symbols:remove" />
+          </button>
+        )}
+      </h2>
+      {!hasResponsiveArtboard ? (
         <Button
           onClick={() => {
             void rpc.remote.makeCurrentArtboardResponsive();

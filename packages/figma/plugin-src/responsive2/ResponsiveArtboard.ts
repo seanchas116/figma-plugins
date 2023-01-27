@@ -201,4 +201,20 @@ export class ResponsiveArtboard {
       }
     }
   }
+
+  clear() {
+    setResponsiveArtboardData(this.node, undefined);
+    this.node.setRelaunchData({});
+    this.clearPerBreakpointStyles(this.node);
+  }
+
+  private clearPerBreakpointStyles(node: SceneNode) {
+    setPerBreakpointStylesData(node, undefined);
+    node.setRelaunchData({});
+    if ("children" in node) {
+      for (const child of node.children) {
+        this.clearPerBreakpointStyles(child);
+      }
+    }
+  }
 }

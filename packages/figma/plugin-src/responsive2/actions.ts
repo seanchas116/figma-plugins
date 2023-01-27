@@ -14,6 +14,20 @@ export function makeCurrentArtboardResponsive() {
   figma.commitUndo();
 }
 
+export function clearCurrentArtboardResponsive() {
+  if (figma.currentPage.selection.length === 0) {
+    return;
+  }
+
+  const artboard = ResponsiveArtboard.get(figma.currentPage.selection[0]);
+  if (!artboard) {
+    return;
+  }
+
+  artboard.clear();
+  figma.commitUndo();
+}
+
 export function resizeCurrentArtboardWidth(width: number): void {
   if (figma.currentPage.selection.length === 0) {
     return;

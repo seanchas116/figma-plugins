@@ -20,6 +20,7 @@ export interface IUIToPluginRPC {
   insertIcon(svgText: string, icon: IconInfo): Promise<void>;
   resizeCurrentArtboardWidth(width: number): Promise<void>;
   makeCurrentArtboardResponsive(): Promise<void>;
+  clearCurrentArtboardResponsive(): Promise<void>;
   copyStylesToLargerScreens(): Promise<void>;
   copyStylesToSmallerScreens(): Promise<void>;
 }
