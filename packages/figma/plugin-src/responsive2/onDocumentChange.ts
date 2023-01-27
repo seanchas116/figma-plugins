@@ -4,7 +4,8 @@ const onDocumentChange = (event: DocumentChangeEvent) => {
   for (const change of event.documentChanges) {
     if (
       change.type === "PROPERTY_CHANGE" &&
-      change.properties.includes("fontSize")
+      (change.properties.includes("fontSize") ||
+        change.properties.includes("layoutMode"))
     ) {
       const node = change.node;
       if (node.removed) {

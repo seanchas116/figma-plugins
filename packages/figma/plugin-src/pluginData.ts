@@ -200,6 +200,7 @@ export function getResponsiveArtboardData(
 
 export interface PerBreakpointStyle {
   fontSize?: number;
+  layoutMode?: FrameNode["layoutMode"];
 }
 
 export type PerBreakpointStylesData = PerBreakpointStyle[];

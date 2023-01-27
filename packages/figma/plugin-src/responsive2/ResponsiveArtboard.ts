@@ -3,7 +3,6 @@ import {
   getPerBreakpointStylesData,
   getResponsiveArtboardData,
   PerBreakpointStyle,
-  PerBreakpointStylesData,
   ResponsiveArtboardData,
   setPerBreakpointStylesData,
   setResponsiveArtboardData,
@@ -14,8 +13,10 @@ function getPerBreakpointStyle(node: SceneNode): PerBreakpointStyle {
   if (fontSize === figma.mixed) {
     fontSize = undefined;
   }
+  const layoutMode = "layoutMode" in node ? node.layoutMode : undefined;
   return {
     fontSize,
+    layoutMode,
   };
 }
 
@@ -124,6 +125,7 @@ export class ResponsiveArtboard {
       currentStyle,
       currentStyle,
     ];
+    console.log(styleData);
 
     styleData[breakpointIndex] = currentStyle;
     setPerBreakpointStylesData(node, styleData);
@@ -145,9 +147,13 @@ export class ResponsiveArtboard {
     const stylesData = getPerBreakpointStylesData(node);
     if (stylesData) {
       const style = stylesData[breakpointIndex];
+      console.log(style);
 
       if ("fontSize" in node && style.fontSize) {
         node.fontSize = style.fontSize;
+      }
+      if ("layoutMode" in node && style.layoutMode) {
+        node.layoutMode = style.layoutMode;
       }
     }
 
