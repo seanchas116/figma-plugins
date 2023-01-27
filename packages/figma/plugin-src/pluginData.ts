@@ -198,9 +198,11 @@ export function getResponsiveArtboardData(
   }
 }
 
-export type PerBreakpointStylesData = {
+export interface PerBreakpointStyle {
   fontSize: number;
-}[];
+}
+
+export type PerBreakpointStylesData = PerBreakpointStyle[];
 
 export function setPerBreakpointStylesData(
   node: SceneNode,
