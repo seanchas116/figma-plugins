@@ -65,7 +65,7 @@ export class ResponsiveArtboard {
     });
 
     const artboard = new ResponsiveArtboard(topLevelNode, data);
-    artboard.updatePerBreakpointStyles(0);
+    artboard.savePerBreakpointStyles(0);
     return artboard;
   }
 
@@ -151,7 +151,7 @@ export class ResponsiveArtboard {
     });
   }
 
-  updatePerBreakpointStyles(
+  savePerBreakpointStyles(
     breakpointIndex: number = this.getBreakpointIndex(),
     node: SceneNode = this.node
   ) {
@@ -168,7 +168,7 @@ export class ResponsiveArtboard {
 
     if ("children" in node) {
       for (const child of node.children) {
-        this.updatePerBreakpointStyles(breakpointIndex, child);
+        this.savePerBreakpointStyles(breakpointIndex, child);
       }
     }
   }

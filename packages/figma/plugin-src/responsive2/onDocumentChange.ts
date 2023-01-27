@@ -16,7 +16,7 @@ const onDocumentChange = (event: DocumentChangeEvent) => {
         continue;
       }
 
-      artboard.updatePerBreakpointStyles();
+      artboard.savePerBreakpointStyles();
     }
 
     // artboard resized
