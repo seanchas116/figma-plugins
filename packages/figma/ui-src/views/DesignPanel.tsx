@@ -269,13 +269,14 @@ const BreakpointSelect: React.FC = observer(() => {
           return (
             <Tooltip text={`${size.label} - ${size.width}px`}>
               <button
-                onClick={onClick}
-                className={clsx("p-1 text-base rounded", {
+                onMouseDown={onClick}
+                className={clsx("p-1 text-base rounded hover:bg-gray-100", {
                   "bg-gray-100": isCopyTarget,
                   // "bg-gray-100": i <= breakpointIndex,
                   // "text-gray-300": !(i <= breakpointIndex),
-                  "font-bold bg-blue-500 text-white": breakpointIndex === i,
-                  "text-gray-500": breakpointIndex !== i,
+                  "font-bold bg-blue-500 hover:bg-blue-500 text-white":
+                    breakpointIndex === i,
+                  "text-gray-800": breakpointIndex !== i,
                 })}
               >
                 {size.icon}
@@ -287,7 +288,7 @@ const BreakpointSelect: React.FC = observer(() => {
       <div className="flex">
         <Tooltip text="Copy styles to smaller breakpoints">
           <button
-            className="text-base hover:bg-gray-100 p-1 rounded"
+            className="text-base hover:bg-gray-100 p-1 rounded text-gray-800"
             onMouseEnter={() => setCopyToSmallerButtonHover(true)}
             onMouseLeave={() => setCopyToSmallerButtonHover(false)}
           >
@@ -296,7 +297,7 @@ const BreakpointSelect: React.FC = observer(() => {
         </Tooltip>
         <Tooltip text="Copy styles to larger breakpoints">
           <button
-            className="text-base hover:bg-gray-100 p-1 rounded"
+            className="text-base hover:bg-gray-100 p-1 rounded text-gray-800"
             onMouseEnter={() => setCopyToLargerButtonHover(true)}
             onMouseLeave={() => setCopyToLargerButtonHover(false)}
           >
