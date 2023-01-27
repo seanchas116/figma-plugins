@@ -203,7 +203,9 @@ export interface PerBreakpointStyle {
   layoutMode?: FrameNode["layoutMode"];
 }
 
-export type PerBreakpointStylesData = PerBreakpointStyle[];
+export type PerBreakpointStylesData = {
+  [minWidth: number]: PerBreakpointStyle;
+};
 
 export function setPerBreakpointStylesData(
   node: SceneNode,
