@@ -108,10 +108,7 @@ export class ResponsiveArtboard {
         { fontSize },
       ];
 
-      // desktop first
-      for (let i = 0; i <= breakpointIndex; i++) {
-        styleData[i].fontSize = fontSize;
-      }
+      styleData[breakpointIndex].fontSize = fontSize;
       setPerBreakpointStylesData(node, styleData);
       console.log(node, styleData);
     }
@@ -147,5 +144,37 @@ export class ResponsiveArtboard {
     return {
       width: this.node.width,
     };
+  }
+
+  copyStylesToSmallerBreakpoints(node: SceneNode) {
+    const styleData = getPerBreakpointStylesData(node);
+    if (styleData) {
+      const breakpointIndex = this.getBreakpointIndex();
+      for (let i = 0; i < breakpointIndex; i++) {
+        styleData[i].fontSize = styleData[breakpointIndex].fontSize;
+      }
+      setPerBreakpointStylesData(node, styleData);
+    }
+    if ("children" in node) {
+      for (const child of node.children) {
+        this.copyStylesToSmallerBreakpoints(child);
+      }
+    }
+  }
+
+  copyStylesToLargerBreakpoints(node: SceneNode) {
+    const styleData = getPerBreakpointStylesData(node);
+    if (styleData) {
+      const breakpointIndex = this.getBreakpointIndex();
+      for (let i = breakpointIndex + 1; i < styleData.length; i++) {
+        styleData[i].fontSize = styleData[breakpointIndex].fontSize;
+      }
+      setPerBreakpointStylesData(node, styleData);
+    }
+    if ("children" in node) {
+      for (const child of node.children) {
+        this.copyStylesToLargerBreakpoints(child);
+      }
+    }
   }
 }

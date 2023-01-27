@@ -8,8 +8,12 @@ import { onSelectionChange } from "./onSelectionChange";
 import { updateInstance } from "./codeImport/updateInstance";
 import { resizeWindow } from "./resizeWindow";
 import { insertIcon } from "./icon/insertIcon";
-import { resizeCurrentArtboardWidth } from "./responsive2/resizeCurrentArtboardWidth";
-import { makeCurrentArtboardResponsive } from "./responsive2/makeCurrentArtboardResponsive";
+import {
+  copyStylesToLargerScreens,
+  copyStylesToSmallerScreens,
+  makeCurrentArtboardResponsive,
+  resizeCurrentArtboardWidth,
+} from "./responsive2/actions";
 
 class RPCHandler implements IUIToPluginRPC {
   async ready(): Promise<void> {
@@ -69,12 +73,12 @@ class RPCHandler implements IUIToPluginRPC {
 
   // eslint-disable-next-line @typescript-eslint/require-await
   async copyStylesToLargerScreens(): Promise<void> {
-    // TODO
+    copyStylesToLargerScreens();
   }
 
   // eslint-disable-next-line @typescript-eslint/require-await
   async copyStylesToSmallerScreens(): Promise<void> {
-    // TODO
+    copyStylesToSmallerScreens();
   }
 }
 
