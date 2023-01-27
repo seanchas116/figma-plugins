@@ -53,7 +53,10 @@ export class ResponsiveArtboard {
     return artboard;
   }
 
-  constructor(node: FrameNode | ComponentNode, data: ResponsiveArtboardData) {
+  private constructor(
+    node: FrameNode | ComponentNode,
+    data: ResponsiveArtboardData
+  ) {
     this.node = node;
     this.data = data;
   }
