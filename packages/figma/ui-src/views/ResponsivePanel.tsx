@@ -7,7 +7,7 @@ export const ResponsivePanel: React.FC = () => {
     <div className="px-4 py-3 flex flex-col gap-3">
       <Button
         onClick={() => {
-          void rpc.remote.createResponsivePage();
+          //void rpc.remote.createResponsivePage();
         }}
       >
         Create Responsive Page
@@ -19,7 +19,7 @@ export const ResponsivePanel: React.FC = () => {
       </p>
       <Button
         onClick={() => {
-          void rpc.remote.syncResponsiveContents();
+          //void rpc.remote.syncResponsiveContents();
         }}
       >
         <Icon className="text-base" icon="material-symbols:sync-outline" />

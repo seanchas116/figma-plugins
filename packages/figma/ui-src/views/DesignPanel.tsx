@@ -291,6 +291,9 @@ const BreakpointSelect: React.FC = observer(() => {
             className="text-base hover:bg-gray-100 p-1 rounded text-gray-500"
             onMouseEnter={() => setCopyToSmallerButtonHover(true)}
             onMouseLeave={() => setCopyToSmallerButtonHover(false)}
+            onClick={() => {
+              void rpc.remote.copyStylesToSmallerScreens();
+            }}
           >
             <Icon icon="material-symbols:assignment-return-outline" />
           </button>
@@ -300,6 +303,9 @@ const BreakpointSelect: React.FC = observer(() => {
             className="text-base hover:bg-gray-100 p-1 rounded text-gray-500"
             onMouseEnter={() => setCopyToLargerButtonHover(true)}
             onMouseLeave={() => setCopyToLargerButtonHover(false)}
+            onClick={() => {
+              void rpc.remote.copyStylesToLargerScreens();
+            }}
           >
             <Icon icon="material-symbols:assignment-return-outline" hFlip />
           </button>

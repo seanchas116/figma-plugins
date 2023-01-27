@@ -14,16 +14,14 @@ export interface IUIToPluginRPC {
   syncCodeAssets(assets: CodeAssets): Promise<void>;
   resizeWindow(width: number, height: number): Promise<void>;
   exportWholeDocument(): Promise<IR.Component[]>;
-  createResponsivePage(): Promise<void>;
-  syncResponsiveContents(): Promise<void>;
-  copyStylesToLargerScreens(): Promise<void>;
-  copyStylesToSmallerScreens(): Promise<void>;
   getClientStorage(key: string): Promise<any>;
   setClientStorage(key: string, value: any): Promise<void>;
   notify(message: string): Promise<void>;
   insertIcon(svgText: string, icon: IconInfo): Promise<void>;
   resizeCurrentArtboardWidth(width: number): Promise<void>;
   makeCurrentArtboardResponsive(): Promise<void>;
+  copyStylesToLargerScreens(): Promise<void>;
+  copyStylesToSmallerScreens(): Promise<void>;
 }
 
 export interface IPluginToUIRPC {

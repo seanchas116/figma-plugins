@@ -81,3 +81,11 @@ export function restorePerBreakpointStyles(
     }
   }
 }
+
+export function copyStylesToLargerScreens() {
+  // TODO
+}
+
+export function copyStylesToSmallerScreens() {
+  // TODO
+}

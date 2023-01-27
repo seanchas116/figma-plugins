@@ -8,14 +8,13 @@ import { onSelectionChange } from "./onSelectionChange";
 import { updateInstance } from "./codeImport/updateInstance";
 import { createResponsivePage } from "./responsive/createResponsivePage";
 import { resizeWindow } from "./resizeWindow";
-import {
-  copyStylesToLargerScreens,
-  copyStylesToSmallerScreens,
-  syncResponsiveContents,
-} from "./responsive/syncContents";
 import { insertIcon } from "./icon/insertIcon";
 import { resizeCurrentArtboardWidth } from "./responsive2/resizeCurrentArtboardWidth";
 import { makeCurrentArtboardResponsive } from "./responsive2/makeCurrentArtboardResponsive";
+import {
+  copyStylesToLargerScreens,
+  copyStylesToSmallerScreens,
+} from "./responsive2/setPerBreakpointStyles";
 
 class RPCHandler implements IUIToPluginRPC {
   async ready(): Promise<void> {
@@ -37,22 +36,14 @@ class RPCHandler implements IUIToPluginRPC {
     return await getComponentIRs(figma.currentPage);
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
-  async createResponsivePage(): Promise<void> {
-    createResponsivePage();
-  }
+  // // eslint-disable-next-line @typescript-eslint/require-await
+  // async createResponsivePage(): Promise<void> {
+  //   createResponsivePage();
+  // }
 
-  async syncResponsiveContents(): Promise<void> {
-    await syncResponsiveContents();
-  }
-
-  async copyStylesToLargerScreens(): Promise<void> {
-    await copyStylesToLargerScreens();
-  }
-
-  async copyStylesToSmallerScreens(): Promise<void> {
-    await copyStylesToSmallerScreens();
-  }
+  // async syncResponsiveContents(): Promise<void> {
+  //   await syncResponsiveContents();
+  // }
 
   async getClientStorage(key: string): Promise<any> {
     return await figma.clientStorage.getAsync(key);
@@ -79,6 +70,16 @@ class RPCHandler implements IUIToPluginRPC {
   // eslint-disable-next-line @typescript-eslint/require-await
   async makeCurrentArtboardResponsive(): Promise<void> {
     makeCurrentArtboardResponsive();
+  }
+
+  // eslint-disable-next-line @typescript-eslint/require-await
+  async copyStylesToLargerScreens(): Promise<void> {
+    copyStylesToLargerScreens();
+  }
+
+  // eslint-disable-next-line @typescript-eslint/require-await
+  async copyStylesToSmallerScreens(): Promise<void> {
+    copyStylesToSmallerScreens();
   }
 }
 
