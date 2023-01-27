@@ -271,12 +271,12 @@ const BreakpointSelect: React.FC = observer(() => {
               <button
                 onMouseDown={onClick}
                 className={clsx("p-1 text-base rounded hover:bg-gray-100", {
-                  "bg-gray-100": isCopyTarget,
+                  "text-blue-500": isCopyTarget,
                   // "bg-gray-100": i <= breakpointIndex,
                   // "text-gray-300": !(i <= breakpointIndex),
                   "font-bold bg-blue-500 hover:bg-blue-500 text-white":
                     breakpointIndex === i,
-                  "text-gray-800": breakpointIndex !== i,
+                  "text-gray-800": !isCopyTarget && breakpointIndex !== i,
                 })}
               >
                 {size.icon}
