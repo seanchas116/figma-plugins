@@ -1,6 +1,4 @@
-import { setResponsiveArtboardData } from "../pluginData";
-import { getArtboard } from "./getArtboard";
-import { setPerBreakpointStyles } from "./setPerBreakpointStyles";
+import { getArtboard, ResponsiveArtboard } from "./ResponsiveArtboard";
 
 export function makeCurrentArtboardResponsive() {
   if (figma.currentPage.selection.length === 0) {
@@ -12,8 +10,6 @@ export function makeCurrentArtboardResponsive() {
     return;
   }
 
-  setResponsiveArtboardData(artboard, {});
-  setPerBreakpointStyles(artboard, 3);
-
+  ResponsiveArtboard.attach(artboard);
   figma.commitUndo();
 }

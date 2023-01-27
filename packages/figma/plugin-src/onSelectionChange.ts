@@ -2,7 +2,7 @@ import { Target, CodeInstanceInfo } from "../types/data";
 import { rpc } from "./rpc";
 import { getElementIR } from "./codegen/element";
 import { getIconPluginData, getInstanceInfo } from "./pluginData";
-import { getResponsiveArtboardInfo } from "./responsive2/getArtboard";
+import { ResponsiveArtboard } from "./responsive2/ResponsiveArtboard";
 
 export async function onSelectionChange() {
   const selection = figma.currentPage.selection;
@@ -14,10 +14,12 @@ export async function onSelectionChange() {
         instance = getInstanceInfo(node);
       }
 
+      const responsiveArtboard = ResponsiveArtboard.get(node);
+
       return {
         instance,
         icon: getIconPluginData(node),
-        responsiveArtboard: getResponsiveArtboardInfo(node),
+        responsiveArtboard: responsiveArtboard?.getInfo(),
         elementIR: await getElementIR(node),
       };
     })

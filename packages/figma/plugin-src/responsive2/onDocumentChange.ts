@@ -1,10 +1,4 @@
-import { getResponsiveArtboardData } from "../pluginData";
-import { getArtboard } from "./getArtboard";
-import {
-  getBreakpointIndex,
-  restorePerBreakpointStyles,
-  setPerBreakpointStyles,
-} from "./setPerBreakpointStyles";
+import { ResponsiveArtboard } from "./ResponsiveArtboard";
 
 const onDocumentChange = (event: DocumentChangeEvent) => {
   for (const change of event.documentChanges) {
@@ -16,16 +10,12 @@ const onDocumentChange = (event: DocumentChangeEvent) => {
       if (node.removed) {
         continue;
       }
-      const artboard = getArtboard(node);
+      const artboard = ResponsiveArtboard.get(node);
       if (!artboard) {
         continue;
       }
-      const artboardData = getResponsiveArtboardData(artboard);
-      if (!artboardData) {
-        continue;
-      }
 
-      setPerBreakpointStyles(artboard, getBreakpointIndex(artboard.width));
+      artboard.setPerBreakpointStyles();
     }
 
     // artboard resized
@@ -37,13 +27,11 @@ const onDocumentChange = (event: DocumentChangeEvent) => {
       if (node.removed) {
         continue;
       }
-      const artboardData = getResponsiveArtboardData(node);
-      if (!artboardData) {
+      const artboard = ResponsiveArtboard.get(node);
+      if (!artboard) {
         continue;
       }
-
-      const breakpointIndex = getBreakpointIndex(node.width);
-      void restorePerBreakpointStyles(node, breakpointIndex);
+      artboard.restorePerBreakpointStyles();
     }
   }
 };

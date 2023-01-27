@@ -6,15 +6,10 @@ import { Component } from "@uimix/element-ir";
 import { getComponentIRs } from "./codegen/component";
 import { onSelectionChange } from "./onSelectionChange";
 import { updateInstance } from "./codeImport/updateInstance";
-import { createResponsivePage } from "./responsive/createResponsivePage";
 import { resizeWindow } from "./resizeWindow";
 import { insertIcon } from "./icon/insertIcon";
 import { resizeCurrentArtboardWidth } from "./responsive2/resizeCurrentArtboardWidth";
 import { makeCurrentArtboardResponsive } from "./responsive2/makeCurrentArtboardResponsive";
-import {
-  copyStylesToLargerScreens,
-  copyStylesToSmallerScreens,
-} from "./responsive2/setPerBreakpointStyles";
 
 class RPCHandler implements IUIToPluginRPC {
   async ready(): Promise<void> {
@@ -74,12 +69,12 @@ class RPCHandler implements IUIToPluginRPC {
 
   // eslint-disable-next-line @typescript-eslint/require-await
   async copyStylesToLargerScreens(): Promise<void> {
-    copyStylesToLargerScreens();
+    // TODO
   }
 
   // eslint-disable-next-line @typescript-eslint/require-await
   async copyStylesToSmallerScreens(): Promise<void> {
-    copyStylesToSmallerScreens();
+    // TODO
   }
 }
 
