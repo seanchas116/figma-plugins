@@ -10,8 +10,6 @@ import { resizeWindow } from "./resizeWindow";
 import { insertIcon } from "./icon/insertIcon";
 import {
   clearCurrentArtboardResponsive,
-  copyStylesToLargerScreens,
-  copyStylesToSmallerScreens,
   makeCurrentArtboardResponsive,
   resizeCurrentArtboardWidth,
 } from "./responsive2/actions";
@@ -79,12 +77,12 @@ class RPCHandler implements IUIToPluginRPC {
 
   // eslint-disable-next-line @typescript-eslint/require-await
   async copyStylesToLargerScreens(): Promise<void> {
-    copyStylesToLargerScreens();
+    //copyStylesToLargerScreens();
   }
 
   // eslint-disable-next-line @typescript-eslint/require-await
   async copyStylesToSmallerScreens(): Promise<void> {
-    copyStylesToSmallerScreens();
+    //copyStylesToSmallerScreens();
   }
 }
 

@@ -1,16 +1,12 @@
 import { ResponsiveArtboardInfo } from "../../types/data";
 import {
-  getPerBreakpointStylesData,
   getResponsiveArtboardData,
-  PerBreakpointStyle,
   ResponsiveArtboardData,
   setPerBreakpointStylesData,
   setResponsiveArtboardData,
 } from "../pluginData";
-import {
-  getPerBreakpointStyle,
-  setPerBreakpointStyle,
-} from "./PerBreakpointStyle";
+import { Breakpoint } from "./Breakpoint";
+import { PerBreakpointStyles } from "./PerBreakpointStyles";
 
 export function getTopLevelNode(
   node: SceneNode
@@ -57,7 +53,7 @@ export class ResponsiveArtboard {
     });
 
     const artboard = new ResponsiveArtboard(topLevelNode, data);
-    artboard.savePerBreakpointStyles(0);
+    artboard.savePerBreakpointStyles(Infinity);
     return artboard;
   }
 
@@ -71,113 +67,42 @@ export class ResponsiveArtboard {
 
   readonly node: FrameNode | ComponentNode;
   readonly data: ResponsiveArtboardData;
-  readonly breakpoints = [
-    {
-      width: 0,
-      label: "SM",
-    },
-    {
-      width: 768,
-      label: "MD",
-    },
-    {
-      width: 1024,
-      label: "LG",
-    },
-    {
-      width: 1280,
-      label: "XL",
-    },
-  ] as const;
+  readonly breakpoints: Breakpoint[] = [
+    { width: 768 },
+    { width: 1024 },
+    { width: 1280 },
+  ];
 
   resize(width: number) {
     this.node.resize(width, this.node.height);
   }
 
-  getBreakpointIndex(): number {
-    let index = 0;
-    for (const [i, breakpoint] of this.breakpoints.entries()) {
-      if (this.node.width < breakpoint.width) {
-        break;
-      }
-      index = i;
-    }
-    return index;
-  }
-
-  private getPerBreakpointStyles(
-    node: SceneNode,
-    defaultStyle: PerBreakpointStyle = getPerBreakpointStyle(node)
-  ): PerBreakpointStyle[] {
-    const styles: PerBreakpointStyle[] = [];
-    for (let i = 0; i < this.breakpoints.length; i++) {
-      styles.push({ ...defaultStyle });
-    }
-
-    const data = getPerBreakpointStylesData(node);
-
-    for (const [minWidth, styleToLoad] of Object.entries(data ?? {})) {
-      const index = this.breakpoints.findIndex(
-        (breakpoint) => breakpoint.width === Number(minWidth)
-      );
-      if (0 <= index) {
-        Object.assign(styles[index], styleToLoad);
-      }
-    }
-
-    return styles;
-  }
-
-  private setPerBreakpointStyles(
-    node: SceneNode,
-    styles: PerBreakpointStyle[]
-  ) {
-    const data: Record<number, PerBreakpointStyle> = {};
-    for (let i = 0; i < styles.length; ++i) {
-      data[this.breakpoints[i].width] = styles[i];
-    }
-
-    setPerBreakpointStylesData(node, data);
-    node.setRelaunchData({
-      open: "",
-    });
-  }
-
   savePerBreakpointStyles(
-    breakpointIndex: number = this.getBreakpointIndex(),
+    width: number = this.node.width,
     node: SceneNode = this.node
   ) {
-    const currentStyle = getPerBreakpointStyle(node);
-
-    const styleData = this.getPerBreakpointStyles(node, currentStyle);
-    console.log(styleData);
-
-    styleData[breakpointIndex] = currentStyle;
-    this.setPerBreakpointStyles(node, styleData);
-    node.setRelaunchData({
-      open: "",
-    });
+    const styles = new PerBreakpointStyles(node, this.breakpoints);
+    styles.record(this.node.width);
+    styles.save();
 
     if ("children" in node) {
       for (const child of node.children) {
-        this.savePerBreakpointStyles(breakpointIndex, child);
+        this.savePerBreakpointStyles(width, child);
       }
     }
   }
 
   restorePerBreakpointStyles(
-    breakpointIndex: number = this.getBreakpointIndex(),
+    width: number = this.node.width,
     node: SceneNode = this.node
   ): void {
-    const stylesData = this.getPerBreakpointStyles(node);
-    const style = stylesData[breakpointIndex];
-    console.log(style);
-
-    setPerBreakpointStyle(node, style);
+    const styles = new PerBreakpointStyles(node, this.breakpoints);
+    styles.restore(this.node.width);
+    styles.save();
 
     if ("children" in node) {
       for (const child of node.children) {
-        this.restorePerBreakpointStyles(breakpointIndex, child);
+        this.restorePerBreakpointStyles(width, child);
       }
     }
   }
@@ -186,36 +111,6 @@ export class ResponsiveArtboard {
     return {
       width: this.node.width,
     };
-  }
-
-  copyStylesToSmallerBreakpoints(node: SceneNode) {
-    const styleData = this.getPerBreakpointStyles(node);
-    const breakpointIndex = this.getBreakpointIndex();
-    for (let i = 0; i < breakpointIndex; i++) {
-      styleData[i].fontSize = styleData[breakpointIndex].fontSize;
-    }
-    this.setPerBreakpointStyles(node, styleData);
-
-    if ("children" in node) {
-      for (const child of node.children) {
-        this.copyStylesToSmallerBreakpoints(child);
-      }
-    }
-  }
-
-  copyStylesToLargerBreakpoints(node: SceneNode) {
-    const styleData = this.getPerBreakpointStyles(node);
-    const breakpointIndex = this.getBreakpointIndex();
-    for (let i = breakpointIndex + 1; i < styleData.length; i++) {
-      styleData[i].fontSize = styleData[breakpointIndex].fontSize;
-    }
-    this.setPerBreakpointStyles(node, styleData);
-
-    if ("children" in node) {
-      for (const child of node.children) {
-        this.copyStylesToLargerBreakpoints(child);
-      }
-    }
   }
 
   clear() {

@@ -41,35 +41,3 @@ export function resizeCurrentArtboardWidth(width: number): void {
   artboard.resize(width);
   figma.commitUndo();
 }
-
-export function copyStylesToLargerScreens(): void {
-  if (figma.currentPage.selection.length === 0) {
-    return;
-  }
-
-  const node = figma.currentPage.selection[0];
-
-  const artboard = ResponsiveArtboard.get(node);
-  if (!artboard) {
-    return;
-  }
-
-  artboard.copyStylesToLargerBreakpoints(node);
-  figma.commitUndo();
-}
-
-export function copyStylesToSmallerScreens(): void {
-  if (figma.currentPage.selection.length === 0) {
-    return;
-  }
-
-  const node = figma.currentPage.selection[0];
-
-  const artboard = ResponsiveArtboard.get(node);
-  if (!artboard) {
-    return;
-  }
-
-  artboard.copyStylesToSmallerBreakpoints(node);
-  figma.commitUndo();
-}

@@ -220,8 +220,16 @@ export interface PerBreakpointStyle {
   textAutoResize?: TextNode["textAutoResize"];
 }
 
-export type PerBreakpointStylesData = {
-  [minWidth: number]: PerBreakpointStyle;
+// Desktop-first styles (with min-width based breakpoints)
+// meaning:
+// ...default style
+// @media (max-width: 767px /* not 768px */) { ...style for 768px breakpoint }
+// @media (max-width: 1023px /* not 1024px */) { ...style for 1024px breakpoint }
+export type PerBreakpointStylesData = Record<
+  number,
+  Partial<PerBreakpointStyle>
+> & {
+  default: PerBreakpointStyle;
 };
 
 export function setPerBreakpointStylesData(

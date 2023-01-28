@@ -1,32 +1,31 @@
-import { PerBreakpointStyle } from "../pluginData";
+import {
+  getPerBreakpointStylesData,
+  PerBreakpointStyle,
+  PerBreakpointStylesData,
+  setPerBreakpointStylesData,
+} from "../pluginData";
 import { diffObjects } from "../util/common";
+import { Breakpoint } from "./Breakpoint";
 import {
   getPerBreakpointStyle,
   setPerBreakpointStyle,
 } from "./PerBreakpointStyle";
 
-// Desktop-first styles (with min-width based breakpoints)
-// meaning:
-// ...default style
-// @media (max-width: 767px /* not 768px */) { ...style for 768px breakpoint }
-// @media (max-width: 1023px /* not 1024px */) { ...style for 1024px breakpoint }
-type PerBreakpointStylesData2 = Record<number, PerBreakpointStyle> & {
-  default: PerBreakpointStyle;
-};
-
 export class PerBreakpointStyles {
   node: SceneNode;
-  breakpoints: { width: number }[];
+  breakpoints: Breakpoint[];
+  currentStyle: PerBreakpointStyle;
   styles: Partial<PerBreakpointStyle>[];
   default: PerBreakpointStyle;
 
-  constructor(
-    node: SceneNode,
-    data: PerBreakpointStylesData2,
-    breakpoints: { width: number }[]
-  ) {
+  constructor(node: SceneNode, breakpoints: Breakpoint[]) {
     this.node = node;
     this.breakpoints = breakpoints;
+    this.currentStyle = getPerBreakpointStyle(node);
+    const data = getPerBreakpointStylesData(node) ?? {
+      default: this.currentStyle,
+    };
+
     this.default = data.default;
     this.styles = breakpoints.map((breakpoint) => data[breakpoint.width] ?? {});
   }
@@ -45,7 +44,7 @@ export class PerBreakpointStyles {
 
   getStyleForBreakpoint(index: number) {
     const base = { ...this.default };
-    for (let i = this.breakpoints.length - 1; i > index; --i) {
+    for (let i = this.breakpoints.length - 1; i >= index; --i) {
       Object.assign(base, this.styles[i]);
     }
     return base;
@@ -54,11 +53,11 @@ export class PerBreakpointStyles {
   record(width: number) {
     const bi = this.getBreakpointIndex(width);
     if (bi === this.breakpoints.length) {
-      this.default = getPerBreakpointStyle(this.node);
+      this.default = { ...this.currentStyle };
       return;
     }
 
-    const current = getPerBreakpointStyle(this.node);
+    const current = this.currentStyle;
     const base = this.getStyleForBreakpoint(bi);
 
     const diff = diffObjects(base, current);
@@ -67,6 +66,22 @@ export class PerBreakpointStyles {
 
   restore(width: number) {
     const bi = this.getBreakpointIndex(width);
-    setPerBreakpointStyle(this.node, this.getStyleForBreakpoint(bi));
+    const style = this.getStyleForBreakpoint(bi);
+    console.log("restore", style);
+    setPerBreakpointStyle(this.node, style);
+  }
+
+  save() {
+    const data: PerBreakpointStylesData = {
+      default: this.default,
+    };
+    for (let i = 0; i < this.breakpoints.length; ++i) {
+      data[this.breakpoints[i].width] = this.styles[i];
+    }
+    console.log("save", data);
+    setPerBreakpointStylesData(this.node, data);
+    this.node.setRelaunchData({
+      open: "",
+    });
   }
 }
