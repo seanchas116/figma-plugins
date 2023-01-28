@@ -14,7 +14,6 @@ import { MIXED, sameOrMixed } from "../util/Mixed";
 import clsx from "clsx";
 import { rpc } from "../rpc";
 import { Button } from "../components/Button";
-import { useState } from "react";
 
 const SizingButton = styled(
   "button",
@@ -260,45 +259,62 @@ const BreakpointSelect: React.FC = observer(() => {
   return (
     <div className="flex gap-4">
       <div className="flex">
-        {breakpoints.map((size, i) => {
-          const onClick = () => {
-            if (size.width === 0) {
-              // mobile
-              void rpc.remote.resizeCurrentArtboardWidth(375);
-            } else {
-              void rpc.remote.resizeCurrentArtboardWidth(size.width);
+        {Array(breakpoints.length + 1)
+          .fill(0)
+          .map((_, i) => {
+            const onClick = () => {
+              if (i === 0) {
+                // mobile
+                void rpc.remote.resizeCurrentArtboardWidth(375);
+              } else {
+                void rpc.remote.resizeCurrentArtboardWidth(
+                  breakpoints[i - 1].width
+                );
+              }
+            };
+
+            const isCurrent = i === breakpointIndex;
+            const isAffected = i <= breakpointIndex;
+
+            const widthMin = i === 0 ? undefined : breakpoints[i - 1].width;
+            const widthMax =
+              i === breakpoints.length ? undefined : breakpoints[i].width - 1;
+
+            let rangeText = "";
+            if (widthMin !== undefined && widthMax !== undefined) {
+              rangeText = `${widthMin} - ${widthMax}`;
+            } else if (widthMin !== undefined) {
+              rangeText = `${widthMin} -`;
+            } else if (widthMax !== undefined) {
+              rangeText = `- ${widthMax}`;
             }
-          };
 
-          const isCurrent = i === breakpointIndex;
-          const isAffected = i <= breakpointIndex;
-
-          return (
-            <Tooltip text={`${size.label} - ${size.width}px`}>
-              <div
-                className={clsx({
-                  "bg-gray-100": isAffected,
-                  "rounded-l": i === 0,
-                  "rounded-r": isCurrent,
-                })}
-              >
-                <button
-                  onMouseDown={onClick}
-                  className={clsx("p-1 text-base relative", {
-                    "rounded font-bold text-blue-500": isCurrent,
-                    "text-gray-600 hover:text-gray-900": !isCurrent,
+            return (
+              <Tooltip text={rangeText}>
+                <div
+                  className={clsx({
+                    "bg-gray-100": isAffected,
+                    "rounded-l": i === 0,
+                    "rounded-r": isCurrent,
                   })}
                 >
-                  {size.icon}
-                  {!isCurrent && (
-                    // TODO: condition
-                    <div className="absolute top-0.5 right-0.5 bg-orange-500 w-1 h-1 rounded-full" />
-                  )}
-                </button>
-              </div>
-            </Tooltip>
-          );
-        })}
+                  <button
+                    onMouseDown={onClick}
+                    className={clsx("p-1 text-base relative", {
+                      "rounded font-bold text-blue-500": isCurrent,
+                      "text-gray-600 hover:text-gray-900": !isCurrent,
+                    })}
+                  >
+                    {icons[i]}
+                    {!isCurrent && (
+                      // TODO: condition
+                      <div className="absolute top-0.5 right-0.5 bg-orange-500 w-1 h-1 rounded-full" />
+                    )}
+                  </button>
+                </div>
+              </Tooltip>
+            );
+          })}
       </div>
       <div className="flex">
         <Tooltip text="Reset Override">
@@ -328,36 +344,20 @@ const BreakpointSelect: React.FC = observer(() => {
   );
 });
 
-const breakpoints = [
-  {
-    width: 0,
-    label: "SM",
-    icon: <Icon icon="material-symbols:phone-iphone-outline" />,
-  },
-  {
-    width: 768,
-    label: "MD",
-    icon: <Icon icon="material-symbols:tablet-mac-outline" />,
-  },
-  {
-    width: 1024,
-    label: "LG",
-    icon: <Icon icon="material-symbols:laptop-mac-outline" />,
-  },
-  {
-    width: 1280,
-    label: "XL",
-    icon: <Icon icon="material-symbols:desktop-mac-outline" />,
-  },
-] as const;
+const breakpoints = [{ width: 768 }, { width: 1024 }, { width: 1280 }] as const;
 
-function getBreakpointIndex(width: number): number {
-  let index = 0;
-  for (const [i, breakpoint] of breakpoints.entries()) {
-    if (width < breakpoint.width) {
-      break;
+const icons = [
+  <Icon icon="material-symbols:phone-iphone-outline" />,
+  <Icon icon="material-symbols:tablet-mac-outline" />,
+  <Icon icon="material-symbols:laptop-mac-outline" />,
+  <Icon icon="material-symbols:desktop-mac-outline" />,
+];
+
+function getBreakpointIndex(width: number) {
+  for (let i = 0; i < breakpoints.length; ++i) {
+    if (width < breakpoints[i].width) {
+      return i;
     }
-    index = i;
   }
-  return index;
+  return breakpoints.length;
 }
