@@ -3,6 +3,7 @@ import { ResponsiveArtboard } from "./ResponsiveArtboard";
 const onDocumentChange = (event: DocumentChangeEvent) => {
   const resizedArtboards = new Map<string, ResponsiveArtboard>();
 
+  // TODO: trigger restore only if the root node is resized
   for (const change of event.documentChanges) {
     if (
       change.type === "PROPERTY_CHANGE" &&
