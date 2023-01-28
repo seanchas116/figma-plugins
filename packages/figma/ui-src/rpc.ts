@@ -15,6 +15,7 @@ export const rpcHandler: IPluginToUIRPC = {
   },
   // eslint-disable-next-line @typescript-eslint/require-await
   onTargetsChange: action(async (targets: Target[]) => {
+    console.log(targets);
     state.targets = targets;
   }),
 };

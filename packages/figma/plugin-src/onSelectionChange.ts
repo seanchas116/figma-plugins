@@ -19,7 +19,7 @@ export async function onSelectionChange() {
       return {
         instance,
         icon: getIconPluginData(node),
-        responsiveArtboard: responsiveArtboard?.getInfo(),
+        responsiveArtboard: responsiveArtboard?.getInfo(node),
         elementIR: await getElementIR(node),
       };
     })

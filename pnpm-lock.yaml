@@ -198,6 +198,7 @@ importers:
       esbuild: ^0.17.4
       hast-util-to-html: ^8.0.4
       jszip: ^3.10.1
+      just-compare: ^2.3.0
       lodash-es: ^4.17.21
       mobx: ^6.7.0
       mobx-react-lite: ^3.4.0
@@ -228,6 +229,7 @@ importers:
       clsx: 1.2.1
       hast-util-to-html: 8.0.4
       jszip: 3.10.1
+      just-compare: 2.3.0
       lodash-es: 4.17.21
       mobx: 6.7.0
       mobx-react-lite: 3.4.0_jofyzmwkboewm6mjrhi25mngky
@@ -10113,6 +10115,10 @@ packages:
     resolution: {integrity: sha512-pBxcB3LFc8QVgdggvZWyeys+hnrNWg4OcZIU/1X59k5jQdLBlCsYGRQaz234SqoRLTCgMH00fY0xRJH+F9METQ==}
     engines: {node: '>=8'}
     dev: true
+
+  /just-compare/2.3.0:
+    resolution: {integrity: sha512-6shoR7HDT+fzfL3gBahx1jZG3hWLrhPAf+l7nCwahDdT9XDtosB9kIF0ZrzUp5QY8dJWfQVr5rnsPqsbvflDzg==}
+    dev: false
 
   /jwa/1.4.1:
     resolution: {integrity: sha512-qiLX/xhEEFKUAJ6FiBMbes3w9ATzyk5W7Hvzpa/SLYdxNtng+gcurvrI7TbACjIXlsJyr05/S1oUhZrc63evQA==}

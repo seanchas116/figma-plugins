@@ -73,4 +73,16 @@ export class PerBreakpointStyles {
       open: "",
     });
   }
+
+  getOverriddenBreakpoints(): number[] {
+    const overriddenBreakpoints = [];
+    for (let i = 0; i < this.breakpoints.length; ++i) {
+      const style = this.styles[i];
+      console.log(style);
+      if (Object.keys(style).length > 0) {
+        overriddenBreakpoints.push(i);
+      }
+    }
+    return overriddenBreakpoints;
+  }
 }

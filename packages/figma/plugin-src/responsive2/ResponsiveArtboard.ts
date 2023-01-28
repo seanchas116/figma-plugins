@@ -105,12 +105,14 @@ export class ResponsiveArtboard {
     }
   }
 
-  getInfo(): ResponsiveArtboardInfo {
+  getInfo(node: SceneNode): ResponsiveArtboardInfo {
+    const perBreakpointStyles = new PerBreakpointStyles(node, this.breakpoints);
+
     return {
       width: this.node.width,
       breakpoints: this.breakpoints,
       breakpointIndex: getBreakpointIndex(this.breakpoints, this.node.width),
-      overriddenIndexes: [], // TODO
+      overriddenIndexes: perBreakpointStyles.getOverriddenBreakpoints(),
     };
   }
 
