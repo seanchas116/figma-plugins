@@ -80,6 +80,16 @@ export function getPerBreakpointStyle(node: SceneNode): PerBreakpointStyle {
     }
   }
 
+  if (node.type === "TEXT") {
+    if (node.textAutoResize === "WIDTH_AND_HEIGHT") {
+      width = { type: "hug" };
+      height = { type: "hug" };
+    }
+    if (node.textAutoResize === "HEIGHT") {
+      height = { type: "hug" };
+    }
+  }
+
   return {
     x: node.x,
     y: node.y,
