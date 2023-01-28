@@ -5,6 +5,11 @@ import {
   setPerBreakpointStyle,
 } from "./PerBreakpointStyle";
 
+// Desktop-first styles (with min-width based breakpoints)
+// meaning:
+// ...default style
+// @media (max-width: 767px /* not 768px */) { ...style for 768px breakpoint }
+// @media (max-width: 1023px /* not 1024px */) { ...style for 1024px breakpoint }
 type PerBreakpointStylesData2 = Record<number, PerBreakpointStyle> & {
   default: PerBreakpointStyle;
 };
