@@ -249,10 +249,6 @@ const ResponsiveSection: React.FC = observer(() => {
 });
 
 const BreakpointSelect: React.FC = observer(() => {
-  const [copyToSmallerButtonHover, setCopyToSmallerButtonHover] =
-    useState(false);
-  const [copyToLargerButtonHover, setCopyToLargerButtonHover] = useState(false);
-
   const artboardWidth = sameOrMixed(
     state.targets.map((t) => t.responsiveArtboard?.width)
   );
@@ -301,34 +297,30 @@ const BreakpointSelect: React.FC = observer(() => {
           );
         })}
       </div>
-      {/* <div className="flex">
-        <Tooltip text="Copy styles to smaller breakpoints">
-          <button
-            disabled={breakpointIndex === 0}
-            className="text-base enabled:hover:bg-gray-100 p-1 rounded text-gray-500 disabled:text-gray-300"
-            onMouseEnter={() => setCopyToSmallerButtonHover(true)}
-            onMouseLeave={() => setCopyToSmallerButtonHover(false)}
-            onClick={() => {
-              void rpc.remote.copyStylesToSmallerScreens();
-            }}
-          >
-            <Icon icon="material-symbols:assignment-return-outline" />
-          </button>
-        </Tooltip>
-        <Tooltip text="Copy styles to larger breakpoints">
+      <div className="flex">
+        <Tooltip text="Reset Override">
           <button
             disabled={breakpointIndex === breakpoints.length - 1}
             className="text-base enabled:hover:bg-gray-100 p-1 rounded text-gray-500 disabled:text-gray-300"
-            onMouseEnter={() => setCopyToLargerButtonHover(true)}
-            onMouseLeave={() => setCopyToLargerButtonHover(false)}
             onClick={() => {
-              void rpc.remote.copyStylesToLargerScreens();
+              throw new Error("TODO");
+            }}
+          >
+            <Icon icon="material-symbols:restart-alt" />
+          </button>
+        </Tooltip>
+        <Tooltip text="Apply to Larger Screens">
+          <button
+            disabled={breakpointIndex === breakpoints.length - 1}
+            className="text-base enabled:hover:bg-gray-100 p-1 rounded text-gray-500 disabled:text-gray-300"
+            onClick={() => {
+              throw new Error("TODO");
             }}
           >
             <Icon icon="material-symbols:assignment-return-outline" hFlip />
           </button>
         </Tooltip>
-      </div> */}
+      </div>
     </div>
   );
 });
