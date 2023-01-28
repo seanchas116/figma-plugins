@@ -274,23 +274,20 @@ const BreakpointSelect: React.FC = observer(() => {
             }
           };
 
-          const isCopyTarget = copyToSmallerButtonHover
-            ? i < breakpointIndex
-            : copyToLargerButtonHover
-            ? i > breakpointIndex
-            : false;
+          const isCurrent = i === breakpointIndex;
+          const isAffected = i < breakpointIndex;
 
           return (
             <Tooltip text={`${size.label} - ${size.width}px`}>
               <button
                 onMouseDown={onClick}
-                className={clsx("p-1 text-base rounded hover:bg-gray-100", {
-                  "text-blue-500": isCopyTarget,
+                className={clsx("p-1 text-base hover:bg-gray-100", {
                   // "bg-gray-100": i <= breakpointIndex,
                   // "text-gray-300": !(i <= breakpointIndex),
                   "font-bold bg-blue-500 hover:bg-blue-500 text-white":
-                    breakpointIndex === i,
-                  "text-gray-600": !isCopyTarget && breakpointIndex !== i,
+                    isCurrent,
+                  "text-gray-600": !isCurrent,
+                  "bg-gray-200": isAffected,
                 })}
               >
                 {size.icon}
