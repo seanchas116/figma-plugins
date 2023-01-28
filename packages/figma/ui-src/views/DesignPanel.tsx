@@ -254,6 +254,14 @@ const BreakpointSelect: React.FC = observer(() => {
   if (typeof artboardWidth !== "number") {
     return null;
   }
+
+  let modifiedBreakpoints = sameOrMixed(
+    state.targets.map((t) => t.responsiveArtboard?.overriddenIndexes ?? [])
+  );
+  if (modifiedBreakpoints === undefined || modifiedBreakpoints === MIXED) {
+    modifiedBreakpoints = [];
+  }
+
   const breakpointIndex = getBreakpointIndex(artboardWidth);
 
   return (
@@ -289,6 +297,8 @@ const BreakpointSelect: React.FC = observer(() => {
               rangeText = `- ${widthMax}`;
             }
 
+            const modified = (modifiedBreakpoints as number[]).includes(i);
+
             return (
               <Tooltip text={rangeText}>
                 <div
@@ -306,8 +316,7 @@ const BreakpointSelect: React.FC = observer(() => {
                     })}
                   >
                     {icons[i]}
-                    {!isCurrent && (
-                      // TODO: condition
+                    {modified && (
                       <div className="absolute top-0.5 right-0.5 bg-orange-500 w-1 h-1 rounded-full" />
                     )}
                   </button>
