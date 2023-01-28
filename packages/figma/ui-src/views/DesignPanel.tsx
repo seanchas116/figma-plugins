@@ -301,7 +301,7 @@ const BreakpointSelect: React.FC = observer(() => {
           );
         })}
       </div>
-      <div className="flex">
+      {/* <div className="flex">
         <Tooltip text="Copy styles to smaller breakpoints">
           <button
             disabled={breakpointIndex === 0}
@@ -328,7 +328,7 @@ const BreakpointSelect: React.FC = observer(() => {
             <Icon icon="material-symbols:assignment-return-outline" hFlip />
           </button>
         </Tooltip>
-      </div>
+      </div> */}
     </div>
   );
 });
