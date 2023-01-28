@@ -50,18 +50,19 @@ export class PerBreakpointStyles {
     return base;
   }
 
-  record(width: number) {
+  save(width: number) {
     const bi = this.getBreakpointIndex(width);
     if (bi === this.breakpoints.length) {
       this.default = { ...this.currentStyle };
-      return;
+    } else {
+      const current = this.currentStyle;
+      const base = this.getStyleForBreakpoint(bi);
+
+      const diff = diffObjects(base, current);
+      this.styles[bi] = diff;
     }
 
-    const current = this.currentStyle;
-    const base = this.getStyleForBreakpoint(bi);
-
-    const diff = diffObjects(base, current);
-    this.styles[bi] = diff;
+    this.saveToNode();
   }
 
   restore(width: number) {
@@ -71,7 +72,7 @@ export class PerBreakpointStyles {
     setPerBreakpointStyle(this.node, style);
   }
 
-  save() {
+  private saveToNode() {
     const data: PerBreakpointStylesData = {
       default: this.default,
     };

@@ -82,8 +82,7 @@ export class ResponsiveArtboard {
     node: SceneNode = this.node
   ) {
     const styles = new PerBreakpointStyles(node, this.breakpoints);
-    styles.record(this.node.width);
-    styles.save();
+    styles.save(this.node.width);
 
     if ("children" in node) {
       for (const child of node.children) {
