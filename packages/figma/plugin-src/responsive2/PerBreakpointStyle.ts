@@ -4,6 +4,32 @@ function omitMixed<T>(value: T | typeof figma.mixed): T | undefined {
   return value === figma.mixed ? undefined : value;
 }
 
+export const observedProperties = new Set<NodeChangeProperty>([
+  "x",
+  "y",
+  "width",
+  "height",
+  "layoutGrow",
+  "layoutAlign",
+  "layoutPositioning",
+
+  "layoutMode",
+  "primaryAxisSizingMode",
+  "counterAxisSizingMode",
+  "primaryAxisAlignItems",
+  "counterAxisAlignItems",
+  "paddingLeft",
+  "paddingRight",
+  "paddingTop",
+  "paddingBottom",
+  "itemSpacing",
+  "itemReverseZIndex",
+  "strokesIncludedInLayout" as NodeChangeProperty,
+
+  "fontSize",
+  "textAutoResize",
+]);
+
 export function getPerBreakpointStyle(node: SceneNode): PerBreakpointStyle {
   // TODO: width/height constraint for text nodes
 

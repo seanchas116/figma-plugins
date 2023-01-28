@@ -1,3 +1,4 @@
+import { observedProperties } from "./PerBreakpointStyle";
 import { ResponsiveArtboard } from "./ResponsiveArtboard";
 
 const onDocumentChange = (event: DocumentChangeEvent) => {
@@ -20,8 +21,11 @@ const onDocumentChange = (event: DocumentChangeEvent) => {
     }
   }
 
-  for (const artboard of resizedArtboards.values()) {
-    artboard.restorePerBreakpointStyles();
+  if (resizedArtboards.size) {
+    for (const artboard of resizedArtboards.values()) {
+      artboard.restorePerBreakpointStyles();
+    }
+    return;
   }
 
   const changedArtboards = new Map<string, ResponsiveArtboard>();
@@ -29,8 +33,7 @@ const onDocumentChange = (event: DocumentChangeEvent) => {
   for (const change of event.documentChanges) {
     if (
       change.type === "PROPERTY_CHANGE" &&
-      (change.properties.includes("fontSize") ||
-        change.properties.includes("layoutMode"))
+      change.properties.some((p) => observedProperties.has(p))
     ) {
       const node = change.node;
       if (node.removed) {
