@@ -275,23 +275,28 @@ const BreakpointSelect: React.FC = observer(() => {
           };
 
           const isCurrent = i === breakpointIndex;
-          const isAffected = i < breakpointIndex;
+          const isAffected = i <= breakpointIndex;
 
           return (
             <Tooltip text={`${size.label} - ${size.width}px`}>
-              <button
-                onMouseDown={onClick}
-                className={clsx("p-1 text-base hover:bg-gray-100", {
-                  // "bg-gray-100": i <= breakpointIndex,
-                  // "text-gray-300": !(i <= breakpointIndex),
-                  "font-bold bg-blue-500 hover:bg-blue-500 text-white":
-                    isCurrent,
-                  "text-gray-600": !isCurrent,
+              <div
+                className={clsx({
                   "bg-gray-200": isAffected,
+                  "rounded-l": i === 0,
+                  "rounded-r": isCurrent,
                 })}
               >
-                {size.icon}
-              </button>
+                <button
+                  onMouseDown={onClick}
+                  className={clsx("p-1 text-base", {
+                    "rounded font-bold bg-blue-500 hover:bg-blue-500 text-white":
+                      isCurrent,
+                    "text-gray-600 hover:text-gray-900": !isCurrent,
+                  })}
+                >
+                  {size.icon}
+                </button>
+              </div>
             </Tooltip>
           );
         })}
