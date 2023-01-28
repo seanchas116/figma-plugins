@@ -101,3 +101,13 @@ export function omit<T, K extends string>(obj: T, keys: K[]): Omit<T, K> {
   }
   return result;
 }
+
+export function diffObjects<T extends object>(from: T, to: T): Partial<T> {
+  const diff: Partial<T> = {};
+  for (const [key, value] of Object.entries(to)) {
+    if (from[key as keyof T] !== value) {
+      diff[key as keyof T] = value;
+    }
+  }
+  return diff;
+}
