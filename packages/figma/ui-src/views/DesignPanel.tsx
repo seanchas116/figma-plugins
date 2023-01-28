@@ -277,20 +277,23 @@ const BreakpointSelect: React.FC = observer(() => {
             <Tooltip text={`${size.label} - ${size.width}px`}>
               <div
                 className={clsx({
-                  "bg-gray-200": isAffected,
+                  "bg-gray-100": isAffected,
                   "rounded-l": i === 0,
                   "rounded-r": isCurrent,
                 })}
               >
                 <button
                   onMouseDown={onClick}
-                  className={clsx("p-1 text-base", {
-                    "rounded font-bold bg-blue-500 hover:bg-blue-500 text-white":
-                      isCurrent,
+                  className={clsx("p-1 text-base relative", {
+                    "rounded font-bold text-blue-500": isCurrent,
                     "text-gray-600 hover:text-gray-900": !isCurrent,
                   })}
                 >
                   {size.icon}
+                  {!isCurrent && (
+                    // TODO: condition
+                    <div className="absolute top-0.5 right-0.5 bg-orange-500 w-1 h-1 rounded-full" />
+                  )}
                 </button>
               </div>
             </Tooltip>
