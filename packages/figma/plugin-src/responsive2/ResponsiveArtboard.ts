@@ -5,7 +5,7 @@ import {
   setPerBreakpointStylesData,
   setResponsiveArtboardData,
 } from "../pluginData";
-import { Breakpoint } from "./Breakpoint";
+import { Breakpoint, getBreakpointIndex } from "./Breakpoint";
 import { PerBreakpointStyles } from "./PerBreakpointStyles";
 
 export function getTopLevelNode(
@@ -108,6 +108,9 @@ export class ResponsiveArtboard {
   getInfo(): ResponsiveArtboardInfo {
     return {
       width: this.node.width,
+      breakpoints: this.breakpoints,
+      breakpointIndex: getBreakpointIndex(this.breakpoints, this.node.width),
+      overriddenIndexes: [], // TODO
     };
   }
 

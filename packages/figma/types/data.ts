@@ -1,5 +1,6 @@
 import type { Props } from "react-docgen-typescript";
 import { Element } from "@uimix/element-ir";
+import { Breakpoint } from "../plugin-src/responsive2/Breakpoint";
 
 export interface CodeComponentInfo {
   externalPath: string; // path used to import the component externally: e.g. '@uimix/components'
@@ -55,7 +56,10 @@ export interface RenderResult {
 }
 
 export interface ResponsiveArtboardInfo {
+  breakpoints: Breakpoint[];
   width: number;
+  breakpointIndex: number;
+  overriddenIndexes: number[];
 }
 
 export interface Target {
