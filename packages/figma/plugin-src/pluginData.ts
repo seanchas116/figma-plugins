@@ -180,24 +180,6 @@ export function getIconInfo(node: SceneNode): IconInfo | undefined {
   }
 }
 
-export interface ResponsiveArtboardData {}
-
-export function setResponsiveArtboardData(
-  node: SceneNode,
-  data: ResponsiveArtboardData | undefined
-) {
-  node.setPluginData("responsiveArtboard", data ? JSON.stringify(data) : "");
-}
-
-export function getResponsiveArtboardData(
-  node: SceneNode
-): ResponsiveArtboardData | undefined {
-  const data = node.getPluginData("responsiveArtboard");
-  if (data) {
-    return JSON.parse(data) as ResponsiveArtboardData;
-  }
-}
-
 export interface PerBreakpointStyle {
   x?: number;
   y?: number;

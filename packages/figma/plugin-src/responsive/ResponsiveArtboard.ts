@@ -1,10 +1,5 @@
 import { ResponsiveArtboardInfo } from "../../types/data";
-import {
-  getResponsiveArtboardData,
-  ResponsiveArtboardData,
-  setPerBreakpointStylesData,
-  setResponsiveArtboardData,
-} from "../pluginData";
+import { setPerBreakpointStylesData } from "../pluginData";
 import { copyProperties } from "../util/copyProperties";
 import { Breakpoint, getBreakpointIndex } from "./Breakpoint";
 import { PerBreakpointStyles } from "./PerBreakpointStyles";
@@ -27,18 +22,54 @@ export function getTopLevelNode(
   return getTopLevelNode(parent);
 }
 
+export function getContainingComponentSet(
+  node: SceneNode
+): ComponentSetNode | undefined {
+  if (node.type === "COMPONENT_SET") {
+    return node;
+  }
+
+  if (
+    !node.parent ||
+    node.parent.type === "PAGE" ||
+    node.parent.type === "DOCUMENT"
+  ) {
+    return;
+  }
+
+  return getContainingComponentSet(node.parent);
+}
+
 export class ResponsiveArtboard {
   static get(node: SceneNode): ResponsiveArtboard | undefined {
-    const topLevelNode = getTopLevelNode(node);
-    if (!topLevelNode) {
-      return;
-    }
-    const data = getResponsiveArtboardData(topLevelNode);
-    if (!data) {
+    const componentSet = getContainingComponentSet(node);
+    if (!componentSet) {
       return;
     }
 
-    return new ResponsiveArtboard(topLevelNode, data);
+    let forEditingVariant: ComponentNode | undefined;
+    const variants: number[] = [];
+
+    for (const variant of componentSet.children) {
+      if (variant.name.startsWith("breakpoint=for editing")) {
+        forEditingVariant = variant as ComponentNode;
+      }
+      if (variant.name.startsWith("breakpoint=<")) {
+        variants.push(parseInt(variant.name.split("=<")[1]));
+      }
+    }
+    console.log(forEditingVariant, variants);
+    variants.sort();
+
+    if (!forEditingVariant || variants.length === 0) {
+      return;
+    }
+
+    return new ResponsiveArtboard(
+      componentSet,
+      forEditingVariant,
+      variants.map((w) => ({ width: w }))
+    );
   }
 
   static attach(topLevelNode: FrameNode | ComponentNode): ResponsiveArtboard {
@@ -87,15 +118,17 @@ export class ResponsiveArtboard {
       componentSetNode.paddingLeft =
         16;
 
-    const data: ResponsiveArtboardData = {};
-    setResponsiveArtboardData(componentNode, data);
-    componentNode.setRelaunchData({
-      open: "",
-    });
+    const breakpoints: Breakpoint[] = [
+      { width: 768 },
+      { width: 1024 },
+      { width: 1280 },
+    ];
 
-    // TODO: get breakpoints from componentSetNode
-
-    const artboard = new ResponsiveArtboard(componentNode, data);
+    const artboard = new ResponsiveArtboard(
+      componentSetNode,
+      componentNode,
+      breakpoints
+    );
     artboard.savePerBreakpointStyles(Infinity);
 
     for (const breakpoint of artboard.breakpoints) {
@@ -116,15 +149,17 @@ export class ResponsiveArtboard {
   }
 
   private constructor(
+    componentSet: ComponentSetNode,
     node: FrameNode | ComponentNode,
-    data: ResponsiveArtboardData
+    breakpoints: Breakpoint[]
   ) {
+    this.componentSet = componentSet;
     this.node = node;
-    this.data = data;
+    this.breakpoints = breakpoints;
   }
 
+  readonly componentSet: ComponentSetNode;
   readonly node: FrameNode | ComponentNode;
-  readonly data: ResponsiveArtboardData;
   readonly breakpoints: Breakpoint[] = [
     { width: 768 },
     { width: 1024 },
@@ -187,7 +222,6 @@ export class ResponsiveArtboard {
   }
 
   clear() {
-    setResponsiveArtboardData(this.node, undefined);
     this.node.setRelaunchData({});
     this.clearPerBreakpointStyles(this.node);
   }
