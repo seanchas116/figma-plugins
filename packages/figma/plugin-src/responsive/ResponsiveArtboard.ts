@@ -47,8 +47,11 @@ export class ResponsiveArtboard {
       return existing;
     }
 
+    const name = topLevelNode.name;
+
     const componentNode = figma.createComponent();
     copyProperties(topLevelNode, componentNode);
+    componentNode.name = "breakpoint=for editing";
 
     for (const child of topLevelNode.children) {
       componentNode.appendChild(child);
@@ -63,6 +66,12 @@ export class ResponsiveArtboard {
 
     topLevelNode.remove();
 
+    const componentSetNode = figma.combineAsVariants(
+      [componentNode],
+      figma.currentPage
+    );
+    componentSetNode.name = name;
+
     const data: ResponsiveArtboardData = {};
     setResponsiveArtboardData(componentNode, data);
     componentNode.setRelaunchData({
@@ -71,6 +80,21 @@ export class ResponsiveArtboard {
 
     const artboard = new ResponsiveArtboard(componentNode, data);
     artboard.savePerBreakpointStyles(Infinity);
+
+    for (const breakpiint of artboard.breakpoints) {
+      const variant = componentNode.clone();
+      variant.name = `breakpoint=< ${breakpiint.width}`;
+      variant.locked = true;
+      variant.visible = false;
+      componentSetNode.insertChild(0, variant);
+    }
+
+    const defaultVariant = componentNode.clone();
+    defaultVariant.name = "breakpoint=default";
+    defaultVariant.locked = true;
+    defaultVariant.visible = false;
+    componentSetNode.insertChild(0, defaultVariant);
+
     return artboard;
   }
 

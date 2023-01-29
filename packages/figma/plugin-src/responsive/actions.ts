@@ -10,7 +10,9 @@ export function makeCurrentArtboardResponsive() {
     return;
   }
 
-  ResponsiveArtboard.attach(topLevelNode);
+  const artboard = ResponsiveArtboard.attach(topLevelNode);
+  figma.currentPage.selection = [artboard.node];
+
   figma.commitUndo();
 }
 
