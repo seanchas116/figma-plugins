@@ -93,6 +93,8 @@ export class ResponsiveArtboard {
       open: "",
     });
 
+    // TODO: get breakpoints from componentSetNode
+
     const artboard = new ResponsiveArtboard(componentNode, data);
     artboard.savePerBreakpointStyles(Infinity);
 
