@@ -1,19 +1,19 @@
 import { getPropertyDescriptor } from "./common";
 
-export async function copyProperties(
+export function copyProperties(
   src: SceneNode,
   dst: SceneNode,
   excludedKeys: string[] = []
-): Promise<void> {
-  if (src.type !== dst.type) {
-    throw new Error("Cannot copy properties between different node types");
-  }
+): void {
+  // if (src.type !== dst.type) {
+  //   throw new Error("Cannot copy properties between different node types");
+  // }
 
-  if (src.type === "TEXT") {
-    if (src.fontName !== figma.mixed) {
-      await figma.loadFontAsync(src.fontName);
-    }
-  }
+  // if (src.type === "TEXT") {
+  //   if (src.fontName !== figma.mixed) {
+  //     await figma.loadFontAsync(src.fontName);
+  //   }
+  // }
 
   if (
     "resizeWithoutConstraints" in dst &&
@@ -47,7 +47,11 @@ export async function copyProperties(
       continue;
     }
 
-    // @ts-ignore
-    dst[key] = src[key];
+    try {
+      // @ts-ignore
+      dst[key] = src[key];
+    } catch (e) {
+      console.error(e);
+    }
   }
 }

@@ -5,6 +5,7 @@ import {
   setPerBreakpointStylesData,
   setResponsiveArtboardData,
 } from "../pluginData";
+import { copyProperties } from "../util/copyProperties";
 import { Breakpoint, getBreakpointIndex } from "./Breakpoint";
 import { PerBreakpointStyles } from "./PerBreakpointStyles";
 
@@ -46,13 +47,29 @@ export class ResponsiveArtboard {
       return existing;
     }
 
+    const componentNode = figma.createComponent();
+    copyProperties(topLevelNode, componentNode);
+
+    for (const child of topLevelNode.children) {
+      componentNode.appendChild(child);
+    }
+
+    const index = figma.currentPage.children.indexOf(topLevelNode);
+    if (index !== -1) {
+      figma.currentPage.insertChild(index, componentNode);
+    } else {
+      figma.currentPage.appendChild(componentNode);
+    }
+
+    topLevelNode.remove();
+
     const data: ResponsiveArtboardData = {};
-    setResponsiveArtboardData(topLevelNode, data);
-    topLevelNode.setRelaunchData({
+    setResponsiveArtboardData(componentNode, data);
+    componentNode.setRelaunchData({
       open: "",
     });
 
-    const artboard = new ResponsiveArtboard(topLevelNode, data);
+    const artboard = new ResponsiveArtboard(componentNode, data);
     artboard.savePerBreakpointStyles(Infinity);
     return artboard;
   }
