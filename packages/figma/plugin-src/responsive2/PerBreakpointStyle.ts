@@ -106,10 +106,18 @@ export function getPerBreakpointStyle(
   }
 
   return {
-    x: absolutePositioned ? node.x : 0,
-    y: absolutePositioned ? node.y : 0,
-    width,
-    height,
+    ...(!isRoot && absolutePositioned
+      ? {
+          x: node.x,
+          y: node.y,
+        }
+      : undefined),
+    ...(!isRoot
+      ? {
+          width,
+          height,
+        }
+      : undefined),
     ...("layoutAlign" in node
       ? {
           layoutPositioning: node.layoutPositioning,
