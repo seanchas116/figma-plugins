@@ -2,7 +2,7 @@ import { Target, CodeInstanceInfo } from "../types/data";
 import { rpc } from "./rpc";
 import { getElementIR } from "./codegen/element";
 import { getIconPluginData, getInstanceInfo } from "./pluginData";
-import { ResponsiveArtboard } from "./responsive2/ResponsiveArtboard";
+import { ResponsiveArtboard } from "./responsive/ResponsiveArtboard";
 
 export async function onSelectionChange() {
   const selection = figma.currentPage.selection;

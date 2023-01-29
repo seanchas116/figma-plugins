@@ -12,7 +12,7 @@ import {
   clearCurrentArtboardResponsive,
   makeCurrentArtboardResponsive,
   resizeCurrentArtboardWidth,
-} from "./responsive2/actions";
+} from "./responsive/actions";
 
 class RPCHandler implements IUIToPluginRPC {
   async ready(): Promise<void> {

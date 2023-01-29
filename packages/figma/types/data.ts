@@ -1,6 +1,6 @@
 import type { Props } from "react-docgen-typescript";
 import { Element } from "@uimix/element-ir";
-import { Breakpoint } from "../plugin-src/responsive2/Breakpoint";
+import { Breakpoint } from "../plugin-src/responsive/Breakpoint";
 
 export interface CodeComponentInfo {
   externalPath: string; // path used to import the component externally: e.g. '@uimix/components'

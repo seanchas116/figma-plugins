@@ -1,6 +1,6 @@
 import "./codeImport/onDocumentChange";
 //import "./responsive/onDocumentChange";
-import "./responsive2/onDocumentChange";
+import "./responsive/onDocumentChange";
 import "./onSelectionChange";
 import "./icon/onDrop";
 import "./rpc";
