@@ -30,8 +30,20 @@ export const observedProperties = new Set<NodeChangeProperty>([
   "textAutoResize",
 ]);
 
+function isAbsolutePositioned(node: SceneNode) {
+  if (node.parent?.type === "FRAME" && node.parent.layoutMode !== "NONE") {
+    if ("layoutPositioning" in node && node.layoutPositioning === "ABSOLUTE") {
+      return true;
+    }
+
+    return false;
+  }
+
+  return true;
+}
+
 export function getPerBreakpointStyle(node: SceneNode): PerBreakpointStyle {
-  // TODO: width/height constraint for text nodes
+  const absolutePositioned = isAbsolutePositioned(node);
 
   let width: PerBreakpointStyle["width"] = { type: "fixed", value: node.width };
   let height: PerBreakpointStyle["height"] = {
@@ -91,8 +103,8 @@ export function getPerBreakpointStyle(node: SceneNode): PerBreakpointStyle {
   }
 
   return {
-    x: node.x,
-    y: node.y,
+    x: absolutePositioned ? node.x : 0,
+    y: absolutePositioned ? node.y : 0,
     width,
     height,
     ...("layoutAlign" in node
