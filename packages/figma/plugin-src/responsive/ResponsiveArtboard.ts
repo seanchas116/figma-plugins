@@ -181,7 +181,7 @@ export class ResponsiveArtboard {
     );
     styles.save(this.node.width);
 
-    if ("children" in node) {
+    if ("children" in node && node.type !== "INSTANCE") {
       for (const child of node.children) {
         this.savePerBreakpointStyles(width, child);
       }
@@ -199,7 +199,7 @@ export class ResponsiveArtboard {
     );
     styles.restore(this.node.width);
 
-    if ("children" in node) {
+    if ("children" in node && node.type !== "INSTANCE") {
       for (const child of node.children) {
         this.restorePerBreakpointStyles(width, child);
       }
