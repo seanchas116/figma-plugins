@@ -139,21 +139,29 @@ export function setPerBreakpointStyle(
   node: SceneNode,
   style: PerBreakpointStyle
 ) {
-  node.x = style.x;
-  node.y = style.y;
+  if (style.x !== undefined) {
+    node.x = style.x;
+  }
+  if (style.y !== undefined) {
+    node.y = style.y;
+  }
 
   // TODO: resize fixed size nodes
 
   if ("layoutAlign" in node) {
     const parent = node.parent;
-    if (parent && "layoutMode" in parent) {
-      if (parent.layoutMode === "VERTICAL") {
-        node.layoutAlign = style.width.type === "fill" ? "STRETCH" : "INHERIT";
-        node.layoutGrow = style.height.type === "fill" ? 1 : 0;
-      }
-      if (parent.layoutMode === "HORIZONTAL") {
-        node.layoutAlign = style.height.type === "fill" ? "STRETCH" : "INHERIT";
-        node.layoutGrow = style.width.type === "fill" ? 1 : 0;
+    if (style.width && style.height) {
+      if (parent && "layoutMode" in parent) {
+        if (parent.layoutMode === "VERTICAL") {
+          node.layoutAlign =
+            style.width.type === "fill" ? "STRETCH" : "INHERIT";
+          node.layoutGrow = style.height.type === "fill" ? 1 : 0;
+        }
+        if (parent.layoutMode === "HORIZONTAL") {
+          node.layoutAlign =
+            style.height.type === "fill" ? "STRETCH" : "INHERIT";
+          node.layoutGrow = style.width.type === "fill" ? 1 : 0;
+        }
       }
     }
 
@@ -167,17 +175,19 @@ export function setPerBreakpointStyle(
       node.layoutMode = style.layoutMode;
     }
 
-    if (node.layoutMode === "VERTICAL") {
-      node.counterAxisSizingMode =
-        style.width.type === "hug" ? "AUTO" : "FIXED";
-      node.primaryAxisSizingMode =
-        style.height.type === "hug" ? "AUTO" : "FIXED";
-    }
-    if (node.layoutMode === "HORIZONTAL") {
-      node.primaryAxisSizingMode =
-        style.width.type === "hug" ? "AUTO" : "FIXED";
-      node.counterAxisSizingMode =
-        style.height.type === "hug" ? "AUTO" : "FIXED";
+    if (style.width && style.height) {
+      if (node.layoutMode === "VERTICAL") {
+        node.counterAxisSizingMode =
+          style.width.type === "hug" ? "AUTO" : "FIXED";
+        node.primaryAxisSizingMode =
+          style.height.type === "hug" ? "AUTO" : "FIXED";
+      }
+      if (node.layoutMode === "HORIZONTAL") {
+        node.primaryAxisSizingMode =
+          style.width.type === "hug" ? "AUTO" : "FIXED";
+        node.counterAxisSizingMode =
+          style.height.type === "hug" ? "AUTO" : "FIXED";
+      }
     }
 
     if (style.primaryAxisAlignItems !== undefined) {

@@ -199,10 +199,13 @@ export function getResponsiveArtboardData(
 }
 
 export interface PerBreakpointStyle {
-  x: number;
-  y: number;
-  width: { type: "fixed"; value: number } | { type: "hug" } | { type: "fill" };
-  height: { type: "fixed"; value: number } | { type: "hug" } | { type: "fill" };
+  x?: number;
+  y?: number;
+  width?: { type: "fixed"; value: number } | { type: "hug" } | { type: "fill" };
+  height?:
+    | { type: "fixed"; value: number }
+    | { type: "hug" }
+    | { type: "fill" };
   layoutPositioning?: LayoutMixin["layoutPositioning"];
 
   layoutMode?: BaseFrameMixin["layoutMode"];
