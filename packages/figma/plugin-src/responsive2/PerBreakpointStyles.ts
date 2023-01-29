@@ -44,9 +44,10 @@ export class PerBreakpointStyles {
       this.default = { ...this.currentStyle };
     } else {
       const current = this.currentStyle;
-      const base = this.getStyleForBreakpoint(bi);
+      const base = this.getStyleForBreakpoint(bi + 1);
 
       const diff = diffObjects(base, current);
+      console.log("diff", diff);
       this.styles[bi] = diff;
     }
 
@@ -56,7 +57,6 @@ export class PerBreakpointStyles {
   restore(width: number) {
     const bi = getBreakpointIndex(this.breakpoints, width);
     const style = this.getStyleForBreakpoint(bi);
-    console.log("restore", style);
     setPerBreakpointStyle(this.node, style);
   }
 
@@ -67,7 +67,6 @@ export class PerBreakpointStyles {
     for (let i = 0; i < this.breakpoints.length; ++i) {
       data[this.breakpoints[i].width] = this.styles[i];
     }
-    console.log("save", data);
     setPerBreakpointStylesData(this.node, data);
     this.node.setRelaunchData({
       open: "",
@@ -78,7 +77,6 @@ export class PerBreakpointStyles {
     const overriddenBreakpoints = [];
     for (let i = 0; i < this.breakpoints.length; ++i) {
       const style = this.styles[i];
-      console.log(style);
       if (Object.keys(style).length > 0) {
         overriddenBreakpoints.push(i);
       }
