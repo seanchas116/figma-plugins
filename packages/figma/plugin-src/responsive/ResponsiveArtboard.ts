@@ -98,9 +98,9 @@ export class ResponsiveArtboard {
     const artboard = new ResponsiveArtboard(componentNode, data);
     artboard.savePerBreakpointStyles(Infinity);
 
-    for (const breakpiint of artboard.breakpoints) {
+    for (const breakpoint of artboard.breakpoints) {
       const variant = componentNode.clone();
-      variant.name = `breakpoint=< ${breakpiint.width}`;
+      variant.name = `breakpoint=< ${breakpoint.width}`;
       variant.locked = true;
       variant.visible = false;
       componentSetNode.insertChild(0, variant);
