@@ -58,8 +58,8 @@ export class ResponsiveArtboard {
         variants.push(parseInt(variant.name.split("=<")[1]));
       }
     }
+    variants.sort((a, b) => a - b);
     console.log(forEditingVariant, variants);
-    variants.sort();
 
     if (!forEditingVariant || variants.length === 0) {
       return;
