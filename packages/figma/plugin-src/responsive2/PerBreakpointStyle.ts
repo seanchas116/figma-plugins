@@ -42,7 +42,10 @@ function isAbsolutePositioned(node: SceneNode) {
   return true;
 }
 
-export function getPerBreakpointStyle(node: SceneNode): PerBreakpointStyle {
+export function getPerBreakpointStyle(
+  node: SceneNode,
+  isRoot: boolean
+): PerBreakpointStyle {
   const absolutePositioned = isAbsolutePositioned(node);
 
   let width: PerBreakpointStyle["width"] = { type: "fixed", value: node.width };

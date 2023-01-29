@@ -13,15 +13,17 @@ import {
 
 export class PerBreakpointStyles {
   node: SceneNode;
+  isRoot: boolean;
   breakpoints: Breakpoint[];
   currentStyle: PerBreakpointStyle;
   styles: Partial<PerBreakpointStyle>[];
   default: PerBreakpointStyle;
 
-  constructor(node: SceneNode, breakpoints: Breakpoint[]) {
+  constructor(breakpoints: Breakpoint[], node: SceneNode, isRoot: boolean) {
     this.node = node;
+    this.isRoot = isRoot;
     this.breakpoints = breakpoints;
-    this.currentStyle = getPerBreakpointStyle(node);
+    this.currentStyle = getPerBreakpointStyle(node, isRoot);
     const data = getPerBreakpointStylesData(node) ?? {
       default: this.currentStyle,
     };
