@@ -190,47 +190,49 @@ export function setPerBreakpointStyle(
       node.layoutMode = style.layoutMode;
     }
 
-    if (style.width && style.height) {
-      if (node.layoutMode === "VERTICAL") {
-        node.counterAxisSizingMode =
-          style.width.type === "hug" ? "AUTO" : "FIXED";
-        node.primaryAxisSizingMode =
-          style.height.type === "hug" ? "AUTO" : "FIXED";
+    if (node.layoutMode !== "NONE") {
+      if (style.width && style.height) {
+        if (node.layoutMode === "VERTICAL") {
+          node.counterAxisSizingMode =
+            style.width.type === "hug" ? "AUTO" : "FIXED";
+          node.primaryAxisSizingMode =
+            style.height.type === "hug" ? "AUTO" : "FIXED";
+        }
+        if (node.layoutMode === "HORIZONTAL") {
+          node.primaryAxisSizingMode =
+            style.width.type === "hug" ? "AUTO" : "FIXED";
+          node.counterAxisSizingMode =
+            style.height.type === "hug" ? "AUTO" : "FIXED";
+        }
       }
-      if (node.layoutMode === "HORIZONTAL") {
-        node.primaryAxisSizingMode =
-          style.width.type === "hug" ? "AUTO" : "FIXED";
-        node.counterAxisSizingMode =
-          style.height.type === "hug" ? "AUTO" : "FIXED";
-      }
-    }
 
-    if (style.primaryAxisAlignItems !== undefined) {
-      node.primaryAxisAlignItems = style.primaryAxisAlignItems;
-    }
-    if (style.counterAxisAlignItems !== undefined) {
-      node.counterAxisAlignItems = style.counterAxisAlignItems;
-    }
-    if (style.paddingLeft !== undefined) {
-      node.paddingLeft = style.paddingLeft;
-    }
-    if (style.paddingRight !== undefined) {
-      node.paddingRight = style.paddingRight;
-    }
-    if (style.paddingTop !== undefined) {
-      node.paddingTop = style.paddingTop;
-    }
-    if (style.paddingBottom !== undefined) {
-      node.paddingBottom = style.paddingBottom;
-    }
-    if (style.itemSpacing !== undefined) {
-      node.itemSpacing = style.itemSpacing;
-    }
-    if (style.itemReverseZIndex !== undefined) {
-      node.itemReverseZIndex = style.itemReverseZIndex;
-    }
-    if (style.strokesIncludedInLayout !== undefined) {
-      node.strokesIncludedInLayout = style.strokesIncludedInLayout;
+      if (style.primaryAxisAlignItems !== undefined) {
+        node.primaryAxisAlignItems = style.primaryAxisAlignItems;
+      }
+      if (style.counterAxisAlignItems !== undefined) {
+        node.counterAxisAlignItems = style.counterAxisAlignItems;
+      }
+      if (style.paddingLeft !== undefined) {
+        node.paddingLeft = style.paddingLeft;
+      }
+      if (style.paddingRight !== undefined) {
+        node.paddingRight = style.paddingRight;
+      }
+      if (style.paddingTop !== undefined) {
+        node.paddingTop = style.paddingTop;
+      }
+      if (style.paddingBottom !== undefined) {
+        node.paddingBottom = style.paddingBottom;
+      }
+      if (style.itemSpacing !== undefined) {
+        node.itemSpacing = style.itemSpacing;
+      }
+      if (style.itemReverseZIndex !== undefined) {
+        node.itemReverseZIndex = style.itemReverseZIndex;
+      }
+      if (style.strokesIncludedInLayout !== undefined) {
+        node.strokesIncludedInLayout = style.strokesIncludedInLayout;
+      }
     }
   }
 
