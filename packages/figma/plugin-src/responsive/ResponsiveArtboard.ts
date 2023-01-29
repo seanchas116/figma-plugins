@@ -72,6 +72,21 @@ export class ResponsiveArtboard {
     );
     componentSetNode.name = name;
 
+    componentSetNode.strokes = [
+      {
+        type: "SOLID",
+        color: { r: 0x97 / 0xff, g: 0x47 / 0xff, b: 0xff / 0xff },
+      },
+    ];
+    componentSetNode.layoutMode = "HORIZONTAL";
+    componentSetNode.counterAxisSizingMode = "AUTO";
+    componentSetNode.itemSpacing = 16;
+    componentSetNode.paddingTop =
+      componentSetNode.paddingRight =
+      componentSetNode.paddingBottom =
+      componentSetNode.paddingLeft =
+        16;
+
     const data: ResponsiveArtboardData = {};
     setResponsiveArtboardData(componentNode, data);
     componentNode.setRelaunchData({
