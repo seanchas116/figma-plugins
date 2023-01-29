@@ -31,7 +31,11 @@ export const observedProperties = new Set<NodeChangeProperty>([
 ]);
 
 function isAbsolutePositioned(node: SceneNode) {
-  if (node.parent?.type === "FRAME" && node.parent.layoutMode !== "NONE") {
+  if (
+    node.parent &&
+    "layoutMode" in node.parent &&
+    node.parent.layoutMode !== "NONE"
+  ) {
     if ("layoutPositioning" in node && node.layoutPositioning === "ABSOLUTE") {
       return true;
     }
