@@ -50,12 +50,12 @@ function getOtherBreakpoints(breakpoint: Breakpoint): Breakpoint[] {
   return otherBreakpoints;
 }
 
-async function copyContentProperties(
+function copyContentProperties(
   original: SceneNode,
   responsive: SceneNode,
   mode: "contents" | "style"
 ) {
-  await copyProperties(
+  copyProperties(
     original,
     responsive,
     mode === "style"
@@ -84,7 +84,7 @@ async function copyContentProperties(
   );
 }
 
-async function syncResponsiveNode(
+function syncResponsiveNode(
   original: SceneNode & ChildrenMixin,
   responsive: SceneNode & ChildrenMixin,
   mode: "contents" | "style"
@@ -110,7 +110,7 @@ async function syncResponsiveNode(
 
     if (responsiveChild) {
       responsiveChildrenToRemove.delete(responsiveChild);
-      await copyContentProperties(originalChild, responsiveChild, mode);
+      copyContentProperties(originalChild, responsiveChild, mode);
     } else {
       responsiveChild = originalChild.clone();
       setResponsiveID(responsiveChild, id);
@@ -122,7 +122,7 @@ async function syncResponsiveNode(
       "children" in responsiveChild &&
       originalChild.type !== "INSTANCE"
     ) {
-      await syncResponsiveNode(originalChild, responsiveChild, mode);
+      syncResponsiveNode(originalChild, responsiveChild, mode);
     }
   }
 
@@ -131,7 +131,7 @@ async function syncResponsiveNode(
   }
 }
 
-export async function syncResponsiveContents() {
+export function syncResponsiveContents() {
   const selected = figma.currentPage.selection[0];
   if (!selected) {
     return;
@@ -140,16 +140,12 @@ export async function syncResponsiveContents() {
   const breakpoint = getBreakpointForNode(selected);
   if (breakpoint) {
     for (const otherBreakpoint of getOtherBreakpoints(breakpoint)) {
-      await syncResponsiveNode(
-        breakpoint.node,
-        otherBreakpoint.node,
-        "contents"
-      );
+      syncResponsiveNode(breakpoint.node, otherBreakpoint.node, "contents");
     }
   }
 }
 
-export async function copyStylesToLargerScreens() {
+export function copyStylesToLargerScreens() {
   const selected = figma.currentPage.selection[0];
   if (!selected) {
     return;
@@ -160,17 +156,13 @@ export async function copyStylesToLargerScreens() {
     for (const otherBreakpoint of getOtherBreakpoints(breakpoint)) {
       console.log(otherBreakpoint.minWidth, breakpoint.minWidth);
       if (otherBreakpoint.minWidth > breakpoint.minWidth) {
-        await syncResponsiveNode(
-          breakpoint.node,
-          otherBreakpoint.node,
-          "style"
-        );
+        syncResponsiveNode(breakpoint.node, otherBreakpoint.node, "style");
       }
     }
   }
 }
 
-export async function copyStylesToSmallerScreens() {
+export function copyStylesToSmallerScreens() {
   const selected = figma.currentPage.selection[0];
   if (!selected) {
     return;
@@ -181,11 +173,7 @@ export async function copyStylesToSmallerScreens() {
     for (const otherBreakpoint of getOtherBreakpoints(breakpoint)) {
       console.log(otherBreakpoint.minWidth, breakpoint.minWidth);
       if (otherBreakpoint.minWidth < breakpoint.minWidth) {
-        await syncResponsiveNode(
-          breakpoint.node,
-          otherBreakpoint.node,
-          "style"
-        );
+        syncResponsiveNode(breakpoint.node, otherBreakpoint.node, "style");
       }
     }
   }

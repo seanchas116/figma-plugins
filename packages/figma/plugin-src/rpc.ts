@@ -13,6 +13,7 @@ import {
   makeCurrentArtboardResponsive,
   resizeCurrentArtboardWidth,
 } from "./responsive/actions";
+import * as simpleResponsive from "./simpleResponsive";
 
 class RPCHandler implements IUIToPluginRPC {
   async ready(): Promise<void> {
@@ -83,6 +84,26 @@ class RPCHandler implements IUIToPluginRPC {
   // eslint-disable-next-line @typescript-eslint/require-await
   async copyStylesToSmallerScreens(): Promise<void> {
     //copyStylesToSmallerScreens();
+  }
+
+  // eslint-disable-next-line @typescript-eslint/require-await
+  async simpleResponsiveCreateComponent(): Promise<void> {
+    simpleResponsive.createResponsivePage();
+  }
+
+  // eslint-disable-next-line @typescript-eslint/require-await
+  async simpleResponsiveSync(): Promise<void> {
+    simpleResponsive.syncResponsiveContents();
+  }
+
+  // eslint-disable-next-line @typescript-eslint/require-await
+  async simpleResponsiveCopyToWider(): Promise<void> {
+    simpleResponsive.copyStylesToLargerScreens();
+  }
+
+  // eslint-disable-next-line @typescript-eslint/require-await
+  async simpleResponsiveCopyToNarrower(): Promise<void> {
+    simpleResponsive.copyStylesToSmallerScreens();
   }
 }
 

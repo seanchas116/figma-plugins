@@ -23,6 +23,11 @@ export interface IUIToPluginRPC {
   clearCurrentArtboardResponsive(): Promise<void>;
   copyStylesToLargerScreens(): Promise<void>;
   copyStylesToSmallerScreens(): Promise<void>;
+
+  simpleResponsiveCreateComponent(): Promise<void>;
+  simpleResponsiveSync(): Promise<void>;
+  simpleResponsiveCopyToWider(): Promise<void>;
+  simpleResponsiveCopyToNarrower(): Promise<void>;
 }
 
 export interface IPluginToUIRPC {
