@@ -1,4 +1,4 @@
-import { DesignPanel } from "./DesignPanel";
+import { DesignPanel } from "./designPanel/DesignPanel";
 import { CodeComponentIFrame } from "./CodeComponentIFrame";
 import { Resizer } from "./Resizer";
 import { state, tabs } from "../state/State";
