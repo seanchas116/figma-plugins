@@ -167,8 +167,6 @@ export function setPerBreakpointStyle(
     node.y = style.y;
   }
 
-  // TODO: resize fixed size nodes
-
   if ("layoutAlign" in node) {
     const parent = node.parent;
     if (style.width && style.height) {
@@ -248,6 +246,15 @@ export function setPerBreakpointStyle(
     }
     if (style.textAutoResize !== undefined) {
       node.textAutoResize = style.textAutoResize;
+    }
+  }
+
+  if ("resize" in node) {
+    if (style.width && style.height) {
+      node.resize(
+        style.width.type === "fixed" ? style.width.value : node.width,
+        style.height.type === "fixed" ? style.height.value : node.height
+      );
     }
   }
 }
