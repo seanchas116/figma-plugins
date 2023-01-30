@@ -12,6 +12,7 @@ export const observedProperties = new Set<NodeChangeProperty>([
   "layoutGrow",
   "layoutAlign",
   "layoutPositioning",
+  "visible",
 
   "layoutMode",
   "primaryAxisSizingMode",
@@ -110,6 +111,7 @@ export function getPerBreakpointStyle(
   }
 
   return {
+    visible: node.visible,
     ...(!isRoot && absolutePositioned
       ? {
           x: node.x,
@@ -154,6 +156,10 @@ export function setPerBreakpointStyle(
   node: SceneNode,
   style: PerBreakpointStyle
 ) {
+  if (style.visible !== undefined) {
+    node.visible = style.visible;
+  }
+
   if (style.x !== undefined) {
     node.x = style.x;
   }
