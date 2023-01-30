@@ -1,8 +1,3 @@
-import {
-  getOrGenerateResponsiveID,
-  getResponsiveID,
-  setResponsiveID,
-} from "../pluginData";
 import { copyProperties } from "../util/copyProperties";
 
 interface Breakpoint {
@@ -84,36 +79,48 @@ function copyContentProperties(
   );
 }
 
+function getResponsiveID(node: SceneNode): string {
+  return node.type + ":" + node.name;
+}
+
+function getOrInsertDefault<K, T>(
+  map: Map<K, T>,
+  key: K,
+  defaultValue: () => T
+) {
+  let value = map.get(key);
+  if (value === undefined) {
+    value = defaultValue();
+    map.set(key, value);
+  }
+  return value;
+}
+
 function syncResponsiveNode(
   original: SceneNode & ChildrenMixin,
   responsive: SceneNode & ChildrenMixin,
   mode: "contents" | "style"
 ) {
-  const responsiveChildMap = new Map<string, SceneNode>();
+  const responsiveChildMap = new Map<string, SceneNode[]>();
   const responsiveChildrenToRemove = new Set<SceneNode>(responsive.children);
 
   for (const responsiveChild of responsive.children) {
     const id = getResponsiveID(responsiveChild);
-    if (id) {
-      responsiveChildMap.set(id, responsiveChild);
-    }
+    const nodes = getOrInsertDefault(responsiveChildMap, id, () => []);
+    nodes.push(responsiveChild);
   }
 
   for (const originalChild of original.children) {
-    const id = getOrGenerateResponsiveID(originalChild);
+    const id = getResponsiveID(originalChild);
 
     // find reusable child
-    let responsiveChild = responsiveChildMap.get(id);
-    if (responsiveChild?.type !== originalChild.type) {
-      responsiveChild = undefined;
-    }
+    let responsiveChild = responsiveChildMap.get(id)?.shift();
 
     if (responsiveChild) {
       responsiveChildrenToRemove.delete(responsiveChild);
       copyContentProperties(originalChild, responsiveChild, mode);
     } else {
       responsiveChild = originalChild.clone();
-      setResponsiveID(responsiveChild, id);
     }
     responsive.appendChild(responsiveChild);
 
