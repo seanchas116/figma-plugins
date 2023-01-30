@@ -1,6 +1,7 @@
 import { observer } from "mobx-react-lite";
 import { ResponsiveSection } from "./ResponsiveSection";
 import { InstanceSection } from "./InstanceSection";
+import { SimpleResponsiveSection } from "./SimpleResponsiveSection";
 
 export const DesignPanel: React.FC = observer(() => {
   return (
@@ -35,6 +36,7 @@ export const DesignPanel: React.FC = observer(() => {
         </div>
       </div> */}
       <ResponsiveSection />
+      <SimpleResponsiveSection />
       <InstanceSection />
     </div>
   );
