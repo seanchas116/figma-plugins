@@ -173,11 +173,9 @@ export class ResponsiveArtboard {
   }
 
   savePerBreakpointStyles(node: SceneNode = this.root) {
-    const styles = new PerBreakpointStyles(
-      this.breakpoints,
-      node,
-      node === this.root
-    );
+    const isRoot = node === this.root;
+
+    const styles = new PerBreakpointStyles(this.breakpoints, node, isRoot);
     styles.save(this.breakpointIndex);
 
     if ("children" in node && node.type !== "INSTANCE") {
@@ -185,14 +183,26 @@ export class ResponsiveArtboard {
         this.savePerBreakpointStyles(child);
       }
     }
+
+    if (isRoot) {
+      const variant = this.breakpoints[this.breakpointIndex].variant;
+
+      // copy the styles from the root to the variant
+      copyProperties(this.root, variant, ["name", "visible"]);
+
+      for (const child of variant.children) {
+        child.remove();
+      }
+      for (const child of this.root.children) {
+        variant.appendChild(child.clone());
+      }
+    }
   }
 
   restorePerBreakpointStyles(node: SceneNode = this.root): void {
-    const styles = new PerBreakpointStyles(
-      this.breakpoints,
-      node,
-      node === this.root
-    );
+    const isRoot = node === this.root;
+
+    const styles = new PerBreakpointStyles(this.breakpoints, node, isRoot);
     styles.restore(this.breakpointIndex);
 
     if ("children" in node && node.type !== "INSTANCE") {
