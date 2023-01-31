@@ -52,8 +52,12 @@ export class ResponsiveArtboard {
   static from(componentSet: ComponentSetNode): ResponsiveArtboard | undefined {
     let forEditingVariant: ComponentNode | undefined;
     const breakpoints: Breakpoint[] = [];
+    let defaultVariant: ComponentNode | undefined;
 
     for (const variant of componentSet.children) {
+      if (variant.name.includes("breakpoint=default")) {
+        defaultVariant = variant as ComponentNode;
+      }
       if (variant.name.startsWith("breakpoint=for editing")) {
         forEditingVariant = variant as ComponentNode;
       }
@@ -66,11 +70,16 @@ export class ResponsiveArtboard {
     }
     breakpoints.sort((a, b) => a.width - b.width);
 
-    if (!forEditingVariant || breakpoints.length === 0) {
+    if (!forEditingVariant || breakpoints.length === 0 || !defaultVariant) {
       return;
     }
 
-    return new ResponsiveArtboard(componentSet, forEditingVariant, breakpoints);
+    return new ResponsiveArtboard(
+      componentSet,
+      forEditingVariant,
+      breakpoints,
+      defaultVariant
+    );
   }
 
   static attach(originalNode: FrameNode): ResponsiveArtboard {
@@ -142,18 +151,21 @@ export class ResponsiveArtboard {
 
   private constructor(
     componentSet: ComponentSetNode,
-    node: FrameNode | ComponentNode,
-    breakpoints: Breakpoint[]
+    node: ComponentNode,
+    breakpoints: Breakpoint[],
+    defaultVariant: ComponentNode
   ) {
     this.componentSet = componentSet;
     this.node = node;
     this.breakpoints = breakpoints;
+    this.defaultVariant = defaultVariant;
     this.breakpointIndex = getBreakpointIndex(breakpoints, node.width);
   }
 
   readonly componentSet: ComponentSetNode;
   readonly node: FrameNode | ComponentNode;
   readonly breakpoints: Breakpoint[];
+  readonly defaultVariant: ComponentNode;
   readonly breakpointIndex: number;
 
   resize(width: number) {
