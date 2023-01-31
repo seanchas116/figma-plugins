@@ -46,7 +46,10 @@ export class ResponsiveArtboard {
     if (!componentSet) {
       return;
     }
+    return this.from(componentSet);
+  }
 
+  static from(componentSet: ComponentSetNode): ResponsiveArtboard | undefined {
     let forEditingVariant: ComponentNode | undefined;
     const breakpoints: Breakpoint[] = [];
 
@@ -116,15 +119,12 @@ export class ResponsiveArtboard {
       componentSetNode.paddingLeft =
         16;
 
-    const breakpoints: Breakpoint[] = [];
-
     for (const width of [768, 1024, 1280]) {
       const variant = componentNode.clone();
       variant.name = `breakpoint=< ${width}`;
       variant.locked = true;
       variant.visible = false;
       componentSetNode.insertChild(0, variant);
-      breakpoints.push({ width, variant });
     }
 
     const defaultVariant = componentNode.clone();
@@ -133,13 +133,10 @@ export class ResponsiveArtboard {
     defaultVariant.visible = false;
     componentSetNode.insertChild(0, defaultVariant);
 
-    const artboard = new ResponsiveArtboard(
-      componentSetNode,
-      componentNode,
-      breakpoints
-    );
-    artboard.savePerBreakpointStyles(Infinity);
-
+    const artboard = this.from(componentSetNode);
+    if (!artboard) {
+      throw new Error("Failed to create ResponsiveArtboard");
+    }
     return artboard;
   }
 
