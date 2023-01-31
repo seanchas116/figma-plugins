@@ -148,48 +148,44 @@ export class ResponsiveArtboard {
     this.componentSet = componentSet;
     this.node = node;
     this.breakpoints = breakpoints;
+    this.breakpointIndex = getBreakpointIndex(breakpoints, node.width);
   }
 
   readonly componentSet: ComponentSetNode;
   readonly node: FrameNode | ComponentNode;
   readonly breakpoints: Breakpoint[];
+  readonly breakpointIndex: number;
 
   resize(width: number) {
     this.node.resize(width, this.node.height);
   }
 
-  savePerBreakpointStyles(
-    width: number = this.node.width,
-    node: SceneNode = this.node
-  ) {
+  savePerBreakpointStyles(node: SceneNode = this.node) {
     const styles = new PerBreakpointStyles(
       this.breakpoints,
       node,
       node === this.node
     );
-    styles.save(this.node.width);
+    styles.save(this.breakpointIndex);
 
     if ("children" in node && node.type !== "INSTANCE") {
       for (const child of node.children) {
-        this.savePerBreakpointStyles(width, child);
+        this.savePerBreakpointStyles(child);
       }
     }
   }
 
-  restorePerBreakpointStyles(
-    width: number = this.node.width,
-    node: SceneNode = this.node
-  ): void {
+  restorePerBreakpointStyles(node: SceneNode = this.node): void {
     const styles = new PerBreakpointStyles(
       this.breakpoints,
       node,
       node === this.node
     );
-    styles.restore(this.node.width);
+    styles.restore(this.breakpointIndex);
 
     if ("children" in node && node.type !== "INSTANCE") {
       for (const child of node.children) {
-        this.restorePerBreakpointStyles(width, child);
+        this.restorePerBreakpointStyles(child);
       }
     }
   }

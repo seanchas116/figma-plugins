@@ -5,7 +5,7 @@ import {
   setPerBreakpointStylesData,
 } from "../pluginData";
 import { diffObjects } from "../util/common";
-import { Breakpoint, getBreakpointIndex } from "./Breakpoint";
+import { Breakpoint } from "./Breakpoint";
 import {
   getPerBreakpointStyle,
   setPerBreakpointStyle,
@@ -40,24 +40,22 @@ export class PerBreakpointStyles {
     return base;
   }
 
-  save(width: number) {
-    const bi = getBreakpointIndex(this.breakpoints, width);
-    if (bi === this.breakpoints.length) {
+  save(breakpointIndex: number) {
+    if (breakpointIndex === this.breakpoints.length) {
       this.default = { ...this.currentStyle };
     } else {
       const current = this.currentStyle;
-      const base = this.getStyleForBreakpoint(bi + 1);
+      const base = this.getStyleForBreakpoint(breakpointIndex + 1);
 
       const diff = diffObjects(base, current);
-      this.styles[bi] = diff;
+      this.styles[breakpointIndex] = diff;
     }
 
     this.saveToNode();
   }
 
-  restore(width: number) {
-    const bi = getBreakpointIndex(this.breakpoints, width);
-    const style = this.getStyleForBreakpoint(bi);
+  restore(breakpointIndex: number) {
+    const style = this.getStyleForBreakpoint(breakpointIndex);
     setPerBreakpointStyle(this.node, style);
   }
 
