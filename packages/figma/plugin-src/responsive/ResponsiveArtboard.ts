@@ -71,30 +71,30 @@ export class ResponsiveArtboard {
     );
   }
 
-  static attach(topLevelNode: FrameNode | ComponentNode): ResponsiveArtboard {
-    const existing = ResponsiveArtboard.get(topLevelNode);
+  static attach(originalNode: FrameNode): ResponsiveArtboard {
+    const existing = ResponsiveArtboard.get(originalNode);
     if (existing) {
       return existing;
     }
 
-    const name = topLevelNode.name;
+    const name = originalNode.name;
 
     const componentNode = figma.createComponent();
-    copyProperties(topLevelNode, componentNode);
+    copyProperties(originalNode, componentNode);
     componentNode.name = "breakpoint=for editing";
 
-    for (const child of topLevelNode.children) {
+    for (const child of originalNode.children) {
       componentNode.appendChild(child);
     }
 
-    const index = figma.currentPage.children.indexOf(topLevelNode);
+    const index = figma.currentPage.children.indexOf(originalNode);
     if (index !== -1) {
       figma.currentPage.insertChild(index, componentNode);
     } else {
       figma.currentPage.appendChild(componentNode);
     }
 
-    topLevelNode.remove();
+    originalNode.remove();
 
     const componentSetNode = figma.combineAsVariants(
       [componentNode],

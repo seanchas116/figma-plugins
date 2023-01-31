@@ -10,6 +10,10 @@ export function makeCurrentArtboardResponsive() {
     return;
   }
 
+  if (topLevelNode.type !== "FRAME") {
+    return;
+  }
+
   const artboard = ResponsiveArtboard.attach(topLevelNode);
   figma.currentPage.selection = [artboard.node];
 
