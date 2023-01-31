@@ -5,8 +5,8 @@ function omitMixed<T>(value: T | typeof figma.mixed): T | undefined {
 }
 
 export const observedProperties = new Set<NodeChangeProperty>([
-  "x",
-  "y",
+  // "x",
+  // "y",
   // "width",
   // "height",
   "layoutGrow",
@@ -112,12 +112,12 @@ export function getPerBreakpointStyle(
 
   return {
     visible: node.visible,
-    ...(!isRoot && absolutePositioned
-      ? {
-          x: node.x,
-          y: node.y,
-        }
-      : undefined),
+    // ...(!isRoot && absolutePositioned
+    //   ? {
+    //       x: node.x,
+    //       y: node.y,
+    //     }
+    //   : undefined),
     ...(!isRoot
       ? {
           width,
@@ -160,12 +160,12 @@ export function setPerBreakpointStyle(
     node.visible = style.visible;
   }
 
-  if (style.x !== undefined) {
-    node.x = style.x;
-  }
-  if (style.y !== undefined) {
-    node.y = style.y;
-  }
+  // if (style.x !== undefined) {
+  //   node.x = style.x;
+  // }
+  // if (style.y !== undefined) {
+  //   node.y = style.y;
+  // }
 
   if ("layoutAlign" in node) {
     const parent = node.parent;
