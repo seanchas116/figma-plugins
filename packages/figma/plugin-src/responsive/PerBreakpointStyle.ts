@@ -252,17 +252,26 @@ export function setPerBreakpointStyle(
   if ("resize" in node) {
     const { width, height } = style;
     if (width && height) {
-      node.resize(
-        width.type === "fixed" ? width.value : node.width,
-        height.type === "fixed" ? height.value : node.height
-      );
       // workaround: Resizing is flaky while the parent is being resized
-      setTimeout(() => {
+      // try to resize the node until it succeeds
+      const tryResize = () => {
+        const widthNeedsResize =
+          width.type === "fixed" && node.width !== width.value;
+        const heightNeedsResize =
+          height.type === "fixed" && node.height !== height.value;
+        if (!widthNeedsResize && !heightNeedsResize) {
+          return;
+        }
+
         node.resize(
           width.type === "fixed" ? width.value : node.width,
           height.type === "fixed" ? height.value : node.height
         );
-      }, 250);
+
+        setTimeout(tryResize, 100);
+      };
+
+      tryResize();
     }
   }
 }
