@@ -1,5 +1,6 @@
 export interface Breakpoint {
   width: number;
+  variant: ComponentNode;
 }
 
 /// Breakpoints: [768, 1024, 1280]

@@ -48,27 +48,26 @@ export class ResponsiveArtboard {
     }
 
     let forEditingVariant: ComponentNode | undefined;
-    const variants: number[] = [];
+    const breakpoints: Breakpoint[] = [];
 
     for (const variant of componentSet.children) {
       if (variant.name.startsWith("breakpoint=for editing")) {
         forEditingVariant = variant as ComponentNode;
       }
       if (variant.name.startsWith("breakpoint=<")) {
-        variants.push(parseInt(variant.name.split("=<")[1]));
+        const width = parseInt(variant.name.split("=<")[1]);
+        if (!isNaN(width)) {
+          breakpoints.push({ width, variant: variant as ComponentNode });
+        }
       }
     }
-    variants.sort((a, b) => a - b);
+    breakpoints.sort((a, b) => a.width - b.width);
 
-    if (!forEditingVariant || variants.length === 0) {
+    if (!forEditingVariant || breakpoints.length === 0) {
       return;
     }
 
-    return new ResponsiveArtboard(
-      componentSet,
-      forEditingVariant,
-      variants.map((w) => ({ width: w }))
-    );
+    return new ResponsiveArtboard(componentSet, forEditingVariant, breakpoints);
   }
 
   static attach(originalNode: FrameNode): ResponsiveArtboard {
@@ -117,25 +116,15 @@ export class ResponsiveArtboard {
       componentSetNode.paddingLeft =
         16;
 
-    const breakpoints: Breakpoint[] = [
-      { width: 768 },
-      { width: 1024 },
-      { width: 1280 },
-    ];
+    const breakpoints: Breakpoint[] = [];
 
-    const artboard = new ResponsiveArtboard(
-      componentSetNode,
-      componentNode,
-      breakpoints
-    );
-    artboard.savePerBreakpointStyles(Infinity);
-
-    for (const breakpoint of artboard.breakpoints) {
+    for (const width of [768, 1024, 1280]) {
       const variant = componentNode.clone();
-      variant.name = `breakpoint=< ${breakpoint.width}`;
+      variant.name = `breakpoint=< ${width}`;
       variant.locked = true;
       variant.visible = false;
       componentSetNode.insertChild(0, variant);
+      breakpoints.push({ width, variant });
     }
 
     const defaultVariant = componentNode.clone();
@@ -143,6 +132,13 @@ export class ResponsiveArtboard {
     defaultVariant.locked = true;
     defaultVariant.visible = false;
     componentSetNode.insertChild(0, defaultVariant);
+
+    const artboard = new ResponsiveArtboard(
+      componentSetNode,
+      componentNode,
+      breakpoints
+    );
+    artboard.savePerBreakpointStyles(Infinity);
 
     return artboard;
   }
@@ -159,11 +155,7 @@ export class ResponsiveArtboard {
 
   readonly componentSet: ComponentSetNode;
   readonly node: FrameNode | ComponentNode;
-  readonly breakpoints: Breakpoint[] = [
-    { width: 768 },
-    { width: 1024 },
-    { width: 1280 },
-  ];
+  readonly breakpoints: Breakpoint[];
 
   resize(width: number) {
     this.node.resize(width, this.node.height);
