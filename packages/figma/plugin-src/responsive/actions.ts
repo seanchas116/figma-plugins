@@ -15,7 +15,7 @@ export function makeCurrentArtboardResponsive() {
   }
 
   const artboard = ResponsiveArtboard.attach(topLevelNode);
-  figma.currentPage.selection = [artboard.node];
+  figma.currentPage.selection = [artboard.root];
 
   figma.commitUndo();
 }

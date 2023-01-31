@@ -14,10 +14,10 @@ const onDocumentChange = (event: DocumentChangeEvent) => {
         continue;
       }
       const artboard = ResponsiveArtboard.get(node);
-      if (!artboard || node !== artboard.node) {
+      if (!artboard || node !== artboard.root) {
         continue;
       }
-      resizedArtboards.set(artboard.node.id, artboard);
+      resizedArtboards.set(artboard.root.id, artboard);
     }
   }
 
@@ -44,7 +44,7 @@ const onDocumentChange = (event: DocumentChangeEvent) => {
         continue;
       }
 
-      changedArtboards.set(artboard.node.id, artboard);
+      changedArtboards.set(artboard.root.id, artboard);
     }
   }
 

@@ -156,27 +156,27 @@ export class ResponsiveArtboard {
     defaultVariant: ComponentNode
   ) {
     this.componentSet = componentSet;
-    this.node = node;
+    this.root = node;
     this.breakpoints = breakpoints;
     this.defaultVariant = defaultVariant;
     this.breakpointIndex = getBreakpointIndex(breakpoints, node.width);
   }
 
   readonly componentSet: ComponentSetNode;
-  readonly node: FrameNode | ComponentNode;
+  readonly root: ComponentNode;
   readonly breakpoints: Breakpoint[];
   readonly defaultVariant: ComponentNode;
   readonly breakpointIndex: number;
 
   resize(width: number) {
-    this.node.resize(width, this.node.height);
+    this.root.resize(width, this.root.height);
   }
 
-  savePerBreakpointStyles(node: SceneNode = this.node) {
+  savePerBreakpointStyles(node: SceneNode = this.root) {
     const styles = new PerBreakpointStyles(
       this.breakpoints,
       node,
-      node === this.node
+      node === this.root
     );
     styles.save(this.breakpointIndex);
 
@@ -187,11 +187,11 @@ export class ResponsiveArtboard {
     }
   }
 
-  restorePerBreakpointStyles(node: SceneNode = this.node): void {
+  restorePerBreakpointStyles(node: SceneNode = this.root): void {
     const styles = new PerBreakpointStyles(
       this.breakpoints,
       node,
-      node === this.node
+      node === this.root
     );
     styles.restore(this.breakpointIndex);
 
@@ -206,20 +206,20 @@ export class ResponsiveArtboard {
     const perBreakpointStyles = new PerBreakpointStyles(
       this.breakpoints,
       node,
-      node === this.node
+      node === this.root
     );
 
     return {
-      width: this.node.width,
+      width: this.root.width,
       breakpoints: this.breakpoints,
-      breakpointIndex: getBreakpointIndex(this.breakpoints, this.node.width),
+      breakpointIndex: getBreakpointIndex(this.breakpoints, this.root.width),
       overriddenIndexes: perBreakpointStyles.getOverriddenBreakpoints(),
     };
   }
 
   clear() {
-    this.node.setRelaunchData({});
-    this.clearPerBreakpointStyles(this.node);
+    this.root.setRelaunchData({});
+    this.clearPerBreakpointStyles(this.root);
   }
 
   private clearPerBreakpointStyles(node: SceneNode) {
