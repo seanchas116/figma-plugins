@@ -182,8 +182,8 @@ export function getIconInfo(node: SceneNode): IconInfo | undefined {
 
 export interface PerBreakpointStyle {
   visible?: boolean;
-  // x?: number;
-  // y?: number;
+  x?: number;
+  y?: number;
   width?: { type: "fixed"; value: number } | { type: "hug" } | { type: "fill" };
   height?:
     | { type: "fixed"; value: number }

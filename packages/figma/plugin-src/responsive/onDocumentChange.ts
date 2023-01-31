@@ -1,6 +1,8 @@
 import { observedProperties } from "./PerBreakpointStyle";
 import { ResponsiveArtboard } from "./ResponsiveArtboard";
 
+let lastRestoreTime = 0;
+
 const onDocumentChange = (event: DocumentChangeEvent) => {
   const resizedArtboards = new Map<string, ResponsiveArtboard>();
 
@@ -25,6 +27,11 @@ const onDocumentChange = (event: DocumentChangeEvent) => {
     for (const artboard of resizedArtboards.values()) {
       artboard.restorePerBreakpointStyles();
     }
+    lastRestoreTime = Date.now();
+    return;
+  }
+
+  if (Date.now() - lastRestoreTime < 1000) {
     return;
   }
 

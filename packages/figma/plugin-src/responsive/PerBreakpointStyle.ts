@@ -5,10 +5,10 @@ function omitMixed<T>(value: T | typeof figma.mixed): T | undefined {
 }
 
 export const observedProperties = new Set<NodeChangeProperty>([
-  // "x",
-  // "y",
-  // "width",
-  // "height",
+  "x",
+  "y",
+  "width",
+  "height",
   "layoutGrow",
   "layoutAlign",
   "layoutPositioning",
@@ -160,12 +160,12 @@ export function setPerBreakpointStyle(
     node.visible = style.visible;
   }
 
-  // if (style.x !== undefined) {
-  //   node.x = style.x;
-  // }
-  // if (style.y !== undefined) {
-  //   node.y = style.y;
-  // }
+  if (style.x !== undefined) {
+    node.x = style.x;
+  }
+  if (style.y !== undefined) {
+    node.y = style.y;
+  }
 
   if ("layoutAlign" in node) {
     const parent = node.parent;
@@ -249,13 +249,20 @@ export function setPerBreakpointStyle(
     }
   }
 
-  // Resizing is flaky while the parent is being resized
-  // if ("resize" in node) {
-  //   if (style.width && style.height) {
-  //     node.resize(
-  //       style.width.type === "fixed" ? style.width.value : node.width,
-  //       style.height.type === "fixed" ? style.height.value : node.height
-  //     );
-  //   }
-  // }
+  if ("resize" in node) {
+    const { width, height } = style;
+    if (width && height) {
+      node.resize(
+        width.type === "fixed" ? width.value : node.width,
+        height.type === "fixed" ? height.value : node.height
+      );
+      // workaround: Resizing is flaky while the parent is being resized
+      setTimeout(() => {
+        node.resize(
+          width.type === "fixed" ? width.value : node.width,
+          height.type === "fixed" ? height.value : node.height
+        );
+      }, 250);
+    }
+  }
 }

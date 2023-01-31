@@ -184,19 +184,19 @@ export class ResponsiveArtboard {
       }
     }
 
-    if (isRoot) {
-      const variant = this.breakpoints[this.breakpointIndex].variant;
+    // if (isRoot) {
+    //   const variant = this.breakpoints[this.breakpointIndex].variant;
 
-      // copy the styles from the root to the variant
-      copyProperties(this.root, variant, ["name", "visible"]);
+    //   // copy the styles from the root to the variant
+    //   copyProperties(this.root, variant, ["name", "visible"]);
 
-      for (const child of variant.children) {
-        child.remove();
-      }
-      for (const child of this.root.children) {
-        variant.appendChild(child.clone());
-      }
-    }
+    //   for (const child of variant.children) {
+    //     child.remove();
+    //   }
+    //   for (const child of this.root.children) {
+    //     variant.appendChild(child.clone());
+    //   }
+    // }
   }
 
   restorePerBreakpointStyles(node: SceneNode = this.root): void {
