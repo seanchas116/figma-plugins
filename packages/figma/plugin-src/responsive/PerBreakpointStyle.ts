@@ -112,12 +112,12 @@ export function getPerBreakpointStyle(
 
   return {
     visible: node.visible,
-    // ...(!isRoot && absolutePositioned
-    //   ? {
-    //       x: node.x,
-    //       y: node.y,
-    //     }
-    //   : undefined),
+    ...(!isRoot && absolutePositioned
+      ? {
+          x: node.x,
+          y: node.y,
+        }
+      : undefined),
     ...(!isRoot
       ? {
           width,
