@@ -49,7 +49,6 @@ export class PerBreakpointStyles {
       const base = this.getStyleForBreakpoint(bi + 1);
 
       const diff = diffObjects(base, current);
-      console.log("diff", diff);
       this.styles[bi] = diff;
     }
 

@@ -59,7 +59,6 @@ export class ResponsiveArtboard {
       }
     }
     variants.sort((a, b) => a - b);
-    console.log(forEditingVariant, variants);
 
     if (!forEditingVariant || variants.length === 0) {
       return;

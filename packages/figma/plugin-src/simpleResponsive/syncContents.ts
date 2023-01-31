@@ -16,7 +16,6 @@ function getMinWidthForVariant(variant: ComponentNode): number | undefined {
 function getBreakpointForNode(node: BaseNode): Breakpoint | undefined {
   if (node.type === "COMPONENT") {
     const minWidth = getMinWidthForVariant(node);
-    console.log(node.name, minWidth);
     if (minWidth !== undefined) {
       return { node, minWidth };
     }
@@ -161,7 +160,6 @@ export function copyStylesToLargerScreens() {
   const breakpoint = getBreakpointForNode(selected);
   if (breakpoint) {
     for (const otherBreakpoint of getOtherBreakpoints(breakpoint)) {
-      console.log(otherBreakpoint.minWidth, breakpoint.minWidth);
       if (otherBreakpoint.minWidth > breakpoint.minWidth) {
         syncResponsiveNode(breakpoint.node, otherBreakpoint.node, "style");
       }
@@ -178,7 +176,6 @@ export function copyStylesToSmallerScreens() {
   const breakpoint = getBreakpointForNode(selected);
   if (breakpoint) {
     for (const otherBreakpoint of getOtherBreakpoints(breakpoint)) {
-      console.log(otherBreakpoint.minWidth, breakpoint.minWidth);
       if (otherBreakpoint.minWidth < breakpoint.minWidth) {
         syncResponsiveNode(breakpoint.node, otherBreakpoint.node, "style");
       }

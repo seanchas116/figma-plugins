@@ -3,8 +3,6 @@ import { createNodeFromIcon } from "./insertIcon";
 
 // @ts-ignore
 figma.on("drop", (event: DropEvent) => {
-  console.log(event);
-
   const { files, node, dropMetadata } = event;
   const iconDropMetadata = dropMetadata as DropMetadata;
   const icon = iconDropMetadata.icon;
