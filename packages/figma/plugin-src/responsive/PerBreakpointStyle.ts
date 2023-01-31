@@ -7,8 +7,8 @@ function omitMixed<T>(value: T | typeof figma.mixed): T | undefined {
 export const observedProperties = new Set<NodeChangeProperty>([
   "x",
   "y",
-  "width",
-  "height",
+  // "width",
+  // "height",
   "layoutGrow",
   "layoutAlign",
   "layoutPositioning",
@@ -249,12 +249,13 @@ export function setPerBreakpointStyle(
     }
   }
 
-  if ("resize" in node) {
-    if (style.width && style.height) {
-      node.resize(
-        style.width.type === "fixed" ? style.width.value : node.width,
-        style.height.type === "fixed" ? style.height.value : node.height
-      );
-    }
-  }
+  // Resizing is flaky while the parent is being resized
+  // if ("resize" in node) {
+  //   if (style.width && style.height) {
+  //     node.resize(
+  //       style.width.type === "fixed" ? style.width.value : node.width,
+  //       style.height.type === "fixed" ? style.height.value : node.height
+  //     );
+  //   }
+  // }
 }
