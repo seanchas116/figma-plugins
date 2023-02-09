@@ -1,3 +1,3 @@
 # UIMix
 
-Code export & import system for Figma
+[WIP] Comprehensive Figma plugin for code import/export
